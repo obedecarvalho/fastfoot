@@ -1,0 +1,5 @@
+
+http://localhost:8081/preCarregar
+http://localhost:8081/criarTemporada
+http://localhost:8081/proximaSemana
+http://localhost:8081/classificarClubesTemporadaAtual

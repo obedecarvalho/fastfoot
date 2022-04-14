@@ -1,0 +1,27 @@
+package com.fastfoot.scheduler.model.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.fastfoot.model.entity.Clube;
+import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
+import com.fastfoot.scheduler.model.entity.Classificacao;
+import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
+
+public interface ClassificacaoRepository extends JpaRepository<Classificacao, Long> {
+
+	public List<Classificacao> findByCampeonato(Campeonato campeonato);
+
+	public List<Classificacao> findByCampeonatoOrderByPosicao(Campeonato campeonato);
+	
+	public List<Classificacao> findByClube(Clube clube);
+	
+	public List<Classificacao> findByGrupoCampeonato(GrupoCampeonato grupoCampeonato);
+
+	@Query("SELECT c FROM Classificacao c WHERE c.grupoCampeonato.campeonato = :campeonatoMisto ORDER BY c.posicao ")
+	public List<Classificacao> findByCampeonatoMistoOrderByPosicao(@Param("campeonatoMisto") CampeonatoMisto campeonatoMisto);
+}

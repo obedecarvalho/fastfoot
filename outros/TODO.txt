@@ -1,0 +1,5 @@
+
+* Concorrência (Thread) nas partidas
+* Internacionalização
+* Trocar banco de dados para arquivo?
+* Gerenciamento Usuários

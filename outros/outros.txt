@@ -1,0 +1,5 @@
+create user fastfoot with password 'fastfoot_';
+create database fastfoot owner fastfoot;
+
+./mvnw spring-boot:run
+./mvnw generate-resources
