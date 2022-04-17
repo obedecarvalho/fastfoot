@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.entity.Jogador;
 
 public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 
@@ -129,10 +130,28 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 
 	@Override
 	public EsquemaPosicao getGoleiroSemPosse() {
-		if (posseBolaMandante) {
+		if (!posseBolaMandante) {
 			return getGoleiroMandante();
 		} else {
 			return getGoleiroVisitante();
+		}
+	}
+	
+	@Override
+	public Jogador getJogadorPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante();
+		} else {
+			return posicaoAtual.getVisitante();
+		}
+	}
+	
+	@Override
+	public Jogador getJogadorSemPosse() {
+		if (!posseBolaMandante) {
+			return posicaoAtual.getMandante();
+		} else {
+			return posicaoAtual.getVisitante();
 		}
 	}
 }

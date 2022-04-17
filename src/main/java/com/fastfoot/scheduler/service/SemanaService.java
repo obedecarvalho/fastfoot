@@ -8,8 +8,11 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.repository.JogadorEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -67,6 +70,12 @@ public class SemanaService {
 	
 	@Autowired
 	private TemporadaService temporadaService;
+
+	@Autowired
+	private PartidaEstatisticasRepository partidaEstatisticasRepository;
+	
+	@Autowired
+	private JogadorEstatisticasRepository jogadorEstatisticasRepository;
 
 	public SemanaDTO proximaSemana() {
 		//Temporada temporada = temporadaRepository.findAtual().get(0);
@@ -204,6 +213,7 @@ public class SemanaService {
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				partidaRepository.saveAll(r.getPartidas());
+				salvarEstatisticas(r.getPartidas());
 				if(r.getCampeonato() != null) {
 					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
 				} else if (r.getGrupoCampeonato() != null) {
@@ -214,7 +224,21 @@ public class SemanaService {
 		if (semana.getRodadasEliminatorias() != null) {
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
 				partidaEliminatoriaRepository.saveAll(r.getPartidas());
+				salvarEstatisticas(r.getPartidas());
 			}
 		}
+	}
+
+	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {
+		//partidas.stream().map(p -> salvarEstatisticas(p));
+		for (PartidaResultadoJogavel partida : partidas) {
+			salvarEstatisticas(partida);
+		}
+	}
+
+	private boolean salvarEstatisticas(PartidaResultadoJogavel partida) {
+		partidaEstatisticasRepository.save(partida.getPartidaEstatisticas());
+		jogadorEstatisticasRepository.saveAll(partida.getPartidaEstatisticas().getJogadorEstatisticas());
+		return true;
 	}
 }

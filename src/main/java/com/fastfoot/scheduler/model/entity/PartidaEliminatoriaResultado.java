@@ -7,7 +7,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
+import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
@@ -40,6 +42,9 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	private PartidaEliminatoriaResultado proximaPartida;
 
 	private Boolean classificaAMandante;
+	
+	@Transient
+	private PartidaEstatisticas partidaEstatisticas;
 
 	public Long getId() {
 		return id;
@@ -128,5 +133,15 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	public String toString() {
 		return "PartidaEliminatoria [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " "
 				+ golsMandante + " x " + golsVisitante + " " + clubeVisitante.getNome() + "]";
+	}
+
+	@Override
+	public PartidaEstatisticas getPartidaEstatisticas() {
+		return partidaEstatisticas;
+	}
+
+	@Override
+	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas) {
+		this.partidaEstatisticas = partidaEstatisticas;
 	}
 }

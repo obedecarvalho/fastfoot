@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.entity.Jogador;
 
 public interface Esquema {
 
@@ -30,4 +31,9 @@ public interface Esquema {
 	public void setPosicaoAtual(EsquemaPosicao posicaoAtual);
 
 	public Boolean getPosseBolaMandante();
+
+	public Jogador getJogadorPosse();
+	
+	public Jogador getJogadorSemPosse();
+
 }

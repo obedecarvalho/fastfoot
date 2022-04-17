@@ -3,3 +3,9 @@
 * Internacionalização
 * Trocar banco de dados para arquivo?
 * Gerenciamento Usuários
+
+
+* Coletar estatisticas jogos
+* Desenvolvimento jogadores
+* Escalação automatica de jogadores
+* Amistosos em semana livres
