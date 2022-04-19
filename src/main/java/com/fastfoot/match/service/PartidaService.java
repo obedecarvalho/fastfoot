@@ -11,7 +11,7 @@ import com.fastfoot.match.model.EsquemaFactory;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
-import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticas;
@@ -28,21 +28,21 @@ public class PartidaService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Autowired
+	/*@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;//TODO: temp
 	
 	@Autowired
-	private JogadorEstatisticasRepository jogadorEstatisticasRepository;//TODO: temp
+	private JogadorEstatisticasRepository jogadorEstatisticasRepository;*///TODO: temp
 
 	private Integer NUM_LANCES = 80;
 	
 	private JogadorEstatisticas criarJogadorEstatisticas(PartidaEstatisticas partidaEstatisticas, Jogador jogador,
-			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
+			HabilidadeAcao habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
 		JogadorEstatisticas je = new JogadorEstatisticas();
 		je.setPartidaEstatisticas(partidaEstatisticas);
 		je.setJogador(jogador);
 		je.setVencedor(vencedor);
-		je.setHabilidadeUsada(habilidade);
+		je.setHabilidadeUsada(habilidade.getHabilidade());
 		je.setOrdem(ordem);
 		je.setAcao(acao);
 		partidaEstatisticas.addJogadorEstatisticas(je);
@@ -77,18 +77,18 @@ public class PartidaService {
 			
 			do {
 			
-				if (habilidadeVencedorAnterior != null && habilidadeVencedorAnterior.getHabilidade().contemAcoesSubsequentes()) {
-					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValor(habilidadeVencedorAnterior.getHabilidade().getAcoesSubsequentes()));
+				if (habilidadeVencedorAnterior != null && habilidadeVencedorAnterior.getHabilidadeAcao().contemAcoesSubsequentes()) {
+					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValor(habilidadeVencedorAnterior.getHabilidadeAcao().getAcoesSubsequentes()));
 				} else {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValorAcaoMeioFimJogadorPosicaoAtualPosse());
 				}
 				
-				habilidadeValorReacao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValorJogadorPosicaoAtualSemPosse(habilidadeValorAcao.getHabilidade().getPossiveisReacoes()));
+				habilidadeValorReacao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValorJogadorPosicaoAtualSemPosse(habilidadeValorAcao.getHabilidadeAcao().getPossiveisReacoes()));
 				
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
 
-				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
-				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
+				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidadeAcao(), jogadorAcaoVenceu, ordemJogada, true);
+				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidadeAcao(), !jogadorAcaoVenceu, ordemJogada, false);
 				ordemJogada++;
 				
 				partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
@@ -99,32 +99,32 @@ public class PartidaService {
 				
 				habilidadeVencedorAnterior = habilidadeValorAcao;
 			
-			} while (jogadorAcaoVenceu && habilidadeValorAcao.getHabilidade().isAcaoInicial());//Dominio
+			} while (jogadorAcaoVenceu && habilidadeValorAcao.getHabilidadeAcao().isAcaoInicial());//Dominio
 			
 			if (jogadorAcaoVenceu) {
 
-				if (habilidadeValorAcao.getHabilidade().isAcaoMeio() || habilidadeValorAcao.getHabilidade().isAcaoInicioMeio()) {
+				if (habilidadeValorAcao.getHabilidadeAcao().isAcaoMeio() || habilidadeValorAcao.getHabilidadeAcao().isAcaoInicioMeio()) {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getHabilidadeValorAcaoFimJogadorPosicaoAtualPosse());
 					//System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
-					criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
+					criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidadeAcao(), true, ordemJogada, true);
 					ordemJogada++;
 					partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
 				}
 				
-				if (habilidadeValorAcao.getHabilidade().isExigeGoleiro()) {//FINALIZACAO, CABECEIO
-					habilidadeValorReacao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getGoleiroSemPosse().getGoleiro().getHabilidadeValor(Arrays.asList(habilidadeValorAcao.getHabilidade().getReacaoGoleiro())));
+				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {//FINALIZACAO, CABECEIO
+					habilidadeValorReacao = (HabilidadeValor) RoletaUtil.executar((List<? extends ElementoRoleta>) esquema.getGoleiroSemPosse().getGoleiro().getHabilidadeValor(Arrays.asList(habilidadeValorAcao.getHabilidadeAcao().getReacaoGoleiro())));
 					
 					//fora
-					habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
+					habilidadeFora = new HabilidadeValor(HabilidadeAcao.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
 					habilidadeVencedora = (HabilidadeValor) RoletaUtil.executar(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
 					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao) ? true : false;
 					
 					//
 					criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(),
-							habilidadeValorAcao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorAcao), ordemJogada, true);
+							habilidadeValorAcao.getHabilidadeAcao(), habilidadeVencedora.equals(habilidadeValorAcao), ordemJogada, true);
 					
 					criarJogadorEstatisticas(partidaEstatisticas, esquema.getGoleiroSemPosse().getGoleiro(),
-							habilidadeValorReacao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorReacao), ordemJogada, false);
+							habilidadeValorReacao.getHabilidadeAcao(), habilidadeVencedora.equals(habilidadeValorReacao), ordemJogada, false);
 					ordemJogada++;
 					
 					partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
@@ -204,8 +204,8 @@ public class PartidaService {
 	}
 
 	public void print(Esquema esquema, HabilidadeValor habilidadeValorAcao, HabilidadeValor habilidadeValorReacao, boolean jogadorAcaoVenceu) {
-		System.err.println(String.format("\t\t%s (%d) x %s (%d) [%s] [%s]", habilidadeValorAcao.getHabilidade().getDescricao(),
-				habilidadeValorAcao.getValor(), habilidadeValorReacao.getHabilidade().getDescricao(),
+		System.err.println(String.format("\t\t%s (%d) x %s (%d) [%s] [%s]", habilidadeValorAcao.getHabilidadeAcao().getDescricao(),
+				habilidadeValorAcao.getValor(), habilidadeValorReacao.getHabilidadeAcao().getDescricao(),
 				habilidadeValorReacao.getValor(), esquema.getPosseBolaMandante() ? "M" : "V",
 				jogadorAcaoVenceu ? "Venceu" : "Perdeu"));
 	}

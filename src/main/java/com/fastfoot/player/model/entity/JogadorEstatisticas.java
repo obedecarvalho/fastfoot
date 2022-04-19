@@ -11,6 +11,7 @@ import javax.persistence.Transient;
 
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 
 @Entity
 public class JogadorEstatisticas {
@@ -27,11 +28,10 @@ public class JogadorEstatisticas {
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
-	
-	@Transient
+
 	private Habilidade habilidadeUsada;
 	
-	private Integer idHabilidadeUsada;
+	//private Integer idHabilidadeUsada;
 	
 	private Boolean vencedor;
 
@@ -69,7 +69,7 @@ public class JogadorEstatisticas {
 
 	public void setHabilidadeUsada(Habilidade habilidadeUsada) {
 		this.habilidadeUsada = habilidadeUsada;
-		this.idHabilidadeUsada = habilidadeUsada.getId();
+		//this.idHabilidadeUsada = habilidadeUsada.getId();
 	}
 
 	public Boolean getVencedor() {
@@ -80,13 +80,13 @@ public class JogadorEstatisticas {
 		this.vencedor = vencedor;
 	}
 
-	public Integer getIdHabilidadeUsada() {
+	/*public Integer getIdHabilidadeUsada() {
 		return idHabilidadeUsada;
 	}
 
 	public void setIdHabilidadeUsada(Integer idHabilidadeUsada) {
 		this.idHabilidadeUsada = idHabilidadeUsada;
-	}
+	}*/
 
 	public Integer getOrdem() {
 		return ordem;

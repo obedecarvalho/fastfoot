@@ -42,7 +42,7 @@ public class EsquemaTransicao implements ElementoRoleta {
 	}
 
 	@Override
-	public int getValor() {
+	public Integer getValor() {
 		return peso;
 	}
 

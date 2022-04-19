@@ -14,7 +14,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.entity.Clube;
-import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
 
@@ -252,29 +252,29 @@ public class Jogador {
 	
 	//###	METODOS AUXILIARES	###
 
-	public List<HabilidadeValor> getHabilidadeValor(List<Habilidade> habilidades) {
-		return getHabilidadeValor().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
+	public List<HabilidadeValor> getHabilidadeValor(List<HabilidadeAcao> habilidades) {
+		return getHabilidadeValor().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
 	}
 	
 	public List<HabilidadeValor> getHabilidadeValor() {
 		if (habilidadeValor == null) {
 			habilidadeValor = new ArrayList<HabilidadeValor>();
 			
-			habilidadeValor.add(new HabilidadeValor(Habilidade.PASSE, getValorPasse()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.FINALIZACAO, getValorFinalizacao()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.CRUZAMENTO, getValorCruzamento()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.ARMACAO, getValorArmacao()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.CABECEIO, getValorCabeceio()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.MARCACAO, getValorMarcacao()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.DESARME, getValorDesarme()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.INTERCEPTACAO, getValorInterceptacao()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.VELOCIDADE, getValorVelocidade()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.DIBLE, getValorDible()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.FORCA, getValorForca()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.POSICIONAMENTO, getValorPosicionamento()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.DOMINIO, getValorDominio()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.REFLEXO, getValorReflexo()));
-			habilidadeValor.add(new HabilidadeValor(Habilidade.JOGO_AEREO, getValorJogoAereo()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.PASSE, getValorPasse()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.FINALIZACAO, getValorFinalizacao()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.CRUZAMENTO, getValorCruzamento()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.ARMACAO, getValorArmacao()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.CABECEIO, getValorCabeceio()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.MARCACAO, getValorMarcacao()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.DESARME, getValorDesarme()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.INTERCEPTACAO, getValorInterceptacao()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.VELOCIDADE, getValorVelocidade()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.DIBLE, getValorDible()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.FORCA, getValorForca()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.POSICIONAMENTO, getValorPosicionamento()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.DOMINIO, getValorDominio()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.REFLEXO, getValorReflexo()));
+			habilidadeValor.add(new HabilidadeValor(HabilidadeAcao.JOGO_AEREO, getValorJogoAereo()));
 		}
 		return habilidadeValor;
 	}
@@ -283,10 +283,10 @@ public class Jogador {
 		if (habilidadeAcaoFimValor == null) {
 			habilidadeAcaoFimValor = new ArrayList<HabilidadeValor>();
 			
-			habilidadeAcaoFimValor.add(new HabilidadeValor(Habilidade.PASSE, getValorPasse()));
-			habilidadeAcaoFimValor.add(new HabilidadeValor(Habilidade.FINALIZACAO, getValorFinalizacao()));
-			habilidadeAcaoFimValor.add(new HabilidadeValor(Habilidade.CRUZAMENTO, getValorCruzamento()));
-			habilidadeAcaoFimValor.add(new HabilidadeValor(Habilidade.ARMACAO, getValorArmacao()));
+			habilidadeAcaoFimValor.add(new HabilidadeValor(HabilidadeAcao.PASSE, getValorPasse()));
+			habilidadeAcaoFimValor.add(new HabilidadeValor(HabilidadeAcao.FINALIZACAO, getValorFinalizacao()));
+			habilidadeAcaoFimValor.add(new HabilidadeValor(HabilidadeAcao.CRUZAMENTO, getValorCruzamento()));
+			habilidadeAcaoFimValor.add(new HabilidadeValor(HabilidadeAcao.ARMACAO, getValorArmacao()));
 		}
 		return habilidadeAcaoFimValor;
 	}
@@ -295,14 +295,14 @@ public class Jogador {
 		if (habilidadeAcaoMeioFimValor == null) {
 			habilidadeAcaoMeioFimValor = new ArrayList<HabilidadeValor>();
 			
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.PASSE, getValorPasse()));
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.FINALIZACAO, getValorFinalizacao()));
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.CRUZAMENTO, getValorCruzamento()));
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.ARMACAO, getValorArmacao()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.PASSE, getValorPasse()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.FINALIZACAO, getValorFinalizacao()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.CRUZAMENTO, getValorCruzamento()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.ARMACAO, getValorArmacao()));
 			
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.VELOCIDADE, getValorVelocidade()));
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.DIBLE, getValorDible()));
-			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(Habilidade.FORCA, getValorForca()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.VELOCIDADE, getValorVelocidade()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.DIBLE, getValorDible()));
+			habilidadeAcaoMeioFimValor.add(new HabilidadeValor(HabilidadeAcao.FORCA, getValorForca()));
 		}
 		return habilidadeAcaoMeioFimValor;
 	}

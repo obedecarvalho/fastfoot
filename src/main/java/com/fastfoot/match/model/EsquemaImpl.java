@@ -2,7 +2,7 @@ package com.fastfoot.match.model;
 
 import java.util.List;
 
-import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
@@ -88,7 +88,7 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<Habilidade> habilidades) {
+	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadeValor(habilidades);
 		} else {
@@ -111,7 +111,7 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValor(List<Habilidade> habilidades) {
+	public List<HabilidadeValor> getHabilidadeValor(List<HabilidadeAcao> habilidades) {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadeValor(habilidades);
 		} else {

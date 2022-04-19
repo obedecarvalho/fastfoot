@@ -2,18 +2,63 @@ package com.fastfoot.player.model;
 
 import java.util.Objects;
 
+import javax.persistence.Transient;
+
+import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.service.util.ElementoRoleta;
 
 public class HabilidadeValor implements ElementoRoleta {
 
+	private Long id;
+
+	private Jogador jogador;
+	
 	private Habilidade habilidade;
 
-	private int valor;
+	private Integer valor;
+	
+	private Integer potencialDesenvolvimento;
+	
+	@Transient
+	private HabilidadeAcao habilidadeAcao;
 
-	public HabilidadeValor(Habilidade habilidade, Integer valor) {
+	public HabilidadeValor(HabilidadeAcao habilidadeAcao, Integer valor) {
 		super();
-		this.habilidade = habilidade;
+		this.habilidadeAcao = habilidadeAcao;
 		this.valor = valor;
+	}
+
+	public HabilidadeAcao getHabilidadeAcao() {
+		return habilidadeAcao;
+	}
+
+	public void setHabilidadeAcao(HabilidadeAcao habilidadeAcao) {
+		this.habilidadeAcao = habilidadeAcao;
+	}
+
+	@Override
+	public Integer getValor() {
+		return valor;
+	}
+
+	public void setValor(Integer valor) {
+		this.valor = valor;
+	}
+	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Jogador getJogador() {
+		return jogador;
+	}
+
+	public void setJogador(Jogador jogador) {
+		this.jogador = jogador;
 	}
 
 	public Habilidade getHabilidade() {
@@ -24,20 +69,19 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.habilidade = habilidade;
 	}
 
-	@Override
-	public int getValor() {
-		return valor;
+	public Integer getPotencialDesenvolvimento() {
+		return potencialDesenvolvimento;
 	}
 
-	public void setValor(int valor) {
-		this.valor = valor;
+	public void setPotencialDesenvolvimento(Integer potencialDesenvolvimento) {
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
-
-	//TODO: melhorar hashCode
 	
+	//TODO: melhorar hashCode
+
 	@Override
 	public int hashCode() {
-		return Objects.hash(habilidade, valor);
+		return Objects.hash(habilidadeAcao, valor);
 	}
 
 	@Override
@@ -49,6 +93,6 @@ public class HabilidadeValor implements ElementoRoleta {
 		if (getClass() != obj.getClass())
 			return false;
 		HabilidadeValor other = (HabilidadeValor) obj;
-		return Objects.equals(habilidade, other.habilidade) && valor == other.valor;
+		return Objects.equals(habilidadeAcao, other.habilidadeAcao) && valor == other.valor;
 	}
 }

@@ -75,7 +75,7 @@ public class Clube implements ElementoRoleta {
 	}
 
 	@Override
-	public int getValor() {
+	public Integer getValor() {
 		return overhall;
 	}
 

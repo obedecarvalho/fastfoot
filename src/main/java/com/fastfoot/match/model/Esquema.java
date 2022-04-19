@@ -2,7 +2,7 @@ package com.fastfoot.match.model;
 
 import java.util.List;
 
-import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
@@ -14,13 +14,13 @@ public interface Esquema {
 
 	public List<HabilidadeValor> getHabilidadeValorAcaoFimJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<Habilidade> habilidades);
+	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades);
 
 	public void inverterPosse();
 
 	public List<EsquemaTransicao> getTransicoesPosse();
 	
-	public List<HabilidadeValor> getHabilidadeValor(List<Habilidade> habilidades);
+	public List<HabilidadeValor> getHabilidadeValor(List<HabilidadeAcao> habilidades);
 
 	public EsquemaPosicao getGoleiroPosse();
 
