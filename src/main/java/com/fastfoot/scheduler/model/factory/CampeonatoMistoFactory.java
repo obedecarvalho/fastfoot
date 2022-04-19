@@ -22,7 +22,7 @@ public class CampeonatoMistoFactory {
 	
 	public static CampeonatoMisto criarCampeonato(Temporada temporada, Map<Liga, List<Clube>> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoMisto campeonato = new CampeonatoMisto();
-		//campeonato.setRodadaAtual(0);
+		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		
@@ -37,7 +37,7 @@ public class CampeonatoMistoFactory {
 		return campeonato;
 	}
 
-	public static List<GrupoCampeonato> gerarRodadasGrupo(Map<Liga, List<Clube>> clubes, CampeonatoMisto campeonato) {
+	private static List<GrupoCampeonato> gerarRodadasGrupo(Map<Liga, List<Clube>> clubes, CampeonatoMisto campeonato) {
 		Set<Liga> ligas = clubes.keySet();
 		
 		List<Clube> clubesGrupo = new ArrayList<Clube>();
@@ -71,7 +71,7 @@ public class CampeonatoMistoFactory {
 		return grupoCampeonatos;
 	}
 
-	public static List<RodadaEliminatoria> gerarRodadas(CampeonatoMisto campeonato) {
+	private static List<RodadaEliminatoria> gerarRodadas(CampeonatoMisto campeonato) {
 		int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_FASE_FINAL), numJogos = Constantes.NRO_CLUBES_FASE_FINAL/2;
 		RodadaEliminatoria rodadaAnterior = null;
 		List<PartidaEliminatoriaResultado> partidasAnterior = null;

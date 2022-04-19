@@ -11,8 +11,15 @@ import javax.persistence.SequenceGenerator;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.player.model.Habilidade;
 
+/**
+ * 
+ * @author obede
+ *
+ * https://shekhargulati.com/2020/05/11/improving-spring-data-jpa-hibernate-bulk-insert-performance-by-more-than-100-times/
+ */
+
 @Entity
-public class JogadorEstatisticas {
+public class JogadorGrupoEstatisticas {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasSequence")	
@@ -28,12 +35,10 @@ public class JogadorEstatisticas {
 	private Jogador jogador;
 
 	private Habilidade habilidadeUsada;
+
+	private Integer quantidadeUso;
 	
-	private Boolean vencedor;
-
-	private Integer ordem;
-
-	private Boolean acao;
+	private Integer quantidadeUsoVencedor;
 
 	public Long getId() {
 		return id;
@@ -67,28 +72,20 @@ public class JogadorEstatisticas {
 		this.habilidadeUsada = habilidadeUsada;
 	}
 
-	public Boolean getVencedor() {
-		return vencedor;
+	public Integer getQuantidadeUso() {
+		return quantidadeUso;
 	}
 
-	public void setVencedor(Boolean vencedor) {
-		this.vencedor = vencedor;
+	public void setQuantidadeUso(Integer quantidadeUso) {
+		this.quantidadeUso = quantidadeUso;
 	}
 
-	public Integer getOrdem() {
-		return ordem;
+	public Integer getQuantidadeUsoVencedor() {
+		return quantidadeUsoVencedor;
 	}
 
-	public void setOrdem(Integer ordem) {
-		this.ordem = ordem;
-	}
-
-	public Boolean getAcao() {
-		return acao;
-	}
-
-	public void setAcao(Boolean acao) {
-		this.acao = acao;
+	public void setQuantidadeUsoVencedor(Integer quantidadeUsoVencedor) {
+		this.quantidadeUsoVencedor = quantidadeUsoVencedor;
 	}
 
 }

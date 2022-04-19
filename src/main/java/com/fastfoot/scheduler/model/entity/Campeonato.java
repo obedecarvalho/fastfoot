@@ -25,7 +25,7 @@ public class Campeonato implements CampeonatoJogavel {
 	
 	private String nome;
 
-	//private Integer rodadaAtual;//TODO: remover
+	private Integer rodadaAtual;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
@@ -38,8 +38,6 @@ public class Campeonato implements CampeonatoJogavel {
 	
 	@Transient
 	private List<Rodada> rodadas;
-	
-	//private Integer ano;
 
 	public Long getId() {
 		return id;
@@ -74,13 +72,13 @@ public class Campeonato implements CampeonatoJogavel {
 		this.rodadas = rodadas;
 	}
 
-	/*public Integer getRodadaAtual() {
+	public Integer getRodadaAtual() {
 		return rodadaAtual;
 	}
 
 	public void setRodadaAtual(Integer rodadaAtual) {
 		this.rodadaAtual = rodadaAtual;
-	}*/
+	}
 
 	public List<Classificacao> getClassificacao() {
 		return classificacao;
@@ -120,13 +118,4 @@ public class Campeonato implements CampeonatoJogavel {
 		return "Campeonato [" + liga.name() + ", " + temporada.getAno() + ", " + nivelCampeonato.name() + "]";
 	}
 
-	/*public Integer getAno() {
-		return ano;
-	}
-
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}*/
-	
-	
 }

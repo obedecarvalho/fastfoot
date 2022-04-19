@@ -21,7 +21,7 @@ public class CampeonatoEliminatorioFactory {
 	public static CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
-		//campeonato.setRodadaAtual(0);
+		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		
@@ -34,7 +34,7 @@ public class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 
-	public static List<RodadaEliminatoria> gerarRodadasCopaNacionalII(CampeonatoEliminatorio campeonato) {
+	private static List<RodadaEliminatoria> gerarRodadasCopaNacionalII(CampeonatoEliminatorio campeonato) {
 		int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II);
 		int numJogos = numeroRodadas*2;
 
@@ -46,7 +46,7 @@ public class CampeonatoEliminatorioFactory {
 	public static CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
-		//campeonato.setRodadaAtual(0);
+		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		
@@ -59,7 +59,7 @@ public class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 
-	public static List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
+	private static List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
 		
 		RodadaEliminatoria rodadaEliminatoria = null, rodadaAnterior;
 		List<PartidaEliminatoriaResultado> partidasRodada = null, partidasRodadaAnterior = null;
@@ -158,7 +158,7 @@ public class CampeonatoEliminatorioFactory {
 	public static CampeonatoEliminatorio criarCampeonato(Temporada temporada, Liga liga, List<Clube> clubes) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
-		//campeonato.setRodadaAtual(0);
+		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		
 		List<RodadaEliminatoria> rodadas = CampeonatoEliminatorioFactory.gerarRodadas(clubes, campeonato);
@@ -168,7 +168,7 @@ public class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 
-	public static List<RodadaEliminatoria> gerarRodadas(List<Clube> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
+	private static List<RodadaEliminatoria> gerarRodadas(List<Clube> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
 		int numeroRodadas = numeroRodadas(clubes.size()), numJogos = clubes.size()/2;
 		RodadaEliminatoria rodadaEliminatoria, rodadaAnterior = null;
 		PartidaEliminatoriaResultado partidaEliminatoria;

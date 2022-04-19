@@ -140,7 +140,7 @@ public class CampeonatoService {
 	}
 
 	public void salvarCampeonatoEliminatorio(CampeonatoEliminatorio campeonato) {
-		//TODO: tem que ordenar por causa da referencia de 'proximaRodada'
+		//tem que ordenar por causa da referencia de 'proximaRodada'
 		//
 		Collections.sort(campeonato.getRodadas(), new Comparator<RodadaEliminatoria>() {
 
@@ -159,7 +159,7 @@ public class CampeonatoService {
 	}
 	
 	public void salvarCampeonatoMisto(CampeonatoMisto campeonato) {
-		//TODO: tem que ordenar por causa da referencia de 'proximaRodada'
+		//tem que ordenar por causa da referencia de 'proximaRodada'
 		//
 		Collections.sort(campeonato.getRodadasEliminatorias(), new Comparator<RodadaEliminatoria>() {
 

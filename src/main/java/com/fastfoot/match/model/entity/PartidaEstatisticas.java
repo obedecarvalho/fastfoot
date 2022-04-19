@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.player.model.entity.JogadorEstatisticas;
+import com.fastfoot.player.model.entity.JogadorGrupoEstatisticas;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
@@ -47,6 +48,9 @@ public class PartidaEstatisticas {
 	
 	@Transient
 	private List<JogadorEstatisticas> jogadorEstatisticas;
+
+	@Transient
+	private List<JogadorGrupoEstatisticas> grupoEstatisticas;
 
 	public PartidaEstatisticas() {
 		this.finalizacacoesForaMandante = 0;
@@ -137,6 +141,14 @@ public class PartidaEstatisticas {
 		this.finalizacacoesDefendidasVisitante = finalizacacoesDefendidasVisitante;
 	}
 	
+	public List<JogadorGrupoEstatisticas> getGrupoEstatisticas() {
+		return grupoEstatisticas;
+	}
+
+	public void setGrupoEstatisticas(List<JogadorGrupoEstatisticas> grupoEstatisticas) {
+		this.grupoEstatisticas = grupoEstatisticas;
+	}
+
 	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante) {
 		if (posseBolaMandante) {
 			this.finalizacacoesDefendidasMandante++;

@@ -48,10 +48,11 @@ public class TemporadaController {
 	}*/
 
 	@GetMapping("/proximaSemana")
-	public ResponseEntity<SemanaDTO> proximaSemana() {
+	public ResponseEntity<SemanaDTO> proximaSemana() {//TODO: renomear 'jogarProximaSemana'
 		try {
 			return ResponseEntity.ok(semanaService.proximaSemana());
 		} catch (Exception e) {
+			e.printStackTrace();//TODO
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}

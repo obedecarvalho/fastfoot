@@ -217,7 +217,7 @@ public class JogadorDTO {
 		dto.setClubeNome(jogador.getClube().getNome());
 		dto.setPosicao(jogador.getPosicao().name());
 		dto.setNumero(jogador.getNumero());
-		dto.setValorPasse(jogador.getValorPasse());
+		/*dto.setValorPasse(jogador.getValorPasse());
 		dto.setValorFinalizacao(jogador.getValorFinalizacao());
 		dto.setValorCruzamento(jogador.getValorCruzamento());
 		dto.setValorArmacao(jogador.getValorArmacao());
@@ -231,7 +231,7 @@ public class JogadorDTO {
 		dto.setValorPosicionamento(jogador.getValorPosicionamento());
 		dto.setValorDominio(jogador.getValorDominio());
 		dto.setValorReflexo(jogador.getValorReflexo());
-		dto.setValorJogoAereo(jogador.getValorJogoAereo());
+		dto.setValorJogoAereo(jogador.getValorJogoAereo());*/
 		return dto;
 	}
 }

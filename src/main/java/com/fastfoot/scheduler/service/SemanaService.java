@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.JogadorEstatisticasRepository;
+import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
+import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
@@ -24,6 +26,8 @@ import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.CampeonatoEliminatorioRepository;
+import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
+import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
@@ -61,6 +65,12 @@ public class SemanaService {
 
 	@Autowired
 	private CampeonatoEliminatorioRepository campeonatoEliminatorioRepository;
+	
+	@Autowired
+	private CampeonatoRepository campeonatoRepository;
+	
+	@Autowired
+	private CampeonatoMistoRepository campeonatoMistoRepository;
 
 	@Autowired
 	private GrupoCampeonatoRepository grupoCampeonatoRepository;
@@ -77,11 +87,12 @@ public class SemanaService {
 	@Autowired
 	private JogadorEstatisticasRepository jogadorEstatisticasRepository;
 
+	@Autowired
+	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
+
 	public SemanaDTO proximaSemana() {
-		//Temporada temporada = temporadaRepository.findAtual().get(0);
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
-		//Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get(0);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
@@ -89,12 +100,14 @@ public class SemanaService {
 		
 		semana.setRodadas(rodadas);
 		semana.setRodadasEliminatorias(rodadaEliminatorias);
-		
+
 		carregarPartidas(semana);
 		jogarPartidas(semana);
 		promover(semana);
 		salvarPartidas(semana);
-		
+
+		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
+
 		if (semana.getNumero() == Constantes.NUM_SEMANAS) {
 			temporadaService.classificarClubesTemporadaAtual();
 		}
@@ -102,6 +115,33 @@ public class SemanaService {
 		return SemanaDTO.convertToDTO(semana);
 	}
 	
+	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
+		Set<Campeonato> camps1 = new HashSet<Campeonato>();
+		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
+		Set<CampeonatoMisto> camps3 = new HashSet<CampeonatoMisto>();
+
+		camps1.addAll(rodadas.stream().filter(r -> r.getCampeonato() != null).map(r -> r.getCampeonato()).collect(Collectors.toSet()));
+		camps2.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoEliminatorio() != null).map(r -> r.getCampeonatoEliminatorio()).collect(Collectors.toSet()));
+		camps3.addAll(rodadas.stream().filter(r -> r.getGrupoCampeonato() != null).map(r -> r.getGrupoCampeonato().getCampeonato()).collect(Collectors.toSet()));
+		camps3.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoMisto() != null).map(r -> r.getCampeonatoMisto()).collect(Collectors.toSet()));
+
+		for (Campeonato c : camps1) {
+			c.setRodadaAtual(c.getRodadaAtual() + 1);
+		}
+
+		for (CampeonatoEliminatorio c : camps2) {
+			c.setRodadaAtual(c.getRodadaAtual() + 1);
+		}
+
+		for (CampeonatoMisto c : camps3) {
+			c.setRodadaAtual(c.getRodadaAtual() + 1);
+		}
+
+		campeonatoRepository.saveAll(camps1);
+		campeonatoEliminatorioRepository.saveAll(camps2);
+		campeonatoMistoRepository.saveAll(camps3);
+	}
+
 	private void carregarPartidas(Semana semana) {
 
 		if (semana.getRodadas() != null) {
@@ -236,9 +276,10 @@ public class SemanaService {
 		}
 	}
 
-	private boolean salvarEstatisticas(PartidaResultadoJogavel partida) {
+	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
 		partidaEstatisticasRepository.save(partida.getPartidaEstatisticas());
 		jogadorEstatisticasRepository.saveAll(partida.getPartidaEstatisticas().getJogadorEstatisticas());
-		return true;
+		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaEstatisticas().getGrupoEstatisticas());
 	}
+
 }

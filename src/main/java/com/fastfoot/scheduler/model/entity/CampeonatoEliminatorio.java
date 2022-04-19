@@ -25,16 +25,14 @@ public class CampeonatoEliminatorio implements CampeonatoJogavel {
 	
 	private String nome;
 	
-	//private Integer rodadaAtual;//TODO: remover
+	private Integer rodadaAtual;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 
 	private NivelCampeonato nivelCampeonato;
-	
-	//private Integer ano;
-	
+
 	@Transient
 	private List<RodadaEliminatoria> rodadas;
 
@@ -63,20 +61,13 @@ public class CampeonatoEliminatorio implements CampeonatoJogavel {
 		this.nome = nome;
 	}
 
-	/*
-	 * public Integer getRodadaAtual() { return rodadaAtual; }
-	 * 
-	 * public void setRodadaAtual(Integer rodadaAtual) { this.rodadaAtual =
-	 * rodadaAtual; }
-	 */
-
-	/*public Integer getAno() {
-		return ano;
+	public Integer getRodadaAtual() {
+		return rodadaAtual;
 	}
 
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}*/
+	public void setRodadaAtual(Integer rodadaAtual) {
+		this.rodadaAtual = rodadaAtual;
+	}
 
 	public List<RodadaEliminatoria> getRodadas() {
 		return rodadas;

@@ -20,7 +20,7 @@ public class CampeonatoFactory {
 		Campeonato campeonato = new Campeonato();
 		campeonato.setTemporada(temporada);
 		campeonato.setLiga(liga);
-		//campeonato.setRodadaAtual(0);
+		campeonato.setRodadaAtual(0);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		
 		List<Classificacao> classificacao = ClassificacaoFactory.gerarClassificacaoInicial(clubes, campeonato, null);

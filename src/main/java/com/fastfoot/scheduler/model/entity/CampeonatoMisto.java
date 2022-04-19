@@ -24,9 +24,7 @@ public class CampeonatoMisto implements CampeonatoJogavel {
 
 	private String nome;
 
-	//private Integer rodadaAtual;//TODO: remover
-
-	//private Integer ano;
+	private Integer rodadaAtual;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
@@ -57,21 +55,13 @@ public class CampeonatoMisto implements CampeonatoJogavel {
 		this.nome = nome;
 	}
 
-	/*public Integer getRodadaAtual() {
+	public Integer getRodadaAtual() {
 		return rodadaAtual;
 	}
 
 	public void setRodadaAtual(Integer rodadaAtual) {
 		this.rodadaAtual = rodadaAtual;
-	}*/
-
-	/*public Integer getAno() {
-		return ano;
 	}
-
-	public void setAno(Integer ano) {
-		this.ano = ano;
-	}*/
 
 	public List<GrupoCampeonato> getGrupos() {
 		return grupos;

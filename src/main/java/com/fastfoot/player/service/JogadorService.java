@@ -12,6 +12,7 @@ import com.fastfoot.model.repository.ClubeRepository;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
@@ -22,6 +23,9 @@ public class JogadorService {
 	
 	@Autowired
 	private ClubeRepository clubeRepository;
+
+	@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;
 
 	public void criarJogadoresClube() {
 		List<Clube> clubes = clubeRepository.findAll();
@@ -50,6 +54,10 @@ public class JogadorService {
 		jogadores.add(JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 11));
 		
 		jogadorRepository.saveAll(jogadores);
+		for (Jogador j : jogadores) {
+			habilidadeValorRepository.saveAll(j.getHabilidades());
+		}
+
 	}
 
 	public List<Jogador> getJogadoresPorClube(Integer idClube) {

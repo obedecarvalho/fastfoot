@@ -12,7 +12,7 @@ public class InicializadorController {
 	private PreCarregarService preCarregarService;*/
 
 	/*@GetMapping("/preCarregar")
-	public ResponseEntity<Boolean> preCarregarClubes () {//TODO: mudar para ao criar primeira temporada?
+	public ResponseEntity<Boolean> preCarregarClubes () {
 		try {
 			/*preCarregarService.preCarregarClubes();
 			jogadorService.criarJogadoresClube();* /

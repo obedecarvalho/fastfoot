@@ -8,22 +8,30 @@ public class RoletaUtil {
 
 	private static final Random R = new Random();
 
+	private static Integer POWER = 2;
+
 	public static ElementoRoleta executar(ElementoRoleta e1, ElementoRoleta e2) {
 		int valor = e1.getValor() + e2.getValor();
 		int x = R.nextInt(valor);
 		return (x <= e1.getValor()) ? e1 : e2;
 	}
 
-	public static ElementoRoleta executarN2(ElementoRoleta e1, ElementoRoleta e2) {
-		int valor = (int)(Math.pow(e1.getValor(), 2) + Math.pow(e2.getValor(), 2));
+	public static ElementoRoleta executarN(ElementoRoleta e1, ElementoRoleta e2) {
+		int valor = (int)(Math.pow(e1.getValor(), POWER) + Math.pow(e2.getValor(), POWER));
 		int x = R.nextInt(valor);
-		return (x <= Math.pow(e1.getValor(), 2)) ? e1 : e2;
+		return (x <= Math.pow(e1.getValor(), POWER)) ? e1 : e2;
 	}
 
 	public static boolean isPrimeiroVencedor(ElementoRoleta e1, ElementoRoleta e2) {
 		Integer valor = e1.getValor() + e2.getValor();
 		Integer x = R.nextInt(valor);
 		return (x <= e1.getValor()) ? true : false;
+	}
+	
+	public static boolean isPrimeiroVencedorN(ElementoRoleta e1, ElementoRoleta e2) {
+		Integer valor = (int) (Math.pow(e1.getValor(), POWER) + Math.pow(e2.getValor(), POWER));
+		Integer x = R.nextInt(valor);
+		return (x <= Math.pow(e1.getValor(), POWER)) ? true : false;
 	}
 	
 	public static ElementoRoleta executar(List<? extends ElementoRoleta> elementos) {
@@ -41,6 +49,26 @@ public class RoletaUtil {
 		while (v > x) {
 			i++;
 			x +=  elementos.get(i).getValor();
+		}
+
+		return elementos.get(i);
+	}
+
+	public static ElementoRoleta executarN(List<? extends ElementoRoleta> elementos) {
+		int valor = 0;
+		
+		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
+			ElementoRoleta elementoRoleta = (ElementoRoleta) iterator.next();
+			valor += Math.pow(elementoRoleta.getValor(), POWER);
+		}
+		
+		int v = R.nextInt(valor);
+		
+		int i = 0, x = (int) Math.pow(elementos.get(0).getValor(), POWER);
+		
+		while (v > x) {
+			i++;
+			x +=  Math.pow(elementos.get(i).getValor(), POWER);
 		}
 
 		return elementos.get(i);

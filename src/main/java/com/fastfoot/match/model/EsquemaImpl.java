@@ -26,14 +26,17 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 		this.posicoes = posicoes;
 	}
 
+	@Override
 	public EsquemaPosicao getPosicaoAtual() {
 		return posicaoAtual;
 	}
 
+	@Override
 	public void setPosicaoAtual(EsquemaPosicao posicaoAtual) {
 		this.posicaoAtual = posicaoAtual;
 	}
 
+	@Override
 	public Boolean getPosseBolaMandante() {
 		return posseBolaMandante;
 	}
@@ -57,42 +60,40 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 	public void setGoleiroVisitante(EsquemaPosicao goleiroVisitante) {
 		this.goleiroVisitante = goleiroVisitante;
 	}
-	
-	//###	METODOS AUXILIARES	###
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValorAcaoMeioFimJogadorPosicaoAtualPosse() {
+	public List<HabilidadeValor> getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadeAcaoMeioFimValor();
+			return posicaoAtual.getMandante().getHabilidadesAcaoMeioFimValor();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadeAcaoMeioFimValor();
+			return posicaoAtual.getVisitante().getHabilidadesAcaoMeioFimValor();
 		}
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualPosse() {
+	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadeValor();
+			return posicaoAtual.getMandante().getHabilidades();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadeValor();
+			return posicaoAtual.getVisitante().getHabilidades();
 		}
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValorAcaoFimJogadorPosicaoAtualPosse() {
+	public List<HabilidadeValor> getHabilidadesAcaoFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadeAcaoFimValor();
+			return posicaoAtual.getMandante().getHabilidadesAcaoFimValor();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadeAcaoFimValor();
+			return posicaoAtual.getVisitante().getHabilidadesAcaoFimValor();
 		}
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
+	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadeValor(habilidades);
+			return posicaoAtual.getMandante().getHabilidades(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadeValor(habilidades);
+			return posicaoAtual.getVisitante().getHabilidades(habilidades);
 		}
 	}
 
@@ -111,11 +112,11 @@ public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadeValor(List<HabilidadeAcao> habilidades) {
+	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadeValor(habilidades);
+			return posicaoAtual.getMandante().getHabilidades(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadeValor(habilidades);
+			return posicaoAtual.getVisitante().getHabilidades(habilidades);
 		}
 	}
 

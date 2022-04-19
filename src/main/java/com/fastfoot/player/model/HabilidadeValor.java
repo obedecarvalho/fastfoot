@@ -2,15 +2,27 @@ package com.fastfoot.player.model;
 
 import java.util.Objects;
 
-import javax.persistence.Transient;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.service.util.ElementoRoleta;
 
+@Entity
 public class HabilidadeValor implements ElementoRoleta {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorSequence")
+	@SequenceGenerator(name = "habilidadeValorSequence", sequenceName = "habilidade_valor_seq")
 	private Long id;
 
+	@ManyToOne
+	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
 	
 	private Habilidade habilidade;
@@ -19,21 +31,26 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	private Integer potencialDesenvolvimento;
 	
-	@Transient
-	private HabilidadeAcao habilidadeAcao;
+	public HabilidadeValor() {
 
-	public HabilidadeValor(HabilidadeAcao habilidadeAcao, Integer valor) {
+	}
+	
+	public HabilidadeValor(Habilidade habilidade, Integer valor) {
 		super();
-		this.habilidadeAcao = habilidadeAcao;
+		this.habilidade = habilidade;
 		this.valor = valor;
 	}
 
-	public HabilidadeAcao getHabilidadeAcao() {
-		return habilidadeAcao;
+	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento) {
+		super();
+		this.habilidade = habilidade;
+		this.valor = valor;
+		this.jogador = jogador;
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 
-	public void setHabilidadeAcao(HabilidadeAcao habilidadeAcao) {
-		this.habilidadeAcao = habilidadeAcao;
+	public HabilidadeAcao getHabilidadeAcao() {
+		return HabilidadeAcao.HABILIDADE_ACAO.get(getHabilidade());
 	}
 
 	@Override
@@ -77,11 +94,14 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 	
-	//TODO: melhorar hashCode
+	@Override
+	public String toString() {
+		return "HabilidadeValor [hab=" + getHabilidade().name() + ", valor=" + valor + "]";
+	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(habilidadeAcao, valor);
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -93,6 +113,7 @@ public class HabilidadeValor implements ElementoRoleta {
 		if (getClass() != obj.getClass())
 			return false;
 		HabilidadeValor other = (HabilidadeValor) obj;
-		return Objects.equals(habilidadeAcao, other.habilidadeAcao) && valor == other.valor;
+		return Objects.equals(id, other.id);
 	}
+
 }

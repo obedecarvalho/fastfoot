@@ -8,19 +8,19 @@ import com.fastfoot.player.model.entity.Jogador;
 
 public interface Esquema {
 
-	public List<HabilidadeValor> getHabilidadeValorAcaoMeioFimJogadorPosicaoAtualPosse();
+	public List<HabilidadeValor> getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualPosse();
+	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeValor> getHabilidadeValorAcaoFimJogadorPosicaoAtualPosse();
+	public List<HabilidadeValor> getHabilidadesAcaoFimJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeValor> getHabilidadeValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades);
+	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades);
 
 	public void inverterPosse();
 
 	public List<EsquemaTransicao> getTransicoesPosse();
 	
-	public List<HabilidadeValor> getHabilidadeValor(List<HabilidadeAcao> habilidades);
+	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades);
 
 	public EsquemaPosicao getGoleiroPosse();
 
