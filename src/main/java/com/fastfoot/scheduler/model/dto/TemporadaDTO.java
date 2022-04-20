@@ -1,5 +1,8 @@
 package com.fastfoot.scheduler.model.dto;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class TemporadaDTO {
@@ -32,6 +35,10 @@ public class TemporadaDTO {
 
 	public void setAtual(Boolean atual) {
 		this.atual = atual;
+	}
+
+	public static List<TemporadaDTO> convertToDTO(List<Temporada> temporadas) {
+		return temporadas.stream().map(s -> convertToDTO(s)).collect(Collectors.toList());
 	}
 
 	public static TemporadaDTO convertToDTO(Temporada t){

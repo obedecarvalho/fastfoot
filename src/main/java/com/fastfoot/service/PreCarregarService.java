@@ -87,8 +87,8 @@ public class PreCarregarService {
 			clubes.add(new Clube(42, Liga.SPAPOR, 76, "Real Sociedad"));
 			clubes.add(new Clube(43, Liga.SPAPOR, 76, "Villarreal"));
 			clubes.add(new Clube(44, Liga.SPAPOR, 76, "Athletic Bilbao"));
-			clubes.add(new Clube(45, Liga.SPAPOR, 76, "Celta de Vigo"));
-			clubes.add(new Clube(46, Liga.SPAPOR, 76, "Braga"));
+			clubes.add(new Clube(45, Liga.SPAPOR, 76, "Braga"));
+			clubes.add(new Clube(46, Liga.SPAPOR, 76, "Celta de Vigo"));
 			clubes.add(new Clube(47, Liga.SPAPOR, 73, "Rayo Vallecano"));
 			clubes.add(new Clube(48, Liga.SPAPOR, 73, "Osasuna"));
 			clubes.add(new Clube(49, Liga.SPAPOR, 73, "Leganes"));
@@ -107,7 +107,7 @@ public class PreCarregarService {
 			clubes.add(new Clube(62, Liga.SPAPOR, 67, "Cádiz"));
 			clubes.add(new Clube(63, Liga.SPAPOR, 67, "Zaragoza"));
 			clubes.add(new Clube(64, Liga.SPAPOR, 67, "Málaga"));
-			clubes.add(new Clube(65, Liga.ITAFRA, 85, "Inter Milan"));
+			clubes.add(new Clube(65, Liga.ITAFRA, 85, "Internazionale" /*"Inter Milan"*/));
 			clubes.add(new Clube(66, Liga.ITAFRA, 85, "Juventus"));
 			clubes.add(new Clube(67, Liga.ITAFRA, 82, "Paris Saint-Germain"));
 			clubes.add(new Clube(68, Liga.ITAFRA, 82, "Napoli"));
@@ -117,10 +117,10 @@ public class PreCarregarService {
 			clubes.add(new Clube(72, Liga.ITAFRA, 79, "Lazio"));
 			clubes.add(new Clube(73, Liga.ITAFRA, 79, "Lyon"));
 			clubes.add(new Clube(74, Liga.ITAFRA, 76, "Roma"));
-			clubes.add(new Clube(75, Liga.ITAFRA, 76, "Sassuolo"));
+			clubes.add(new Clube(75, Liga.ITAFRA, 76, "Olympique de Marseille"));
 			clubes.add(new Clube(76, Liga.ITAFRA, 76, "Monaco"));
 			clubes.add(new Clube(77, Liga.ITAFRA, 76, "Fiorentina"));
-			clubes.add(new Clube(78, Liga.ITAFRA, 76, "Olympique de Marseille"));
+			clubes.add(new Clube(78, Liga.ITAFRA, 76, "Sassuolo"));
 			clubes.add(new Clube(79, Liga.ITAFRA, 73, "Rennes"));
 			clubes.add(new Clube(80, Liga.ITAFRA, 73, "Verona"));
 			clubes.add(new Clube(81, Liga.ITAFRA, 73, "RC Strasbourg"));

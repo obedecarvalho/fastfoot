@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
@@ -31,8 +32,13 @@ public class ClubeController {
 	}
 	
 	@GetMapping("/clubesRankings/{liga}")
-	public ResponseEntity<List<ClubeRankingDTO>> getClubesRankings(@PathVariable(name = "liga") String liga) {
-		List<ClubeRankingDTO> partidas = clubeService.getClubesRankings(liga);
+	public ResponseEntity<List<ClubeRankingDTO>> getClubesRankings(@RequestParam(name = "ano", required = false) Integer ano, @PathVariable(name = "liga") String liga) {
+		List<ClubeRankingDTO> partidas = null;
+		if (ValidatorUtil.isEmpty(ano)) {
+			partidas = clubeService.getClubesRankings(liga);
+		} else {
+			partidas = clubeService.getClubesRankings(liga, ano);
+		}
 		if (ValidatorUtil.isEmpty(partidas)) {
 			return ResponseEntity.notFound().build();
 		}

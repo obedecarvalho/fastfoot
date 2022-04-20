@@ -35,4 +35,8 @@ public class ClubeService {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		return temporada != null ? ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), temporada.getAno()-1)) : null;
 	}
+
+	public List<ClubeRankingDTO> getClubesRankings(String liga, Integer ano){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
+		return ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), ano));
+	}
 }

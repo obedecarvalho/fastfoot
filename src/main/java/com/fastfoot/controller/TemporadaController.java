@@ -65,4 +65,13 @@ public class TemporadaController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
+
+	@GetMapping("/temporadas")
+	public ResponseEntity<List<TemporadaDTO>> getTemporadas(){
+		try {
+			return ResponseEntity.ok(temporadaService.getTemporadas());
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
 }
