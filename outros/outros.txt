@@ -1,5 +1,8 @@
 create user fastfoot with password 'fastfoot_';
 create database fastfoot owner fastfoot;
+pg_dump --dbname=fastfoot -U fastfoot --schema-only -W -h 127.0.0.1 --exclude-table=tmp_hab -f fastfoot.sql #export das DDLs
 
 ./mvnw spring-boot:run
 ./mvnw generate-resources
+./mvnw package #gerar jar da aplicação
+
