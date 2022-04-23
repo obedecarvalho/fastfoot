@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
+import com.fastfoot.match.model.repository.PartidaResumoRepository;
+import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.player.model.repository.JogadorEstatisticasRepository;
 import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -82,13 +82,16 @@ public class SemanaService {
 	private TemporadaService temporadaService;
 
 	@Autowired
-	private PartidaEstatisticasRepository partidaEstatisticasRepository;
+	private PartidaResumoRepository partidaResumoRepository;
 	
 	@Autowired
-	private JogadorEstatisticasRepository jogadorEstatisticasRepository;
+	private PartidaLanceRepository partidaLanceRepository;
 
 	@Autowired
 	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
+	
+	@Autowired
+	private RodadaService rodadaService;
 
 	public SemanaDTO proximaSemana() {
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
@@ -103,16 +106,109 @@ public class SemanaService {
 
 		carregarPartidas(semana);
 		jogarPartidas(semana);
-		promover(semana);
 		salvarPartidas(semana);
+		
+		if (semana.getRodadasJogavel().get(0).isUltimaRodadaPontosCorridos()) {
+			carregarClassificacao(semana);
+			classificarComDesempate(semana);
+			salvarClassificacao(semana);
+		}
+
+		promover(semana);
 
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
-
-		if (semana.getNumero() == Constantes.NUM_SEMANAS) {
+		
+		if (semana.isUltimaSemana()) {
 			temporadaService.classificarClubesTemporadaAtual();
 		}
 
 		return SemanaDTO.convertToDTO(semana);
+	}
+	
+	public SemanaDTO proximaSemana2() {
+		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
+		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
+		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
+
+		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
+		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
+		
+		semana.setRodadas(rodadas);
+		semana.setRodadasEliminatorias(rodadaEliminatorias);
+
+		/*carregarPartidas(semana);
+		jogarPartidas(semana);
+		salvarPartidas(semana);
+		
+		if (semana.getRodadasJogavel().get(0).isUltimaRodadaPontosCorridos()) {
+			carregarClassificacao(semana);
+			classificarComDesempate(semana);
+			salvarClassificacao(semana);
+		}*/
+		
+		for (Rodada r : semana.getRodadas()) {
+			rodadaService.executarRodada(r);
+		}
+		
+		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+			rodadaService.executarRodada(r);
+		}
+
+		promover(semana);
+
+		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
+		
+		if (semana.isUltimaSemana()) {
+			temporadaService.classificarClubesTemporadaAtual();
+		}
+
+		return SemanaDTO.convertToDTO(semana);
+	}
+
+	private void carregarClassificacao(Semana semana) {
+		if (semana.getRodadas() != null) {
+			for (Rodada r : semana.getRodadas()) {
+				if(r.getCampeonato() != null) {
+					r.getCampeonato().setClassificacao(classificacaoRepository.findByCampeonato(r.getCampeonato()));
+				} else if (r.getGrupoCampeonato() != null) {
+					r.getGrupoCampeonato().setClassificacao(classificacaoRepository.findByGrupoCampeonato(r.getGrupoCampeonato()));
+				}
+			}
+		}
+	}
+
+	/**
+	 * Classifica os times com Desempate. Para ser executado na ultima rodada. 
+	 * @param semana
+	 */
+	private void classificarComDesempate(Semana semana) {
+		if (semana.getRodadas() != null) {
+			for (Rodada r : semana.getRodadas()) {
+				if(r.getCampeonato() != null) {
+					if (r.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+						List<PartidaResultado> partidas = partidaRepository.findByCampeonato(r.getCampeonato());
+						ClassificacaoUtil.ordernarClassificacao(r.getCampeonato().getClassificacao(), partidas);
+					}
+				} else if (r.getGrupoCampeonato() != null) {
+					if (r.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+						List<PartidaResultado> partidas = partidaRepository.findByGrupoCampeonato(r.getGrupoCampeonato());
+						ClassificacaoUtil.ordernarClassificacao(r.getGrupoCampeonato().getClassificacao(), partidas);
+					}
+				}
+			}
+		}
+	}
+
+	private void salvarClassificacao(Semana semana) {
+		if (semana.getRodadas() != null) {
+			for (Rodada r : semana.getRodadas()) {
+				if(r.getCampeonato() != null) {
+					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
+				} else if (r.getGrupoCampeonato() != null) {
+					classificacaoRepository.saveAll(r.getGrupoCampeonato().getClassificacao());
+				}
+			}
+		}
 	}
 	
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
@@ -168,19 +264,13 @@ public class SemanaService {
 				if(r.getCampeonato() != null) {
 					partidaResultadoService.jogarRodada(r, r.getCampeonato().getClassificacao());
 					
-					if (r.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
-						List<PartidaResultado> partidas = partidaRepository.findByCampeonato(r.getCampeonato());
-						ClassificacaoUtil.ordernarClassificacao(r.getCampeonato().getClassificacao(), partidas);
-					} else {
+					if (!r.isUltimaRodadaPontosCorridos()) {
 						ClassificacaoUtil.ordernarClassificacao(r.getCampeonato().getClassificacao(), false);
 					}
 				} else if (r.getGrupoCampeonato() != null) {
 					partidaResultadoService.jogarRodada(r, r.getGrupoCampeonato().getClassificacao());
 					
-					if (r.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
-						List<PartidaResultado> partidas = partidaRepository.findByGrupoCampeonato(r.getGrupoCampeonato());
-						ClassificacaoUtil.ordernarClassificacao(r.getGrupoCampeonato().getClassificacao(), partidas);
-					} else {
+					if (!r.isUltimaRodadaPontosCorridos()) {
 						ClassificacaoUtil.ordernarClassificacao(r.getGrupoCampeonato().getClassificacao(), false);
 					}
 				}
@@ -210,7 +300,10 @@ public class SemanaService {
 
 			for (CampeonatoMisto c : campeonatosMisto) {
 				grupos = grupoCampeonatoRepository.findByCampeonato(c);
-				rodadaInicial = rodadaEliminatoriaRepository.findByCampeonatoMistoAndNumero(c, Constantes.NRO_PARTIDAS_FASE_GRUPOS + 1).get(0);
+				for (GrupoCampeonato g : grupos) {
+					g.setClassificacao(classificacaoRepository.findByGrupoCampeonato(g));
+				}
+				rodadaInicial = rodadaEliminatoriaRepository.findFirstByCampeonatoMistoAndNumero(c, Constantes.NRO_PARTIDAS_FASE_GRUPOS + 1).get();
 				partidas = partidaEliminatoriaRepository.findByRodada(rodadaInicial);
 				c.setGrupos(grupos);
 				rodadaInicial.setPartidas(partidas);
@@ -230,7 +323,7 @@ public class SemanaService {
 			
 			for (CampeonatoEliminatorio c : campeonatos) {
 				CampeonatoEliminatorio copaNacionalII = campeonatoEliminatorioRepository
-						.findByTemporadaAndLigaAndNivelCampeonato(c.getTemporada(), c.getLiga(), NivelCampeonato.COPA_NACIONAL_II).get(0);
+						.findFirstByTemporadaAndLigaAndNivelCampeonato(c.getTemporada(), c.getLiga(), NivelCampeonato.COPA_NACIONAL_II).get();
 				
 				rodadaCNII = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(copaNacionalII, 1).get(0);
 				rodadaCNII.setPartidas(partidaEliminatoriaRepository.findByRodada(rodadaCNII));
@@ -250,10 +343,11 @@ public class SemanaService {
 	}
 
 	private void salvarPartidas(Semana semana) {
+		boolean salvarEstatisticas = false;
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				partidaRepository.saveAll(r.getPartidas());
-				salvarEstatisticas(r.getPartidas());
+				if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 				if(r.getCampeonato() != null) {
 					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
 				} else if (r.getGrupoCampeonato() != null) {
@@ -264,22 +358,21 @@ public class SemanaService {
 		if (semana.getRodadasEliminatorias() != null) {
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
 				partidaEliminatoriaRepository.saveAll(r.getPartidas());
-				salvarEstatisticas(r.getPartidas());
+				if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 			}
 		}
 	}
 
 	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {
-		//partidas.stream().map(p -> salvarEstatisticas(p));
 		for (PartidaResultadoJogavel partida : partidas) {
 			salvarEstatisticas(partida);
 		}
 	}
 
 	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
-		partidaEstatisticasRepository.save(partida.getPartidaEstatisticas());
-		jogadorEstatisticasRepository.saveAll(partida.getPartidaEstatisticas().getJogadorEstatisticas());
-		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaEstatisticas().getGrupoEstatisticas());
+		partidaResumoRepository.save(partida.getPartidaResumo());
+		partidaLanceRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
+		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
 	}
 
 }

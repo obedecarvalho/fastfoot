@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.model.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -19,4 +20,5 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 
 	public List<CampeonatoEliminatorio> findByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
 
+	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
 }

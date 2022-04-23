@@ -1,5 +1,6 @@
 package com.fastfoot.scheduler.service.util;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -13,23 +14,15 @@ public class PromotorEliminatoriaUtil {
 
 	public static void promoverGruposParaRodadasEliminatorias(List<GrupoCampeonato> grupos, RodadaEliminatoria rodadaInicial) {
 		List<PartidaEliminatoriaResultado> partidas = rodadaInicial.getPartidas();
-		
-		/*for (GrupoCampeonato gc : grupos) {
-			ClassificacaoUtil.ordernarClassificacao(gc.getClassificacao());
-		}*/
+
 		Clube primeiroColocado, segundoColocado; 
 		
 		for (int i = 0; i < Constantes.NRO_GRUPOS_CONT; i++) {
 			int j = (i + (Constantes.NRO_GRUPOS_CONT/2))%Constantes.NRO_GRUPOS_CONT;
 			GrupoCampeonato gc = grupos.get(i);
-			
+
 			primeiroColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == 1).findFirst().get().getClube();
 			segundoColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == 2).findFirst().get().getClube();
-			
-			/*
-			 * partidas.get(i).setClubeMandante(gc.getClassificacao().get(0).getClube());
-			 * partidas.get(j).setClubeVisitante(gc.getClassificacao().get(1).getClube());
-			 */
 			
 			partidas.get(i).setClubeMandante(primeiroColocado);
 			partidas.get(j).setClubeVisitante(segundoColocado);
@@ -49,9 +42,12 @@ public class PromotorEliminatoriaUtil {
 		List<Clube> clubes1Fase = rodada1FaseCN.getPartidas().stream().map(PartidaEliminatoriaResultado::getClubePerdedor).collect(Collectors.toList());
 		List<Clube> clubes2Fase = rodada2FaseCN.getPartidas().stream().map(PartidaEliminatoriaResultado::getClubePerdedor).collect(Collectors.toList());
 		
+		Collections.shuffle(clubes1Fase);
+		Collections.shuffle(clubes2Fase);
+		
 		for (int i = 0; i < rodadaCNII.getPartidas().size(); i++) {
-			rodadaCNII.getPartidas().get(i).setClubeMandante(clubes1Fase.get(i));
-			rodadaCNII.getPartidas().get(i).setClubeVisitante(clubes2Fase.get(i));
+			rodadaCNII.getPartidas().get(i).setClubeMandante(clubes2Fase.get(i));
+			rodadaCNII.getPartidas().get(i).setClubeVisitante(clubes1Fase.get(i));
 		}
 	}
 }

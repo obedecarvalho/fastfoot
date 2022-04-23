@@ -1,6 +1,6 @@
 package com.fastfoot.scheduler.model;
 
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.model.entity.Clube;
 
 public interface PartidaResultadoJogavel {
@@ -19,8 +19,8 @@ public interface PartidaResultadoJogavel {
 	
 	public RodadaJogavel getRodada();
 
-	public PartidaEstatisticas getPartidaEstatisticas();
+	public PartidaResumo getPartidaResumo();
 
-	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas);
+	public void setPartidaResumo(PartidaResumo partidaResumo);
 
 }

@@ -1,4 +1,4 @@
-package com.fastfoot.player.model.entity;
+package com.fastfoot.match.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,20 +8,20 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.entity.Jogador;
 
 @Entity
-public class JogadorEstatisticas {
+public class PartidaLance {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasSequence")	
-	@SequenceGenerator(name = "jogadorEstatisticasSequence", sequenceName = "jogador_estatisticas_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaLanceSequence")	
+	@SequenceGenerator(name = "partidaLanceSequence", sequenceName = "partida_lance_seq")
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_partida_estatisticas")
-	private PartidaEstatisticas partidaEstatisticas;
+	@JoinColumn(name = "id_partida_resumo")
+	private PartidaResumo partidaResumo;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
@@ -43,12 +43,12 @@ public class JogadorEstatisticas {
 		this.id = id;
 	}
 
-	public PartidaEstatisticas getPartidaEstatisticas() {
-		return partidaEstatisticas;
+	public PartidaResumo getPartidaResumo() {
+		return partidaResumo;
 	}
 
-	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas) {
-		this.partidaEstatisticas = partidaEstatisticas;
+	public void setPartidaResumo(PartidaResumo partidaResumo) {
+		this.partidaResumo = partidaResumo;
 	}
 
 	public Jogador getJogador() {

@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
@@ -38,7 +38,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	private Integer golsVisitante;
 
 	@Transient
-	private PartidaEstatisticas partidaEstatisticas;
+	private PartidaResumo partidaResumo;
 	
 	public Long getId() {
 		return id;
@@ -114,13 +114,13 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	}
 
 	@Override
-	public PartidaEstatisticas getPartidaEstatisticas() {
-		return partidaEstatisticas;
+	public PartidaResumo getPartidaResumo() {
+		return partidaResumo;
 	}
 
 	@Override
-	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas) {
-		this.partidaEstatisticas = partidaEstatisticas;
+	public void setPartidaResumo(PartidaResumo partidaResumo) {
+		this.partidaResumo = partidaResumo;
 	}
 
 }

@@ -94,9 +94,6 @@ public class TemporadaService {
 			//Nacional I e II
 			for (int i = 0; i < Constantes.NRO_DIVISOES; i++) {
 				
-				/*int posInicial = i*Constantes.NRO_CLUBE_CAMP_NACIONAL; 
-				int posFinal = (i+1)*Constantes.NRO_CLUBE_CAMP_NACIONAL;*/
-				
 				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
 						(i == 0 ? ClassificacaoNacionalFinal.getAllNacionalNovoCampeonato() : ClassificacaoNacionalFinal.getAllNacionalIINovoCampeonato()));
 				

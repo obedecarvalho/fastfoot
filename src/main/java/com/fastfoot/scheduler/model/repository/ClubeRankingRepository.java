@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
+import com.fastfoot.scheduler.model.entity.Temporada;
 
 public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Integer>{
 
@@ -16,4 +17,7 @@ public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Inte
 	
 	@Query("SELECT cr FROM ClubeRanking cr WHERE cr.clube.liga = :liga AND cr.ano = :ano ORDER BY cr.posicaoGeral ")
 	public List<ClubeRanking> findByLigaAndAno(@Param("liga") Liga liga, @Param("ano") Integer ano); 
+
+	public List<ClubeRanking> findByTemporada(Temporada temporada);
+
 }

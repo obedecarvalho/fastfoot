@@ -9,4 +9,6 @@ public interface RodadaJogavel {
 	public Semana getSemana();
 	
 	public CampeonatoJogavel getCampeonatoJogavel();
+
+	public boolean isUltimaRodadaPontosCorridos();
 }

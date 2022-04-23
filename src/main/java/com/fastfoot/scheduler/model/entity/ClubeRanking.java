@@ -31,8 +31,12 @@ public class ClubeRanking {
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
+
+	@ManyToOne
+	@JoinColumn(name = "id_temporada")
+	private Temporada temporada;
 	
-	private Integer ano;
+	private Integer ano;//TODO: remover??
 	
 	private ClassificacaoNacionalFinal classificacaoNacional;
 	
@@ -131,9 +135,17 @@ public class ClubeRanking {
 		return ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(classificacaoCopaNacional);
 	}
 
+	public Temporada getTemporada() {
+		return temporada;
+	}
+
+	public void setTemporada(Temporada temporada) {
+		this.temporada = temporada;
+	}
+
 	@Override
 	public String toString() {
-		return "ClubeRanking [" + clube.getNome() + ", pos=" + posicaoGeral + ", ano=" + ano + ", rkNac="
+		return "ClubeRanking [" + clube.getNome() + ", pos=" + posicaoGeral + (getTemporada() != null ? (", ano=" + ano) : "") + ", rkNac="
 				+ (classificacaoNacional != null ? classificacaoNacional.name() : "") + ", rkCN="
 				+ (classificacaoCopaNacional != null ? classificacaoCopaNacional.name() : "") + ", rkCont="
 				+ (classificacaoContinental != null ? classificacaoContinental.name() : "") + "]";

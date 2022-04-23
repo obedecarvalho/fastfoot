@@ -9,3 +9,9 @@
 * Desenvolvimento jogadores
 * Escalação automatica de jogadores
 * Amistosos em semana livres
+
+** Telas
+	> Classificação: adicionar filtro 'Ano'
+	> Estatísticas clube (Ano, Partidas em cada campeonato, vitórias ...)
+	> Estatísticas jogador (Ano, partidas por clube, finalizações, habilidades mais usadas...)
+	> Confrontos: confrontos entre clubes

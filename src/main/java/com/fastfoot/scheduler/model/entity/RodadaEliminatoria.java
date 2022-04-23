@@ -113,4 +113,9 @@ public class RodadaEliminatoria implements RodadaJogavel {
 		return "RodadaEliminatoria [" + numero + ", sem=" + semana.getNumero() + (campeonatoEliminatorio != null ? ", (CN)" : ", (CONT)" ) + "]";
 	}
 
+	@Override
+	public boolean isUltimaRodadaPontosCorridos() {
+		return false;
+	}
+
 }

@@ -50,7 +50,7 @@ public class TemporadaController {
 	@GetMapping("/proximaSemana")
 	public ResponseEntity<SemanaDTO> proximaSemana() {//TODO: renomear 'jogarProximaSemana'
 		try {
-			return ResponseEntity.ok(semanaService.proximaSemana());
+			return ResponseEntity.ok(semanaService.proximaSemana2());
 		} catch (Exception e) {
 			e.printStackTrace();//TODO
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -67,7 +67,7 @@ public class TemporadaController {
 	}
 
 	@GetMapping("/temporadas")
-	public ResponseEntity<List<TemporadaDTO>> getTemporadas(){
+	public ResponseEntity<List<TemporadaDTO>> getTemporadas(){//TODO: renomear get***Itens??? //Olhar outros metodos como esse para padronizar nomes
 		try {
 			return ResponseEntity.ok(temporadaService.getTemporadas());
 		} catch (Exception e) {

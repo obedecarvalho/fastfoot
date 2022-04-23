@@ -41,6 +41,12 @@ public class Jogador {
 	
 	@Transient
 	private List<HabilidadeValor> habilidades;
+	
+	@Transient
+	private List<HabilidadeValor> habilidadesAcaoFim;
+	
+	@Transient
+	private List<HabilidadeValor> habilidadesAcaoMeioFim;
 
 	public String getNome() {
 		return nome;
@@ -117,12 +123,19 @@ public class Jogador {
 	}
 
 	public List<HabilidadeValor> getHabilidadesAcaoFimValor() {
-		return getHabilidades(Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO, HabilidadeAcao.CRUZAMENTO, HabilidadeAcao.ARMACAO));
+		if (habilidadesAcaoFim == null) {
+			habilidadesAcaoFim = getHabilidades(Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO,
+					HabilidadeAcao.CRUZAMENTO, HabilidadeAcao.ARMACAO));
+		}
+		return habilidadesAcaoFim; 
 	}
 
 	public List<HabilidadeValor> getHabilidadesAcaoMeioFimValor() {
-		return getHabilidades(
-				Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO, HabilidadeAcao.CRUZAMENTO,
-						HabilidadeAcao.ARMACAO, HabilidadeAcao.VELOCIDADE, HabilidadeAcao.DIBLE, HabilidadeAcao.FORCA));
+		if (habilidadesAcaoMeioFim == null) {
+			habilidadesAcaoMeioFim = getHabilidades(
+					Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO, HabilidadeAcao.CRUZAMENTO,
+							HabilidadeAcao.ARMACAO, HabilidadeAcao.VELOCIDADE, HabilidadeAcao.DIBLE, HabilidadeAcao.FORCA));
+		}
+		return habilidadesAcaoMeioFim;
 	}
 }

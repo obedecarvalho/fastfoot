@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 
@@ -87,6 +88,17 @@ public class Rodada implements RodadaJogavel {
 
 	public void setSemana(Semana semana) {
 		this.semana = semana;
+	}
+
+	@Override
+	public boolean isUltimaRodadaPontosCorridos() {
+		if(getCampeonato() != null && getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+			return true;
+		}
+		if (getGrupoCampeonato() != null && getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+			return true;
+		}
+		return false;
 	}
 	
 	@Override

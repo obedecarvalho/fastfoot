@@ -11,6 +11,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
+import com.fastfoot.model.Constantes;
+import com.fastfoot.scheduler.model.RodadaJogavel;
+
 /**
  * 
  * @author obede
@@ -88,6 +91,17 @@ public class Semana {
 			rodadasEliminatorias = new ArrayList<RodadaEliminatoria>();
 		}
 		rodadasEliminatorias.add(rodada);
+	}
+
+	public boolean isUltimaSemana() {
+		if (getNumero() == Constantes.NUM_SEMANAS) {
+			return true;
+		}
+		return false;
+	}
+
+	public List<? extends RodadaJogavel> getRodadasJogavel() {
+		return (rodadas != null) ? rodadas : rodadasEliminatorias;
 	}
 
 	@Override

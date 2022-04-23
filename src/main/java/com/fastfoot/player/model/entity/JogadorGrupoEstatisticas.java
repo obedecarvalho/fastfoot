@@ -8,7 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.player.model.Habilidade;
 
 /**
@@ -27,8 +27,8 @@ public class JogadorGrupoEstatisticas {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_partida_estatisticas")
-	private PartidaEstatisticas partidaEstatisticas;
+	@JoinColumn(name = "id_partida_resumo")
+	private PartidaResumo partidaResumo;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
@@ -48,12 +48,12 @@ public class JogadorGrupoEstatisticas {
 		this.id = id;
 	}
 
-	public PartidaEstatisticas getPartidaEstatisticas() {
-		return partidaEstatisticas;
+	public PartidaResumo getPartidaResumo() {
+		return partidaResumo;
 	}
 
-	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas) {
-		this.partidaEstatisticas = partidaEstatisticas;
+	public void setPartidaResumo(PartidaResumo partidaResumo) {
+		this.partidaResumo = partidaResumo;
 	}
 
 	public Jogador getJogador() {

@@ -12,18 +12,17 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
-import com.fastfoot.player.model.entity.JogadorEstatisticas;
 import com.fastfoot.player.model.entity.JogadorGrupoEstatisticas;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 @Entity
-public class PartidaEstatisticas {
+public class PartidaResumo {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaEstatisticasSequence")	
-	@SequenceGenerator(name = "partidaEstatisticasSequence", sequenceName = "partida_estatisticas_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaResumoSequence")	
+	@SequenceGenerator(name = "partidaResumoSequence", sequenceName = "partida_resumo_seq")
 	private Long id;
 	
 	@ManyToOne
@@ -47,12 +46,12 @@ public class PartidaEstatisticas {
 	private Integer lancesVisitante;
 	
 	@Transient
-	private List<JogadorEstatisticas> jogadorEstatisticas;
+	private List<PartidaLance> partidaLances;
 
 	@Transient
 	private List<JogadorGrupoEstatisticas> grupoEstatisticas;
 
-	public PartidaEstatisticas() {
+	public PartidaResumo() {
 		this.finalizacacoesForaMandante = 0;
 		this.finalizacacoesForaVisitante = 0;
 		this.finalizacacoesDefendidasMandante = 0;
@@ -117,12 +116,12 @@ public class PartidaEstatisticas {
 		this.lancesVisitante = lancesVisitante;
 	}
 	
-	public List<JogadorEstatisticas> getJogadorEstatisticas() {
-		return jogadorEstatisticas;
+	public List<PartidaLance> getPartidaLances() {
+		return partidaLances;
 	}
 
-	public void setJogadorEstatisticas(List<JogadorEstatisticas> jogadorEstatisticas) {
-		this.jogadorEstatisticas = jogadorEstatisticas;
+	public void setPartidaLances(List<PartidaLance> partidaLances) {
+		this.partidaLances = partidaLances;
 	}
 
 	public Integer getFinalizacacoesDefendidasMandante() {
@@ -181,10 +180,10 @@ public class PartidaEstatisticas {
 		}
 	}
 	
-	public void addJogadorEstatisticas(JogadorEstatisticas jogadorEstatisticas) {
-		if (this.jogadorEstatisticas == null) {
-			this.jogadorEstatisticas = new ArrayList<JogadorEstatisticas>(); 
+	public void addPartidaLance(PartidaLance partidaLance) {
+		if (this.partidaLances == null) {
+			this.partidaLances = new ArrayList<PartidaLance>(); 
 		}
-		this.jogadorEstatisticas.add(jogadorEstatisticas);
+		this.partidaLances.add(partidaLance);
 	}
 }

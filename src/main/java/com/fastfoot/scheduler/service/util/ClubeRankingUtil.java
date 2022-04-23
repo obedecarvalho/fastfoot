@@ -28,7 +28,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 public class ClubeRankingUtil {
 	
 	public static List<ClubeRanking> rankearClubesTemporada(Temporada temporada, List<Clube> clubes) {
-		List<ClubeRanking> rankings =  gerarClubeRanking(clubes, temporada.getAno());
+		List<ClubeRanking> rankings =  gerarClubeRankingInicial(clubes, temporada);
 
 		Map<Clube, ClubeRanking> clubeRankings = rankings.stream().collect(Collectors.toMap(ClubeRanking::getClube, Function.identity()));
 
@@ -199,13 +199,14 @@ public class ClubeRankingUtil {
 		return rankingsLiga.stream().filter(r -> clasCont.equals(r.getClassificacaoContinental())).findFirst();
 	}
 
-	public static List<ClubeRanking> gerarClubeRanking(List<Clube> clubes, Integer ano) {
+	public static List<ClubeRanking> gerarClubeRankingInicial(List<Clube> clubes, Temporada temporada) {
 		List<ClubeRanking> rankings = new ArrayList<ClubeRanking>();
 		ClubeRanking clubeRanking = null;
 		for (Clube c : clubes) {
 			clubeRanking = new ClubeRanking();
 			clubeRanking.setClube(c);
-			clubeRanking.setAno(ano);
+			clubeRanking.setAno(temporada.getAno());
+			clubeRanking.setTemporada(temporada);
 			clubeRanking.setClassificacaoNacional(ClassificacaoNacionalFinal.NULL);
 			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU);
 			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.NAO_PARTICIPOU);

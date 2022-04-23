@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaFactory;
 import com.fastfoot.match.model.EsquemaTransicao;
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaLance;
+import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticas;
 import com.fastfoot.player.model.factory.JogadorGrupoEstatisticasFactory;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -30,21 +30,21 @@ public class PartidaService {
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 
-	private Integer NUM_LANCES = 90;
+	private Integer NUM_LANCES = 45;//private Integer NUM_LANCES = 90;
 
 	private Boolean imprimir = false;
 	
-	private JogadorEstatisticas criarJogadorEstatisticas(PartidaEstatisticas partidaEstatisticas, Jogador jogador,
+	private PartidaLance criarJogadorEstatisticas(PartidaResumo partidaResumo, Jogador jogador,
 			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
-		JogadorEstatisticas je = new JogadorEstatisticas();
-		je.setPartidaEstatisticas(partidaEstatisticas);
-		je.setJogador(jogador);
-		je.setVencedor(vencedor);
-		je.setHabilidadeUsada(habilidade);
-		je.setOrdem(ordem);
-		je.setAcao(acao);
-		partidaEstatisticas.addJogadorEstatisticas(je);
-		return je;
+		PartidaLance pl = new PartidaLance();
+		pl.setPartidaResumo(partidaResumo);
+		pl.setJogador(jogador);
+		pl.setVencedor(vencedor);
+		pl.setHabilidadeUsada(habilidade);
+		pl.setOrdem(ordem);
+		pl.setAcao(acao);
+		partidaResumo.addPartidaLance(pl);
+		return pl;
 	}
 
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
@@ -66,9 +66,9 @@ public class PartidaService {
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
-		PartidaEstatisticas partidaEstatisticas = new PartidaEstatisticas();
+		PartidaResumo partidaResumo = new PartidaResumo();
 		Integer ordemJogada = 1;
-		partidaEstatisticas.setPartidaResultadoJogavel(partidaResultado);
+		partidaResumo.setPartidaResultadoJogavel(partidaResultado);
 		Integer golMandante = 0, golVisitante = 0;
 
 		HabilidadeValor habilidadeVencedorAnterior = null;
@@ -97,11 +97,11 @@ public class PartidaService {
 				
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
 
-				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
-				criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
+				criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
+				criarJogadorEstatisticas(partidaResumo, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
 				ordemJogada++;
 				
-				partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
+				partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
 				
 				//
 				if (imprimir) print(esquema, habilidadeValorAcao, habilidadeValorReacao, jogadorAcaoVenceu);
@@ -121,10 +121,10 @@ public class PartidaService {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoFimJogadorPosicaoAtualPosse());
 					if (imprimir) System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
-						criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
+						criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
 					}
 					ordemJogada++;
-					partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
+					partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
 				}
 				
 				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {//FINALIZACAO, CABECEIO
@@ -141,14 +141,14 @@ public class PartidaService {
 					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao) ? true : false;
 					
 					//
-					criarJogadorEstatisticas(partidaEstatisticas, esquema.getJogadorPosse(),
+					criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(),
 							habilidadeValorAcao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorAcao), ordemJogada, true);
 					
-					criarJogadorEstatisticas(partidaEstatisticas, esquema.getGoleiroSemPosse().getGoleiro(),
+					criarJogadorEstatisticas(partidaResumo, esquema.getGoleiroSemPosse().getGoleiro(),
 							habilidadeValorReacao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorReacao), ordemJogada, false);
 					ordemJogada++;
 					
-					partidaEstatisticas.incrementarLance(esquema.getPosseBolaMandante());
+					partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
 
 					//
 					if (imprimir) print(esquema, habilidadeValorAcao, habilidadeValorReacao, habilidadeVencedora.equals(habilidadeValorAcao));
@@ -163,10 +163,10 @@ public class PartidaService {
 						}
 					} else if (habilidadeVencedora.equals(habilidadeValorReacao)) {
 						if (imprimir) System.err.println("\t\tGOLEIRO DEFENDEU");
-						partidaEstatisticas.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
+						partidaResumo.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (imprimir) System.err.println("\t\tFORA!!!!");
-						partidaEstatisticas.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
+						partidaResumo.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
 					}
 					esquema.inverterPosse();//TODO
 				} else {
@@ -188,14 +188,14 @@ public class PartidaService {
 			}
 		}
 		//
-		JogadorGrupoEstatisticasFactory.agruparEstatisticas(partidaEstatisticas);
+		JogadorGrupoEstatisticasFactory.agruparEstatisticas(partidaResumo);
 		//
 		partidaResultado.setGolsMandante(golMandante);
 		partidaResultado.setGolsVisitante(golVisitante);
 		if (imprimir) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
 		//TODO: penalts
 	
-		partidaResultado.setPartidaEstatisticas(partidaEstatisticas);
+		partidaResultado.setPartidaResumo(partidaResumo);
 	}
 	
 	//###	TESTE	###

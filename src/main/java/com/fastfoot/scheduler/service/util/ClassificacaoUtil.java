@@ -27,7 +27,8 @@ public class ClassificacaoUtil {
 		ordernarClassificacao(classificacao, partidas, partidas == null);
 	}
 
-	public static void ordernarClassificacao(List<Classificacao> classificacao, List<PartidaResultado> partidas, boolean desempatar) throws RuntimeException {
+	public static void ordernarClassificacao(List<Classificacao> classificacao, List<PartidaResultado> partidas,
+			boolean desempatar) throws RuntimeException {
 
 		Collections.sort(classificacao, new Comparator<Classificacao>() {
 
