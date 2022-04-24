@@ -45,4 +45,12 @@ public class ClubeController {
 		return ResponseEntity.ok(partidas);
 	}
 	
+	@GetMapping("/anoClubeRankingItens")
+	public ResponseEntity<List<Integer>> getAnoClubeRankingItens(){
+		List<Integer> anos = clubeService.getAnosClubeRanking();
+		if (ValidatorUtil.isEmpty(anos)) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(anos);
+	}
 }

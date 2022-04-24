@@ -15,6 +15,7 @@ import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.service.util.ValidatorUtil;
 
 
 
@@ -73,5 +74,14 @@ public class TemporadaController {
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
+	}
+
+	@GetMapping("/anoTemporadaItens")
+	public ResponseEntity<List<Integer>> getAnoTemporadaItens(){
+		List<Integer> anos = temporadaService.getAnosTemporadas();
+		if (ValidatorUtil.isEmpty(anos)) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(anos);
 	}
 }

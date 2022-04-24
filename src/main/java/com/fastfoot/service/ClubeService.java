@@ -39,4 +39,8 @@ public class ClubeService {
 	public List<ClubeRankingDTO> getClubesRankings(String liga, Integer ano){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		return ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), ano));
 	}
+
+	public List<Integer> getAnosClubeRanking(){
+		return clubeRankingRepository.findAnosClubeRanking();
+	}
 }

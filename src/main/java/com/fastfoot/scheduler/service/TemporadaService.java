@@ -184,4 +184,8 @@ public class TemporadaService {
 	public List<TemporadaDTO> getTemporadas() {
 		return TemporadaDTO.convertToDTO(temporadaRepository.findAll());
 	}
+
+	public List<Integer> getAnosTemporadas(){
+		return temporadaRepository.getAnosTemporadas();
+	}
 }

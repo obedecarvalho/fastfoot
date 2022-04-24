@@ -20,4 +20,6 @@ public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Inte
 
 	public List<ClubeRanking> findByTemporada(Temporada temporada);
 
+	@Query("SELECT DISTINCT cr.ano FROM ClubeRanking cr ORDER BY cr.ano DESC ")
+	public List<Integer> findAnosClubeRanking();
 }
