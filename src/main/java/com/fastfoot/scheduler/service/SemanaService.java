@@ -1,8 +1,10 @@
 package com.fastfoot.scheduler.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
@@ -145,19 +148,29 @@ public class SemanaService {
 			classificarComDesempate(semana);
 			salvarClassificacao(semana);
 		}*/
-		
+
+		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
+
+		System.err.println("\t\tproximaSemana2() - Criando Threads");
+
 		for (Rodada r : semana.getRodadas()) {
-			rodadaService.executarRodada(r);
+			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
-		
+
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-			rodadaService.executarRodada(r);
+			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
+
+		System.err.println("\t\tproximaSemana2() - Juntando Threads");
+
+		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+
+		System.err.println("\t\tproximaSemana2() - Parte final Threads");
 
 		promover(semana);
 
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
-		
+
 		if (semana.isUltimaSemana()) {
 			temporadaService.classificarClubesTemporadaAtual();
 		}

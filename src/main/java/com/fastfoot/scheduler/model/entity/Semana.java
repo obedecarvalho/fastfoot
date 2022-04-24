@@ -32,6 +32,11 @@ public class Semana {
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
+
+	/**
+	 * Controle da execucao assincrona
+	 */
+	private Boolean emExecucao;
 	
 	@Transient
 	List<Rodada> rodadas;
@@ -77,6 +82,14 @@ public class Semana {
 
 	public void setRodadasEliminatorias(List<RodadaEliminatoria> rodadasEliminatorias) {
 		this.rodadasEliminatorias = rodadasEliminatorias;
+	}
+
+	public Boolean getEmExecucao() {
+		return emExecucao;
+	}
+
+	public void setEmExecucao(Boolean emExecucao) {
+		this.emExecucao = emExecucao;
 	}
 
 	public void addRodada(Rodada rodada) {

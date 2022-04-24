@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -11,6 +12,7 @@ import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -45,8 +47,10 @@ public class RodadaService {
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
 
-	//@Async
-	public void executarRodada(Rodada rodada) {
+	@Async("partidaExecutor")
+	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
+		System.err.println(Thread.currentThread().getName() + " - Inicio");
+		
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
@@ -56,6 +60,10 @@ public class RodadaService {
 			classificarComDesempate(rodada);
 			salvarClassificacao(rodada);
 		}
+		
+		System.err.println(Thread.currentThread().getName() + " - Fim");
+		
+		return CompletableFuture.completedFuture(rodada);
 	}
 
 	private void jogarPartidas(Rodada rodada) {
@@ -131,11 +139,17 @@ public class RodadaService {
 		}
 	}
 
-	//@Async
-	public void executarRodada(RodadaEliminatoria rodada) {
+	@Async("partidaExecutor")
+	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
+		System.err.println(Thread.currentThread().getName() + " - Inicio");
+
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
+		
+		System.err.println(Thread.currentThread().getName() + " - Fim");
+		
+		return CompletableFuture.completedFuture(rodada);
 	}
 
 	private void carregarPartidas(RodadaEliminatoria rodada) {
