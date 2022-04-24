@@ -13,6 +13,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -164,6 +165,9 @@ public class RodadaService {
 		boolean salvarEstatisticas = false;
 
 		partidaEliminatoriaRepository.saveAll(r.getPartidas());
+		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
+			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.save(per.getProximaPartida());
+		}
 		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 	}
 
