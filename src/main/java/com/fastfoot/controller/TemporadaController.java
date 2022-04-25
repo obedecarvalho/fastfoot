@@ -57,6 +57,25 @@ public class TemporadaController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
+	
+	/* TODO: Corrreção no app: ao alterar algum dos campos do Clube Ranking, limpar DataSource
+	 */
+
+	@GetMapping("/jogarTemporadaCompleta")
+	public ResponseEntity<SemanaDTO> jogarTemporadaCompleta() {
+		try {
+			SemanaDTO semana = null;
+
+			do {
+				semana = semanaService.proximaSemana2();
+			} while (semana.getNumero() < 25);
+
+			return ResponseEntity.ok(semana);
+		} catch (Exception e) {
+			e.printStackTrace();//TODO
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
 
 	@GetMapping("/campeonatosTemporadaAtual")
 	public ResponseEntity<List<CampeonatoDTO>> getCampeonatosTemporada(@RequestParam(name = "nivel") String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'

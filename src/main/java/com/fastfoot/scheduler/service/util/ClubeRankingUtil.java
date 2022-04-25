@@ -15,6 +15,7 @@ import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.OrdemClassificacaoGeral;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -24,6 +25,7 @@ import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.ValidatorUtil;
 
 public class ClubeRankingUtil {
 	
@@ -45,8 +47,91 @@ public class ClubeRankingUtil {
 		List<ClubeRanking> rankingsLiga = null;
 		for (Liga l : Liga.getAll()) {
 			rankingsLiga = rankings.stream().filter(r -> l.equals(r.getClube().getLiga())).collect(Collectors.toList());
-			gerarPosicaoGeralLiga(rankingsLiga);
+			gerarPosicaoGeralLigaX(rankingsLiga);
 		}
+	}
+	
+	private static final OrdemClassificacaoGeral[] ORDEM = {
+			
+			new OrdemClassificacaoGeral(1, ClassificacaoCopaNacionalFinal.CNII_VICE_CAMPEAO),//TODO			
+			
+			new OrdemClassificacaoGeral(1, ClassificacaoContinentalFinal.C_CAMPEAO),
+			new OrdemClassificacaoGeral(2, ClassificacaoNacionalFinal.N_1),
+			new OrdemClassificacaoGeral(3, ClassificacaoNacionalFinal.N_2),
+			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_3),
+			new OrdemClassificacaoGeral(5, ClassificacaoContinentalFinal.CII_CAMPEAO),
+			new OrdemClassificacaoGeral(6, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),
+			new OrdemClassificacaoGeral(7, ClassificacaoNacionalFinal.N_4),
+			new OrdemClassificacaoGeral(8, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
+			new OrdemClassificacaoGeral(9, ClassificacaoNacionalFinal.N_5),
+			new OrdemClassificacaoGeral(10, ClassificacaoNacionalFinal.N_6),
+			new OrdemClassificacaoGeral(11, ClassificacaoNacionalFinal.N_7),
+			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),
+			new OrdemClassificacaoGeral(13, ClassificacaoNacionalFinal.N_9),
+			new OrdemClassificacaoGeral(14, ClassificacaoNacionalFinal.N_10),
+			new OrdemClassificacaoGeral(15, ClassificacaoNacionalFinal.N_11),
+			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_12),
+			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_13),
+			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.NII_1),
+			new OrdemClassificacaoGeral(19, ClassificacaoNacionalFinal.NII_2),
+			new OrdemClassificacaoGeral(20, ClassificacaoNacionalFinal.NII_3),
+			new OrdemClassificacaoGeral(21, ClassificacaoNacionalFinal.N_14),
+			new OrdemClassificacaoGeral(22, ClassificacaoNacionalFinal.N_15),
+			new OrdemClassificacaoGeral(23, ClassificacaoNacionalFinal.N_16),
+			new OrdemClassificacaoGeral(24, ClassificacaoNacionalFinal.NII_4),
+			new OrdemClassificacaoGeral(25, ClassificacaoNacionalFinal.NII_5),
+			new OrdemClassificacaoGeral(26, ClassificacaoNacionalFinal.NII_6),
+			new OrdemClassificacaoGeral(27, ClassificacaoNacionalFinal.NII_7),
+			new OrdemClassificacaoGeral(28, ClassificacaoNacionalFinal.NII_8),
+			new OrdemClassificacaoGeral(29, ClassificacaoNacionalFinal.NII_9),
+			new OrdemClassificacaoGeral(30, ClassificacaoNacionalFinal.NII_10),
+			new OrdemClassificacaoGeral(31, ClassificacaoNacionalFinal.NII_11),
+			new OrdemClassificacaoGeral(32, ClassificacaoNacionalFinal.NII_12),
+			new OrdemClassificacaoGeral(33, ClassificacaoNacionalFinal.NII_13),
+			new OrdemClassificacaoGeral(34, ClassificacaoNacionalFinal.NII_14),
+			new OrdemClassificacaoGeral(35, ClassificacaoNacionalFinal.NII_15),
+			new OrdemClassificacaoGeral(36, ClassificacaoNacionalFinal.NII_16)
+			
+		};
+	
+	public static void gerarPosicaoGeralLigaX(List<ClubeRanking> rankingsLiga) {
+		
+		Optional<ClubeRanking> tmp = null;
+		List<ClubeRanking> tmps = null;
+		int posFinal = 1, qtdeAtualizada = 0;
+		
+		for (OrdemClassificacaoGeral ocg: ORDEM) {
+			tmp = null; tmps = null;
+			
+			if (ocg.isContinental()) {
+				tmp = findClassificacaoContinental(rankingsLiga, ocg.getClassificacaoContinental());
+			} else if (ocg.isNacional()) {
+				tmps = findClassificacaoNacional(rankingsLiga, ocg.getClassificacaoNacional());
+			} else if (ocg.isCopaNacional()) {
+				tmp = findClassificacaoCopaNacional(rankingsLiga, ocg.getClassificacaoCopaNacional());
+			}
+			
+			if (tmp != null && tmp.isPresent()) {
+				tmps = Arrays.asList(tmp.get());
+			}
+			
+			if (!ValidatorUtil.isEmpty(tmps)) {
+				qtdeAtualizada = 0;
+				for (ClubeRanking cr : tmps) {
+					if (cr.getPosicaoGeral() == -1) {
+						cr.setPosicaoGeral(posFinal);
+						qtdeAtualizada++;
+					}
+				}
+				posFinal += qtdeAtualizada;
+			}
+			
+			/*if (tmp.isPresent() && tmp.get().getPosicaoGeral() == -1) {
+				tmp.get().setPosicaoGeral(posFinal);
+				posFinal++;
+			}*/
+		}
+		
 	}
 
 	public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
@@ -190,6 +275,10 @@ public class ClubeRankingUtil {
 	public static List<ClubeRanking> findClassificacaoNacional(List<ClubeRanking> rankingsLiga, ClassificacaoNacionalFinal clasNac) {
 		return rankingsLiga.stream().filter(r -> clasNac.equals(r.getClassificacaoNacional())).collect(Collectors.toList());
 	}
+	
+	public static Optional<ClubeRanking> findClassificacaoNacionalX(List<ClubeRanking> rankingsLiga, ClassificacaoNacionalFinal clasNac) {
+		return rankingsLiga.stream().filter(r -> clasNac.equals(r.getClassificacaoNacional())).findFirst();
+	}
 
 	public static Optional<ClubeRanking> findClassificacaoCopaNacional(List<ClubeRanking> rankingsLiga, ClassificacaoCopaNacionalFinal clasCopaNac) {
 		return rankingsLiga.stream().filter(r -> clasCopaNac.equals(r.getClassificacaoCopaNacional())).findFirst();
@@ -210,6 +299,7 @@ public class ClubeRankingUtil {
 			clubeRanking.setClassificacaoNacional(ClassificacaoNacionalFinal.NULL);
 			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU);
 			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.NAO_PARTICIPOU);
+			clubeRanking.setPosicaoGeral(-1);
 			rankings.add(clubeRanking);
 		}
 		return rankings;

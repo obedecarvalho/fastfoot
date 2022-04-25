@@ -5,19 +5,19 @@ import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
 public enum ClassificacaoContinentalFinal {
-	NAO_PARTICIPOU,
+	NAO_PARTICIPOU,//99
 	//###	Continental	###
-	C_FASE_GRUPOS,
-	C_QUARTAS_FINAL,
-	C_SEMI_FINAL,
-	C_VICE_CAMPEAO,
-	C_CAMPEAO,
+	C_FASE_GRUPOS,//16
+	C_QUARTAS_FINAL,//8
+	C_SEMI_FINAL,//4
+	C_VICE_CAMPEAO,//2
+	C_CAMPEAO,//1
 	//###	Continental II	###
-	CII_FASE_GRUPOS,
-	CII_QUARTAS_FINAL,
-	CII_SEMI_FINAL,
-	CII_VICE_CAMPEAO,
-	CII_CAMPEAO;
+	CII_FASE_GRUPOS,//16
+	CII_QUARTAS_FINAL,//8
+	CII_SEMI_FINAL,//4
+	CII_VICE_CAMPEAO,//2
+	CII_CAMPEAO;//1
 
 	public static ClassificacaoContinentalFinal getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
 		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {

@@ -139,6 +139,7 @@ public class PreCarregarService {
 			clubes.add(new Clube(94, Liga.ITAFRA, 67, "Reims"));
 			clubes.add(new Clube(95, Liga.ITAFRA, 67, "Genoa"));
 			clubes.add(new Clube(96, Liga.ITAFRA, 67, "Venezia"));
+			//Rangers, Celtic, Aberdeen, Motherwell
 			clubes.add(new Clube(97, Liga.ENGLND, 85, "Liverpool"));
 			clubes.add(new Clube(98, Liga.ENGLND, 85, "Manchester United"));
 			clubes.add(new Clube(99, Liga.ENGLND, 82, "Manchester City"));

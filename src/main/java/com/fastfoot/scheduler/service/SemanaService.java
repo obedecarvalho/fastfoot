@@ -370,7 +370,7 @@ public class SemanaService {
 		}
 		if (semana.getRodadasEliminatorias() != null) {
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				partidaEliminatoriaRepository.saveAll(r.getPartidas());
+				partidaEliminatoriaRepository.saveAll(r.getPartidas());//TODO: salvar proximaPartida
 				if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 			}
 		}

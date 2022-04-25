@@ -5,17 +5,17 @@ import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
 public enum ClassificacaoCopaNacionalFinal {
-	NAO_PARTICIPOU,
-	CN_OITAVAS_FINAL,
-	CN_QUARTAS_FINAL,
-	CN_SEMI_FINAL,
-	CN_VICE_CAMPEAO,
-	CN_CAMPEAO,
-	CNII_OITAVAS_FINAL,
-	CNII_QUARTAS_FINAL,
-	CNII_SEMI_FINAL,
-	CNII_VICE_CAMPEAO,
-	CNII_CAMPEAO;
+	NAO_PARTICIPOU,//99
+	CN_OITAVAS_FINAL,//16
+	CN_QUARTAS_FINAL,//8
+	CN_SEMI_FINAL,//4
+	CN_VICE_CAMPEAO,//2
+	CN_CAMPEAO,//1
+	CNII_OITAVAS_FINAL,//16
+	CNII_QUARTAS_FINAL,//8
+	CNII_SEMI_FINAL,//4
+	CNII_VICE_CAMPEAO,//2
+	CNII_CAMPEAO;//1
 
 	public static ClassificacaoCopaNacionalFinal getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
 		if (NivelCampeonato.COPA_NACIONAL.equals(nivel)) {
