@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -14,6 +15,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
  *
  * Link util: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
  */
+@Repository
 public interface TemporadaRepository extends JpaRepository<Temporada, Long>{
 
 	public List<Temporada> findByAtual(Boolean atual);

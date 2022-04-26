@@ -25,7 +25,7 @@ public class ClubeRanking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubeRankingSequence")	
-	@SequenceGenerator(name = "clubeRankingSequence", sequenceName = "clube_ranking_seq")
+	@SequenceGenerator(name = "clubeRankingSequence", sequenceName = "clube_ranking_seq", initialValue = 1000)
 	private Integer id;
 	
 	@ManyToOne
@@ -133,6 +133,14 @@ public class ClubeRanking {
 
 	public boolean isCampeaoCopaNacionalII() {
 		return ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(classificacaoCopaNacional);
+	}
+
+	public boolean isCampeaoNacional() {
+		return ClassificacaoNacionalFinal.N_1.equals(classificacaoNacional);
+	}
+
+	public boolean isCampeaoNacionalII() {
+		return ClassificacaoNacionalFinal.NII_1.equals(classificacaoNacional);
 	}
 
 	public Temporada getTemporada() {

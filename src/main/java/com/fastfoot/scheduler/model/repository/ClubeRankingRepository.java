@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
+@Repository
 public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Integer>{
 
 	@Query("SELECT cr FROM ClubeRanking cr WHERE cr.posicaoGeral BETWEEN :menor AND :maior AND cr.ano = :ano ORDER BY cr.posicaoGeral ")

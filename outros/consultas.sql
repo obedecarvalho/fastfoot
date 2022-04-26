@@ -209,3 +209,63 @@ delete from clube_ranking;
 delete from semana;
 delete from clube;
 delete from temporada;
+
+
+
+select *, 'SELECT count(*), ''' || tablename || ''' FROM ' || tablename || ' union '
+from pg_catalog.pg_tables
+where tableowner = 'fastfoot';
+
+select *, 'DELETE FROM ' || tablename || ';'
+from pg_catalog.pg_tables
+where tableowner = 'fastfoot';
+
+select *, 'DROP TABLE ' || tablename || ';'
+from pg_catalog.pg_tables
+where tableowner = 'fastfoot';
+
+select c.nome, c.liga, c.overhall, ctr.*
+from clube_titulo_ranking ctr
+inner join clube c on c.id = ctr.id
+where (titulos_continental + titulos_continentalii + titulos_nacional + titulos_nacionalii + titulos_copa_nacional + titulos_copa_nacionalii) > 0
+
+select c.overhall, c.nome, sum(ctr.titulos_continental)
+from clube_titulo_ranking ctr
+inner join clube c on c.id = ctr.id
+where 
+	titulos_continental > 0
+group by c.overhall, c.nome;
+
+select c.overhall, c.nome, c.liga, sum(ctr.titulos_nacional)
+from clube_titulo_ranking ctr
+inner join clube c on c.id = ctr.id
+where 
+	titulos_nacional > 0
+group by c.overhall, c.nome, c.liga;
+
+select c.overhall, c.nome, c.liga, sum(ctr.titulos_copa_nacional)
+from clube_titulo_ranking ctr
+inner join clube c on c.id = ctr.id
+where 
+	titulos_copa_nacional > 0
+group by c.overhall, c.nome, c.liga;
+
+
+select c.overhall, 
+	sum(titulos_continental) as C, sum(titulos_continentalii) as CII, 
+	sum(titulos_nacional) as N, sum(titulos_nacionalii) as NII, 
+	sum(titulos_copa_nacional) as CN, sum(titulos_copa_nacionalii) as CNII
+from clube_titulo_ranking ctr
+inner join clube c on c.id = ctr.id
+where (titulos_continental + titulos_continentalii + titulos_nacional + titulos_nacionalii + titulos_copa_nacional + titulos_copa_nacionalii) > 0
+group by c.overhall;
+
+--comparar habilidades dois times
+select j.id_clube, hv.habilidade, avg(hv.valor)
+from jogador j
+inner join habilidade_valor hv on hv.id_jogador = j.id
+where 
+	--j.id_clube in (201, 202)
+	j.id_clube in (301, 302)
+group by j.id_clube, hv.habilidade
+order by j.id_clube, hv.habilidade;

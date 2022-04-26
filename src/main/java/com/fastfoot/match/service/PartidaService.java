@@ -30,7 +30,7 @@ public class PartidaService {
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 
-	private Integer NUM_LANCES = 45;//private Integer NUM_LANCES = 90;
+	private Integer NUM_LANCES = 90;//private Integer NUM_LANCES = 90;
 
 	private Boolean imprimir = false;
 	

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
@@ -19,6 +20,7 @@ import com.fastfoot.scheduler.model.entity.Semana;
  * 	https://www.baeldung.com/spring-data-jpa-query
  * 	https://www.devmedia.com.br/tipos-de-heranca-no-hibernate/28641
  */
+@Repository
 public interface RodadaRepository extends JpaRepository<Rodada, Long>{
 
 	@Query("SELECT r FROM Rodada r WHERE r.campeonato = :campeonato AND r.numero = :numero ")

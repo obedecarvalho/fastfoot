@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -14,6 +15,7 @@ import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
+@Repository
 public interface PartidaResultadoRepository extends JpaRepository<PartidaResultado, Long>{
 
 	public List<PartidaResultado> findByRodada(Rodada rodada);

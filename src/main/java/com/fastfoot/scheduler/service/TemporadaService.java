@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.repository.ClubeRepository;
@@ -41,6 +43,9 @@ public class TemporadaService {
 	
 	@Autowired
 	private ClubeRankingRepository clubeRankingRepository;
+	
+	@Autowired
+	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 	
 	@Autowired
 	private TemporadaRepository temporadaRepository;
@@ -156,10 +161,13 @@ public class TemporadaService {
 	}
 
 	public void classificarClubesTemporadaAtual() {
-		Temporada temporada = temporadaRepository.findByAtual(true).get(0);
+		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		campeonatoService.carregarCampeonatosTemporada(temporada);
 		List<ClubeRanking> rankings = ClubeRankingUtil.rankearClubesTemporada(temporada, clubeRepository.findAll());
+		List<ClubeTituloRanking> rankingsTitulos = clubeTituloRankingRepository.findAll();
+		ClubeRankingUtil.atualizarRankingTitulos(rankings, rankingsTitulos);
 		clubeRankingRepository.saveAll(rankings);
+		clubeTituloRankingRepository.saveAll(rankingsTitulos);
 	}
 
 	public List<CampeonatoDTO> getCampeonatosTemporada(String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'

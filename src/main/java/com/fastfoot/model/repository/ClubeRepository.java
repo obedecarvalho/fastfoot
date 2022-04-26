@@ -5,11 +5,13 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
 
+@Repository
 public interface ClubeRepository extends JpaRepository<Clube, Integer>{
 
 	public List<Clube> findByLiga(Liga liga);

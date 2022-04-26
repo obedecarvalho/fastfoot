@@ -50,7 +50,7 @@ public class RodadaService {
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
-		System.err.println(Thread.currentThread().getName() + " - Inicio");
+		//System.err.println(Thread.currentThread().getName() + " - Inicio");
 		
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
@@ -62,7 +62,7 @@ public class RodadaService {
 			salvarClassificacao(rodada);
 		}
 		
-		System.err.println(Thread.currentThread().getName() + " - Fim");
+		//System.err.println(Thread.currentThread().getName() + " - Fim");
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -96,12 +96,12 @@ public class RodadaService {
 	private void salvarPartidas(Rodada r) {
 		boolean salvarEstatisticas = false;
 
-		partidaRepository.saveAll(r.getPartidas());
+		partidaRepository.saveAllAndFlush(r.getPartidas());
 		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 		if(r.getCampeonato() != null) {
-			classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
+			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
 		} else if (r.getGrupoCampeonato() != null) {
-			classificacaoRepository.saveAll(r.getGrupoCampeonato().getClassificacao());
+			classificacaoRepository.saveAllAndFlush(r.getGrupoCampeonato().getClassificacao());
 		}
 	}
 
@@ -134,21 +134,21 @@ public class RodadaService {
 
 	private void salvarClassificacao(Rodada r) {
 		if(r.getCampeonato() != null) {
-			classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
+			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
 		} else if (r.getGrupoCampeonato() != null) {
-			classificacaoRepository.saveAll(r.getGrupoCampeonato().getClassificacao());
+			classificacaoRepository.saveAllAndFlush(r.getGrupoCampeonato().getClassificacao());
 		}
 	}
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
-		System.err.println(Thread.currentThread().getName() + " - Inicio");
+		//System.err.println(Thread.currentThread().getName() + " - Inicio");
 
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
 		
-		System.err.println(Thread.currentThread().getName() + " - Fim");
+		//System.err.println(Thread.currentThread().getName() + " - Fim");
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -164,9 +164,9 @@ public class RodadaService {
 	private void salvarPartidas(RodadaEliminatoria r) {
 		boolean salvarEstatisticas = false;
 
-		partidaEliminatoriaRepository.saveAll(r.getPartidas());
+		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
-			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.save(per.getProximaPartida());
+			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());
 		}
 		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 	}

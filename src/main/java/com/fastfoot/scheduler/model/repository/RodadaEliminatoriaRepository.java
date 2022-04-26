@@ -6,12 +6,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Semana;
 
+@Repository
 public interface RodadaEliminatoriaRepository extends JpaRepository<RodadaEliminatoria, Long>{
 
 	@Query("SELECT re FROM RodadaEliminatoria re WHERE re.campeonatoEliminatorio = :campeonatoEliminatorio AND re.numero = :numero ")

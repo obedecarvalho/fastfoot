@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
@@ -42,59 +43,106 @@ public class ClubeRankingUtil {
 		
 		return rankings;
 	}
+	
+	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<ClubeTituloRanking> rankingsTitulos) {
+		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(ClubeTituloRanking::getClube, Function.identity())));
+	}
+	
+	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, Map<Clube, ClubeTituloRanking> rankingsTitulos) {
+
+		List<ClubeRanking> campeoesContinentais = rankings.stream().filter(r -> r.isCampeaoContinental()).collect(Collectors.toList());
+		List<ClubeRanking> campeoesContinentaisII = rankings.stream().filter(r -> r.isCampeaoContinentalII()).collect(Collectors.toList());		
+		List<ClubeRanking> campeoesNacionais = rankings.stream().filter(r -> r.isCampeaoNacional()).collect(Collectors.toList());
+		List<ClubeRanking> campeoesNacionaisII = rankings.stream().filter(r -> r.isCampeaoNacionalII()).collect(Collectors.toList());
+		List<ClubeRanking> campeoesCopaNacionais = rankings.stream().filter(r -> r.isCampeaoCopaNacional()).collect(Collectors.toList());
+		List<ClubeRanking> campeoesCopaNacionaisII = rankings.stream().filter(r -> r.isCampeaoCopaNacionalII()).collect(Collectors.toList());
+
+		ClubeTituloRanking ctr = null;
+
+		for (ClubeRanking cr : campeoesContinentais) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosContinental(ctr.getTitulosContinental()+1);
+		}
+		
+		for (ClubeRanking cr : campeoesContinentaisII) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosContinentalII(ctr.getTitulosContinentalII()+1);
+		}
+		
+		for (ClubeRanking cr : campeoesNacionais) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosNacional(ctr.getTitulosNacional()+1);
+		}
+		
+		for (ClubeRanking cr : campeoesNacionaisII) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosNacionalII(ctr.getTitulosNacionalII()+1);
+		}
+		
+		for (ClubeRanking cr : campeoesCopaNacionais) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosCopaNacional(ctr.getTitulosCopaNacional()+1);
+		}
+		
+		for (ClubeRanking cr : campeoesCopaNacionaisII) {
+			ctr = rankingsTitulos.get(cr.getClube());
+			ctr.setTitulosCopaNacionalII(ctr.getTitulosCopaNacionalII()+1);
+		}
+	}
 
 	public static void gerarPosicaoGeral(List<ClubeRanking> rankings) {
 		List<ClubeRanking> rankingsLiga = null;
 		for (Liga l : Liga.getAll()) {
 			rankingsLiga = rankings.stream().filter(r -> l.equals(r.getClube().getLiga())).collect(Collectors.toList());
-			gerarPosicaoGeralLigaX(rankingsLiga);
+			gerarPosicaoGeralLiga(rankingsLiga);
 		}
 	}
 	
 	private static final OrdemClassificacaoGeral[] ORDEM = {
 			
-			new OrdemClassificacaoGeral(1, ClassificacaoCopaNacionalFinal.CNII_VICE_CAMPEAO),//TODO			
-			
 			new OrdemClassificacaoGeral(1, ClassificacaoContinentalFinal.C_CAMPEAO),
-			new OrdemClassificacaoGeral(2, ClassificacaoNacionalFinal.N_1),
-			new OrdemClassificacaoGeral(3, ClassificacaoNacionalFinal.N_2),
-			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_3),
-			new OrdemClassificacaoGeral(5, ClassificacaoContinentalFinal.CII_CAMPEAO),
-			new OrdemClassificacaoGeral(6, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),
+			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CII_CAMPEAO),
+			new OrdemClassificacaoGeral(3, ClassificacaoNacionalFinal.N_1),
+			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_2),
+			new OrdemClassificacaoGeral(5, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),
+			new OrdemClassificacaoGeral(6, ClassificacaoNacionalFinal.N_3),		
 			new OrdemClassificacaoGeral(7, ClassificacaoNacionalFinal.N_4),
-			new OrdemClassificacaoGeral(8, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
-			new OrdemClassificacaoGeral(9, ClassificacaoNacionalFinal.N_5),
+			new OrdemClassificacaoGeral(8, ClassificacaoNacionalFinal.N_5),
+			new OrdemClassificacaoGeral(9, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
 			new OrdemClassificacaoGeral(10, ClassificacaoNacionalFinal.N_6),
 			new OrdemClassificacaoGeral(11, ClassificacaoNacionalFinal.N_7),
-			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),
-			new OrdemClassificacaoGeral(13, ClassificacaoNacionalFinal.N_9),
-			new OrdemClassificacaoGeral(14, ClassificacaoNacionalFinal.N_10),
-			new OrdemClassificacaoGeral(15, ClassificacaoNacionalFinal.N_11),
-			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_12),
-			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_13),
-			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.NII_1),
-			new OrdemClassificacaoGeral(19, ClassificacaoNacionalFinal.NII_2),
-			new OrdemClassificacaoGeral(20, ClassificacaoNacionalFinal.NII_3),
-			new OrdemClassificacaoGeral(21, ClassificacaoNacionalFinal.N_14),
-			new OrdemClassificacaoGeral(22, ClassificacaoNacionalFinal.N_15),
-			new OrdemClassificacaoGeral(23, ClassificacaoNacionalFinal.N_16),
-			new OrdemClassificacaoGeral(24, ClassificacaoNacionalFinal.NII_4),
-			new OrdemClassificacaoGeral(25, ClassificacaoNacionalFinal.NII_5),
-			new OrdemClassificacaoGeral(26, ClassificacaoNacionalFinal.NII_6),
-			new OrdemClassificacaoGeral(27, ClassificacaoNacionalFinal.NII_7),
-			new OrdemClassificacaoGeral(28, ClassificacaoNacionalFinal.NII_8),
-			new OrdemClassificacaoGeral(29, ClassificacaoNacionalFinal.NII_9),
-			new OrdemClassificacaoGeral(30, ClassificacaoNacionalFinal.NII_10),
-			new OrdemClassificacaoGeral(31, ClassificacaoNacionalFinal.NII_11),
-			new OrdemClassificacaoGeral(32, ClassificacaoNacionalFinal.NII_12),
-			new OrdemClassificacaoGeral(33, ClassificacaoNacionalFinal.NII_13),
-			new OrdemClassificacaoGeral(34, ClassificacaoNacionalFinal.NII_14),
-			new OrdemClassificacaoGeral(35, ClassificacaoNacionalFinal.NII_15),
-			new OrdemClassificacaoGeral(36, ClassificacaoNacionalFinal.NII_16)
+			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),			
+			/*new OrdemClassificacaoGeral(13, ClassificacaoContinentalFinal.C_VICE_CAMPEAO),
+			new OrdemClassificacaoGeral(14, ClassificacaoContinentalFinal.CII_VICE_CAMPEAO),
+			new OrdemClassificacaoGeral(15, ClassificacaoCopaNacionalFinal.CN_VICE_CAMPEAO),*/			
+			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_9),
+			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_10),
+			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.N_11),
+			new OrdemClassificacaoGeral(19, ClassificacaoNacionalFinal.N_12),
+			new OrdemClassificacaoGeral(20, ClassificacaoNacionalFinal.N_13),
+			new OrdemClassificacaoGeral(21, ClassificacaoNacionalFinal.NII_1),
+			new OrdemClassificacaoGeral(22, ClassificacaoNacionalFinal.NII_2),
+			new OrdemClassificacaoGeral(23, ClassificacaoNacionalFinal.NII_3),
+			new OrdemClassificacaoGeral(24, ClassificacaoNacionalFinal.N_14),
+			new OrdemClassificacaoGeral(25, ClassificacaoNacionalFinal.N_15),
+			new OrdemClassificacaoGeral(26, ClassificacaoNacionalFinal.N_16),
+			new OrdemClassificacaoGeral(27, ClassificacaoNacionalFinal.NII_4),
+			new OrdemClassificacaoGeral(28, ClassificacaoNacionalFinal.NII_5),
+			new OrdemClassificacaoGeral(29, ClassificacaoNacionalFinal.NII_6),
+			new OrdemClassificacaoGeral(30, ClassificacaoNacionalFinal.NII_7),
+			new OrdemClassificacaoGeral(31, ClassificacaoNacionalFinal.NII_8),
+			new OrdemClassificacaoGeral(32, ClassificacaoNacionalFinal.NII_9),
+			new OrdemClassificacaoGeral(33, ClassificacaoNacionalFinal.NII_10),
+			new OrdemClassificacaoGeral(34, ClassificacaoNacionalFinal.NII_11),
+			new OrdemClassificacaoGeral(35, ClassificacaoNacionalFinal.NII_12),
+			new OrdemClassificacaoGeral(36, ClassificacaoNacionalFinal.NII_13),
+			new OrdemClassificacaoGeral(37, ClassificacaoNacionalFinal.NII_14),
+			new OrdemClassificacaoGeral(38, ClassificacaoNacionalFinal.NII_15),
+			new OrdemClassificacaoGeral(39, ClassificacaoNacionalFinal.NII_16)
 			
 		};
 	
-	public static void gerarPosicaoGeralLigaX(List<ClubeRanking> rankingsLiga) {
+	public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
 		
 		Optional<ClubeRanking> tmp = null;
 		List<ClubeRanking> tmps = null;
@@ -134,7 +182,7 @@ public class ClubeRankingUtil {
 		
 	}
 
-	public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
+	/*public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
 		
 		//C1, N1, N2, N3, CII1, CN1, N4
 		
@@ -270,7 +318,7 @@ public class ClubeRankingUtil {
 			}
 			posFinal += qtdeAtualizada;
 		}
-	}
+	}*/
 
 	public static List<ClubeRanking> findClassificacaoNacional(List<ClubeRanking> rankingsLiga, ClassificacaoNacionalFinal clasNac) {
 		return rankingsLiga.stream().filter(r -> clasNac.equals(r.getClassificacaoNacional())).collect(Collectors.toList());

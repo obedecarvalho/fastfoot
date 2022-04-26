@@ -96,7 +96,7 @@ public class SemanaService {
 	@Autowired
 	private RodadaService rodadaService;
 
-	public SemanaDTO proximaSemana() {
+	/*public SemanaDTO proximaSemana() {
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
@@ -126,9 +126,9 @@ public class SemanaService {
 		}
 
 		return SemanaDTO.convertToDTO(semana);
-	}
+	}*/
 	
-	public SemanaDTO proximaSemana2() {
+	public SemanaDTO proximaSemana() {
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
@@ -151,7 +151,7 @@ public class SemanaService {
 
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
 
-		System.err.println("\t\tproximaSemana2() - Criando Threads");
+		//System.err.println("\t\tproximaSemana2() - Criando Threads");
 
 		for (Rodada r : semana.getRodadas()) {
 			rodadasFuture.add(rodadaService.executarRodada(r));
@@ -161,11 +161,11 @@ public class SemanaService {
 			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
 
-		System.err.println("\t\tproximaSemana2() - Juntando Threads");
+		//System.err.println("\t\tproximaSemana2() - Juntando Threads");
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
 
-		System.err.println("\t\tproximaSemana2() - Parte final Threads");
+		//System.err.println("\t\tproximaSemana2() - Parte final Threads");
 
 		promover(semana);
 
@@ -246,9 +246,9 @@ public class SemanaService {
 			c.setRodadaAtual(c.getRodadaAtual() + 1);
 		}
 
-		campeonatoRepository.saveAll(camps1);
-		campeonatoEliminatorioRepository.saveAll(camps2);
-		campeonatoMistoRepository.saveAll(camps3);
+		campeonatoRepository.saveAllAndFlush(camps1);
+		campeonatoEliminatorioRepository.saveAllAndFlush(camps2);
+		campeonatoMistoRepository.saveAllAndFlush(camps3);
 	}
 
 	private void carregarPartidas(Semana semana) {
