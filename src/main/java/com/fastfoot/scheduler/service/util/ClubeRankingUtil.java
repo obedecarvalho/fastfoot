@@ -34,9 +34,15 @@ public class ClubeRankingUtil {
 		List<ClubeRanking> rankings =  gerarClubeRankingInicial(clubes, temporada);
 
 		Map<Clube, ClubeRanking> clubeRankings = rankings.stream().collect(Collectors.toMap(ClubeRanking::getClube, Function.identity()));
+		
+		List<CampeonatoEliminatorio> copasNacionais = temporada.getCampeonatosCopasNacionais().stream()
+				.filter(c -> c.getNivelCampeonato().isCopaNacional()).collect(Collectors.toList());
+		List<CampeonatoEliminatorio> copasNacionaisII = temporada.getCampeonatosCopasNacionais().stream()
+				.filter(c -> c.getNivelCampeonato().isCopaNacionalII()).collect(Collectors.toList());
 
 		rankearCampeonatoNacional(clubeRankings, temporada.getCampeonatosNacionais());
-		rankearCopaNacional(clubeRankings, temporada.getCampeonatosCopasNacionais());
+		rankearCopaNacional(clubeRankings, copasNacionais);
+		rankearCopaNacional(clubeRankings, copasNacionaisII);
 		rankearContinental(clubeRankings, temporada.getCampeonatosContinentais());
 		
 		gerarPosicaoGeral(rankings);

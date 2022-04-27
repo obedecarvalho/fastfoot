@@ -269,3 +269,111 @@ where
 	j.id_clube in (301, 302)
 group by j.id_clube, hv.habilidade
 order by j.id_clube, hv.habilidade;
+
+
+--deletar temporada
+
+
+with tmp_partida as (
+	select pr.id as prid, r.id as rid, c.id as cid, gc.id as gcid, cm.id as cmid
+	from partida_resultado pr 
+	inner join rodada r on pr.id_rodada = r.id 
+	left join campeonato c on c.id = r.id_campeonato 
+	left join grupo_campeonato gc on r.id_grupo_campeonato = gc.id 
+	left join campeonato_misto cm on gc.id_campeonato_misto = cm.id
+	where c.id_temporada = 1249 or cm.id_temporada = 1249
+)
+delete from partida_resultado where id in (
+	select prid
+	from tmp_partida 
+);
+
+with tmp_rodada as (
+	select r.id as rid, c.id as cid, gc.id as gcid, cm.id as cmid
+	from rodada r 
+	left join campeonato c on c.id = r.id_campeonato 
+	left join grupo_campeonato gc on r.id_grupo_campeonato = gc.id 
+	left join campeonato_misto cm on gc.id_campeonato_misto = cm.id
+	where c.id_temporada = 1249 or cm.id_temporada = 1249
+)
+delete from rodada where id in (
+	select rid
+	from tmp_rodada 
+);
+
+with tmp_cl as (
+	select cl.id as clid, c.id as cid, gc.id as gcid, cm.id as cmid
+	from classificacao cl 
+	left join campeonato c on c.id = cl.id_campeonato 
+	left join grupo_campeonato gc on cl.id_grupo_campeonato = gc.id 
+	left join campeonato_misto cm on gc.id_campeonato_misto = cm.id
+	where c.id_temporada = 1249 or cm.id_temporada = 1249
+)
+delete from classificacao where id in (
+	select clid
+	from tmp_cl
+);
+
+with tmp_partida as (
+	select per.id as perid, re.id as reid, ce.id as ceid, cm.id as cmid
+	from partida_eliminatoria_resultado per 
+	inner join rodada_eliminatoria re on per.id_rodada_eliminatoria = re.id 
+	left join campeonato_eliminatorio ce on re.id_campeonato_eliminatorio =ce.id
+	left join campeonato_misto cm on cm.id = re.id_campeonato_misto 
+	where cm.id_temporada = 1249 or ce.id_temporada = 1249
+)
+delete from partida_eliminatoria_resultado where id in (
+	select perid
+	from tmp_partida 
+);
+
+with tmp_rodada as (
+	select re.id as reid, ce.id as ceid, cm.id as cmid
+	from rodada_eliminatoria re 
+	left join campeonato_eliminatorio ce on re.id_campeonato_eliminatorio =ce.id
+	left join campeonato_misto cm on cm.id = re.id_campeonato_misto 
+	where cm.id_temporada = 1249 or ce.id_temporada = 1249
+)
+delete from rodada_eliminatoria where id in (
+	select reid
+	from tmp_rodada 
+);
+
+with tmp_gc as (
+	select gc.id as gcid, cm.id as cmid
+	from grupo_campeonato gc 
+	left join campeonato_misto cm on gc.id_campeonato_misto = cm.id
+	where cm.id_temporada = 1249
+)
+delete from grupo_campeonato where id in (
+	select gcid
+	from tmp_gc 
+);
+
+DELETE FROM campeonato where id_temporada = 1249;
+DELETE FROM campeonato_eliminatorio where id_temporada = 1249;
+DELETE FROM campeonato_misto where id_temporada = 1249;
+DELETE FROM clube_ranking where id_temporada = 1249;
+DELETE FROM semana where id_temporada = 1249;
+delete from temporada where id = 1249;
+
+
+
+select cr.ano, cr.classificacao_nacional, count(*)
+from clube_ranking cr 
+where cr.classificacao_nacional in (1, 17)
+group by cr.ano, cr.classificacao_nacional
+order by count(*);
+
+select cr.ano, cr.classificacao_copa_nacional, count(*), array_agg(c.liga) 
+from clube_ranking cr 
+inner join clube c on cr.id_clube = c.id 
+where cr.classificacao_copa_nacional in (5, 10)
+group by cr.ano, cr.classificacao_copa_nacional
+order by count(*), ano;
+
+select cr.ano, cr.classificacao_continental, count(*)
+from clube_ranking cr 
+where cr.classificacao_continental in (5, 10)
+group by cr.ano, cr.classificacao_continental
+order by count(*), ano;

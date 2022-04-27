@@ -19,7 +19,15 @@ public enum NivelCampeonato {
 	}
 
 	public boolean isCopaNacionalCopaNacionalII() {//CampeonatoEliminatorio
-		return COPA_NACIONAL.equals(this) || COPA_NACIONAL_II.equals(this);
+		return isCopaNacional() || isCopaNacionalII();
+	}
+	
+	public boolean isCopaNacional() {//CampeonatoEliminatorio
+		return COPA_NACIONAL.equals(this);
+	}
+	
+	public boolean isCopaNacionalII() {//CampeonatoEliminatorio
+		return COPA_NACIONAL_II.equals(this);
 	}
 	
 	public boolean isContinentalContinentalII() {//CampeonatoMisto
