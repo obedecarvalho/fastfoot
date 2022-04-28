@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.match.model.repository.PartidaResumoRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -40,7 +41,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
-import com.fastfoot.scheduler.service.util.PromotorEliminatoriaUtil;
+import com.fastfoot.service.ParametroService;
 
 @Service
 public class SemanaService {
@@ -95,6 +96,9 @@ public class SemanaService {
 	
 	@Autowired
 	private RodadaService rodadaService;
+
+	@Autowired
+	private ParametroService parametroService;
 
 	/*public SemanaDTO proximaSemana() {
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
@@ -320,39 +324,57 @@ public class SemanaService {
 				partidas = partidaEliminatoriaRepository.findByRodada(rodadaInicial);
 				c.setGrupos(grupos);
 				rodadaInicial.setPartidas(partidas);
-				PromotorEliminatoriaUtil.promoverGruposParaRodadasEliminatorias(grupos, rodadaInicial);
+				PromotorEliminatoria.promoverGruposParaRodadasEliminatorias(grupos, rodadaInicial);
 				partidaEliminatoriaRepository.saveAll(rodadaInicial.getPartidas());
 			}
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
+			//Boolean jogarContIII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III);
+			Boolean jogarCopaNacII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
+			Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 			
-			List<CampeonatoEliminatorio> campeonatos = semana.getRodadasEliminatorias().stream()
-					.filter(r -> r.getCampeonatoEliminatorio() != null
-							&& NivelCampeonato.COPA_NACIONAL.equals(r.getCampeonatoEliminatorio().getNivelCampeonato()))
-					.map(RodadaEliminatoria::getCampeonatoEliminatorio)
-					.collect(Collectors.toList());
-			
-			RodadaEliminatoria rodadaCNII = null, rodada1Fase, rodada2Fase;
-			
-			for (CampeonatoEliminatorio c : campeonatos) {
-				CampeonatoEliminatorio copaNacionalII = campeonatoEliminatorioRepository
-						.findFirstByTemporadaAndLigaAndNivelCampeonato(c.getTemporada(), c.getLiga(), NivelCampeonato.COPA_NACIONAL_II).get();
+			if (jogarCopaNacII) {
+				List<CampeonatoEliminatorio> campeonatos = semana.getRodadasEliminatorias().stream()
+						.filter(r -> r.getCampeonatoEliminatorio() != null
+								&& NivelCampeonato.COPA_NACIONAL.equals(r.getCampeonatoEliminatorio().getNivelCampeonato()))
+						.map(RodadaEliminatoria::getCampeonatoEliminatorio)
+						.collect(Collectors.toList());
 				
-				rodadaCNII = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(copaNacionalII, 1).get(0);
-				rodadaCNII.setPartidas(partidaEliminatoriaRepository.findByRodada(rodadaCNII));
+				RodadaEliminatoria rodadaCNII = null, rodada1Fase, rodada2Fase;
 				
-				rodada1Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 1).get(0);
-				rodada1Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada1Fase));
-
-				rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
-				rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
-
-				PromotorEliminatoriaUtil.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
-				
-				partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
+				for (CampeonatoEliminatorio c : campeonatos) {
+					CampeonatoEliminatorio copaNacionalII = campeonatoEliminatorioRepository
+							.findFirstByTemporadaAndLigaAndNivelCampeonato(c.getTemporada(), c.getLiga(), NivelCampeonato.COPA_NACIONAL_II).get();
+					
+					rodadaCNII = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(copaNacionalII, 1).get(0);
+					rodadaCNII.setPartidas(partidaEliminatoriaRepository.findByRodada(rodadaCNII));
+					
+					rodada1Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 1).get(0);
+					rodada1Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada1Fase));
+	
+					rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
+					rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
+	
+					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(nroCompeticoes > 2);
+					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
+					
+					partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
+				}
 			}
 		}
 
+	}
+
+	private PromotorEliminatoria getPromotorEliminatoria(Boolean jogarContIII) {
+		PromotorEliminatoria promotorEliminatoria = null;
+		
+		if (jogarContIII) {
+			promotorEliminatoria = new PromotorEliminatoriaImplDozeClubes();
+		} else {
+			promotorEliminatoria = new PromotorEliminatoriaImplOitoClubes();
+		}
+		
+		return promotorEliminatoria;
 	}
 
 	private void salvarPartidas(Semana semana) {

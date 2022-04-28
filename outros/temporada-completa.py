@@ -6,25 +6,29 @@ url = 'http://localhost:8081/proximaSemana'
 urlNovaTemporada = 'http://localhost:8081/novaTemporada'
 
 numero = 0;
+novaTemporada = False;
 
-while numero < 25:
+rodadaFinal = 24
+
+while numero < rodadaFinal:
 	time.sleep(0.5)
 	r = requests.get(url)
 	if r.status_code == 200:
 		numero = int(r.json()['numero'])
 		print(numero)
 	else:
-		print('Error (Executando Rodadas): ' + r.status_code)
+		print('Error (Executando Rodadas): ' + str(r.status_code))
 		exit()
 
-r = requests.get(urlNovaTemporada)
+if novaTemporada:
+	r = requests.get(urlNovaTemporada)
 
-if r.status_code == 200:
-	print('Nova Temporada: ')
-	print(r.json()['ano'])
-else:
-	print('Error (Criando Temporada): ' + r.status_code)
-	exit()
+	if r.status_code == 200:
+		print('Nova Temporada: ')
+		print(r.json()['ano'])
+	else:
+		print('Error (Criando Temporada): ' + str(r.status_code))
+		exit()
 
 
 #print(r.status_code)

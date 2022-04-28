@@ -17,8 +17,6 @@ import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
 
-
-
 @RestController
 @CrossOrigin("*")
 public class TemporadaController {

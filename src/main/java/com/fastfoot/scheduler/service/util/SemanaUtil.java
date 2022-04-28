@@ -6,13 +6,16 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.Rodada;
+import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class SemanaUtil {
 	
@@ -20,6 +23,7 @@ public class SemanaUtil {
 	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_II = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new HashMap<Integer, Integer>();
 	
 	static {
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(1, 1);
@@ -47,7 +51,10 @@ public class SemanaUtil {
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(7, 11);
 		RODADA_SEMANA_CONTINENTAL.put(3, 12);
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(8, 13);
+
 		RODADA_SEMANA_CONTINENTAL.put(4, 14);
+		RODADA_SEMANA_AMISTOSOS_AUTOMATICOS.put(101, 14);
+
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(9, 15);
 		
 		RODADA_SEMANA_COPA_NACIONAL_II.put(3, 16);
@@ -59,9 +66,15 @@ public class SemanaUtil {
 		RODADA_SEMANA_COPA_NACIONAL_II.put(4, 18);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(11, 19);
+
 		RODADA_SEMANA_CONTINENTAL.put(5, 20);
+		RODADA_SEMANA_AMISTOSOS_AUTOMATICOS.put(102, 20);
+
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(12, 21);
+
 		RODADA_SEMANA_CONTINENTAL.put(6, 22);
+		RODADA_SEMANA_AMISTOSOS_AUTOMATICOS.put(103, 22);
+
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(13, 23);
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(14, 24);
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(15, 25);
@@ -73,12 +86,12 @@ public class SemanaUtil {
 		associarRodadaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_CAMPEONATO_NACIONAL);
 	}
 
-	public static void associarRodadaCopaNacionalSemana(CampeonatoEliminatorio campeonato) {
+	public static void associarRodadaCopaNacionalSeisRodadasSemana(CampeonatoEliminatorio campeonato) {
 
 		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL);
 	}
 
-	public static void associarRodadaCopaNacionalIISemana(CampeonatoEliminatorio campeonato) {
+	public static void associarRodadaCopaNacionalQuatroRodadasSemana(CampeonatoEliminatorio campeonato) {
 
 		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL_II);
 	}
@@ -91,8 +104,24 @@ public class SemanaUtil {
 		associarRodadaEliminatoriaSemana(campeonato.getRodadasEliminatorias(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_CONTINENTAL);
 	}
 	
+	public static void associarRodadaAmistosaSemana(Temporada temporada, List<RodadaAmistosa> rodadas) {
+		associarRodadaAmistosaSemana(rodadas, listSemanaToMap(temporada.getSemanas()),
+				RODADA_SEMANA_AMISTOSOS_AUTOMATICOS);
+	}
+	
 	private static Map<Integer, Semana> listSemanaToMap(List<Semana> semanas) {
 		return semanas.stream().collect(Collectors.toMap(Semana::getNumero, Function.identity()));
+	}
+	
+	private static void associarRodadaAmistosaSemana(List<RodadaAmistosa> rodadas, Map<Integer, Semana> nroSemana, Map<Integer, Integer> mapRodadaSemana) {
+
+		Semana s = null;
+		
+		for (RodadaAmistosa r : rodadas) {
+			s = nroSemana.get(mapRodadaSemana.get(r.getNumero()));
+			r.setSemana(s);
+			s.addRodada(r);
+		}
 	}
 
 	private static void associarRodadaEliminatoriaSemana(List<RodadaEliminatoria> rodadas, Map<Integer, Semana> nroSemana, Map<Integer, Integer> mapRodadaSemana) {
@@ -102,7 +131,7 @@ public class SemanaUtil {
 		for (RodadaEliminatoria r : rodadas) {
 			s = nroSemana.get(mapRodadaSemana.get(r.getNumero()));
 			r.setSemana(s);
-			s.addRodadaEliminatoria(r);
+			s.addRodada(r);
 		}
 	}
 

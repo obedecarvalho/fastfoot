@@ -64,4 +64,11 @@ public class Constantes {
 	
 	/** Numero de competicoes Continental */
 	public static final Integer NRO_COMPETICOES_CONT = 2;
+	
+	//###	AMISTOSOS	###
+	/** Numero de grupos */
+	public static final Integer NRO_GRUPOS_AMISTOSOS = 4;
+	
+	/** Número de clubes por grupo */
+	public static final Integer NRO_CLUBES_GRUPOS_AMISTOSOS = 4;
 }

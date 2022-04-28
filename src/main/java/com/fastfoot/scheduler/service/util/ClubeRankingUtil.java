@@ -50,7 +50,28 @@ public class ClubeRankingUtil {
 		return rankings;
 	}
 	
-	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<ClubeTituloRanking> rankingsTitulos) {
+	/*
+		select cr.ano, cr.classificacao_nacional, count(*)
+		from clube_ranking cr 
+		where cr.classificacao_nacional in (1, 17)
+		group by cr.ano, cr.classificacao_nacional
+		order by count(*);
+		
+		select cr.ano, cr.classificacao_copa_nacional, count(*), array_agg(c.liga) 
+		from clube_ranking cr 
+		inner join clube c on cr.id_clube = c.id 
+		where cr.classificacao_copa_nacional in (5, 10)
+		group by cr.ano, cr.classificacao_copa_nacional
+		order by count(*), ano;
+		
+		select cr.ano, cr.classificacao_continental, count(*)
+		from clube_ranking cr 
+		where cr.classificacao_continental in (5, 10)
+		group by cr.ano, cr.classificacao_continental
+		order by count(*), ano;
+	 */
+	
+	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<ClubeTituloRanking> rankingsTitulos) {//TODO: transformar em consulta SQL
 		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(ClubeTituloRanking::getClube, Function.identity())));
 	}
 	
@@ -107,20 +128,21 @@ public class ClubeRankingUtil {
 	private static final OrdemClassificacaoGeral[] ORDEM = {
 			
 			new OrdemClassificacaoGeral(1, ClassificacaoContinentalFinal.C_CAMPEAO),
-			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CII_CAMPEAO),
 			new OrdemClassificacaoGeral(3, ClassificacaoNacionalFinal.N_1),
+			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CII_CAMPEAO),
 			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_2),
 			new OrdemClassificacaoGeral(5, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),
-			new OrdemClassificacaoGeral(6, ClassificacaoNacionalFinal.N_3),		
+			new OrdemClassificacaoGeral(6, ClassificacaoNacionalFinal.N_3),
 			new OrdemClassificacaoGeral(7, ClassificacaoNacionalFinal.N_4),
 			new OrdemClassificacaoGeral(8, ClassificacaoNacionalFinal.N_5),
-			new OrdemClassificacaoGeral(9, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
+			//new OrdemClassificacaoGeral(9, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
 			new OrdemClassificacaoGeral(10, ClassificacaoNacionalFinal.N_6),
 			new OrdemClassificacaoGeral(11, ClassificacaoNacionalFinal.N_7),
-			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),			
+			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),
+			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CIII_CAMPEAO),
 			/*new OrdemClassificacaoGeral(13, ClassificacaoContinentalFinal.C_VICE_CAMPEAO),
 			new OrdemClassificacaoGeral(14, ClassificacaoContinentalFinal.CII_VICE_CAMPEAO),
-			new OrdemClassificacaoGeral(15, ClassificacaoCopaNacionalFinal.CN_VICE_CAMPEAO),*/			
+			new OrdemClassificacaoGeral(15, ClassificacaoCopaNacionalFinal.CN_VICE_CAMPEAO),*/
 			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_9),
 			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_10),
 			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.N_11),

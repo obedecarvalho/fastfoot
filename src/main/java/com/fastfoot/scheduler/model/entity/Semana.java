@@ -36,13 +36,16 @@ public class Semana {
 	/**
 	 * Controle da execucao assincrona
 	 */
-	private Boolean emExecucao;
+	//private Boolean emExecucao;
 	
 	@Transient
 	List<Rodada> rodadas;
 	
 	@Transient
 	List<RodadaEliminatoria> rodadasEliminatorias;
+	
+	@Transient
+	List<RodadaAmistosa> rodadasAmistosas;
 
 	public Long getId() {
 		return id;
@@ -84,13 +87,13 @@ public class Semana {
 		this.rodadasEliminatorias = rodadasEliminatorias;
 	}
 
-	public Boolean getEmExecucao() {
+	/*public Boolean getEmExecucao() {
 		return emExecucao;
 	}
 
 	public void setEmExecucao(Boolean emExecucao) {
 		this.emExecucao = emExecucao;
-	}
+	}*/
 
 	public void addRodada(Rodada rodada) {
 		if (rodadas == null) {
@@ -99,11 +102,18 @@ public class Semana {
 		rodadas.add(rodada);
 	}
 	
-	public void addRodadaEliminatoria(RodadaEliminatoria rodada) {
+	public void addRodada(RodadaEliminatoria rodada) {
 		if (rodadasEliminatorias == null) {
 			rodadasEliminatorias = new ArrayList<RodadaEliminatoria>();
 		}
 		rodadasEliminatorias.add(rodada);
+	}
+	
+	public void addRodada(RodadaAmistosa rodada) {
+		if (rodadasAmistosas == null) {
+			rodadasAmistosas = new ArrayList<RodadaAmistosa>();
+		}
+		rodadasAmistosas.add(rodada);
 	}
 
 	public boolean isUltimaSemana() {

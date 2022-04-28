@@ -1,6 +1,7 @@
 package com.fastfoot.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,11 @@ import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
+import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Clube;
+import com.fastfoot.model.entity.Parametro;
 import com.fastfoot.model.repository.ClubeRepository;
+import com.fastfoot.model.repository.ParametroRepository;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
@@ -37,10 +41,14 @@ public class PreCarregarService {
 	@Autowired
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
+	@Autowired
+	private ParametroRepository parametroRepository;
+
 	public void preCarregarClubes () {
 		inserirClubes();
 		inserirClubesRanking();
 		inserirClubeTituloRanking();
+		inserirParametro();
 	}
 
 	private void inserirClubes() {
@@ -183,6 +191,32 @@ public class PreCarregarService {
 			clubes.add(new Clube(132, Liga.ENGLND, 61, "Bolton Wanderers"));*/
 			
 			clubeRepository.saveAll(clubes);
+		}
+	}
+	
+	private void inserirParametro() {
+		
+		if (parametroRepository.findAll().isEmpty()) {
+
+			Parametro p1 = new Parametro();
+			p1.setNome(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+			p1.setValor("2");
+			p1.setValorMinimo("0");
+			p1.setValorMaximo("8");
+
+			Parametro p2 = new Parametro();
+			p2.setNome(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
+			p2.setValor("true");
+
+			Parametro p3 = new Parametro();
+			p3.setNome(ParametroConstantes.JOGAR_5_LIGAS);
+			p3.setValor("false");
+
+			Parametro p4 = new Parametro();
+			p4.setNome(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+			p4.setValor("true");
+
+			parametroRepository.saveAll(Arrays.asList(p1, p2, p3, p4));
 		}
 	}
 
