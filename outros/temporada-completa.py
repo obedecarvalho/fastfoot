@@ -8,7 +8,7 @@ urlNovaTemporada = 'http://localhost:8081/novaTemporada'
 numero = 0;
 novaTemporada = False;
 
-rodadaFinal = 24
+rodadaFinal = 25
 
 while numero < rodadaFinal:
 	time.sleep(0.5)

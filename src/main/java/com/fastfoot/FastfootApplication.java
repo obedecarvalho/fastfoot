@@ -17,12 +17,23 @@ public class FastfootApplication {
 	}
 
 	@Bean(name = "partidaExecutor")
-	public Executor asyncExecutor() {
+	public Executor asyncPartidaExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(4);
-		executor.setMaxPoolSize(8);
-		executor.setQueueCapacity(32);
+		//executor.setMaxPoolSize(8);
+		//executor.setQueueCapacity(32);
 		executor.setThreadNamePrefix("PartidaExecutor-");
+		executor.initialize();
+		return executor;
+    }
+	
+	@Bean(name = "jogadorServiceExecutor")
+	public Executor asyncJogadorServiceExecutor() {
+		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(8);
+		//executor.setMaxPoolSize(8);
+		//executor.setQueueCapacity(32);
+		executor.setThreadNamePrefix("jogadorServiceExecutor-");
 		executor.initialize();
 		return executor;
     }

@@ -1,5 +1,7 @@
 package com.fastfoot.player.model.factory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.fastfoot.model.entity.Clube;
@@ -7,6 +9,7 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.service.util.JogadorCalcularForcaUtil;
 import com.fastfoot.player.service.util.NomeUtil;
 
 public class JogadorFactory {
@@ -52,11 +55,12 @@ public class JogadorFactory {
 		default:
 			break;
 		}
+		//JogadorCalcularForcaUtil.calcular(jogador);
 		return jogador;
 	}
 
 	public static Jogador gerarGoleiro(Clube clube, Integer numero) {
-		Jogador j = gerarGoleiro(clube.getOverhall(), numero);
+		Jogador j = gerarGoleiro(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -67,28 +71,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.GOLEIRO);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.JOGO_AEREO);
+		
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarZagueiro(Clube clube, Integer numero) {
-		Jogador j = gerarZagueiro(clube.getOverhall(), numero);
+		Jogador j = gerarZagueiro(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -99,28 +106,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.ZAGUEIRO);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarLateral(Clube clube, Integer numero) {
-		Jogador j = gerarLateral(clube.getOverhall(), numero);
+		Jogador j = gerarLateral(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -131,28 +141,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.LATERAL);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarVolante(Clube clube, Integer numero) {
-		Jogador j = gerarVolante(clube.getOverhall(), numero);
+		Jogador j = gerarVolante(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -163,28 +176,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.VOLANTE);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarMeiaLateral(Clube clube, Integer numero) {
-		Jogador j = gerarMeiaLateral(clube.getOverhall(), numero);
+		Jogador j = gerarMeiaLateral(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -195,28 +211,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.MEIA_LATERAL);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+		
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarMeia(Clube clube, Integer numero) {
-		Jogador j = gerarMeia(clube.getOverhall(), numero);
+		Jogador j = gerarMeia(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -227,28 +246,31 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.MEIA);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+		
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
 	}
 	
 	public static Jogador gerarAtacante(Clube clube, Integer numero) {
-		Jogador j = gerarAtacante(clube.getOverhall(), numero);
+		Jogador j = gerarAtacante(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
 	}
@@ -259,24 +281,41 @@ public class JogadorFactory {
 		j.setPosicao(Posicao.ATACANTE);
 		j.setNumero(numero);
 		j.setNome(NomeUtil.getNome());
+		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
 		
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_ESPECIFICO), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_COMUM), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidade(overhall, PESO_HABILIDADE_OUTROS), Habilidade.JOGO_AEREO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.PASSE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.ARMACAO);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CABECEIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.MARCACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DESARME);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.INTERCEPTACAO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FORCA);
+		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.POSICIONAMENTO);
+		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
+		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
+		
+		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
+	}
+
+	private static Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
+		Integer valor = gerarValorHabilidade(media, PESO_HABILIDADE_ESPECIFICO);
+		valorHabilidadesEspecificas.add(valor);
+		return valor;
+	}
+	
+	private static Integer gerarValorHabilidadeComum(Integer media) {
+		return gerarValorHabilidade(media, PESO_HABILIDADE_COMUM);
+	}
+	
+	private static Integer gerarValorHabilidadeOutros(Integer media) {
+		return gerarValorHabilidade(media, PESO_HABILIDADE_OUTROS);
 	}
 
 	private static Integer gerarValorHabilidade(Integer media, Double peso) {

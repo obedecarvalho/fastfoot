@@ -1,5 +1,6 @@
 package com.fastfoot.scheduler.model.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -39,6 +40,14 @@ public class RodadaAmistosa implements RodadaJogavel {
 	@Transient
 	private List<PartidaAmistosaResultado> partidas;
 
+	public RodadaAmistosa() {
+
+	}
+	
+	public RodadaAmistosa(Integer numero) {
+		this.numero = numero;
+	}
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,6 +71,13 @@ public class RodadaAmistosa implements RodadaJogavel {
 
 	public void setPartidas(List<PartidaAmistosaResultado> partidas) {
 		this.partidas = partidas;
+	}
+	
+	public void addAllPartidas(List<PartidaAmistosaResultado> partidas) {
+		if (this.partidas == null) {
+			this.partidas = new ArrayList<PartidaAmistosaResultado>();
+		}
+		this.partidas.addAll(partidas);
 	}
 
 	/*public Campeonato getCampeonato() {

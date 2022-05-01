@@ -16,8 +16,10 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
+import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
+import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
@@ -43,6 +45,9 @@ public class RodadaService {
 
 	@Autowired
 	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
+
+	@Autowired
+	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
 	
 	//###	SERVICE	###
 	@Autowired
@@ -181,5 +186,32 @@ public class RodadaService {
 		partidaEstatisticasRepository.save(partida.getPartidaResumo());
 		jogadorEstatisticasRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
 		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
+	}
+
+	@Async("partidaExecutor")
+	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
+		//System.err.println(Thread.currentThread().getName() + " - Inicio");
+
+		carregarPartidas(rodada);
+		jogarPartidas(rodada);
+		salvarPartidas(rodada);
+		
+		//System.err.println(Thread.currentThread().getName() + " - Fim");
+		
+		return CompletableFuture.completedFuture(rodada);
+	}
+
+	private void carregarPartidas(RodadaAmistosa rodada) {
+		rodada.setPartidas(partidaAmistosaResultadoRepository.findByRodada(rodada));
+	}
+
+	private void jogarPartidas(RodadaAmistosa rodada) {
+		partidaResultadoService.jogarRodada(rodada);
+	}
+
+	private void salvarPartidas(RodadaAmistosa r) {
+		boolean salvarEstatisticas = false;
+		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
+		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 	}
 }

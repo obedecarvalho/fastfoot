@@ -71,4 +71,7 @@ public class Constantes {
 	
 	/** Número de clubes por grupo */
 	public static final Integer NRO_CLUBES_GRUPOS_AMISTOSOS = 4;
+
+	//### ROLETA	###
+	public static final Integer ROLETA_N_POWER = 2;
 }

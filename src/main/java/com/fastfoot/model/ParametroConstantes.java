@@ -12,4 +12,5 @@ public class ParametroConstantes {
 
 	public static final String NUMERO_CAMPEONATOS_CONTINENTAIS = "NUMERO_CAMPEONATOS_CONTINENTAIS";
 
+	public static final String ESTRATEGIA_COPA_NACIONAL = "ESTRATEGIA_COPA_NACIONAL";//AUTOMATICA, 8, 12, 16//TODO
 }

@@ -4,7 +4,9 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.service.util.ElementoRoleta;
 
@@ -16,9 +18,14 @@ public class Clube implements ElementoRoleta {
 	
 	private String nome;
 	
-	private Integer overhall;
+	private Integer forcaGeral;
 	
 	private Liga liga;
+
+	private Integer forcaGeralAtual;
+
+	@Transient
+	private Integer valorN;
 	
 	public Clube() {
 		super();
@@ -29,11 +36,11 @@ public class Clube implements ElementoRoleta {
 		this.id = id;
 	}
 
-	public Clube(Integer id, Liga liga, Integer overhall, String nome) {
+	public Clube(Integer id, Liga liga, Integer forcaGeral, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.overhall = overhall;
+		this.forcaGeral = forcaGeral;
 		this.liga = liga;
 	}
 
@@ -53,12 +60,12 @@ public class Clube implements ElementoRoleta {
 		this.nome = nome;
 	}
 
-	public Integer getOverhall() {
-		return overhall;
+	public Integer getForcaGeral() {
+		return forcaGeral;
 	}
 
-	public void setOverhall(Integer overhall) {
-		this.overhall = overhall;
+	public void setForcaGeral(Integer overhall) {
+		this.forcaGeral = overhall;
 	}
 
 	public Liga getLiga() {
@@ -69,6 +76,14 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}
 
+	public Integer getForcaGeralAtual() {
+		return forcaGeralAtual;
+	}
+
+	public void setForcaGeralAtual(Integer forcaGeralAtual) {
+		this.forcaGeralAtual = forcaGeralAtual;
+	}
+
 	@Override
 	public String toString() {
 		return "Clube [nome=" + nome + ", liga=" + liga.name() + "]";
@@ -76,7 +91,15 @@ public class Clube implements ElementoRoleta {
 
 	@Override
 	public Integer getValor() {
-		return overhall;
+		return forcaGeralAtual;
+	}
+
+	@Override
+	public Integer getValorN() {
+		if (valorN == null) {
+			valorN = (int) Math.pow(forcaGeralAtual, Constantes.ROLETA_N_POWER);
+		}
+		return valorN;
 	}
 
 	@Override

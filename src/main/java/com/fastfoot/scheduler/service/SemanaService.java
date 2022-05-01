@@ -26,6 +26,7 @@ import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
+import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -36,6 +37,7 @@ import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
+import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
@@ -100,6 +102,9 @@ public class SemanaService {
 	@Autowired
 	private ParametroService parametroService;
 
+	@Autowired
+	private RodadaAmistoraRepository rodadaAmistoraRepository;
+
 	/*public SemanaDTO proximaSemana() {
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
@@ -139,9 +144,11 @@ public class SemanaService {
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
+		List<RodadaAmistosa> rodadasAmistosas = rodadaAmistoraRepository.findBySemana(semana);
 		
 		semana.setRodadas(rodadas);
 		semana.setRodadasEliminatorias(rodadaEliminatorias);
+		semana.setRodadasAmistosas(rodadasAmistosas);
 
 		/*carregarPartidas(semana);
 		jogarPartidas(semana);
@@ -162,6 +169,10 @@ public class SemanaService {
 		}
 
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+			rodadasFuture.add(rodadaService.executarRodada(r));
+		}
+		
+		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
 			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
 

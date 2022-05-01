@@ -9,7 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.service.util.ElementoRoleta;
 
@@ -30,6 +32,9 @@ public class HabilidadeValor implements ElementoRoleta {
 	private Integer valor;
 	
 	private Integer potencialDesenvolvimento;
+
+	@Transient
+	private Integer valorN;
 	
 	public HabilidadeValor() {
 
@@ -56,6 +61,14 @@ public class HabilidadeValor implements ElementoRoleta {
 	@Override
 	public Integer getValor() {
 		return valor;
+	}
+
+	@Override
+	public Integer getValorN() {
+		if (valorN == null) {
+			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
+		}
+		return valorN;
 	}
 
 	public void setValor(Integer valor) {

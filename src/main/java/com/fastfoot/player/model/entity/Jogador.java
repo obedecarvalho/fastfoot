@@ -38,6 +38,8 @@ public class Jogador {
 	private Integer numero;
 
 	private Integer idade;
+
+	private Integer forcaGeral;
 	
 	@Transient
 	private List<HabilidadeValor> habilidades;
@@ -102,6 +104,14 @@ public class Jogador {
 
 	public void setHabilidades(List<HabilidadeValor> habilidadeValor) {
 		this.habilidades = habilidadeValor;
+	}
+
+	public Integer getForcaGeral() {
+		return forcaGeral;
+	}
+
+	public void setForcaGeral(Integer forcaGeral) {
+		this.forcaGeral = forcaGeral;
 	}
 
 	@Override

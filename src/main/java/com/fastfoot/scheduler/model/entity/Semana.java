@@ -95,6 +95,14 @@ public class Semana {
 		this.emExecucao = emExecucao;
 	}*/
 
+	public List<RodadaAmistosa> getRodadasAmistosas() {
+		return rodadasAmistosas;
+	}
+
+	public void setRodadasAmistosas(List<RodadaAmistosa> rodadasAmistosas) {
+		this.rodadasAmistosas = rodadasAmistosas;
+	}
+
 	public void addRodada(Rodada rodada) {
 		if (rodadas == null) {
 			rodadas = new ArrayList<Rodada>();

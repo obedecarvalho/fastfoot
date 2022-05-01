@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.repository.ClubeRepository;
+import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.JogadorService;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -59,6 +61,9 @@ public class TemporadaService {
 
 	@Autowired
 	private SemanaRepository semanaRepository;
+
+	@Autowired
+	private JogadorRepository jogadorRepository;
 	
 	@Autowired
 	private CampeonatoService campeonatoService;
@@ -93,7 +98,20 @@ public class TemporadaService {
 			ano = temporada.getAno() + 1;
 		} else {
 			preCarregarService.preCarregarClubes();
-			jogadorService.criarJogadoresClube();
+			
+			if (jogadorRepository.findAll().isEmpty()) {//TODO
+				List<Clube> clubes = clubeRepository.findAll();
+				CompletableFuture<Boolean> cj1 = jogadorService.criarJogadoresClube(clubes.subList(0, 16));
+				CompletableFuture<Boolean> cj5 = jogadorService.criarJogadoresClube(clubes.subList(16, 32));
+				CompletableFuture<Boolean> cj2 = jogadorService.criarJogadoresClube(clubes.subList(32, 48));
+				CompletableFuture<Boolean> cj6 = jogadorService.criarJogadoresClube(clubes.subList(48, 64));
+				CompletableFuture<Boolean> cj3 = jogadorService.criarJogadoresClube(clubes.subList(64, 80));
+				CompletableFuture<Boolean> cj7 = jogadorService.criarJogadoresClube(clubes.subList(80, 96));
+				CompletableFuture<Boolean> cj4 = jogadorService.criarJogadoresClube(clubes.subList(96, 112));
+				CompletableFuture<Boolean> cj8 = jogadorService.criarJogadoresClube(clubes.subList(112, 128));
+				
+				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();//TODO: remover??
+			}
 		}
 
 		temporada = TemporadaFactory.criarTempordada(ano);	
@@ -227,8 +245,17 @@ public class TemporadaService {
 		
 		//Amistosos
 		if (marcarAmistosos) {
-			Map<Liga, List<Clube>> clubesAmistosos = null;
-			for (int i = nroCompeticoes; i < 8; i++) {
+			Map<Liga, List<Clube>> clubesAmistosos = new HashMap<Liga, List<Clube>>();
+
+			//
+			int posInicial = nroCompeticoes * Constantes.NRO_CLUBES_POR_LIGA_CONT + 1;
+			for (Liga liga : Liga.getAll()) {
+				clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial, 32));
+			}
+			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosas(temporada, clubesAmistosos));
+			//
+			
+			/*for (int i = nroCompeticoes; i < 8; i++) {
 				clubesAmistosos = new HashMap<Liga, List<Clube>>();
 				
 				int posInicial = i*Constantes.NRO_CLUBES_POR_LIGA_CONT; 
@@ -240,7 +267,7 @@ public class TemporadaService {
 				}
 				
 				rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosas(temporada, clubesAmistosos));
-			}
+			}*/
 		}
 	}
 

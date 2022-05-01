@@ -1,5 +1,6 @@
 package com.fastfoot.match.model;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.service.util.ElementoRoleta;
 
 public class EsquemaTransicao implements ElementoRoleta {
@@ -9,6 +10,8 @@ public class EsquemaTransicao implements ElementoRoleta {
 	private EsquemaPosicao posFinal;
 	
 	private Integer peso;
+
+	private Integer valorN;
 	
 	public EsquemaTransicao(EsquemaPosicao posInicial, EsquemaPosicao posFinal, Integer peso) {
 		super();
@@ -44,6 +47,14 @@ public class EsquemaTransicao implements ElementoRoleta {
 	@Override
 	public Integer getValor() {
 		return peso;
+	}
+
+	@Override
+	public Integer getValorN() {
+		if (valorN == null) {
+			valorN = (int) Math.pow(peso, Constantes.ROLETA_N_POWER);
+		}
+		return valorN;
 	}
 
 	@Override
