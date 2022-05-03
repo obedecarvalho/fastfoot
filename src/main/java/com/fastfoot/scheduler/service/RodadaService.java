@@ -2,6 +2,7 @@ package com.fastfoot.scheduler.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -40,8 +41,8 @@ public class RodadaService {
 	@Autowired
 	private PartidaResumoRepository partidaEstatisticasRepository;
 	
-	@Autowired
-	private PartidaLanceRepository jogadorEstatisticasRepository;
+	/*@Autowired
+	private PartidaLanceRepository jogadorEstatisticasRepository;*/
 
 	@Autowired
 	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
@@ -52,6 +53,8 @@ public class RodadaService {
 	//###	SERVICE	###
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
+
+	private static boolean SALVAR_ESTATISTICAS = true;
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
@@ -99,7 +102,7 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(Rodada r) {
-		boolean salvarEstatisticas = false;
+		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
 
 		partidaRepository.saveAllAndFlush(r.getPartidas());
 		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
@@ -167,7 +170,7 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(RodadaEliminatoria r) {
-		boolean salvarEstatisticas = false;
+		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
@@ -177,14 +180,17 @@ public class RodadaService {
 	}
 
 	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {
+		//
+		partidaEstatisticasRepository.saveAll(partidas.stream().map(p -> p.getPartidaResumo()).collect(Collectors.toList()));
+		//
 		for (PartidaResultadoJogavel partida : partidas) {
 			salvarEstatisticas(partida);
 		}
 	}
 
 	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
-		partidaEstatisticasRepository.save(partida.getPartidaResumo());
-		jogadorEstatisticasRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
+		//partidaEstatisticasRepository.save(partida.getPartidaResumo());
+		//jogadorEstatisticasRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
 		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
 	}
 
@@ -210,7 +216,7 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(RodadaAmistosa r) {
-		boolean salvarEstatisticas = false;
+		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 	}

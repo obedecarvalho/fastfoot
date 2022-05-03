@@ -11,20 +11,20 @@ import javax.persistence.SequenceGenerator;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.Jogador;
 
-@Entity
+//@Entity
 public class PartidaLance {
 
-	@Id
+	/*@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaLanceSequence")	
-	@SequenceGenerator(name = "partidaLanceSequence", sequenceName = "partida_lance_seq")
+	@SequenceGenerator(name = "partidaLanceSequence", sequenceName = "partida_lance_seq")*/
 	private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_resumo")
+	/*@ManyToOne
+	@JoinColumn(name = "id_partida_resumo")*/
 	private PartidaResumo partidaResumo;
 	
-	@ManyToOne
-	@JoinColumn(name = "id_jogador")
+	/*@ManyToOne
+	@JoinColumn(name = "id_jogador")*/
 	private Jogador jogador;
 
 	private Habilidade habilidadeUsada;

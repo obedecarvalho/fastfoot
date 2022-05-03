@@ -252,7 +252,7 @@ public class TemporadaService {
 			for (Liga liga : Liga.getAll()) {
 				clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial, 32));
 			}
-			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosas(temporada, clubesAmistosos));
+			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosasAgrupaGrupo(temporada, clubesAmistosos));
 			//
 			
 			/*for (int i = nroCompeticoes; i < 8; i++) {

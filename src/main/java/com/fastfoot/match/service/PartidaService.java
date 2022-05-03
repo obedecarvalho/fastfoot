@@ -30,7 +30,11 @@ public class PartidaService {
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 
-	private Integer NUM_LANCES = 90;//private Integer NUM_LANCES = 90;
+	private double NUM_LANCES_POR_MINUTO = 1;
+	
+	private Integer MINUTOS = 90;
+
+	private float MIN_FORA = 0.2f;
 
 	private Boolean imprimir = false;
 	
@@ -79,7 +83,7 @@ public class PartidaService {
 		
 		Boolean jogadorAcaoVenceu = null;
 		
-		for (int i = 0; i < NUM_LANCES; i++) {
+		for (int i = 0; i < (NUM_LANCES_POR_MINUTO * MINUTOS); i++) {
 			
 			do {
 			
@@ -134,11 +138,16 @@ public class PartidaService {
 											Arrays.asList(habilidadeValorAcao.getHabilidadeAcao().getReacaoGoleiro())));
 					
 					//fora
-					habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
+					//habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
+					habilidadeFora = new HabilidadeValor(Habilidade.FORA,
+							Math.max(habilidadeValorAcao.getJogador().getForcaGeral() - habilidadeValorAcao.getValor(),
+									Math.round(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral())));
+					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
 					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
 					habilidadeVencedora = (HabilidadeValor) RoletaUtil.executarN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
 					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao) ? true : false;
+					//System.err.println("\t\tFORA!!!!");
 					
 					//
 					criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(),

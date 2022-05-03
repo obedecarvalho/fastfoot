@@ -90,8 +90,8 @@ public class SemanaService {
 	@Autowired
 	private PartidaResumoRepository partidaResumoRepository;
 	
-	@Autowired
-	private PartidaLanceRepository partidaLanceRepository;
+	/*@Autowired
+	private PartidaLanceRepository partidaLanceRepository;*/
 
 	@Autowired
 	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
@@ -417,7 +417,7 @@ public class SemanaService {
 
 	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
 		partidaResumoRepository.save(partida.getPartidaResumo());
-		partidaLanceRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
+		//partidaLanceRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
 		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
 	}
 

@@ -377,3 +377,11 @@ from clube_ranking cr
 where cr.classificacao_continental in (5, 10)
 group by cr.ano, cr.classificacao_continental
 order by count(*), ano;
+
+select jge.id_jogador, jge.habilidade_usada, 
+	sum(jge.quantidade_uso) as quantidade_uso, sum(jge.quantidade_uso_vencedor) as quantidade_uso_vencedor,
+	j.numero
+from jogador_grupo_estatisticas jge
+inner join jogador j on jge.id_jogador = j.id
+group by jge.id_jogador, jge.habilidade_usada, j.numero
+order by jge.id_jogador, jge.habilidade_usada, j.numero;

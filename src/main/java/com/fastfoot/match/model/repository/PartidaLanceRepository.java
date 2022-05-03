@@ -9,8 +9,8 @@ import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.player.model.entity.Jogador;
 
-@Repository
-public interface PartidaLanceRepository extends JpaRepository<PartidaLance, Long> {
+//@Repository
+public interface PartidaLanceRepository /*extends JpaRepository<PartidaLance, Long>*/ {
 	
 	public List<PartidaLance> findByJogador(Jogador jogador);
 	

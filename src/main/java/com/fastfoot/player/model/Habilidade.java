@@ -22,7 +22,10 @@ public enum Habilidade {
 	DOMINIO("Dominio", TipoHabilidade.ACAO_INICIAL),
 
 	REFLEXO("Reflexo", TipoHabilidade.REACAO_GOLEIRO),
-	JOGO_AEREO("Jogo Aereo", TipoHabilidade.REACAO_GOLEIRO);
+	JOGO_AEREO("Jogo Aereo", TipoHabilidade.REACAO_GOLEIRO),
+	
+	ERRO("ERRO", null),
+	FORA("FORA", null);
 
 	private String descricao;
 	

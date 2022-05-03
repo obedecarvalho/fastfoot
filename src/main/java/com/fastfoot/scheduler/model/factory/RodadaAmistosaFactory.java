@@ -16,6 +16,34 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public class RodadaAmistosaFactory {
+
+	public static List<RodadaAmistosa> criarRodadasAmistosasAgrupaGrupo(Temporada temporada, Map<Liga, List<Clube>> clubes) {
+		
+		int nroCompeticoes = clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT;
+		
+		Map<Liga, List<Clube>> clubesGrupo = new HashMap<Liga, List<Clube>>();
+		List<RodadaAmistosa> rodadasGeral = new ArrayList<RodadaAmistosa>();
+		List<RodadaAmistosa> rodadas = null;
+		
+		for (int i = 0; i < nroCompeticoes; i++) {
+			
+			int posInicial = i * Constantes.NRO_CLUBES_POR_LIGA_CONT;
+			int posFinal = (i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT;
+			
+			for (Liga l : Liga.getAll()) {
+				clubesGrupo.put(l, clubes.get(l).subList(posInicial, posFinal));
+			}
+			//
+			rodadas = Arrays.asList(new RodadaAmistosa(101), new RodadaAmistosa(102), new RodadaAmistosa(103));
+			gerarPartidasGrupos(clubesGrupo, rodadas);
+			rodadasGeral.addAll(rodadas);
+			//
+			//rodadasGeral.addAll(gerarRodadas(clubesGrupo));
+			clubesGrupo.clear();
+		}
+		SemanaUtil.associarRodadaAmistosaSemana(temporada, rodadasGeral);
+		return rodadasGeral;
+	}
 	
 	public static List<RodadaAmistosa> criarRodadasAmistosas(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		//List<RodadaAmistosa> rodadas = Arrays.asList(new RodadaAmistosa(101), new RodadaAmistosa(102), new RodadaAmistosa(103));
