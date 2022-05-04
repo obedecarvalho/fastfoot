@@ -313,6 +313,7 @@ public class SemanaService {
 
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
+			String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
 			RodadaEliminatoria rodadaInicial = null;
 			List<PartidaEliminatoriaResultado> partidas = null;
@@ -335,8 +336,14 @@ public class SemanaService {
 				partidas = partidaEliminatoriaRepository.findByRodada(rodadaInicial);
 				c.setGrupos(grupos);
 				rodadaInicial.setPartidas(partidas);
-				PromotorEliminatoria.promoverGruposParaRodadasEliminatorias(grupos, rodadaInicial);
-				partidaEliminatoriaRepository.saveAll(rodadaInicial.getPartidas());
+				//PromotorEliminatoria.promoverGruposParaRodadasEliminatorias(grupos, rodadaInicial);
+				//partidaEliminatoriaRepository.saveAll(rodadaInicial.getPartidas());
+				c.setPrimeiraRodadaEliminatoria(rodadaInicial);
+			}
+			
+			getPromotorContinental(estrategiaPromotorCont).promover(campeonatosMisto);
+			for (CampeonatoMisto c : campeonatosMisto) {
+				partidaEliminatoriaRepository.saveAll(c.getPrimeiraRodadaEliminatoria().getPartidas());
 			}
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
@@ -374,6 +381,18 @@ public class SemanaService {
 			}
 		}
 
+	}
+
+	private PromotorContinental getPromotorContinental(String estrategia) {
+		PromotorContinental promotorContinental = null;
+
+		if ("DOIS_MELHORES".equals(estrategia)) {
+			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
+		} else if ("OUTRO_CAMPEONATO".equals(estrategia)) {	
+			promotorContinental = new PromotorContinentalImplInterCampeonatos();
+		}
+
+		return promotorContinental;
 	}
 
 	private PromotorEliminatoria getPromotorEliminatoria(Boolean jogarContIII) {

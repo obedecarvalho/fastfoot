@@ -28,4 +28,9 @@ public class ParametroService {
 		Parametro parametro = getParametro(nome);		
 		return Integer.valueOf(parametro.getValor());
 	}
+
+	public String getParametroString(String nome) {
+		Parametro parametro = getParametro(nome);		
+		return parametro.getValor();
+	}
 }

@@ -37,6 +37,9 @@ public class CampeonatoMisto implements CampeonatoJogavel {
 
 	@Transient
 	private List<RodadaEliminatoria> rodadasEliminatorias;
+	
+	@Transient
+	private RodadaEliminatoria primeiraRodadaEliminatoria;
 
 	public Long getId() {
 		return id;
@@ -96,6 +99,14 @@ public class CampeonatoMisto implements CampeonatoJogavel {
 		this.nivelCampeonato = nivelCampeonato;
 	}
 	
+	public RodadaEliminatoria getPrimeiraRodadaEliminatoria() {
+		return primeiraRodadaEliminatoria;
+	}
+
+	public void setPrimeiraRodadaEliminatoria(RodadaEliminatoria primeiraRodadaEliminatoria) {
+		this.primeiraRodadaEliminatoria = primeiraRodadaEliminatoria;
+	}
+
 	@Override
 	public Liga getLiga() {
 		return null;

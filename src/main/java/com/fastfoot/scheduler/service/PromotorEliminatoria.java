@@ -12,7 +12,7 @@ public abstract class PromotorEliminatoria {
 
 	public abstract void classificarCopaNacionalII(RodadaEliminatoria rodadaCNII, RodadaEliminatoria rodada1FaseCN, RodadaEliminatoria rodada2FaseCN);
 
-	public static void promoverGruposParaRodadasEliminatorias(List<GrupoCampeonato> grupos, RodadaEliminatoria rodadaInicial) {
+	/*public static void promoverGruposParaRodadasEliminatorias(List<GrupoCampeonato> grupos, RodadaEliminatoria rodadaInicial) {
 		List<PartidaEliminatoriaResultado> partidas = rodadaInicial.getPartidas();
 
 		Clube primeiroColocado, segundoColocado; 
@@ -27,7 +27,7 @@ public abstract class PromotorEliminatoria {
 			partidas.get(i).setClubeMandante(primeiroColocado);
 			partidas.get(j).setClubeVisitante(segundoColocado);
 		}
-	}
+	}*/
 
 	public static void promoverProximaPartidaEliminatoria(PartidaEliminatoriaResultado partida) {
 		if (partida.getClassificaAMandante()) {

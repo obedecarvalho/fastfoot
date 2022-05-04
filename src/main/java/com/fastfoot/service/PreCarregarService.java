@@ -215,8 +215,12 @@ public class PreCarregarService {
 			Parametro p4 = new Parametro();
 			p4.setNome(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
 			p4.setValor("true");
+			
+			Parametro p5 = new Parametro();
+			p5.setNome(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
+			p5.setValor("DOIS_MELHORES");
 
-			parametroRepository.saveAll(Arrays.asList(p1, p2, p3, p4));
+			parametroRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
 		}
 	}
 
