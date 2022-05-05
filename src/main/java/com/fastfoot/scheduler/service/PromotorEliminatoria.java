@@ -1,10 +1,5 @@
 package com.fastfoot.scheduler.service;
 
-import java.util.List;
-
-import com.fastfoot.model.Constantes;
-import com.fastfoot.model.entity.Clube;
-import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 

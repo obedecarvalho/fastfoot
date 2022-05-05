@@ -1,5 +1,6 @@
 package com.fastfoot.match.service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,14 +11,15 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaFactory;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.entity.PartidaLance;
-import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.factory.JogadorGrupoEstatisticasFactory;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -38,41 +40,64 @@ public class PartidaService {
 
 	private Boolean imprimir = false;
 	
-	private PartidaLance criarJogadorEstatisticas(PartidaResumo partidaResumo, Jogador jogador,
+	private Boolean lanceALance = true;
+	
+	private PartidaLance criarPartidaLance(List<PartidaLance> lances, PartidaResultadoJogavel partida, Jogador jogador,
 			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
 		PartidaLance pl = new PartidaLance();
-		pl.setPartidaResumo(partidaResumo);
+		if (partida instanceof PartidaResultado) {
+			pl.setPartidaResultado((PartidaResultado) partida);
+		} else if (partida instanceof PartidaAmistosaResultado) {
+			pl.setPartidaAmistosaResultado((PartidaAmistosaResultado) partida);
+		} else if (partida instanceof PartidaEliminatoriaResultado) {
+			pl.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partida);
+		}
 		pl.setJogador(jogador);
 		pl.setVencedor(vencedor);
 		pl.setHabilidadeUsada(habilidade);
 		pl.setOrdem(ordem);
 		pl.setAcao(acao);
-		partidaResumo.addPartidaLance(pl);
+		lances.add(pl);
 		return pl;
+	}
+	
+	private void atualizarEstatisticasHabilidade(HabilidadeValor habilidadeValor, Boolean vencedor) {
+		habilidadeValor.incrementarQuantidadeUso();
+		if (vencedor) {
+			habilidadeValor.incrementarQuantidadeUsoVencedor();
+		}
 	}
 
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
-		List<Jogador> jogadoresMandante = jogadorRepository.findByClube(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
-		List<Jogador> jogadoresVisitante = jogadorRepository.findByClube(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
+		//TODO: mudar de classe
+		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeCompleto(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
+		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeCompleto(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
 		
-		for (Jogador j : jogadoresMandante) {
+		/*for (Jogador j : jogadoresMandante) {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
 		}
 
 		for (Jogador j : jogadoresVisitante) {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
-		}
+		}*/
 
 		Esquema esquema = EsquemaFactory.gerarEsquema(jogadoresMandante, jogadoresVisitante);
 		
 		jogar(esquema, partidaResultado);
+		
+		for (Jogador j : jogadoresMandante) {
+			habilidadeValorRepository.saveAll(j.getHabilidades());
+		}
+	
+		for (Jogador j : jogadoresVisitante) {
+			habilidadeValorRepository.saveAll(j.getHabilidades());
+		}
 	}
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
-		PartidaResumo partidaResumo = new PartidaResumo();
+		List<PartidaLance> lances = new ArrayList<PartidaLance>();
 		Integer ordemJogada = 1;
-		partidaResumo.setPartidaResultadoJogavel(partidaResultado);
 		Integer golMandante = 0, golVisitante = 0;
 
 		HabilidadeValor habilidadeVencedorAnterior = null;
@@ -81,7 +106,7 @@ public class PartidaService {
 		HabilidadeValor habilidadeFora = null;
 		HabilidadeValor habilidadeVencedora = null;
 		
-		Boolean jogadorAcaoVenceu = null;
+		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
 		for (int i = 0; i < (NUM_LANCES_POR_MINUTO * MINUTOS); i++) {
 			
@@ -101,11 +126,13 @@ public class PartidaService {
 				
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
 
-				criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
-				criarJogadorEstatisticas(partidaResumo, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
+				if (lanceALance) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
+				atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
+				if (lanceALance) criarPartidaLance(lances, partidaResultado, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
+				atualizarEstatisticasHabilidade(habilidadeValorReacao, !jogadorAcaoVenceu);
 				ordemJogada++;
 				
-				partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
+				partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
 				
 				//
 				if (imprimir) print(esquema, habilidadeValorAcao, habilidadeValorReacao, jogadorAcaoVenceu);
@@ -125,10 +152,11 @@ public class PartidaService {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoFimJogadorPosicaoAtualPosse());
 					if (imprimir) System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
-						criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
+						if (lanceALance) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
+						atualizarEstatisticasHabilidade(habilidadeValorAcao, true);
 					}
 					ordemJogada++;
-					partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
+					partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
 				}
 				
 				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {//FINALIZACAO, CABECEIO
@@ -146,36 +174,40 @@ public class PartidaService {
 
 					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
 					habilidadeVencedora = (HabilidadeValor) RoletaUtil.executarN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
-					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao) ? true : false;
+					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
+					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					//System.err.println("\t\tFORA!!!!");
 					
 					//
-					criarJogadorEstatisticas(partidaResumo, esquema.getJogadorPosse(),
-							habilidadeValorAcao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorAcao), ordemJogada, true);
+					if (lanceALance) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(),
+							habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
+					atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
 					
-					criarJogadorEstatisticas(partidaResumo, esquema.getGoleiroSemPosse().getGoleiro(),
-							habilidadeValorReacao.getHabilidade(), habilidadeVencedora.equals(habilidadeValorReacao), ordemJogada, false);
+					if (lanceALance) criarPartidaLance(lances, partidaResultado, esquema.getGoleiroSemPosse().getGoleiro(),
+							habilidadeValorReacao.getHabilidade(), goleiroVenceu, ordemJogada, false);
+					atualizarEstatisticasHabilidade(habilidadeValorReacao, goleiroVenceu);
 					ordemJogada++;
 					
-					partidaResumo.incrementarLance(esquema.getPosseBolaMandante());
+					partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
 
 					//
-					if (imprimir) print(esquema, habilidadeValorAcao, habilidadeValorReacao, habilidadeVencedora.equals(habilidadeValorAcao));
+					if (imprimir) print(esquema, habilidadeValorAcao, habilidadeValorReacao, jogadorAcaoVenceu);
 					//
 					
-					if (habilidadeVencedora.equals(habilidadeValorAcao)) {
+					if (jogadorAcaoVenceu) {
 						if (imprimir) System.err.println("\t\tGOLLL");
 						if (esquema.getPosseBolaMandante()) {
 							golMandante++;
 						} else {
 							golVisitante++;
 						}
-					} else if (habilidadeVencedora.equals(habilidadeValorReacao)) {
+						partidaResultado.incrementarGol(esquema.getPosseBolaMandante());
+					} else if (goleiroVenceu) {
 						if (imprimir) System.err.println("\t\tGOLEIRO DEFENDEU");
-						partidaResumo.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
+						partidaResultado.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (imprimir) System.err.println("\t\tFORA!!!!");
-						partidaResumo.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
+						partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
 					}
 					esquema.inverterPosse();//TODO
 				} else {
@@ -196,46 +228,17 @@ public class PartidaService {
 				habilidadeVencedorAnterior = null;
 			}
 		}
-		//
-		JogadorGrupoEstatisticasFactory.agruparEstatisticas(partidaResumo);
-		//
-		partidaResultado.setGolsMandante(golMandante);
-		partidaResultado.setGolsVisitante(golVisitante);
+
+		//JogadorAgruparGrupoEstatisticasUtil.agruparEstatisticas(lances);
+
 		if (imprimir) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
 		//TODO: penalts
-	
-		partidaResultado.setPartidaResumo(partidaResumo);
+		
+		partidaResultado.setPartidaJogada(true);
 	}
 	
 	//###	TESTE	###
 	
-	/*public void jogarPartida() {
-		int overhallMandante = 85, overhallVisitante = 85;
-		
-		
-		List<Jogador> jogadorMandante =
-		Arrays.asList(JogadorFactory.gerarGoleiro(overhallMandante, 1),
-				JogadorFactory.gerarZagueiro(overhallMandante, 3), JogadorFactory.gerarZagueiro(overhallMandante, 4),
-				JogadorFactory.gerarLateral(overhallMandante, 2), JogadorFactory.gerarVolante(overhallMandante, 5),
-				JogadorFactory.gerarLateral(overhallMandante, 6), JogadorFactory.gerarMeiaLateral(overhallMandante, 7),
-				JogadorFactory.gerarMeia(overhallMandante, 10), JogadorFactory.gerarMeiaLateral(overhallMandante, 8),
-				JogadorFactory.gerarAtacante(overhallMandante, 9), JogadorFactory.gerarAtacante(overhallMandante, 11));
-
-		List<Jogador> jogadorVisitante =
-		Arrays.asList(JogadorFactory.gerarGoleiro(overhallVisitante, 12),
-				JogadorFactory.gerarZagueiro(overhallVisitante, 23),
-				JogadorFactory.gerarZagueiro(overhallVisitante, 24), JogadorFactory.gerarLateral(overhallVisitante, 22),
-				JogadorFactory.gerarVolante(overhallVisitante, 25), JogadorFactory.gerarLateral(overhallVisitante, 26),
-				JogadorFactory.gerarMeiaLateral(overhallVisitante, 27), JogadorFactory.gerarMeia(overhallVisitante, 30),
-				JogadorFactory.gerarMeiaLateral(overhallVisitante, 28),
-				JogadorFactory.gerarAtacante(overhallVisitante, 29),
-				JogadorFactory.gerarAtacante(overhallVisitante, 31));
-		
-		Esquema esquema = EsquemaFactory.gerarEsquema(jogadorMandante, jogadorVisitante);
-		
-		jogar(esquema, null);
-	}*/
-
 	public void print(Esquema esquema, HabilidadeValor habilidadeValorAcao, HabilidadeValor habilidadeValorReacao, boolean jogadorAcaoVenceu) {
 		System.err.println(String.format("\t\t%s (%d) x %s (%d) [%s] [%s]", habilidadeValorAcao.getHabilidade().getDescricao(),
 				habilidadeValorAcao.getValor(), habilidadeValorReacao.getHabilidade().getDescricao(),

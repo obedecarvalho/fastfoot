@@ -17,6 +17,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
 public class HabilidadeValor implements ElementoRoleta {
+	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorSequence")
@@ -32,6 +33,10 @@ public class HabilidadeValor implements ElementoRoleta {
 	private Integer valor;
 	
 	private Integer potencialDesenvolvimento;
+
+	private Integer quantidadeUso;
+	
+	private Integer quantidadeUsoVencedor;
 
 	@Transient
 	private Integer valorN;
@@ -52,6 +57,8 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.valor = valor;
 		this.jogador = jogador;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
+		this.quantidadeUso = 0;
+		this.quantidadeUsoVencedor = 0;
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -107,6 +114,30 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 	
+	public Integer getQuantidadeUso() {
+		return quantidadeUso;
+	}
+
+	public void setQuantidadeUso(Integer quantidadeUso) {
+		this.quantidadeUso = quantidadeUso;
+	}
+
+	public void incrementarQuantidadeUso() {
+		this.quantidadeUso++;
+	}
+
+	public Integer getQuantidadeUsoVencedor() {
+		return quantidadeUsoVencedor;
+	}
+
+	public void setQuantidadeUsoVencedor(Integer quantidadeUsoVencedor) {
+		this.quantidadeUsoVencedor = quantidadeUsoVencedor;
+	}
+
+	public void incrementarQuantidadeUsoVencedor() {
+		this.quantidadeUsoVencedor++;
+	}
+
 	@Override
 	public String toString() {
 		return "HabilidadeValor [hab=" + getHabilidade().name() + ", valor=" + valor + "]";

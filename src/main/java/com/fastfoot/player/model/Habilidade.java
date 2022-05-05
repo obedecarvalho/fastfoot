@@ -4,25 +4,25 @@ public enum Habilidade {
 	
 	NULL("NULL", null),
 
-	PASSE("Passe", TipoHabilidade.ACAO_FIM),
-	FINALIZACAO("Finalizacao", TipoHabilidade.ACAO_FIM),
-	CRUZAMENTO("Cruzamento", TipoHabilidade.ACAO_FIM),
-	ARMACAO("Armacao", TipoHabilidade.ACAO_FIM),
+	PASSE("Passe", TipoHabilidade.ACAO_FIM),//1
+	FINALIZACAO("Finalizacao", TipoHabilidade.ACAO_FIM),//2
+	CRUZAMENTO("Cruzamento", TipoHabilidade.ACAO_FIM),//3
+	ARMACAO("Armacao", TipoHabilidade.ACAO_FIM),//4
 
-	MARCACAO("Marcacao", TipoHabilidade.REACAO),
-	DESARME("Desarme", TipoHabilidade.REACAO),
-	INTERCEPTACAO("Interceptacao", TipoHabilidade.REACAO),
+	MARCACAO("Marcacao", TipoHabilidade.REACAO),//5
+	DESARME("Desarme", TipoHabilidade.REACAO),//6
+	INTERCEPTACAO("Interceptacao", TipoHabilidade.REACAO),//7
 
-	VELOCIDADE("Velocidade", TipoHabilidade.ACAO_MEIO),
-	DIBLE("Dible", TipoHabilidade.ACAO_MEIO),
-	FORCA("Forca", TipoHabilidade.ACAO_MEIO),
+	VELOCIDADE("Velocidade", TipoHabilidade.ACAO_MEIO),//8
+	DIBLE("Dible", TipoHabilidade.ACAO_MEIO),//9
+	FORCA("Forca", TipoHabilidade.ACAO_MEIO),//10
 
-	CABECEIO("Cabeceio", TipoHabilidade.ACAO_INICIO_FIM),
-	POSICIONAMENTO("Posicionamento", TipoHabilidade.ACAO_INICIO_MEIO),
-	DOMINIO("Dominio", TipoHabilidade.ACAO_INICIAL),
+	CABECEIO("Cabeceio", TipoHabilidade.ACAO_INICIO_FIM),//11
+	POSICIONAMENTO("Posicionamento", TipoHabilidade.ACAO_INICIO_MEIO),//12
+	DOMINIO("Dominio", TipoHabilidade.ACAO_INICIAL),//13
 
-	REFLEXO("Reflexo", TipoHabilidade.REACAO_GOLEIRO),
-	JOGO_AEREO("Jogo Aereo", TipoHabilidade.REACAO_GOLEIRO),
+	REFLEXO("Reflexo", TipoHabilidade.REACAO_GOLEIRO),//14
+	JOGO_AEREO("Jogo Aereo", TipoHabilidade.REACAO_GOLEIRO),//15
 	
 	ERRO("ERRO", null),
 	FORA("FORA", null);

@@ -7,9 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
 
-import com.fastfoot.match.model.entity.PartidaResumo;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
@@ -36,9 +34,32 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	private Integer golsMandante;
 	
 	private Integer golsVisitante;
+	
+	private Integer finalizacacoesForaMandante;
+	
+	private Integer finalizacacoesForaVisitante;
+	
+	private Integer finalizacacoesDefendidasMandante;
+	
+	private Integer finalizacacoesDefendidasVisitante;
+	
+	private Integer lancesMandante;
+	
+	private Integer lancesVisitante;
 
-	@Transient
-	private PartidaResumo partidaResumo;
+	private Boolean partidaJogada;
+
+	public PartidaAmistosaResultado() {
+		this.golsMandante = 0;
+		this.golsVisitante = 0;
+		this.finalizacacoesForaMandante = 0;
+		this.finalizacacoesForaVisitante = 0;
+		this.finalizacacoesDefendidasMandante = 0;
+		this.finalizacacoesDefendidasVisitante = 0;
+		this.lancesMandante = 0;
+		this.lancesVisitante = 0;
+		this.partidaJogada = false;
+	}
 
 	public Long getId() {
 		return id;
@@ -66,6 +87,7 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 		this.clubeVisitante = clubeVisitante;
 	}
 
+	@Override
 	public Integer getGolsMandante() {
 		return golsMandante;
 	}
@@ -75,6 +97,7 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 		this.golsMandante = golsMandante;
 	}
 
+	@Override
 	public Integer getGolsVisitante() {
 		return golsVisitante;
 	}
@@ -92,7 +115,67 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	public void setRodada(RodadaAmistosa rodada) {
 		this.rodada = rodada;
 	}
+	
+	public Boolean getPartidaJogada() {
+		return partidaJogada;
+	}
 
+	@Override
+	public void setPartidaJogada(Boolean partidaJogada) {
+		this.partidaJogada = partidaJogada;
+	}
+
+	public Integer getFinalizacacoesForaMandante() {
+		return finalizacacoesForaMandante;
+	}
+
+	public void setFinalizacacoesForaMandante(Integer finalizacacoesForaMandante) {
+		this.finalizacacoesForaMandante = finalizacacoesForaMandante;
+	}
+
+	public Integer getFinalizacacoesForaVisitante() {
+		return finalizacacoesForaVisitante;
+	}
+
+	public void setFinalizacacoesForaVisitante(Integer finalizacacoesForaVisitante) {
+		this.finalizacacoesForaVisitante = finalizacacoesForaVisitante;
+	}
+
+	public Integer getFinalizacacoesDefendidasMandante() {
+		return finalizacacoesDefendidasMandante;
+	}
+
+	public void setFinalizacacoesDefendidasMandante(Integer finalizacacoesDefendidasMandante) {
+		this.finalizacacoesDefendidasMandante = finalizacacoesDefendidasMandante;
+	}
+
+	public Integer getFinalizacacoesDefendidasVisitante() {
+		return finalizacacoesDefendidasVisitante;
+	}
+
+	public void setFinalizacacoesDefendidasVisitante(Integer finalizacacoesDefendidasVisitante) {
+		this.finalizacacoesDefendidasVisitante = finalizacacoesDefendidasVisitante;
+	}
+
+	public Integer getLancesMandante() {
+		return lancesMandante;
+	}
+
+	public void setLancesMandante(Integer lancesMandante) {
+		this.lancesMandante = lancesMandante;
+	}
+
+	public Integer getLancesVisitante() {
+		return lancesVisitante;
+	}
+
+	public void setLancesVisitante(Integer lancesVisitante) {
+		this.lancesVisitante = lancesVisitante;
+	}
+	
+	//###	METODOS AUXILIARES	###
+
+	@Override
 	public Clube getClubeVencedor() {
 		if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
 		if (golsMandante > golsVisitante) return clubeMandante;
@@ -100,26 +183,53 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 		return null;//Empate
 	}
 
+	@Override
 	public Clube getClubePerdedor() {
 		if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
 		if (golsMandante < golsVisitante) return clubeMandante;
 		if (golsVisitante < golsMandante) return clubeVisitante;
 		return null;//Empate
 	}
+	
+	@Override
+	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante) {
+		if (posseBolaMandante) {
+			this.finalizacacoesDefendidasMandante++;
+		} else {
+			this.finalizacacoesDefendidasVisitante++;
+		}
+	}
+
+	@Override
+	public void incrementarFinalizacaoFora(boolean posseBolaMandante) {
+		if (posseBolaMandante) {
+			this.finalizacacoesForaMandante++;
+		} else {
+			this.finalizacacoesForaVisitante++;
+		}
+	}
+
+	@Override
+	public void incrementarLance(boolean posseBolaMandante) {
+		if (posseBolaMandante) {
+			this.lancesMandante++;
+		} else {
+			this.lancesVisitante++;
+		}
+	}
+
+	@Override
+	public void incrementarGol(boolean posseBolaMandante) {
+		if (posseBolaMandante) {
+			this.golsMandante++;
+		} else {
+			this.golsVisitante++;
+		}
+	}
 
 	@Override
 	public String toString() {
 		return "PartidaAmistosaResultado [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " " + golsMandante
 				+ " x " + golsVisitante + " " + clubeVisitante.getNome() + "]";
-	}
-
-	@Override
-	public PartidaResumo getPartidaResumo() {
-		return partidaResumo;
-	}
-
-	@Override
-	public void setPartidaResumo(PartidaResumo partidaResumo) {
-		this.partidaResumo = partidaResumo;
 	}
 }

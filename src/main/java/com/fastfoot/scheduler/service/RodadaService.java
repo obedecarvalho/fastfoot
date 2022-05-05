@@ -2,16 +2,14 @@ package com.fastfoot.scheduler.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.match.model.repository.PartidaResumoRepository;
+import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -37,15 +35,9 @@ public class RodadaService {
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
-
-	@Autowired
-	private PartidaResumoRepository partidaEstatisticasRepository;
 	
-	/*@Autowired
-	private PartidaLanceRepository jogadorEstatisticasRepository;*/
-
 	@Autowired
-	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
+	private PartidaLanceRepository partidaLanceRepository;
 
 	@Autowired
 	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
@@ -54,12 +46,11 @@ public class RodadaService {
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
 
-	private static boolean SALVAR_ESTATISTICAS = true;
+	private static final Boolean SALVAR_ESTATISTICAS = false;
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
-		//System.err.println(Thread.currentThread().getName() + " - Inicio");
-		
+
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
@@ -69,9 +60,7 @@ public class RodadaService {
 			classificarComDesempate(rodada);
 			salvarClassificacao(rodada);
 		}
-		
-		//System.err.println(Thread.currentThread().getName() + " - Fim");
-		
+
 		return CompletableFuture.completedFuture(rodada);
 	}
 
@@ -102,10 +91,11 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(Rodada r) {
-		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
 
 		partidaRepository.saveAllAndFlush(r.getPartidas());
-		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
+
+		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
+
 		if(r.getCampeonato() != null) {
 			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
 		} else if (r.getGrupoCampeonato() != null) {
@@ -150,13 +140,10 @@ public class RodadaService {
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
-		//System.err.println(Thread.currentThread().getName() + " - Inicio");
 
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
-		
-		//System.err.println(Thread.currentThread().getName() + " - Fim");
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -170,40 +157,31 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(RodadaEliminatoria r) {
-		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
 			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());
 		}
-		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
+
+		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
 	}
 
-	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {
-		//
-		partidaEstatisticasRepository.saveAll(partidas.stream().map(p -> p.getPartidaResumo()).collect(Collectors.toList()));
-		//
+	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {//TODO
+		List<PartidaLance> lances = null;
+
 		for (PartidaResultadoJogavel partida : partidas) {
-			salvarEstatisticas(partida);
+			lances = null;//partida.getPartidaLances();
+			partidaLanceRepository.saveAll(lances);
 		}
-	}
-
-	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
-		//partidaEstatisticasRepository.save(partida.getPartidaResumo());
-		//jogadorEstatisticasRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
-		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
 	}
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
-		//System.err.println(Thread.currentThread().getName() + " - Inicio");
 
 		carregarPartidas(rodada);
 		jogarPartidas(rodada);
 		salvarPartidas(rodada);
-		
-		//System.err.println(Thread.currentThread().getName() + " - Fim");
-		
+
 		return CompletableFuture.completedFuture(rodada);
 	}
 
@@ -216,8 +194,9 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(RodadaAmistosa r) {
-		boolean salvarEstatisticas = SALVAR_ESTATISTICAS;
+
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
-		if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
+		
+		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
 	}
 }

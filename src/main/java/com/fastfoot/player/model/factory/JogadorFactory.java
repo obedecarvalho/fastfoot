@@ -9,7 +9,6 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.service.util.JogadorCalcularForcaUtil;
 import com.fastfoot.player.service.util.NomeUtil;
 
 public class JogadorFactory {

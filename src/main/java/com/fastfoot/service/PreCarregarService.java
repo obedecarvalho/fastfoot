@@ -1,7 +1,6 @@
 package com.fastfoot.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -197,30 +196,31 @@ public class PreCarregarService {
 	private void inserirParametro() {
 		
 		if (parametroRepository.findAll().isEmpty()) {
+			
+			Parametro p1 = null;
+			List<Parametro> parametros = new ArrayList<Parametro>();
 
-			Parametro p1 = new Parametro();
+			p1 = new Parametro();
 			p1.setNome(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 			p1.setValor("2");
 			p1.setValorMinimo("0");
 			p1.setValorMaximo("8");
-
-			Parametro p2 = new Parametro();
-			p2.setNome(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-			p2.setValor("true");
-
-			Parametro p3 = new Parametro();
-			p3.setNome(ParametroConstantes.JOGAR_5_LIGAS);
-			p3.setValor("false");
-
-			Parametro p4 = new Parametro();
-			p4.setNome(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
-			p4.setValor("true");
 			
-			Parametro p5 = new Parametro();
-			p5.setNome(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
-			p5.setValor("DOIS_MELHORES");
+			parametros.add(p1);
 
-			parametroRepository.saveAll(Arrays.asList(p1, p2, p3, p4, p5));
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true"));
+
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_5_LIGAS, "false"));
+
+			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true"));
+			
+			//DOIS_MELHORES, OUTRO_CAMPEONATO
+			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "DOIS_MELHORES"));
+			
+			//AUTOMATICO, OITO_CLUBES, DOZE_CLUBES, DEZESSEIS_CLUBES
+			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_COPA_NACIONAL, "AUTOMATICO"));
+
+			parametroRepository.saveAll(parametros);
 		}
 	}
 
@@ -228,7 +228,7 @@ public class PreCarregarService {
 		if (clubeTituloRankingRepository.findAll().isEmpty()) {
 			List<ClubeTituloRanking> rankingTitulos = new ArrayList<ClubeTituloRanking>();
 			
-			rankingTitulos.add(new ClubeTituloRanking(101, new Clube(101)));
+			rankingTitulos.add(new ClubeTituloRanking(101, new Clube(101)));//TODO: transformar em 'for'
 			rankingTitulos.add(new ClubeTituloRanking(102, new Clube(102)));
 			rankingTitulos.add(new ClubeTituloRanking(103, new Clube(103)));
 			rankingTitulos.add(new ClubeTituloRanking(104, new Clube(104)));
@@ -367,7 +367,7 @@ public class PreCarregarService {
 			
 			int ano = Constantes.ANO_INICIAL - 1;
 			
-			ranking.add(new ClubeRanking(1, new Clube(101), ano, 1, posicaoToClassificacaoNacional(1), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(1, new Clube(101), ano, 1, posicaoToClassificacaoNacional(1), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));//TODO: transformar em 'for'
 			ranking.add(new ClubeRanking(2, new Clube(102), ano, 2, posicaoToClassificacaoNacional(2), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(3, new Clube(103), ano, 3, posicaoToClassificacaoNacional(3), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(4, new Clube(104), ano, 4, posicaoToClassificacaoNacional(4), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));

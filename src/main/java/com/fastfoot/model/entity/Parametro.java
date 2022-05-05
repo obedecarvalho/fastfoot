@@ -22,6 +22,15 @@ public class Parametro {
 	
 	private String valorMinimo;
 
+	public Parametro() {
+
+	}
+
+	public Parametro(String nome, String valor) {
+		this.nome = nome;
+		this.valor = valor;
+	}
+	
 	public Integer getId() {
 		return id;
 	}

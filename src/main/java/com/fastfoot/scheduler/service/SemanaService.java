@@ -10,13 +10,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.match.model.repository.PartidaResumoRepository;
-import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.player.model.repository.JogadorGrupoEstatisticasRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
-import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -24,7 +20,6 @@ import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -36,20 +31,18 @@ import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
-import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
 import com.fastfoot.service.ParametroService;
 
 @Service
 public class SemanaService {
 	
-	@Autowired
-	private PartidaResultadoService partidaResultadoService;
+	/*@Autowired
+	private PartidaResultadoService partidaResultadoService;*/
 
 	@Autowired
 	private TemporadaRepository temporadaRepository;
@@ -63,8 +56,8 @@ public class SemanaService {
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
 
-	@Autowired
-	private PartidaResultadoRepository partidaRepository;
+	/*@Autowired
+	private PartidaResultadoRepository partidaRepository;*/
 
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaRepository;
@@ -87,14 +80,14 @@ public class SemanaService {
 	@Autowired
 	private TemporadaService temporadaService;
 
-	@Autowired
-	private PartidaResumoRepository partidaResumoRepository;
+	/*@Autowired
+	private PartidaResumoRepository partidaResumoRepository;*/
 	
 	/*@Autowired
 	private PartidaLanceRepository partidaLanceRepository;*/
 
-	@Autowired
-	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;
+	/*@Autowired
+	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;*/
 	
 	@Autowired
 	private RodadaService rodadaService;
@@ -193,7 +186,7 @@ public class SemanaService {
 		return SemanaDTO.convertToDTO(semana);
 	}
 
-	private void carregarClassificacao(Semana semana) {
+	/*private void carregarClassificacao(Semana semana) {
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				if(r.getCampeonato() != null) {
@@ -203,13 +196,13 @@ public class SemanaService {
 				}
 			}
 		}
-	}
+	}*/
 
 	/**
 	 * Classifica os times com Desempate. Para ser executado na ultima rodada. 
 	 * @param semana
 	 */
-	private void classificarComDesempate(Semana semana) {
+	/*private void classificarComDesempate(Semana semana) {
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				if(r.getCampeonato() != null) {
@@ -225,9 +218,9 @@ public class SemanaService {
 				}
 			}
 		}
-	}
+	}*/
 
-	private void salvarClassificacao(Semana semana) {
+	/*private void salvarClassificacao(Semana semana) {
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				if(r.getCampeonato() != null) {
@@ -237,8 +230,8 @@ public class SemanaService {
 				}
 			}
 		}
-	}
-	
+	}*/
+
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
 		Set<Campeonato> camps1 = new HashSet<Campeonato>();
 		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
@@ -266,7 +259,7 @@ public class SemanaService {
 		campeonatoMistoRepository.saveAllAndFlush(camps3);
 	}
 
-	private void carregarPartidas(Semana semana) {
+	/*private void carregarPartidas(Semana semana) {
 
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
@@ -284,9 +277,9 @@ public class SemanaService {
 				r.setPartidas(partidaEliminatoriaRepository.findByRodada(r));
 			}
 		}
-	}
+	}*/
 
-	private void jogarPartidas(Semana semana) {
+	/*private void jogarPartidas(Semana semana) {
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				if(r.getCampeonato() != null) {
@@ -309,7 +302,7 @@ public class SemanaService {
 				partidaResultadoService.jogarRodada(r);
 			}
 		}
-	}
+	}*/
 
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
@@ -407,12 +400,12 @@ public class SemanaService {
 		return promotorEliminatoria;
 	}
 
-	private void salvarPartidas(Semana semana) {
+	/*private void salvarPartidas(Semana semana) {
 		boolean salvarEstatisticas = false;
 		if (semana.getRodadas() != null) {
 			for (Rodada r : semana.getRodadas()) {
 				partidaRepository.saveAll(r.getPartidas());
-				if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
+				//if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 				if(r.getCampeonato() != null) {
 					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
 				} else if (r.getGrupoCampeonato() != null) {
@@ -423,21 +416,9 @@ public class SemanaService {
 		if (semana.getRodadasEliminatorias() != null) {
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
 				partidaEliminatoriaRepository.saveAll(r.getPartidas());//TODO: salvar proximaPartida
-				if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
+				//if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
 			}
 		}
-	}
-
-	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {
-		for (PartidaResultadoJogavel partida : partidas) {
-			salvarEstatisticas(partida);
-		}
-	}
-
-	private void salvarEstatisticas(PartidaResultadoJogavel partida) {
-		partidaResumoRepository.save(partida.getPartidaResumo());
-		//partidaLanceRepository.saveAll(partida.getPartidaResumo().getPartidaLances());
-		jogadorGrupoEstatisticasRepository.saveAll(partida.getPartidaResumo().getGrupoEstatisticas());
-	}
+	}*/
 
 }

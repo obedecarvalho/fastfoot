@@ -10,21 +10,20 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
-//@Entity
+@Entity
 public class PartidaLance {
 
-	/*@Id
+	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaLanceSequence")	
-	@SequenceGenerator(name = "partidaLanceSequence", sequenceName = "partida_lance_seq")*/
+	@SequenceGenerator(name = "partidaLanceSequence", sequenceName = "partida_lance_seq")
 	private Long id;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_partida_resumo")*/
-	private PartidaResumo partidaResumo;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_jogador")*/
+	@ManyToOne
+	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
 
 	private Habilidade habilidadeUsada;
@@ -35,20 +34,24 @@ public class PartidaLance {
 
 	private Boolean acao;
 
+	@ManyToOne
+	@JoinColumn(name = "id_partida_resultado")
+	private PartidaResultado partidaResultado;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_partida_amistosa_resultado")
+	private PartidaAmistosaResultado partidaAmistosaResultado;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_partida_eliminatoria_resultado")
+	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
+
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public PartidaResumo getPartidaResumo() {
-		return partidaResumo;
-	}
-
-	public void setPartidaResumo(PartidaResumo partidaResumo) {
-		this.partidaResumo = partidaResumo;
 	}
 
 	public Jogador getJogador() {
@@ -89,6 +92,30 @@ public class PartidaLance {
 
 	public void setAcao(Boolean acao) {
 		this.acao = acao;
+	}
+
+	public PartidaResultado getPartidaResultado() {
+		return partidaResultado;
+	}
+
+	public void setPartidaResultado(PartidaResultado partidaResultado) {
+		this.partidaResultado = partidaResultado;
+	}
+
+	public PartidaAmistosaResultado getPartidaAmistosaResultado() {
+		return partidaAmistosaResultado;
+	}
+
+	public void setPartidaAmistosaResultado(PartidaAmistosaResultado partidaAmistosaResultado) {
+		this.partidaAmistosaResultado = partidaAmistosaResultado;
+	}
+
+	public PartidaEliminatoriaResultado getPartidaEliminatoriaResultado() {
+		return partidaEliminatoriaResultado;
+	}
+
+	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
+		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
 	}
 
 }

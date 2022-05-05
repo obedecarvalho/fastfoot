@@ -4,8 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-import com.fastfoot.model.Constantes;
-
 public class RoletaUtil {
 
 	private static final Random R = new Random();

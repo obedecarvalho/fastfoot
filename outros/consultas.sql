@@ -385,3 +385,34 @@ from jogador_grupo_estatisticas jge
 inner join jogador j on jge.id_jogador = j.id
 group by jge.id_jogador, jge.habilidade_usada, j.numero
 order by jge.id_jogador, jge.habilidade_usada, j.numero;
+
+
+select *
+from partida_resultado
+where id_rodada in (
+		select id from rodada r where r.id_campeonato in (
+			select id from campeonato where id_temporada = 3030)
+		union
+		select id from rodada r where r.id_grupo_campeonato in (
+			select id from grupo_campeonato gc where gc.id_campeonato_misto in (
+				select id from campeonato_misto where id_temporada = 3030))
+	)
+;
+
+
+select *
+from partida_eliminatoria_resultado
+where id_rodada_eliminatoria in (
+	select id from rodada_eliminatoria re where re.id_campeonato_eliminatorio in (
+		select id from campeonato_eliminatorio ce where ce.id_temporada = 3030)
+	union 
+	select id from rodada_eliminatoria re where re.id_campeonato_misto in (
+		select id from campeonato_misto cm where cm.id_temporada = 3030
+		)
+);
+
+select *
+from partida_amistosa_resultado
+where id_rodada_amistosa in (
+select id from rodada_amistosa where id_semana in (select id from semana where id_temporada = 3030)
+);
