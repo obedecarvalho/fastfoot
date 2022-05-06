@@ -70,8 +70,8 @@ public class PartidaService {
 
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
 		//TODO: mudar de classe
-		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeCompleto(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
-		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeCompleto(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
+		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
+		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
 		
 		/*for (Jogador j : jogadoresMandante) {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));

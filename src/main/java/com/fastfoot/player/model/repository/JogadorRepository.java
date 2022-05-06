@@ -16,5 +16,5 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	public List<Jogador> findByClube(Clube clube);
 	
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube ")
-	public List<Jogador> findByClubeCompleto(@Param("clube") Clube clube);
+	public List<Jogador> findByClubeFetchHabilidades(@Param("clube") Clube clube);
 }

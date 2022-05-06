@@ -19,7 +19,7 @@ public class FastfootApplication {
 	@Bean(name = "partidaExecutor")
 	public Executor asyncPartidaExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(4);
+		executor.setCorePoolSize(8);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
 		executor.setThreadNamePrefix("PartidaExecutor-");
