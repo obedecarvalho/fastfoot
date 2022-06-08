@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
-//import com.fastfoot.probability.service.CalcularProbabilidadeService;
+import com.fastfoot.probability.service.CalcularProbabilidadeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
@@ -32,7 +32,6 @@ import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
-import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
@@ -42,9 +41,6 @@ import com.fastfoot.service.ParametroService;
 
 @Service
 public class SemanaService {
-	
-	/*@Autowired
-	private PartidaResultadoService partidaResultadoService;*/
 
 	@Autowired
 	private TemporadaRepository temporadaRepository;
@@ -57,9 +53,6 @@ public class SemanaService {
 	
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
-
-	@Autowired
-	private PartidaResultadoRepository partidaRepository;
 
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaRepository;
@@ -81,15 +74,6 @@ public class SemanaService {
 	
 	@Autowired
 	private TemporadaService temporadaService;
-
-	/*@Autowired
-	private PartidaResumoRepository partidaResumoRepository;*/
-	
-	/*@Autowired
-	private PartidaLanceRepository partidaLanceRepository;*/
-
-	/*@Autowired
-	private JogadorGrupoEstatisticasRepository jogadorGrupoEstatisticasRepository;*/
 	
 	@Autowired
 	private RodadaService rodadaService;
@@ -97,8 +81,8 @@ public class SemanaService {
 	@Autowired
 	private ParametroService parametroService;
 	
-	/*@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeService;*/ 
+	@Autowired
+	private CalcularProbabilidadeService calcularProbabilidadeService; 
 
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
@@ -160,8 +144,6 @@ public class SemanaService {
 
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
 
-		//System.err.println("\t\tproximaSemana2() - Criando Threads");
-
 		for (Rodada r : semana.getRodadas()) {
 			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
@@ -174,35 +156,34 @@ public class SemanaService {
 			rodadasFuture.add(rodadaService.executarRodada(r));
 		}
 
-		//System.err.println("\t\tproximaSemana2() - Juntando Threads");
-
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
-
-		//System.err.println("\t\tproximaSemana2() - Parte final Threads");
 
 		promover(semana);
 
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
-		//
-		/*if (semana.getNumero() > 22) {
-			Campeonato c = rodadas.get(0).getCampeonato();
-			c.setClassificacao(classificacaoRepository.findByCampeonato(c));
-			c.setRodadas(rodadaRepository.findByCampeonato(c));
-			
-			for (Rodada r : c.getRodadas()) {
-				r.setPartidas(partidaRepository.findByRodada(r));
-			}
-			
-			calcularProbabilidadeService.calcularClubeProbabilidade(rodadas.get(0).getCampeonato());
-		}*/
-		//
+		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
+			calcularProbabilidades(temporada);
+		}
 
 		if (semana.isUltimaSemana()) {
 			temporadaService.classificarClubesTemporadaAtual();
 		}
 
 		return SemanaDTO.convertToDTO(semana);
+	}
+
+	private void calcularProbabilidades(Temporada temporada) {
+		
+		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);
+		
+		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Campeonato c : campeonatos) {
+			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(c));
+		}
+
+		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
 	/*private void carregarClassificacao(Semana semana) {
@@ -217,7 +198,7 @@ public class SemanaService {
 		}
 	}*/
 
-	/**
+	/* *
 	 * Classifica os times com Desempate. Para ser executado na ultima rodada. 
 	 * @param semana
 	 */
@@ -349,8 +330,6 @@ public class SemanaService {
 				partidas = partidaEliminatoriaRepository.findByRodada(rodadaInicial);
 				c.setGrupos(grupos);
 				rodadaInicial.setPartidas(partidas);
-				//PromotorEliminatoria.promoverGruposParaRodadasEliminatorias(grupos, rodadaInicial);
-				//partidaEliminatoriaRepository.saveAll(rodadaInicial.getPartidas());
 				c.setPrimeiraRodadaEliminatoria(rodadaInicial);
 			}
 			

@@ -37,5 +37,16 @@ public class FastfootApplication {
 		executor.initialize();
 		return executor;
     }
+	
+	@Bean(name = "probabilidadeExecutor")
+	public Executor asyncProbabilidadeExecutor() {
+		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(8);
+		//executor.setMaxPoolSize(8);
+		//executor.setQueueCapacity(32);
+		executor.setThreadNamePrefix("jogadorServiceExecutor-");
+		executor.initialize();
+		return executor;
+    }
 
 }
