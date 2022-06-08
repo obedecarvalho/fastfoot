@@ -19,9 +19,10 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 public class SemanaUtil {
 	
 	private static final Map<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_6_RODADAS = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_II = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_4_RODADAS = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_5_RODADAS = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new HashMap<Integer, Integer>();
 	
 	static {
@@ -29,23 +30,26 @@ public class SemanaUtil {
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(2, 2);
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(3, 3);
 		
-		RODADA_SEMANA_COPA_NACIONAL.put(1, 4);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(1, 4);
 		RODADA_SEMANA_CONTINENTAL.put(1, 4);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(4, 5);
 		
-		RODADA_SEMANA_COPA_NACIONAL.put(2, 6);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(2, 6);
+		RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.put(1, 6);
 		RODADA_SEMANA_CONTINENTAL.put(2, 6);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(5, 7);
 		
-		RODADA_SEMANA_COPA_NACIONAL.put(3, 8);
-		RODADA_SEMANA_COPA_NACIONAL_II.put(1, 8);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(3, 8);
+		RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.put(2, 8);
+		RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.put(1, 8);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(6, 9);
 		
-		RODADA_SEMANA_COPA_NACIONAL.put(4, 10);
-		RODADA_SEMANA_COPA_NACIONAL_II.put(2, 10);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(4, 10);
+		RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.put(3, 10);
+		RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.put(2, 10);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(7, 11);
 		RODADA_SEMANA_CONTINENTAL.put(3, 12);
@@ -56,13 +60,16 @@ public class SemanaUtil {
 
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(9, 15);
 		
-		RODADA_SEMANA_COPA_NACIONAL_II.put(3, 16);
-		RODADA_SEMANA_COPA_NACIONAL.put(5, 16);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(5, 16);
+		RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.put(4, 16);
+		RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.put(3, 16);
+		
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(10, 17);
 		
-		RODADA_SEMANA_COPA_NACIONAL.put(6, 18);
-		RODADA_SEMANA_COPA_NACIONAL_II.put(4, 18);
+		RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.put(6, 18);
+		RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.put(5, 18);
+		RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.put(4, 18);
 		
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(11, 19);
 
@@ -87,12 +94,17 @@ public class SemanaUtil {
 
 	public static void associarRodadaCopaNacionalSeisRodadasSemana(CampeonatoEliminatorio campeonato) {
 
-		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL);
+		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL_6_RODADAS);
+	}
+	
+	public static void associarRodadaCopaNacionalCincoRodadasSemana(CampeonatoEliminatorio campeonato) {
+
+		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL_5_RODADAS);
 	}
 
 	public static void associarRodadaCopaNacionalQuatroRodadasSemana(CampeonatoEliminatorio campeonato) {
 
-		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL_II);
+		associarRodadaEliminatoriaSemana(campeonato.getRodadas(), listSemanaToMap(campeonato.getTemporada().getSemanas()), RODADA_SEMANA_COPA_NACIONAL_4_RODADAS);
 	}
 
 	public static void associarRodadaContinentalSemana(CampeonatoMisto campeonato) {

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
+//import com.fastfoot.probability.service.CalcularProbabilidadeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
@@ -31,6 +32,7 @@ import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
+import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
@@ -56,8 +58,8 @@ public class SemanaService {
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
 
-	/*@Autowired
-	private PartidaResultadoRepository partidaRepository;*/
+	@Autowired
+	private PartidaResultadoRepository partidaRepository;
 
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaRepository;
@@ -94,6 +96,9 @@ public class SemanaService {
 
 	@Autowired
 	private ParametroService parametroService;
+	
+	/*@Autowired
+	private CalcularProbabilidadeService calcularProbabilidadeService;*/ 
 
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
@@ -178,6 +183,20 @@ public class SemanaService {
 		promover(semana);
 
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
+		
+		//
+		/*if (semana.getNumero() > 22) {
+			Campeonato c = rodadas.get(0).getCampeonato();
+			c.setClassificacao(classificacaoRepository.findByCampeonato(c));
+			c.setRodadas(rodadaRepository.findByCampeonato(c));
+			
+			for (Rodada r : c.getRodadas()) {
+				r.setPartidas(partidaRepository.findByRodada(r));
+			}
+			
+			calcularProbabilidadeService.calcularClubeProbabilidade(rodadas.get(0).getCampeonato());
+		}*/
+		//
 
 		if (semana.isUltimaSemana()) {
 			temporadaService.classificarClubesTemporadaAtual();
@@ -306,6 +325,7 @@ public class SemanaService {
 
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
+
 			String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
 			RodadaEliminatoria rodadaInicial = null;
@@ -340,7 +360,8 @@ public class SemanaService {
 			}
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
-			//Boolean jogarContIII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III);
+
+			String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 			Boolean jogarCopaNacII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
 			Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 			
@@ -366,7 +387,7 @@ public class SemanaService {
 					rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
 					rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
 	
-					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(nroCompeticoes > 2);
+					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(numeroRodadasCopaNacional, nroCompeticoes);
 					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
 					
 					partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
@@ -377,24 +398,34 @@ public class SemanaService {
 	}
 
 	private PromotorContinental getPromotorContinental(String estrategia) {
+		
+		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
 		PromotorContinental promotorContinental = null;
 
-		if ("DOIS_MELHORES".equals(estrategia)) {
+		if (ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_SEG.equals(estrategia)) {
 			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
-		} else if ("OUTRO_CAMPEONATO".equals(estrategia)) {	
+		} else if (ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategia)) {	
 			promotorContinental = new PromotorContinentalImplInterCampeonatos();
 		}
 
 		return promotorContinental;
 	}
 
-	private PromotorEliminatoria getPromotorEliminatoria(Boolean jogarContIII) {
+	private PromotorEliminatoria getPromotorEliminatoria(String numeroRodadasCopaNacional, Integer nroCompeticoes) {
 		PromotorEliminatoria promotorEliminatoria = null;
 		
-		if (jogarContIII) {
-			promotorEliminatoria = new PromotorEliminatoriaImplDozeClubes();
-		} else {
-			promotorEliminatoria = new PromotorEliminatoriaImplOitoClubes();
+		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
+			if (nroCompeticoes == 3) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteEOitoClubes();
+			} else if (nroCompeticoes == 2) {
+				promotorEliminatoria = new PromotorEliminatoriaImplTrintaEDoisClubes();
+			}
+		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
+			if (nroCompeticoes == 3) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteClubes();
+			} else if (nroCompeticoes == 2) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteEQuatroClubes();
+			}
 		}
 		
 		return promotorEliminatoria;

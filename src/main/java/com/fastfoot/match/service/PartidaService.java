@@ -3,17 +3,21 @@ package com.fastfoot.match.service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
-import com.fastfoot.match.model.EsquemaFactory;
+import com.fastfoot.match.model.EsquemaFactoryDoisTresTresDois;
+import com.fastfoot.match.model.EsquemaFactoryDoisUmQuatroUmDois;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -29,8 +33,11 @@ public class PartidaService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
+	/*@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;*/
+
 	@Autowired
-	private HabilidadeValorRepository habilidadeValorRepository;
+	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;
 
 	private double NUM_LANCES_POR_MINUTO = 1;
 	
@@ -62,16 +69,44 @@ public class PartidaService {
 	}
 	
 	private void atualizarEstatisticasHabilidade(HabilidadeValor habilidadeValor, Boolean vencedor) {
-		habilidadeValor.incrementarQuantidadeUso();
+		habilidadeValor.getHabilidadeValorEstatistica().incrementarQuantidadeUso();
 		if (vencedor) {
-			habilidadeValor.incrementarQuantidadeUsoVencedor();
+			habilidadeValor.getHabilidadeValorEstatistica().incrementarQuantidadeUsoVencedor();
 		}
 	}
+
+	private void inicializarEstatisticas(List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
+		for (Jogador j : jogadores) {
+			for (HabilidadeValor hv : j.getHabilidades()) {
+				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, partidaResultado));
+			}
+		}
+	}
+	
+	private void salvarEstatisticas(List<Jogador> jogadores) {
+		List<HabilidadeValorEstatistica> estatisticas = new ArrayList<HabilidadeValorEstatistica>();
+		
+		for (Jogador j : jogadores) {
+			/*for (HabilidadeValor hv : j.getHabilidades()) {
+				estatisticas.add(hv.getHabilidadeValorEstatistica());
+			}*/
+			estatisticas.addAll(j.getHabilidades().stream().map(hv -> hv.getHabilidadeValorEstatistica()).collect(Collectors.toList()));
+		}
+		
+		habilidadeValorEstatisticaRepository.saveAll(estatisticas.stream().filter(hve -> hve.getQuantidadeUso() > 0).collect(Collectors.toList()));
+		
+		//habilidadeValorEstatisticaRepository.saveAll(estatisticas);
+	}
+
 
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
 		//TODO: mudar de classe
 		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
 		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
+		
+		inicializarEstatisticas(jogadoresMandante, partidaResultado);
+		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
+		
 		
 		/*for (Jogador j : jogadoresMandante) {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
@@ -81,17 +116,21 @@ public class PartidaService {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
 		}*/
 
-		Esquema esquema = EsquemaFactory.gerarEsquema(jogadoresMandante, jogadoresVisitante);
+		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
+		Esquema esquema = EsquemaFactoryDoisUmQuatroUmDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
 		
 		jogar(esquema, partidaResultado);
 		
-		for (Jogador j : jogadoresMandante) {
+		/*for (Jogador j : jogadoresMandante) {
 			habilidadeValorRepository.saveAll(j.getHabilidades());
 		}
 	
 		for (Jogador j : jogadoresVisitante) {
 			habilidadeValorRepository.saveAll(j.getHabilidades());
-		}
+		}*/
+		
+		salvarEstatisticas(jogadoresMandante);
+		salvarEstatisticas(jogadoresVisitante);
 	}
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {

@@ -81,7 +81,7 @@ public class HabilidadeAcao {
 
 		
 		//Posicionamento AI --> Interceptacao  
-		POSICIONAMENTO.setPossiveisReacoes(Arrays.asList(INTERCEPTACAO));
+		POSICIONAMENTO.setPossiveisReacoes(Arrays.asList(INTERCEPTACAO));//POSICIONAMENTO_DEFENSIVO
 
 		
 		//Dominio(?) AI --> Interceptacao 

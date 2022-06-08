@@ -6,7 +6,7 @@ import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
-public class EsquemaImpl implements Esquema {//Esquema tatico 4-1-3-2 (2-3-3-2)
+public class EsquemaImpl implements Esquema {
 
 	private List<EsquemaPosicao> posicoes;
 

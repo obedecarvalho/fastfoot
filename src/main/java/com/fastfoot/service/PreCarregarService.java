@@ -189,36 +189,62 @@ public class PreCarregarService {
 			clubes.add(new Clube(131, Liga.ENGLND, 61, "Wigan"));
 			clubes.add(new Clube(132, Liga.ENGLND, 61, "Bolton Wanderers"));*/
 			
+			/*clubes.add(new Clube(501, Liga.BRASIL, 85, "Flamengo"));
+			clubes.add(new Clube(502, Liga.BRASIL, 85, "Atlético"));
+			clubes.add(new Clube(503, Liga.BRASIL, 82, "Palmeiras"));
+			clubes.add(new Clube(504, Liga.BRASIL, 82, "Athlético"));
+			clubes.add(new Clube(505, Liga.BRASIL, 82, "São Paulo"));
+			clubes.add(new Clube(506, Liga.BRASIL, 78, "Santos"));
+			clubes.add(new Clube(507, Liga.BRASIL, 78, "Fluminense"));
+			clubes.add(new Clube(508, Liga.BRASIL, 78, "Fortaleza"));
+			clubes.add(new Clube(509, Liga.BRASIL, 78, "Grêmio"));
+			clubes.add(new Clube(510, Liga.BRASIL, 75, "Corinthians"));
+			clubes.add(new Clube(511, Liga.BRASIL, 75, "Internacional"));
+			clubes.add(new Clube(512, Liga.BRASIL, 75, "Ceará"));
+			clubes.add(new Clube(513, Liga.BRASIL, 75, "América"));
+			clubes.add(new Clube(514, Liga.BRASIL, 75, "Bahia"));
+			clubes.add(new Clube(515, Liga.BRASIL, 71, "Atlético - GO"));
+			clubes.add(new Clube(516, Liga.BRASIL, 71, "Botafogo"));
+			clubes.add(new Clube(517, Liga.BRASIL, 71, "Red Bull Bragantino"));
+			clubes.add(new Clube(518, Liga.BRASIL, 71, "Goiás"));
+			clubes.add(new Clube(519, Liga.BRASIL, 71, "Cuiabá"));
+			clubes.add(new Clube(520, Liga.BRASIL, 71, "Cruzeiro"));
+			clubes.add(new Clube(521, Liga.BRASIL, 68, "Juventude"));
+			clubes.add(new Clube(522, Liga.BRASIL, 68, "Coritiba"));
+			clubes.add(new Clube(523, Liga.BRASIL, 68, "Vasco"));
+			clubes.add(new Clube(524, Liga.BRASIL, 68, "Chapecoense"));
+			clubes.add(new Clube(525, Liga.BRASIL, 68, "Avaí"));
+			clubes.add(new Clube(526, Liga.BRASIL, 68, "Sport"));
+			clubes.add(new Clube(527, Liga.BRASIL, 64, "CRB"));
+			clubes.add(new Clube(528, Liga.BRASIL, 64, "Vitória"));
+			clubes.add(new Clube(529, Liga.BRASIL, 64, "Vila Nova"));
+			clubes.add(new Clube(530, Liga.BRASIL, 64, "Ponte Preta"));
+			clubes.add(new Clube(531, Liga.BRASIL, 64, "Sampaio Corrêa"));
+			clubes.add(new Clube(532, Liga.BRASIL, 64, "ABC"));*/
+
 			clubeRepository.saveAll(clubes);
 		}
 	}
 	
 	private void inserirParametro() {
 		
+		parametroRepository.deleteAll();
+
 		if (parametroRepository.findAll().isEmpty()) {
-			
-			Parametro p1 = null;
+
 			List<Parametro> parametros = new ArrayList<Parametro>();
 
-			p1 = new Parametro();
-			p1.setNome(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-			p1.setValor("2");
-			p1.setValorMinimo("0");
-			p1.setValorMaximo("8");
-			
-			parametros.add(p1);
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "2", "2, 3"));
 
-			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true"));
+			//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
+			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "SEGUNDO_MELHOR_GRUPO", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
 
-			parametros.add(new Parametro(ParametroConstantes.JOGAR_5_LIGAS, "false"));
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true", "true, false"));
 
-			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true"));
-			
-			//DOIS_MELHORES, OUTRO_CAMPEONATO
-			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "DOIS_MELHORES"));
-			
-			//AUTOMATICO, OITO_CLUBES, DOZE_CLUBES, DEZESSEIS_CLUBES
-			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_COPA_NACIONAL, "AUTOMATICO"));
+			//4 (16 TIMES), 6 (28 a 32 TIMES)
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, "6 (28 a 32 TIMES)", "6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
+
+			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "false", "true, false"));
 
 			parametroRepository.saveAll(parametros);
 		}

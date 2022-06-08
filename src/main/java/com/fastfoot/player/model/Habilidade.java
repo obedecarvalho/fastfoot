@@ -11,11 +11,11 @@ public enum Habilidade {
 
 	MARCACAO("Marcacao", TipoHabilidade.REACAO),//5
 	DESARME("Desarme", TipoHabilidade.REACAO),//6
-	INTERCEPTACAO("Interceptacao", TipoHabilidade.REACAO),//7
+	INTERCEPTACAO("Interceptacao", TipoHabilidade.REACAO),//7	//POSICIONAMENTO_DEFENSIVO
 
-	VELOCIDADE("Velocidade", TipoHabilidade.ACAO_MEIO),//8
+	VELOCIDADE("Velocidade", TipoHabilidade.ACAO_MEIO),//8	//ACAO_MEIO_REACAO
 	DIBLE("Dible", TipoHabilidade.ACAO_MEIO),//9
-	FORCA("Forca", TipoHabilidade.ACAO_MEIO),//10
+	FORCA("Forca", TipoHabilidade.ACAO_MEIO),//10			//ACAO_MEIO_REACAO
 
 	CABECEIO("Cabeceio", TipoHabilidade.ACAO_INICIO_FIM),//11
 	POSICIONAMENTO("Posicionamento", TipoHabilidade.ACAO_INICIO_MEIO),//12

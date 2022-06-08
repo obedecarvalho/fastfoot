@@ -18,9 +18,12 @@ public class Parametro {
 	
 	private String descricao;
 	
-	private String valorMaximo;
+	/*private String valorMaximo;
 	
-	private String valorMinimo;
+	private String valorMinimo;*/
+
+	//Valores separados por ,
+	private String possiveisValores;
 
 	public Parametro() {
 
@@ -29,6 +32,12 @@ public class Parametro {
 	public Parametro(String nome, String valor) {
 		this.nome = nome;
 		this.valor = valor;
+	}
+
+	public Parametro(String nome, String valor, String possiveisValores) {
+		this.nome = nome;
+		this.valor = valor;
+		this.possiveisValores = possiveisValores;
 	}
 	
 	public Integer getId() {
@@ -63,7 +72,7 @@ public class Parametro {
 		this.descricao = descricao;
 	}
 
-	public String getValorMaximo() {
+	/*public String getValorMaximo() {
 		return valorMaximo;
 	}
 
@@ -77,6 +86,23 @@ public class Parametro {
 
 	public void setValorMinimo(String valorMinimo) {
 		this.valorMinimo = valorMinimo;
+	}*/
+
+	public String getPossiveisValores() {
+		return possiveisValores;
 	}
 
+	public void setPossiveisValores(String possiveisValores) {
+		this.possiveisValores = possiveisValores;
+	}
+
+	public boolean validar() {
+		String[] valores = getPossiveisValores().split(",");
+		for (String v : valores) {
+			if (valor.equals(v)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

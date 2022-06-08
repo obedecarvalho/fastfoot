@@ -8,7 +8,7 @@ import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
-public class PromotorEliminatoriaImplOitoClubes extends PromotorEliminatoria {
+public class PromotorEliminatoriaImplTrintaEDoisClubes extends PromotorEliminatoria {
 
 	public void classificarCopaNacionalII(RodadaEliminatoria rodadaCNII, RodadaEliminatoria rodada1FaseCN, RodadaEliminatoria rodada2FaseCN) {
 		

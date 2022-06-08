@@ -29,8 +29,10 @@ import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplOitoClubes;
-import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplDozeClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaEDoisClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEOitoClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEQuatroClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactory;
 import com.fastfoot.scheduler.model.factory.RodadaAmistosaFactory;
@@ -120,58 +122,9 @@ public class TemporadaService {
 		List<CampeonatoMisto> campeonatosContinentais = new ArrayList<CampeonatoMisto>();
 		List<CampeonatoEliminatorio> copasNacionais = new ArrayList<CampeonatoEliminatorio>();
 		List<RodadaAmistosa> rodadaAmistosaAutomaticas = new ArrayList<RodadaAmistosa>();
-		
-		/*List<Clube> clubes = null;
-		Campeonato campeonatoNacional = null;
-		List<ClubeRanking> clubesRk = null;
-		CampeonatoEliminatorio copaNacional = null;
-		
-		for (Liga liga : Liga.getAll()) {
 
-			//Nacional I e II
-			for (int i = 0; i < Constantes.NRO_DIVISOES; i++) {
-				
-				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
-						(i == 0 ? ClassificacaoNacionalFinal.getAllNacionalNovoCampeonato() : ClassificacaoNacionalFinal.getAllNacionalIINovoCampeonato()));
-				
-				campeonatoNacional = CampeonatoFactory.criarCampeonato(temporada, liga, clubes, (i == 0 ? NivelCampeonato.NACIONAL : NivelCampeonato.NACIONAL_II));
-
-				campeonatosNacionais.add(campeonatoNacional);
-			}
-
-			//Copa Nacional I e II
-			
-			clubesRk = clubeRankingRepository.findByLigaAndAno(liga, ano - 1);
-			
-			copaNacional = CampeonatoEliminatorioFactory.criarCampeonatoCopaNacional(temporada, liga, clubesRk, NivelCampeonato.COPA_NACIONAL);
-			
-			copasNacionais.add(copaNacional);
-			
-			copaNacional = CampeonatoEliminatorioFactory.criarCampeonatoCopaNacionalII(temporada, liga, NivelCampeonato.COPA_NACIONAL_II);
-			
-			copasNacionais.add(copaNacional);
-		}
-		
-		//Continental I e II
-		Map<Liga, List<Clube>> clubesContinental = null;
-		CampeonatoMisto campeonatoContinental = null;
-		for (int i = 0; i < Constantes.NRO_COMPETICOES_CONT; i++) {
-			clubesContinental = new HashMap<Liga, List<Clube>>();
-			
-			int posInicial = i*Constantes.NRO_CLUBES_POR_LIGA_CONT; 
-			int posFinal = (i+1)*Constantes.NRO_CLUBES_POR_LIGA_CONT;
-			
-			
-			for (Liga liga : Liga.getAll()) {
-				clubesContinental.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial + 1, posFinal));
-			}
-			
-			campeonatoContinental = CampeonatoMistoFactory.criarCampeonato(temporada, clubesContinental, (i == 0 ? NivelCampeonato.CONTINENTAL : NivelCampeonato.CONTINENTAL_II));
-			campeonatosContinentais.add(campeonatoContinental);
-		}*/
-		//
 		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
-		//
+
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		
 		return TemporadaDTO.convertToDTO(temporada);
@@ -181,12 +134,15 @@ public class TemporadaService {
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
-		//Boolean jogarContIII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III);
 		Boolean jogarCopaNacII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-		Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		Boolean marcarAmistosos = parametroService.getParametroBoolean(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 
-		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(nroCompeticoes);
+		Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+
+		Boolean marcarAmistosos = parametroService.getParametroBoolean(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		
+
+		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(numeroRodadasCopaNacional, nroCompeticoes);
 
 		Integer ano = temporada.getAno();
 
@@ -226,19 +182,17 @@ public class TemporadaService {
 		//Continental I e II
 		Map<Liga, List<Clube>> clubesContinental = null;
 		CampeonatoMisto campeonatoContinental = null;
-		//Integer nroCompeticoes = (jogarContIII ? Constantes.NRO_COMPETICOES_CONT + 1: Constantes.NRO_COMPETICOES_CONT);
 		for (int i = 0; i < nroCompeticoes; i++) {
 			clubesContinental = new HashMap<Liga, List<Clube>>();
 			
-			int posInicial = i*Constantes.NRO_CLUBES_POR_LIGA_CONT; 
-			int posFinal = (i+1)*Constantes.NRO_CLUBES_POR_LIGA_CONT;
+			int posInicial = i * Constantes.NRO_CLUBES_POR_LIGA_CONT;
+			int posFinal = (i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT;
 			
 			
 			for (Liga liga : Liga.getAll()) {
 				clubesContinental.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial + 1, posFinal));
 			}
-			
-			//NivelCampeonato nivelCampeonato = (i == 0 ? NivelCampeonato.CONTINENTAL : (i == 1 ? NivelCampeonato.CONTINENTAL_II : NivelCampeonato.CONTINENTAL_III));
+
 			campeonatoContinental = CampeonatoMistoFactory.criarCampeonato(temporada, clubesContinental, NivelCampeonato.getContinentalPorOrdem(i));
 			campeonatosContinentais.add(campeonatoContinental);
 		}
@@ -247,40 +201,34 @@ public class TemporadaService {
 		if (marcarAmistosos) {
 			Map<Liga, List<Clube>> clubesAmistosos = new HashMap<Liga, List<Clube>>();
 
-			//
 			int posInicial = nroCompeticoes * Constantes.NRO_CLUBES_POR_LIGA_CONT + 1;
 			for (Liga liga : Liga.getAll()) {
 				clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial, 32));
 			}
+
 			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosasAgrupaGrupo(temporada, clubesAmistosos));
-			//
-			
-			/*for (int i = nroCompeticoes; i < 8; i++) {
-				clubesAmistosos = new HashMap<Liga, List<Clube>>();
-				
-				int posInicial = i*Constantes.NRO_CLUBES_POR_LIGA_CONT; 
-				int posFinal = (i+1)*Constantes.NRO_CLUBES_POR_LIGA_CONT;
-				
-				
-				for (Liga liga : Liga.getAll()) {
-					clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial + 1, posFinal));
-				}
-				
-				rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosas(temporada, clubesAmistosos));
-			}*/
+
 		}
 	}
 
-	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(Integer nroCompeticoesContinentais) {
-		
+	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(String numeroRodadasCopaNacional, Integer nroCompeticoesContinentais) {
+
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
-		
-		if (nroCompeticoesContinentais == 2) {
-			campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplOitoClubes();
-		} else if (nroCompeticoesContinentais == 3) {
-			campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplDozeClubes();
-		} else {
+
+		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadasCopaNacional)) {
 			campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplDezesseisClubes();
+		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
+			if (nroCompeticoesContinentais == 2) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubes();
+			} else if (nroCompeticoesContinentais == 3) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
+			}
+		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
+			if (nroCompeticoesContinentais == 2) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEQuatroClubes();
+			} else if (nroCompeticoesContinentais == 3) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteClubes();
+			}
 		}
 
 		return campeonatoEliminatorioFactory;

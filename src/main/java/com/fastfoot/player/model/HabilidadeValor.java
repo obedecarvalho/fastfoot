@@ -40,6 +40,9 @@ public class HabilidadeValor implements ElementoRoleta {
 
 	@Transient
 	private Integer valorN;
+
+	@Transient
+	private HabilidadeValorEstatistica habilidadeValorEstatistica;
 	
 	public HabilidadeValor() {
 
@@ -136,6 +139,14 @@ public class HabilidadeValor implements ElementoRoleta {
 
 	public void incrementarQuantidadeUsoVencedor() {
 		this.quantidadeUsoVencedor++;
+	}
+
+	public HabilidadeValorEstatistica getHabilidadeValorEstatistica() {
+		return habilidadeValorEstatistica;
+	}
+
+	public void setHabilidadeValorEstatistica(HabilidadeValorEstatistica habilidadeValorEstatistica) {
+		this.habilidadeValorEstatistica = habilidadeValorEstatistica;
 	}
 
 	@Override
