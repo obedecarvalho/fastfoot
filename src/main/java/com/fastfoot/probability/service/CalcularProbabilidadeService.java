@@ -21,6 +21,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.ClubeProbabilidade;
+import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
@@ -79,7 +80,7 @@ public class CalcularProbabilidadeService {
 			
 			ordernarClassificacao(classificacaoProbabilidadesX, true);
 			
-			agruparClubeProbabilidade(clubeProbabilidades, classificacaoProbabilidadesX);
+			agruparClubeProbabilidadeX(clubeProbabilidades, classificacaoProbabilidadesX);
 		}
 		
 		print(clubeProbabilidades.values());
@@ -89,14 +90,53 @@ public class CalcularProbabilidadeService {
 	private void print(Collection<ClubeProbabilidade> clubeProbabilidades) {
 		for (ClubeProbabilidade cp : clubeProbabilidades) {
 			System.err.println("\t" + cp.getClube().getNome());
-			for (Integer pos : cp.getPosicaoQtde().keySet()) {
-				System.err.println(String.format("\t\t%d:%d", pos, cp.getPosicaoQtde().get(pos).size()));
-				System.err.println("\t\t\t->" + cp.getPosicaoQtde().get(pos).stream().map(x -> x.getPontos()).collect(Collectors.toList()));
+			for (Integer pos : cp.getClubeProbabilidadePosicao().keySet()) {
+				System.err.println(String.format("\t\t%d:%d", pos, cp.getClubeProbabilidadePosicao().get(pos).getProbabilidade()));
+				//System.err.println("\t\t\t->" + cp.getClubeProbabilidadePosicao().get(pos).stream().map(x -> x.getPontos()).collect(Collectors.toList()));
 			}
 		}
 	}
 	
-	private void agruparClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
+	private void agruparClubeProbabilidadeX(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
+			List<ClassificacaoProbabilidade> classificacaoProbabilidades) {
+		
+		if (clubeProbabilidades.isEmpty()) {
+			for (ClassificacaoProbabilidade clasp : classificacaoProbabilidades) {
+				ClubeProbabilidade clup = new ClubeProbabilidade();
+				
+				clup.setClube(clasp.getClube());
+				clup.setCampeonato(null);
+				clup.setSemana(null);
+				
+				//clup.setPosicaoQtde(new HashMap<Integer, List<ClassificacaoProbabilidade>>());
+				clup.setClubeProbabilidadePosicao(new HashMap<Integer, ClubeProbabilidadePosicao>());
+				
+				clubeProbabilidades.put(clasp.getClube(), clup);
+			}
+		}
+		
+		for (ClassificacaoProbabilidade clasp : classificacaoProbabilidades) {
+			ClubeProbabilidade clup = clubeProbabilidades.get(clasp.getClube());
+			
+			
+			ClubeProbabilidadePosicao cpp = clup.getClubeProbabilidadePosicao().get(clasp.getPosicao());
+			
+			if (cpp == null) {
+				cpp = new ClubeProbabilidadePosicao();
+				
+				cpp.setPosicao(clasp.getPosicao());
+				cpp.setProbabilidade(1);
+				cpp.setClubeProbabilidade(clup);
+			} else {
+				cpp.setProbabilidade(cpp.getProbabilidade() + 1);
+			}
+			
+			clup.getClubeProbabilidadePosicao().put(clasp.getPosicao(), cpp);
+		}
+		
+	}
+	
+	/*private void agruparClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
 			List<ClassificacaoProbabilidade> classificacaoProbabilidades) {
 		
 		if (clubeProbabilidades.isEmpty()) {
@@ -121,7 +161,7 @@ public class CalcularProbabilidadeService {
 			clup.getPosicaoQtde().put(clasp.getPosicao(), qtde);
 		}
 		
-	}
+	}*/
 	
 	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
 

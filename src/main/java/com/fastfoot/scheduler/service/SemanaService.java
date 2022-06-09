@@ -179,9 +179,13 @@ public class SemanaService {
 		
 		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
-		for (Campeonato c : campeonatos) {
+		/*for (Campeonato c : campeonatos) {
 			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(c));
-		}
+		}*/
+		
+		//
+		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(campeonatos.get(0)));
+		//
 
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
