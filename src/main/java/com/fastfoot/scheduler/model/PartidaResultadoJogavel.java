@@ -35,4 +35,6 @@ public interface PartidaResultadoJogavel {
 	public Clube getClubePerdedor();
 
 	public void setPartidaJogada(Boolean partidaJogada);
+	
+	public Boolean getPartidaJogada();
 }

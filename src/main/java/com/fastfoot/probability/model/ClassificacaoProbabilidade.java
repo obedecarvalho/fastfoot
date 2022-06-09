@@ -111,11 +111,17 @@ public class ClassificacaoProbabilidade implements Comparable<ClassificacaoProba
 		if (o.getVitorias() < getVitorias()) return -1;
 		if (o.getVitorias() > getVitorias()) return 1;
 
-		if (o.getSaldoGols() < getSaldoGols()) return -1;
-		if (o.getSaldoGols() > getSaldoGols()) return 1;
+		/*double mrgOther = o.getGolsPro() * 0.12d;
+		double mrg = getGolsPro() * 0.12d;
+		if ((o.getSaldoGols() + mrgOther) < (getSaldoGols() - mrg))
+			return -1;
+		if ((o.getSaldoGols() - mrgOther) > (getSaldoGols() + mrg))
+			return 1;*/
 
-		if (o.getGolsPro() < getGolsPro()) return -1;
-		if (o.getGolsPro() > getGolsPro()) return 1;
+		/*if ((1.12d * o.getGolsPro()) < (0.88d * getGolsPro()))
+			return -1;
+		if ((0.88d * o.getGolsPro()) > (1.12d * getGolsPro()))
+			return 1;*/
 
 		return 0;
 	}
@@ -171,4 +177,11 @@ public class ClassificacaoProbabilidade implements Comparable<ClassificacaoProba
 		setProbabilidadeEmpate(getEmpates().doubleValue()/getNumJogos());
 		setProbabilidadeDerrota(getDerrotas().doubleValue()/getNumJogos());
 	}
+
+	@Override
+	public String toString() {
+		return "ClassificacaoProbabilidade [posicao=" + posicao + ", pontos=" + pontos + ", vitorias=" + vitorias
+				+ ", clube=" + clube.getNome() + "]";
+	}
+
 }

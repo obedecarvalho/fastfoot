@@ -31,6 +31,8 @@ public class PartidaResultadoDTO {
 	private String nivelCampeonato;
 	
 	private Integer numeroGrupoCampeonato;
+	
+	private Boolean partidaJogada;
 		
 	public Integer getNumeroRodada() {
 		return numeroRodada;
@@ -128,6 +130,14 @@ public class PartidaResultadoDTO {
 		this.numeroGrupoCampeonato = numeroGrupoCampeonato;
 	}
 	
+	public Boolean getPartidaJogada() {
+		return partidaJogada;
+	}
+
+	public void setPartidaJogada(Boolean partidaJogada) {
+		this.partidaJogada = partidaJogada;
+	}
+
 	public static List<PartidaResultadoDTO> convertToDTO(List<? extends PartidaResultadoJogavel> partidas) {
 		return partidas.stream().map(p -> convertToDTO(p)).collect(Collectors.toList());
 	}
@@ -159,6 +169,8 @@ public class PartidaResultadoDTO {
 		if (pr.getRodada() instanceof Rodada && ((Rodada)pr.getRodada()).getGrupoCampeonato() != null) {
 			dto.setNumeroGrupoCampeonato(((Rodada)pr.getRodada()).getGrupoCampeonato().getNumero());
 		}
+		
+		dto.setPartidaJogada(pr.getPartidaJogada());
 
 		return dto;
 	}

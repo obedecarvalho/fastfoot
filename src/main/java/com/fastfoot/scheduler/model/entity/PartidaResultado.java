@@ -155,6 +155,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 		this.lancesVisitante = lancesVisitante;
 	}
 
+	@Override
 	public Boolean getPartidaJogada() {
 		return partidaJogada;
 	}

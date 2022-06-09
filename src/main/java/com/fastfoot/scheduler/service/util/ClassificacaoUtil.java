@@ -1,6 +1,6 @@
 package com.fastfoot.scheduler.service.util;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -15,9 +15,9 @@ import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 public class ClassificacaoUtil {
 
-	public static void ordernarClassificacao(List<Classificacao> classificacao) {
+	/*public static void ordernarClassificacao(List<Classificacao> classificacao) {
 		ordernarClassificacao(classificacao, null, true);
-	}
+	}*/
 
 	public static void ordernarClassificacao(List<Classificacao> classificacao, boolean desempatar) {
 		ordernarClassificacao(classificacao, null, desempatar);
@@ -43,7 +43,23 @@ public class ClassificacaoUtil {
 			if (i > 0 && classificacao.get(i-1).compareTo(classificacao.get(i)) == 0) {
 				//Se entrou aqui, o clube[i] está empatado com clube[i-1]
 				if (desempatar) {
-					sortearPosicao(Arrays.asList(classificacao.get(i-1), classificacao.get(i)), i);
+					//
+					List<Classificacao> empatados = new ArrayList<Classificacao>();
+
+					empatados.add(classificacao.get(i));
+
+					empatados.add(classificacao.get(i - 1));
+
+					int j = i - 1;
+
+					while (j > 0 && classificacao.get(j - 1).compareTo(classificacao.get(j)) == 0) {
+						empatados.add(classificacao.get(j - 1));
+						j--;
+					}
+
+					sortearPosicao(empatados, j + 1);
+					//
+					//sortearPosicao(Arrays.asList(classificacao.get(i-1), classificacao.get(i)), i);
 				} else {
 					//Para manter varios clubes com a mesma classificacao em Caso de empate
 					classificacao.get(i).setPosicao(classificacao.get(i-1).getPosicao()); 

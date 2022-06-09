@@ -163,7 +163,7 @@ public class SemanaService {
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
-			calcularProbabilidades(temporada);
+			calcularProbabilidades(semana, temporada);
 		}
 
 		if (semana.isUltimaSemana()) {
@@ -173,19 +173,15 @@ public class SemanaService {
 		return SemanaDTO.convertToDTO(semana);
 	}
 
-	private void calcularProbabilidades(Temporada temporada) {
+	private void calcularProbabilidades(Semana semana, Temporada temporada) {
 		
 		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);
 		
 		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
-		/*for (Campeonato c : campeonatos) {
-			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(c));
-		}*/
-		
-		//
-		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(campeonatos.get(0)));
-		//
+		for (Campeonato c : campeonatos) {
+			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, c));
+		}
 
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}

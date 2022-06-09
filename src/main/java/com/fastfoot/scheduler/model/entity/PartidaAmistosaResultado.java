@@ -116,6 +116,7 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 		this.rodada = rodada;
 	}
 	
+	@Override
 	public Boolean getPartidaJogada() {
 		return partidaJogada;
 	}

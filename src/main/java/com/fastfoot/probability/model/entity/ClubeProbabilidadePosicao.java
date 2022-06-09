@@ -1,4 +1,4 @@
-package com.fastfoot.probability.model;
+package com.fastfoot.probability.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -23,6 +23,12 @@ public class ClubeProbabilidadePosicao {
 	private Integer posicao;
 	
 	private Integer probabilidade;
+
+	private Integer pontuacaoMaxima;
+	
+	private Double pontuacaoMedia;
+	
+	private Integer pontuacaoMinima;
 
 	public ClubeProbabilidade getClubeProbabilidade() {
 		return clubeProbabilidade;
@@ -54,5 +60,29 @@ public class ClubeProbabilidadePosicao {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Integer getPontuacaoMaxima() {
+		return pontuacaoMaxima;
+	}
+
+	public void setPontuacaoMaxima(Integer pontuacaoMaxima) {
+		this.pontuacaoMaxima = pontuacaoMaxima;
+	}
+
+	public Double getPontuacaoMedia() {
+		return pontuacaoMedia;
+	}
+
+	public void setPontuacaoMedia(Double pontuacaoMedia) {
+		this.pontuacaoMedia = pontuacaoMedia;
+	}
+
+	public Integer getPontuacaoMinima() {
+		return pontuacaoMinima;
+	}
+
+	public void setPontuacaoMinima(Integer pontuacaoMinima) {
+		this.pontuacaoMinima = pontuacaoMinima;
 	}
 }

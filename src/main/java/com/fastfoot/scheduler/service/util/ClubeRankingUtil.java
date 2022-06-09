@@ -127,26 +127,23 @@ public class ClubeRankingUtil {
 	
 	private static final OrdemClassificacaoGeral[] ORDEM = {
 			
-			new OrdemClassificacaoGeral(1, ClassificacaoContinentalFinal.C_CAMPEAO),
-			new OrdemClassificacaoGeral(3, ClassificacaoNacionalFinal.N_1),
-			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CII_CAMPEAO),
-			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_2),
-			new OrdemClassificacaoGeral(5, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),
-			new OrdemClassificacaoGeral(6, ClassificacaoNacionalFinal.N_3),
-			new OrdemClassificacaoGeral(7, ClassificacaoNacionalFinal.N_4),
-			new OrdemClassificacaoGeral(8, ClassificacaoNacionalFinal.N_5),
-			//new OrdemClassificacaoGeral(9, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),
-			new OrdemClassificacaoGeral(10, ClassificacaoNacionalFinal.N_6),
-			new OrdemClassificacaoGeral(11, ClassificacaoNacionalFinal.N_7),
-			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),
-			new OrdemClassificacaoGeral(2, ClassificacaoContinentalFinal.CIII_CAMPEAO),
-			/*new OrdemClassificacaoGeral(13, ClassificacaoContinentalFinal.C_VICE_CAMPEAO),
-			new OrdemClassificacaoGeral(14, ClassificacaoContinentalFinal.CII_VICE_CAMPEAO),
-			new OrdemClassificacaoGeral(15, ClassificacaoCopaNacionalFinal.CN_VICE_CAMPEAO),*/
-			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_9),
-			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_10),
-			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.N_11),
-			new OrdemClassificacaoGeral(19, ClassificacaoNacionalFinal.N_12),
+			new OrdemClassificacaoGeral(1, ClassificacaoContinentalFinal.C_CAMPEAO),//CI
+			new OrdemClassificacaoGeral(2, ClassificacaoNacionalFinal.N_1),//CI
+			new OrdemClassificacaoGeral(3, ClassificacaoContinentalFinal.CII_CAMPEAO),//CI
+			new OrdemClassificacaoGeral(4, ClassificacaoNacionalFinal.N_2),//CI
+			new OrdemClassificacaoGeral(5, ClassificacaoCopaNacionalFinal.CN_CAMPEAO),//CI ou CII
+			new OrdemClassificacaoGeral(6, ClassificacaoNacionalFinal.N_3),//CI ou CII
+			new OrdemClassificacaoGeral(7, ClassificacaoNacionalFinal.N_4),//CI ou CII
+			new OrdemClassificacaoGeral(8, ClassificacaoContinentalFinal.CIII_CAMPEAO),//CII
+			new OrdemClassificacaoGeral(9, ClassificacaoNacionalFinal.N_5),//CII ou CIII
+			new OrdemClassificacaoGeral(10, ClassificacaoNacionalFinal.N_6),//CII ou CIII
+			new OrdemClassificacaoGeral(11, ClassificacaoNacionalFinal.N_7),//CII ou CIII ou Nada
+			new OrdemClassificacaoGeral(12, ClassificacaoNacionalFinal.N_8),//CII ou CIII ou Nada
+			new OrdemClassificacaoGeral(13, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO),//CIII ou Nada
+			new OrdemClassificacaoGeral(16, ClassificacaoNacionalFinal.N_9),//CIII ou Nada
+			new OrdemClassificacaoGeral(17, ClassificacaoNacionalFinal.N_10),//CIII ou Nada
+			new OrdemClassificacaoGeral(18, ClassificacaoNacionalFinal.N_11),//CIII ou Nada
+			new OrdemClassificacaoGeral(19, ClassificacaoNacionalFinal.N_12),//CIII ou Nada
 			new OrdemClassificacaoGeral(20, ClassificacaoNacionalFinal.N_13),
 			new OrdemClassificacaoGeral(21, ClassificacaoNacionalFinal.NII_1),
 			new OrdemClassificacaoGeral(22, ClassificacaoNacionalFinal.NII_2),
