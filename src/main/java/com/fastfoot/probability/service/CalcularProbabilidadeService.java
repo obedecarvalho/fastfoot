@@ -116,7 +116,7 @@ public class CalcularProbabilidadeService {
 		clubeProbabilidadeRepository.saveAll(probabilidades);
 		
 		for (ClubeProbabilidade cp : probabilidades) {
-			clubeProbabilidadePosicaoRepository.saveAll(cp.getClubeProbabilidadePosicao().values());
+			clubeProbabilidadePosicaoRepository.saveAll(cp.getClubeProbabilidadePosicao().values());//TODO: precisa salvar?
 		}
 		
 		//TODO: salvar ClubeRankingPosicaoProbabilidade
@@ -282,7 +282,8 @@ public class CalcularProbabilidadeService {
 			
 			//CNII
 			//TODO: precisa de NI e NII
-			if (nivelCampeonato.isNacional()) {
+			//TODO: complemento de CNI
+			/*if (nivelCampeonato.isNacional()) {
 				Integer probabilidadeClassificacaoCNII = 0;
 				for (int i = getPosicoesClassificamCNIIMin(); i <= getPosicoesClassificamCNIIMax(); i++ ) {
 					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
@@ -291,7 +292,7 @@ public class CalcularProbabilidadeService {
 					}
 				}
 				cp.setProbabilidadeClassificacaoCNII(probabilidadeClassificacaoCNII.doubleValue()/getNumeroSimulacoes(semana));
-			}
+			}*/
 			//TODO: NII
 			
 			
@@ -409,7 +410,7 @@ public class CalcularProbabilidadeService {
 		return -1;
 	}
 
-	private Integer getPosicoesClassificamCNIIMin() {//Classifica direto pra CNII
+	/*private Integer getPosicoesClassificamCNIIMin() {//Classifica direto pra CNII
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
@@ -436,17 +437,17 @@ public class CalcularProbabilidadeService {
 		}
 
 		return -1;
-	}
+	}*/
 
-	private Integer getPosicoesClassificamCNIIMax() {
+	/*private Integer getPosicoesClassificamCNIIMax() {
 		Boolean jogarCNII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
 		
 		if (!jogarCNII) return -1;
 		
 		return 32;
-	}
+	}*/
 
-	private Integer getPosicoesClassificamCopaNacional() {
+	/*private Integer getPosicoesClassificamCopaNacional() {
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
@@ -474,9 +475,9 @@ public class CalcularProbabilidadeService {
 		}
 
 		return -1;
-	}
+	}*/
 	
-	private Integer getPosicoesClassificamCopaNacionalNII() {
+	/*private Integer getPosicoesClassificamCopaNacionalNII() {
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
@@ -504,7 +505,7 @@ public class CalcularProbabilidadeService {
 		}
 
 		return -1;
-	}
+	}*/
 	
 	
 	
@@ -699,7 +700,7 @@ public class CalcularProbabilidadeService {
 		clasVisitante.calcularProbabilidades();
 	}
 
-
+	//TODO: transformar em Util
 	public static void ordernarClassificacao(List<ClassificacaoProbabilidade> classificacao, boolean desempatar) throws RuntimeException {
 
 		Collections.sort(classificacao, new Comparator<ClassificacaoProbabilidade>() {
