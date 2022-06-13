@@ -1,6 +1,8 @@
 package com.fastfoot.probability.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -72,6 +74,14 @@ public class ClubeProbabilidadeService {
 			
 			dtos.add(dto);
 		}
+
+		Collections.sort(dtos, new Comparator<ClubeProbabilidadeDTO>() {
+
+			@Override
+			public int compare(ClubeProbabilidadeDTO o1, ClubeProbabilidadeDTO o2) {
+				return o1.getClassificacao().getPosicao().compareTo(o2.getClassificacao().getPosicao());
+			}
+		});
 
 		return dtos;
 	}

@@ -234,7 +234,7 @@ public class PreCarregarService {
 
 			List<Parametro> parametros = new ArrayList<Parametro>();
 
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "2", "2, 3"));
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
 			//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
 			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "SEGUNDO_MELHOR_GRUPO", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
@@ -242,7 +242,7 @@ public class PreCarregarService {
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true", "true, false"));
 
 			//4 (16 TIMES), 6 (28 a 32 TIMES)
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, "6 (28 a 32 TIMES)", "6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, "5 (20 a 24 TIMES)", "6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
 
 			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "false", "true, false"));
 			

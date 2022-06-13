@@ -23,4 +23,6 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 	public List<CampeonatoEliminatorio> findByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
 
 	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
+
+	public List<CampeonatoEliminatorio> findByTemporadaAndLiga(Temporada temporada, Liga liga);
 }

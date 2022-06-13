@@ -1,5 +1,7 @@
 package com.fastfoot.service;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,10 +15,25 @@ public class ParametroService {
 
 	@Autowired
 	private ParametroRepository parametroRepository;
+
+	private static final Map<String, Parametro> PARAMETRO_CACHE = new HashMap<String, Parametro>();
 	
 	public Parametro getParametro(String nome) {
-		Optional<Parametro> parametro = parametroRepository.findFirstByNome(nome);
-		return parametro.get();
+		//return getParametro(nome, false);//TODO
+		return getParametro(nome, true);
+	}
+	
+	public Parametro getParametro(String nome, boolean force) {
+		
+		Parametro parametro = PARAMETRO_CACHE.get(nome);
+		
+		if (parametro == null || force) {		
+			Optional<Parametro> parametroOpt = parametroRepository.findFirstByNome(nome);
+			parametro = parametroOpt.get();
+			PARAMETRO_CACHE.put(nome, parametro);
+		}
+
+		return parametro;
 	}
 	
 	public Boolean getParametroBoolean(String nome) {
@@ -32,5 +49,9 @@ public class ParametroService {
 	public String getParametroString(String nome) {
 		Parametro parametro = getParametro(nome);		
 		return parametro.getValor();
+	}
+
+	public void reset() {
+		PARAMETRO_CACHE.clear();
 	}
 }

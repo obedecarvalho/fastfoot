@@ -10,15 +10,15 @@ public class ClubeProbabilidadeDTO {
 	
 	private String nomeClube;
 	
-	private Integer probabilidadeCampeao;
+	private String probabilidadeCampeao;
 	
-	private Integer probabilidadeRebaixamento;
+	private String probabilidadeRebaixamento;
 	
-	private Integer probabilidadeAcesso;
+	private String probabilidadeAcesso;
 
-	private Integer probabilidadeClassificacaoContinental;
+	private String probabilidadeClassificacaoContinental;
 	
-	private Integer probabilidadeClassificacaoCopaNacional;
+	private String probabilidadeClassificacaoCopaNacional;
 	
 	private ClassificacaoDTO classificacao;
 
@@ -30,43 +30,43 @@ public class ClubeProbabilidadeDTO {
 		this.nomeClube = nomeClube;
 	}
 
-	public Integer getProbabilidadeCampeao() {
+	public String getProbabilidadeCampeao() {
 		return probabilidadeCampeao;
 	}
 
-	public void setProbabilidadeCampeao(Integer probabilidadeCampeao) {
+	public void setProbabilidadeCampeao(String probabilidadeCampeao) {
 		this.probabilidadeCampeao = probabilidadeCampeao;
 	}
 
-	public Integer getProbabilidadeRebaixamento() {
+	public String getProbabilidadeRebaixamento() {
 		return probabilidadeRebaixamento;
 	}
 
-	public void setProbabilidadeRebaixamento(Integer probabilidadeRebaixamento) {
+	public void setProbabilidadeRebaixamento(String probabilidadeRebaixamento) {
 		this.probabilidadeRebaixamento = probabilidadeRebaixamento;
 	}
 
-	public Integer getProbabilidadeAcesso() {
+	public String getProbabilidadeAcesso() {
 		return probabilidadeAcesso;
 	}
 
-	public void setProbabilidadeAcesso(Integer probabilidadeAcesso) {
+	public void setProbabilidadeAcesso(String probabilidadeAcesso) {
 		this.probabilidadeAcesso = probabilidadeAcesso;
 	}
 
-	public Integer getProbabilidadeClassificacaoContinental() {
+	public String getProbabilidadeClassificacaoContinental() {
 		return probabilidadeClassificacaoContinental;
 	}
 
-	public void setProbabilidadeClassificacaoContinental(Integer probabilidadeClassificacaoContinental) {
+	public void setProbabilidadeClassificacaoContinental(String probabilidadeClassificacaoContinental) {
 		this.probabilidadeClassificacaoContinental = probabilidadeClassificacaoContinental;
 	}
 
-	public Integer getProbabilidadeClassificacaoCopaNacional() {
+	public String getProbabilidadeClassificacaoCopaNacional() {
 		return probabilidadeClassificacaoCopaNacional;
 	}
 
-	public void setProbabilidadeClassificacaoCopaNacional(Integer probabilidadeClassificacaoCopaNacional) {
+	public void setProbabilidadeClassificacaoCopaNacional(String probabilidadeClassificacaoCopaNacional) {
 		this.probabilidadeClassificacaoCopaNacional = probabilidadeClassificacaoCopaNacional;
 	}
 
@@ -87,15 +87,15 @@ public class ClubeProbabilidadeDTO {
 		
 		dto.setNomeClube(cp.getClube().getNome());
 		
-		dto.setProbabilidadeAcesso(cp.getProbabilidadeAcesso());
+		dto.setProbabilidadeAcesso(cp.getProbabilidadeAcessoDescricao());
 		
-		dto.setProbabilidadeCampeao(cp.getProbabilidadeCampeao());
+		dto.setProbabilidadeCampeao(cp.getProbabilidadeCampeaoDescricao());
 		
-		dto.setProbabilidadeClassificacaoContinental(cp.getProbabilidadeClassificacaoContinental());
+		dto.setProbabilidadeClassificacaoContinental(cp.getProbabilidadeClassificacaoContinentalDescricao());
 		
-		dto.setProbabilidadeClassificacaoCopaNacional(cp.getProbabilidadeClassificacaoCopaNacional());
+		dto.setProbabilidadeClassificacaoCopaNacional(cp.getProbabilidadeClassificacaoCopaNacionalDescricao());
 		
-		dto.setProbabilidadeRebaixamento(cp.getProbabilidadeRebaixamento());
+		dto.setProbabilidadeRebaixamento(cp.getProbabilidadeRebaixamentoDescricao());
 		
 		return dto;
 	}

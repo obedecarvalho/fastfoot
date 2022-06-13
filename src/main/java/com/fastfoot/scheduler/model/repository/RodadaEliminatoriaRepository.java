@@ -32,4 +32,5 @@ public interface RodadaEliminatoriaRepository extends JpaRepository<RodadaElimin
 
 	public Optional<RodadaEliminatoria> findFirstByCampeonatoMistoAndNumero(CampeonatoMisto campeonatoMisto, Integer numero);
 
+	public Optional<RodadaEliminatoria> findFirstByCampeonatoEliminatorioAndNumero(CampeonatoEliminatorio campeonatoEliminatorio, Integer numero);
 }

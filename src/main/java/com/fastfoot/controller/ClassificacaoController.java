@@ -77,6 +77,8 @@ public class ClassificacaoController {
 		
 		semana.setNumero(t.getSemanaAtual());
 		
+		semana.setTemporada(t);
+		
 		/*for (Campeonato c : campeonatos) {
 			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(c));
 		}*/
@@ -84,7 +86,7 @@ public class ClassificacaoController {
 		//
 		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(0)));
 		
-		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(1)));
+		//calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(1)));
 		
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 		

@@ -163,7 +163,7 @@ public class SemanaService {
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
-			calcularProbabilidades(semana, temporada);
+			//calcularProbabilidades(semana, temporada);
 		}
 
 		if (semana.isUltimaSemana()) {
