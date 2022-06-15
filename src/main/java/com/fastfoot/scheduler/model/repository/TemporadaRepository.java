@@ -24,4 +24,6 @@ public interface TemporadaRepository extends JpaRepository<Temporada, Long>{
 
 	@Query("SELECT t.ano FROM Temporada t ORDER BY t.ano DESC ")
 	public List<Integer> getAnosTemporadas();
+
+	public Optional<Temporada> findFirstByAno(Integer ano);
 }

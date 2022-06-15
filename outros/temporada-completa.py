@@ -47,7 +47,7 @@ for i in range(1, numTemporada+1):
 		r = requests.get(url)
 		if r.status_code == 200:
 			numero = int(r.json()['numero'])
-			print(numero, end = '\t')
+			print(numero)
 		else:
 			print('Error (Executando Rodadas): ' + str(r.status_code))
 			exit()

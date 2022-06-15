@@ -1,20 +1,19 @@
 package com.fastfoot.probability.model.entity;
 
-import java.util.List;
 import java.util.Map;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.entity.Clube;
+import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
+import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Semana;
 
@@ -37,9 +36,6 @@ public class ClubeProbabilidade {
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
-	
-	/*@OneToMany(mappedBy = "clubeProbabilidade", fetch = FetchType.LAZY)
-	private List<ClubeProbabilidadePosicao> probabilidadePosicao;*/
 
 	private Double probabilidadeCampeao;
 	
@@ -47,19 +43,29 @@ public class ClubeProbabilidade {
 	
 	private Double probabilidadeAcesso;
 
-	private Double probabilidadeClassificacaoContinental;
-	
-	private Double probabilidadeClassificacaoCopaNacional;
-	
 	private Double probabilidadeClassificacaoCI;
 	
 	private Double probabilidadeClassificacaoCII;
 	
 	private Double probabilidadeClassificacaoCIII;
 	
-	private Double probabilidadeClassificacaoCNI;
+	//
+	private Integer qtdeClassificacaoCIII;
 	
-	private Double probabilidadeClassificacaoCNII;
+	private Integer qtdeClassificacaoCII;
+	
+	private Integer qtdeClassificacaoCI;
+	
+	private Integer qtdeClassificacaoCNI;
+	
+	private Integer qtdeAcesso;
+	
+	private Integer qtdeRebaixamento;
+	
+	private Integer qtdeCampeao;
+	//
+	
+	private Double probabilidadeClassificacaoCNI;
 
 	@Transient
 	private Map<Integer, ClubeProbabilidadePosicao> clubeProbabilidadePosicao;//Key: posicao
@@ -71,8 +77,17 @@ public class ClubeProbabilidade {
 		probabilidadeCampeao = 0d;
 		probabilidadeRebaixamento = 0d;
 		probabilidadeAcesso = 0d;
-		probabilidadeClassificacaoContinental = 0d;
-		probabilidadeClassificacaoCopaNacional = 0d;
+		probabilidadeClassificacaoCI = 0d;
+		probabilidadeClassificacaoCII = 0d;
+		probabilidadeClassificacaoCIII = 0d;
+		probabilidadeClassificacaoCNI = 0d;
+		qtdeClassificacaoCIII = 0;
+		qtdeClassificacaoCI = 0;
+		qtdeClassificacaoCII = 0;
+		qtdeClassificacaoCNI = 0;
+		qtdeCampeao = 0;
+		qtdeAcesso = 0;
+		qtdeRebaixamento = 0;
 	}
 	
 	public Clube getClube() {
@@ -114,14 +129,6 @@ public class ClubeProbabilidade {
 	public void setSemana(Semana semana) {
 		this.semana = semana;
 	}
-
-	/*public List<ClubeProbabilidadePosicao> getProbabilidadePosicao() {
-		return probabilidadePosicao;
-	}
-
-	public void setProbabilidadePosicao(List<ClubeProbabilidadePosicao> probabilidadePosicao) {
-		this.probabilidadePosicao = probabilidadePosicao;
-	}*/
 	
 	public String getProbabilidadeCampeaoDescricao() {
 		return getDescricaoProcentagem(probabilidadeCampeao);
@@ -158,31 +165,11 @@ public class ClubeProbabilidade {
 	public void setProbabilidadeAcesso(Double probabilidadeAcesso) {
 		this.probabilidadeAcesso = probabilidadeAcesso;
 	}
-	
-	public String getProbabilidadeClassificacaoContinentalDescricao() {
-		return getDescricaoProcentagem(probabilidadeClassificacaoContinental);
-	}
 
-	public Double getProbabilidadeClassificacaoContinental() {
-		return probabilidadeClassificacaoContinental;
-	}
-
-	public void setProbabilidadeClassificacaoContinental(Double probabilidadeClassificacaoContinental) {
-		this.probabilidadeClassificacaoContinental = probabilidadeClassificacaoContinental;
+	public String getProbabilidadeClassificacaoCIDescricao() {
+		return getDescricaoProcentagem(probabilidadeClassificacaoCI);
 	}
 	
-	public String getProbabilidadeClassificacaoCopaNacionalDescricao() {
-		return getDescricaoProcentagem(probabilidadeClassificacaoCopaNacional);
-	}
-
-	public Double getProbabilidadeClassificacaoCopaNacional() {
-		return probabilidadeClassificacaoCopaNacional;
-	}
-
-	public void setProbabilidadeClassificacaoCopaNacional(Double probabilidadeClassificacaoCopaNacional) {
-		this.probabilidadeClassificacaoCopaNacional = probabilidadeClassificacaoCopaNacional;
-	}
-
 	public Double getProbabilidadeClassificacaoCI() {
 		return probabilidadeClassificacaoCI;
 	}
@@ -191,6 +178,10 @@ public class ClubeProbabilidade {
 		this.probabilidadeClassificacaoCI = probabilidadeClassificacaoCI;
 	}
 
+	public String getProbabilidadeClassificacaoCIIDescricao() {
+		return getDescricaoProcentagem(probabilidadeClassificacaoCII);
+	}
+	
 	public Double getProbabilidadeClassificacaoCII() {
 		return probabilidadeClassificacaoCII;
 	}
@@ -199,6 +190,10 @@ public class ClubeProbabilidade {
 		this.probabilidadeClassificacaoCII = probabilidadeClassificacaoCII;
 	}
 
+	public String getProbabilidadeClassificacaoCIIIDescricao() {
+		return getDescricaoProcentagem(probabilidadeClassificacaoCIII);
+	}
+	
 	public Double getProbabilidadeClassificacaoCIII() {
 		return probabilidadeClassificacaoCIII;
 	}
@@ -208,8 +203,8 @@ public class ClubeProbabilidade {
 	}
 
 	private String getDescricaoProcentagem(Double d) {
-		if (d > 0 && d < 0.001d) {
-			return "< 0,10%";
+		if (d > 0 && d < 0.0001d) {
+			return "< 0,01%";
 		}
 		
 		return String.format("%.2f%s", d*100, "%");
@@ -223,6 +218,10 @@ public class ClubeProbabilidade {
 			Map<Integer, ClubeRankingPosicaoProbabilidade> clubeProbabilidadePosicaoContinental) {
 		this.clubeProbabilidadePosicaoGeral = clubeProbabilidadePosicaoContinental;
 	}
+	
+	public String getProbabilidadeClassificacaoCNIDescricao() {
+		return getDescricaoProcentagem(probabilidadeClassificacaoCNI);
+	}
 
 	public Double getProbabilidadeClassificacaoCNI() {
 		return probabilidadeClassificacaoCNI;
@@ -230,14 +229,6 @@ public class ClubeProbabilidade {
 
 	public void setProbabilidadeClassificacaoCNI(Double probabilidadeClassificacaoCNI) {
 		this.probabilidadeClassificacaoCNI = probabilidadeClassificacaoCNI;
-	}
-
-	public Double getProbabilidadeClassificacaoCNII() {
-		return probabilidadeClassificacaoCNII;
-	}
-
-	public void setProbabilidadeClassificacaoCNII(Double probabilidadeClassificacaoCNII) {
-		this.probabilidadeClassificacaoCNII = probabilidadeClassificacaoCNII;
 	}
 
 	@Override
@@ -248,7 +239,62 @@ public class ClubeProbabilidade {
 				+ ", pClassificacaoCII=" + probabilidadeClassificacaoCII
 				+ ", pClassificacaoCIII=" + probabilidadeClassificacaoCIII 
 				+ ", pClassificacaoCNI=" + probabilidadeClassificacaoCNI
-				+ ", pClassificacaoCNII=" + probabilidadeClassificacaoCNII
 				+ "]";
+	}
+
+	public Integer getQtdeClassificacaoCIII() {
+		return qtdeClassificacaoCIII;
+	}
+
+	public void setQtdeClassificacaoCIII(Integer qtdeClassificacaoCIII) {
+		this.qtdeClassificacaoCIII = qtdeClassificacaoCIII;
+	}
+
+	public Integer getQtdeClassificacaoCII() {
+		return qtdeClassificacaoCII;
+	}
+
+	public void setQtdeClassificacaoCII(Integer qtdeClassificacaoCII) {
+		this.qtdeClassificacaoCII = qtdeClassificacaoCII;
+	}
+
+	public Integer getQtdeClassificacaoCI() {
+		return qtdeClassificacaoCI;
+	}
+
+	public void setQtdeClassificacaoCI(Integer qtdeClassificacaoCI) {
+		this.qtdeClassificacaoCI = qtdeClassificacaoCI;
+	}
+
+	public Integer getQtdeClassificacaoCNI() {
+		return qtdeClassificacaoCNI;
+	}
+
+	public void setQtdeClassificacaoCNI(Integer qtdeClassificacaoCNI) {
+		this.qtdeClassificacaoCNI = qtdeClassificacaoCNI;
+	}
+
+	public Integer getQtdeAcesso() {
+		return qtdeAcesso;
+	}
+
+	public void setQtdeAcesso(Integer qtdeAcesso) {
+		this.qtdeAcesso = qtdeAcesso;
+	}
+
+	public Integer getQtdeRebaixamento() {
+		return qtdeRebaixamento;
+	}
+
+	public void setQtdeRebaixamento(Integer qtdeRebaixamento) {
+		this.qtdeRebaixamento = qtdeRebaixamento;
+	}
+
+	public Integer getQtdeCampeao() {
+		return qtdeCampeao;
+	}
+
+	public void setQtdeCampeao(Integer qtdeCampeao) {
+		this.qtdeCampeao = qtdeCampeao;
 	}
 }

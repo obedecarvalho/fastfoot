@@ -1,23 +1,9 @@
-package com.fastfoot.probability.model.entity;
+package com.fastfoot.probability.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.SequenceGenerator;
+import com.fastfoot.probability.model.entity.ClubeProbabilidade;
 
-@Entity
 public class ClubeProbabilidadePosicao {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubeProbabilidadePosicaoSequence")	
-	@SequenceGenerator(name = "clubeProbabilidadePosicaoSequence", sequenceName = "clube_probabilidade_posicao_seq")
-	private Long id;
 
-	@ManyToOne
-	@JoinColumn(name = "id_clube")
 	private ClubeProbabilidade clubeProbabilidade;
 	
 	private Integer posicao;
@@ -52,14 +38,6 @@ public class ClubeProbabilidadePosicao {
 
 	public void setProbabilidade(Integer probabilidade) {
 		this.probabilidade = probabilidade;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
 	}
 
 	public Integer getPontuacaoMaxima() {

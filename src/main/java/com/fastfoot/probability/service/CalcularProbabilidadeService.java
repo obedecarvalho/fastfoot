@@ -22,11 +22,10 @@ import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.model.repository.ClubeRepository;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
+import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
+import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
 import com.fastfoot.probability.model.entity.ClubeProbabilidade;
-import com.fastfoot.probability.model.entity.ClubeProbabilidadePosicao;
-import com.fastfoot.probability.model.entity.ClubeRankingPosicaoProbabilidade;
-import com.fastfoot.probability.model.repository.ClubeProbabilidadePosicaoRepository;
 import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;
 import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeUtil;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -59,6 +58,8 @@ public class CalcularProbabilidadeService {
 	
 	private static final Random R = new Random();
 	
+	private static boolean imprimir = false;
+	
 	@Autowired
 	private ClubeRepository clubeRepository;
 	
@@ -73,9 +74,6 @@ public class CalcularProbabilidadeService {
 
 	@Autowired
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
-
-	@Autowired
-	private ClubeProbabilidadePosicaoRepository clubeProbabilidadePosicaoRepository;
 
 	@Autowired
 	private CampeonatoMistoRepository campeonatoMistoRepository;
@@ -104,32 +102,25 @@ public class CalcularProbabilidadeService {
 		
 		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, c);
 		
-		//salvarProbabilidades(probabilidades);
+		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
 	}
 
-	
-
 	private void salvarProbabilidades(Collection<ClubeProbabilidade> probabilidades) {
-		
 		clubeProbabilidadeRepository.saveAll(probabilidades);
-		
-		for (ClubeProbabilidade cp : probabilidades) {
-			clubeProbabilidadePosicaoRepository.saveAll(cp.getClubeProbabilidadePosicao().values());//TODO: precisa salvar?
-		}
-		
-		//TODO: salvar ClubeRankingPosicaoProbabilidade
 	}
 
 	private Integer getNumeroSimulacoes(Semana semana) {
-		/*if (semana.getNumero() == 22)
+		//return 100;
+
+		if (semana.getNumero() == 22)
 			return NUM_SIMULACOES_SEM_22;
 		if (semana.getNumero() == 23)
 			return NUM_SIMULACOES_SEM_23;
 		if (semana.getNumero() == 24)
-			return NUM_SIMULACOES_SEM_24;*/
-		return 100;
+			return NUM_SIMULACOES_SEM_24;
+		return -1;
 	}
 	
 	public Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato campeonato) {
@@ -139,9 +130,17 @@ public class CalcularProbabilidadeService {
 		inicializarClubeProbabilidade(clubeProbabilidades,
 				campeonato.getClassificacao().stream().map(c -> c.getClube()).collect(Collectors.toList()), semana,
 				campeonato);
+		
+		Map<Integer, Clube> clubesCampeoes = new HashMap<Integer, Clube>();
+		
+		getCampeoesContinentais(semana.getTemporada(), clubesCampeoes);
+		
+		getCampeoesCopaNacional(semana.getTemporada(), clubesCampeoes, campeonato.getLiga());
+		
+		List<Clube> clubesLiga = clubeRepository.findByLiga(campeonato.getLiga());
 
 		for (int i = 0; i < getNumeroSimulacoes(semana); i++) {
-		
+
 			Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades = campeonato.getClassificacao().stream()
 					.map(c -> ClassificacaoProbabilidade.criar(c))
 					.collect(Collectors.toMap(ClassificacaoProbabilidade::getClube, Function.identity()));
@@ -155,34 +154,21 @@ public class CalcularProbabilidadeService {
 					classificacaoProbabilidades.values());
 			
 			ordernarClassificacao(classificacaoProbabilidadesList, true);
-			
-			Map<Integer, Clube> clubesCampeoes = new HashMap<Integer, Clube>();
-			
-			getCampeoesContinentais(semana.getTemporada(), clubesCampeoes);
-			
-			getCampeoesCopaNacional(semana.getTemporada(), clubesCampeoes, campeonato.getLiga());
-			
+
 			List<ClubeRankingProbabilidade> ranking = ClubeRankingProbabilidadeUtil.rankearClubesTemporada(
-					clubeRepository.findByLiga(campeonato.getLiga()),
+					clubesLiga,
 					classificacaoProbabilidadesList, campeonato.getNivelCampeonato(), clubesCampeoes);
-			
-			
-			/*List<Integer> x = classificacaoProbabilidadesList.stream().map(c -> c.getPosicao()).sorted().collect(Collectors.toList());
-			
-			if (x.size() != 16) {
-				System.err.println("--------------------\n\t" + x);
-			}*/
-			
+
 			agruparClubeProbabilidade(clubeProbabilidades, classificacaoProbabilidadesList);
 			
 			agruparClubeRankingProbabilidade(clubeProbabilidades, ranking);
 
 		}
-		
+
 		calcularProbabilidadesEspecificas(clubeProbabilidades, semana, campeonato.getNivelCampeonato());
 		
-		printClubeProbabilidade(clubeProbabilidades.values());
-		
+		if (imprimir) printClubeProbabilidade(clubeProbabilidades.values());
+
 		return clubeProbabilidades.values();
 
 	}
@@ -201,6 +187,7 @@ public class CalcularProbabilidadeService {
 			cpp = cp.getClubeProbabilidadePosicao().get(1);
 			if (cpp != null) {
 				cp.setProbabilidadeCampeao(cpp.getProbabilidade().doubleValue()/getNumeroSimulacoes(semana));
+				cp.setQtdeCampeao(cpp.getProbabilidade());
 			}
 			
 			//Rebaixamento
@@ -213,6 +200,7 @@ public class CalcularProbabilidadeService {
 					}
 				}
 				cp.setProbabilidadeRebaixamento(probabilidadeRebaixamento.doubleValue()/getNumeroSimulacoes(semana));
+				cp.setQtdeRebaixamento(probabilidadeRebaixamento);
 			}
 			
 			//Acesso
@@ -225,122 +213,61 @@ public class CalcularProbabilidadeService {
 					}
 				}
 				cp.setProbabilidadeAcesso(probabilidadeAcesso.doubleValue()/getNumeroSimulacoes(semana));
+				cp.setQtdeAcesso(probabilidadeAcesso);
 			}
 			
 			//CI
-			if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCI = 0;
-				for (int i = getPosicoesClassificamCIMin(); i <= getPosicoesClassificamCIMax(); i++ ) {
-					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-					if (crpp != null) {
-						probabilidadeClassificacaoCI += crpp.getProbabilidade();
-					}
+			Integer probabilidadeClassificacaoCI = 0;
+			for (int i = getPosicoesClassificamCIMin(); i <= getPosicoesClassificamCIMax(); i++ ) {
+				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+				if (crpp != null) {
+					probabilidadeClassificacaoCI += crpp.getProbabilidade();
 				}
-				cp.setProbabilidadeClassificacaoCI(probabilidadeClassificacaoCI.doubleValue()/getNumeroSimulacoes(semana));
 			}
-			//TODO: NII
-			
+			cp.setQtdeClassificacaoCI(probabilidadeClassificacaoCI);
+			cp.setProbabilidadeClassificacaoCI(probabilidadeClassificacaoCI.doubleValue()/getNumeroSimulacoes(semana));
+
 			//CII
-			if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCII = 0;
-				for (int i = getPosicoesClassificamCIIMin(); i <= getPosicoesClassificamCIIMax(); i++ ) {
-					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-					if (crpp != null) {
-						probabilidadeClassificacaoCII += crpp.getProbabilidade();
-					}
+			Integer probabilidadeClassificacaoCII = 0;
+			for (int i = getPosicoesClassificamCIIMin(); i <= getPosicoesClassificamCIIMax(); i++ ) {
+				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+				if (crpp != null) {
+					probabilidadeClassificacaoCII += crpp.getProbabilidade();
 				}
-				cp.setProbabilidadeClassificacaoCII(probabilidadeClassificacaoCII.doubleValue()/getNumeroSimulacoes(semana));
 			}
-			//TODO: NII
-			
+			cp.setQtdeClassificacaoCII(probabilidadeClassificacaoCII);
+			cp.setProbabilidadeClassificacaoCII(probabilidadeClassificacaoCII.doubleValue()/getNumeroSimulacoes(semana));
+
 			//CIII
-			if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCIII = 0;
-				for (int i = getPosicoesClassificamCIIIMin(); i <= getPosicoesClassificamCIIIMax(); i++ ) {
-					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-					if (crpp != null) {
-						probabilidadeClassificacaoCIII += crpp.getProbabilidade();
-					}
+			Integer probabilidadeClassificacaoCIII = 0;
+			for (int i = getPosicoesClassificamCIIIMin(); i <= getPosicoesClassificamCIIIMax(); i++ ) {
+				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+				if (crpp != null) {
+					probabilidadeClassificacaoCIII += crpp.getProbabilidade();
 				}
-				cp.setProbabilidadeClassificacaoCIII(probabilidadeClassificacaoCIII.doubleValue()/getNumeroSimulacoes(semana));
 			}
-			//TODO: NII
-			
+			cp.setQtdeClassificacaoCIII(probabilidadeClassificacaoCIII);
+			cp.setProbabilidadeClassificacaoCIII(probabilidadeClassificacaoCIII.doubleValue()/getNumeroSimulacoes(semana));
+
 			//CNI
-			//TODO: precisa de NI e NII
-			if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCNI = 0;
-				for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(); i++ ) {
-					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-					if (crpp != null) {
-						probabilidadeClassificacaoCNI += crpp.getProbabilidade();
-					}
+			/*
+			 * Quando a COPA NACIONAL tem 4 rodadas as estatísticas de classificação para CNI apresentam distorções
+			 * devido aos campeões (CI, CII, CIII, CNI e CNII) poderem estar ou não na zona de rebaixamento (14, 15, 16).
+			 *  
+			 */
+			Integer probabilidadeClassificacaoCNI = 0;
+			for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(); i++ ) {
+				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+				if (crpp != null) {
+					probabilidadeClassificacaoCNI += crpp.getProbabilidade();
 				}
-				cp.setProbabilidadeClassificacaoCNI(probabilidadeClassificacaoCNI.doubleValue()/getNumeroSimulacoes(semana));
 			}
-			//TODO: NII
-			
-			//CNII
-			//TODO: precisa de NI e NII
-			//TODO: complemento de CNI
-			/*if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCNII = 0;
-				for (int i = getPosicoesClassificamCNIIMin(); i <= getPosicoesClassificamCNIIMax(); i++ ) {
-					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-					if (crpp != null) {
-						probabilidadeClassificacaoCNII += crpp.getProbabilidade();
-					}
-				}
-				cp.setProbabilidadeClassificacaoCNII(probabilidadeClassificacaoCNII.doubleValue()/getNumeroSimulacoes(semana));
-			}*/
-			//TODO: NII
-			
-			
-			/*if (nivelCampeonato.isNacional()) {
-				Integer probabilidadeClassificacaoCopaNacional = 0;
-				for (int i = 1; i <= getPosicoesClassificamCopaNacional(); i++ ) {
-					cpp = cp.getClubeProbabilidadePosicao().get(i);
-					if (cpp != null) {
-						probabilidadeClassificacaoCopaNacional += cpp.getProbabilidade();
-					}
-				}
-				cp.setProbabilidadeClassificacaoCopaNacional(probabilidadeClassificacaoCopaNacional.doubleValue()/getNumeroSimulacoes(semana));
-			}
-			
-			if (nivelCampeonato.isNacionalII()) {
-				Integer probabilidadeClassificacaoCopaNacional = 0;
-				for (int i = 1; i <= getPosicoesClassificamCopaNacionalNII(); i++ ) {
-					cpp = cp.getClubeProbabilidadePosicao().get(i);
-					if (cpp != null) {
-						probabilidadeClassificacaoCopaNacional += cpp.getProbabilidade();
-					}
-				}
-				cp.setProbabilidadeClassificacaoCopaNacional(probabilidadeClassificacaoCopaNacional.doubleValue()/getNumeroSimulacoes(semana));
-			}*/
+			cp.setQtdeClassificacaoCNI(probabilidadeClassificacaoCNI);
+			cp.setProbabilidadeClassificacaoCNI(probabilidadeClassificacaoCNI.doubleValue()/getNumeroSimulacoes(semana));
 
 		}
 
 	}
-	
-	/*private Integer getPosicoesClassificamContinental() {
-
-		Integer nroCompeticoesContinentais = parametroService
-				.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-
-		Boolean cnIIIReduzida = false; // parametroService.getParametro... TODO
-
-		if (nroCompeticoesContinentais == 3) {
-			if (cnIIIReduzida) {
-				return 6;
-			} else {
-				return 8;
-			}
-		} else if (nroCompeticoesContinentais == 2) {
-			return 4;
-		}
-		
-		return -1;
-	}*/
 	
 	private Integer getPosicoesClassificamCIMin() { return 1; }
 	
@@ -365,27 +292,22 @@ public class CalcularProbabilidadeService {
 
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 
-		Boolean cnIIIReduzida = false; // parametroService.getParametro... TODO
-		
+		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
 		}
 
-		if (cnIIIReduzida) {
+		if (cIIIReduzido) {
 			return 10;
 		}
 
 		return 12;
 	}
 	
-	private Integer getPosicoesClassificamCNIMin() {
-		//Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		//String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
+	private Integer getPosicoesClassificamCNIMin() { return 1; }
 
-		return 1;
-	}
-
-	private Integer getPosicoesClassificamCNIMax() {
+	/*private Integer getPosicoesClassificamCNIMax() {
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
@@ -408,107 +330,14 @@ public class CalcularProbabilidadeService {
 		}
 
 		return -1;
+
+	}*/
+	
+	private Integer getPosicoesClassificamCNIMax() {
+		
+		return parametroService.getNumeroTimesParticipantesCopaNacional();
 	}
 
-	/*private Integer getPosicoesClassificamCNIIMin() {//Classifica direto pra CNII
-		
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		
-		String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
-		
-		Boolean jogarCNII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-		
-		if (!jogarCNII) return -1;
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadasCopaNacional)) {
-			return 17;
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//20
-				return 21;
-			} else if (nroCompeticoesContinentais == 2) {//24
-				return 25;
-			}
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//28
-				return 29;
-			} else if (nroCompeticoesContinentais == 2) {//32
-				return -1;
-			}
-		}
-
-		return -1;
-	}*/
-
-	/*private Integer getPosicoesClassificamCNIIMax() {
-		Boolean jogarCNII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-		
-		if (!jogarCNII) return -1;
-		
-		return 32;
-	}*/
-
-	/*private Integer getPosicoesClassificamCopaNacional() {
-		
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		
-		String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
-		
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadasCopaNacional)) {
-			return 11;
-		}
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//20
-				return 13;
-			} else if (nroCompeticoesContinentais == 2) {//24
-				return 16;
-			}
-		}
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//28
-				return 16;
-			} else if (nroCompeticoesContinentais == 2) {//32
-				return 16;
-			}
-		}
-
-		return -1;
-	}*/
-	
-	/*private Integer getPosicoesClassificamCopaNacionalNII() {
-		
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		
-		String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
-		
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadasCopaNacional)) {
-			return 0;
-		}
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//20
-				return 2;
-			} else if (nroCompeticoesContinentais == 2) {//24
-				return 3;
-			}
-		}
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 3) {//28
-				return 7;
-			} else if (nroCompeticoesContinentais == 2) {//32
-				return 16;
-			}
-		}
-
-		return -1;
-	}*/
-	
-	
-	
 	private void agruparClubeRankingProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades, List<ClubeRankingProbabilidade> ranking) {
 
 		ClubeRankingPosicaoProbabilidade crpp = null;
@@ -532,10 +361,8 @@ public class CalcularProbabilidadeService {
 					crpp.setProbabilidade(crpp.getProbabilidade() + 1);
 				}
 			}
-		}
-		
+		}		
 	}
-	
 
 	private void agruparClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
 			List<ClassificacaoProbabilidade> classificacaoProbabilidades) {
@@ -605,7 +432,7 @@ public class CalcularProbabilidadeService {
 		RodadaEliminatoria r = null;
 		List<PartidaEliminatoriaResultado> p = null;
 		
-		int numeroRodadas = getNumeroRodadasCopaNacional();
+		int numeroRodadas = parametroService.getNumeroRodadasCopaNacional();
 
 		for (CampeonatoEliminatorio c : copasNacionais) {
 			
@@ -617,20 +444,6 @@ public class CalcularProbabilidadeService {
 				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_COPA_NAC_II, p.get(0).getClubeVencedor());
 			}
 		}
-	}
-
-	private Integer getNumeroRodadasCopaNacional() {
-		String numeroRodadas = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadas)) {
-			return 4;
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadas)) {
-			return 5;
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadas)) {
-			return 6;
-		}
-		
-		return 0;
 	}
 	
 	private void inicializarClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
@@ -730,7 +543,7 @@ public class CalcularProbabilidadeService {
 				
 				//Se entrou aqui, o clube[i] está empatado com clube[i-1]
 				//if (desempatar) {
-					sortearPosicao(empatados, j + 1);
+				sortearPosicao(empatados, j + 1);
 				//} else {
 					//Para manter varios clubes com a mesma classificacao em Caso de empate
 					//classificacao.get(i).setPosicao(classificacao.get(i-1).getPosicao()); 
@@ -749,18 +562,14 @@ public class CalcularProbabilidadeService {
 		}
 	}
 	
-	//########	TESTE	##############3333
-	
-	@SuppressWarnings("unused")
+	//########	TESTE	##############
+
 	private synchronized void printClubeProbabilidade(Collection<ClubeProbabilidade> clubeProbabilidades) {
 		for (ClubeProbabilidade cp : clubeProbabilidades) {
 			/*System.err.println("\t" + cp.getClube().getNome());
 			System.err.println("\t\tCampeao: " + cp.getProbabilidadeCampeao());
 			System.err.println("\t\tRebaixamento: " + cp.getProbabilidadeRebaixamento());
 			System.err.println("\t\tAcesso: " + cp.getProbabilidadeAcesso());
-			//System.err.println("\t\tContinental: " + cp.getProbabilidadeClassificacaoContinental());
-			//System.err.println("\t\tCopa Nacional: " + cp.getProbabilidadeClassificacaoCopaNacional());
-			
 			System.err.println("\t\tC1: " + cp.getProbabilidadeClassificacaoCI());
 			System.err.println("\t\tC2: " + cp.getProbabilidadeClassificacaoCII());
 			System.err.println("\t\tC3: " + cp.getProbabilidadeClassificacaoCIII());*/

@@ -126,6 +126,10 @@ public class ClubeRanking {
 	public boolean isCampeaoContinentalII() {
 		return ClassificacaoContinentalFinal.CII_CAMPEAO.equals(classificacaoContinental);
 	}
+	
+	public boolean isCampeaoContinentalIII() {
+		return ClassificacaoContinentalFinal.CIII_CAMPEAO.equals(classificacaoContinental);
+	}
 
 	public boolean isCampeaoCopaNacional() {
 		return ClassificacaoCopaNacionalFinal.CN_CAMPEAO.equals(classificacaoCopaNacional);

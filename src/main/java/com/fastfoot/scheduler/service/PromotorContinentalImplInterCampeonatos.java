@@ -32,13 +32,23 @@ public class PromotorContinentalImplInterCampeonatos implements PromotorContinen
 
 	private void promover(CampeonatoMisto campeonato, CampeonatoMisto campeonatoSuperior, Integer posProxColocado) {
 
-		Clube primeiroColocado, proximoColocado; 
+		Clube primeiroColocado, proximoColocado;
+		
+		int numGrupos = campeonato.getGrupos().size();
 
 		for (int i = 0; i < Constantes.NRO_GRUPOS_CONT; i++) {
-			GrupoCampeonato gc = campeonato.getGrupos().get(i);
+			int posG = i % numGrupos;
+			//int posClas = (i / numGrupos) + 1;
+			
+			GrupoCampeonato gc = campeonato.getGrupos().get(posG);
 			GrupoCampeonato gcSup = campeonatoSuperior.getGrupos().get(i);
 
-			primeiroColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == 1).findFirst().get().getClube();	
+			//primeiroColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == posClas).findFirst().get().getClube();	
+			if (numGrupos == Constantes.NRO_GRUPOS_CONT || i == posG) {
+				primeiroColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == 1).findFirst().get().getClube();
+			} else {
+				primeiroColocado = gc.getClassificacao().stream().filter(c -> c.getPosicao() == 2).findFirst().get().getClube();
+			}
 			proximoColocado = gcSup.getClassificacao().stream().filter(c -> c.getPosicao() == posProxColocado).findFirst().get().getClube();
 			
 			campeonato.getPrimeiraRodadaEliminatoria().getPartidas().get(i).setClubeMandante(primeiroColocado);
@@ -73,7 +83,7 @@ public class PromotorContinentalImplInterCampeonatos implements PromotorContinen
 			promover(c2.get(), c1.get(), 3);
 		}
 		
-		if (c1.isPresent() && c3.isPresent()) {
+		if (c2.isPresent() && c3.isPresent()) {
 			promover(c3.get(), c2.get(), 2);
 			ultimo = c3.get();
 		}

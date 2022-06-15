@@ -416,3 +416,16 @@ from partida_amistosa_resultado
 where id_rodada_amistosa in (
 select id from rodada_amistosa where id_semana in (select id from semana where id_temporada = 3030)
 );
+
+
+--probabilidades
+select c.liga, c.nivel_campeonato as nivel, s.numero, sum(probabilidade_campeao) as campeao, sum(probabilidade_acesso) as acesso, 
+sum(probabilidade_rebaixamento) as rebaixamento, sum(probabilidade_classificacaoci) as classificacaoci, 
+sum(probabilidade_classificacaocii) as classificacaocii
+, sum(probabilidade_classificacaociii) as classificacaociii
+, sum(probabilidade_classificacaocni) as classificacaocni
+from clube_probabilidade cp
+left join campeonato c on cp.id_campeonato = c.id
+inner join semana s on s.id = cp.id_semana
+group by id_campeonato, c.liga, c.nivel_campeonato, s.numero
+order by s.numero, c.liga, nivel

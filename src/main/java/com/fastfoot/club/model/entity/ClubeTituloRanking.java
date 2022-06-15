@@ -29,6 +29,8 @@ public class ClubeTituloRanking {
 	
 	private Integer titulosContinentalII;
 	
+	private Integer titulosContinentalIII;
+	
 	public ClubeTituloRanking() {
 
 	}
@@ -42,6 +44,7 @@ public class ClubeTituloRanking {
 		this.titulosCopaNacionalII = 0;	
 		this.titulosContinental = 0;	
 		this.titulosContinentalII = 0;
+		this.titulosContinentalIII = 0;
 	}
 
 	public Integer getId() {
@@ -106,6 +109,14 @@ public class ClubeTituloRanking {
 
 	public void setTitulosContinentalII(Integer titulosContinentalII) {
 		this.titulosContinentalII = titulosContinentalII;
+	}
+
+	public Integer getTitulosContinentalIII() {
+		return titulosContinentalIII;
+	}
+
+	public void setTitulosContinentalIII(Integer titulosContinentalIII) {
+		this.titulosContinentalIII = titulosContinentalIII;
 	}
 
 }

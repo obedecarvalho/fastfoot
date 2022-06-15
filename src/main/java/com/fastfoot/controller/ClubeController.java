@@ -1,6 +1,7 @@
 package com.fastfoot.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
 import com.fastfoot.scheduler.model.dto.ClubeRankingDTO;
 import com.fastfoot.service.ClubeService;
@@ -52,5 +54,10 @@ public class ClubeController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(anos);
+	}
+
+	@GetMapping("/clubes/campeoes/{ano}")
+	public ResponseEntity<Map<String, List<Clube>>> getClubesCampeoesPorAno(@PathVariable(name = "ano") Integer ano) {
+		return ResponseEntity.ok(clubeService.getClubesCampeoesPorAno(ano));
 	}
 }

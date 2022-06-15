@@ -19,7 +19,8 @@ public class RodadaAmistosaFactory {
 
 	public static List<RodadaAmistosa> criarRodadasAmistosasAgrupaGrupo(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		
-		int nroCompeticoes = clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT;
+		//int nroCompeticoes = clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT;
+		int nroCompeticoes = new Double(Math.ceil(clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT.doubleValue())).intValue();
 		
 		Map<Liga, List<Clube>> clubesGrupo = new HashMap<Liga, List<Clube>>();
 		List<RodadaAmistosa> rodadasGeral = new ArrayList<RodadaAmistosa>();
@@ -28,7 +29,7 @@ public class RodadaAmistosaFactory {
 		for (int i = 0; i < nroCompeticoes; i++) {
 			
 			int posInicial = i * Constantes.NRO_CLUBES_POR_LIGA_CONT;
-			int posFinal = (i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT;
+			int posFinal = Math.min((i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT, clubes.get(Liga.ENGLND).size());
 			
 			for (Liga l : Liga.getAll()) {
 				clubesGrupo.put(l, clubes.get(l).subList(posInicial, posFinal));
@@ -45,7 +46,7 @@ public class RodadaAmistosaFactory {
 		return rodadasGeral;
 	}
 	
-	public static List<RodadaAmistosa> criarRodadasAmistosas(Temporada temporada, Map<Liga, List<Clube>> clubes) {
+	/*private static List<RodadaAmistosa> criarRodadasAmistosas(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		//List<RodadaAmistosa> rodadas = Arrays.asList(new RodadaAmistosa(101), new RodadaAmistosa(102), new RodadaAmistosa(103));
 		//SemanaUtil.associarRodadaAmistosaSemana(temporada, rodadas);
 		
@@ -68,7 +69,7 @@ public class RodadaAmistosaFactory {
 		}
 		SemanaUtil.associarRodadaAmistosaSemana(temporada, rodadasGeral);
 		return rodadasGeral;
-	}
+	}*/
 	
 	/*public static List<RodadaAmistosa> criarRodadasAmistosas(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		List<RodadaAmistosa> rodadasGeral = gerarRodadas(clubes);
@@ -76,7 +77,7 @@ public class RodadaAmistosaFactory {
 		return rodadasGeral;
 	}*/
 
-	private static List<RodadaAmistosa> gerarRodadas(Map<Liga, List<Clube>> clubes) {//Esperado 16 clubes
+	/*private static List<RodadaAmistosa> gerarRodadas(Map<Liga, List<Clube>> clubes) {//Esperado 16 clubes
 		Set<Liga> ligas = clubes.keySet();
 		
 		List<Clube> clubesGrupo = new ArrayList<Clube>();
@@ -98,9 +99,9 @@ public class RodadaAmistosaFactory {
 		}
 
 		return rodadasGeral;
-	}
+	}*/
 
-	private static List<RodadaAmistosa> gerarRodadas(List<Clube> clubes, Integer nroRodadaInicial) {
+	/*private static List<RodadaAmistosa> gerarRodadas(List<Clube> clubes, Integer nroRodadaInicial) {
 		int nTimes = clubes.size();
 		
 		int nRodadas = nTimes-1, nPartidas = (int) nTimes/2;
@@ -165,9 +166,9 @@ public class RodadaAmistosaFactory {
 		}
 		
 		return rodadas;		
-	}
+	}*/
 	
-	public static List<RodadaAmistosa> criarRodadasAmistosasUnicaRodadaSemana(Temporada temporada, Map<Liga, List<Clube>> clubes) {
+	/*private static List<RodadaAmistosa> criarRodadasAmistosasUnicaRodadaSemana(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		List<RodadaAmistosa> rodadas = Arrays.asList(new RodadaAmistosa(101), new RodadaAmistosa(102), new RodadaAmistosa(103));
 		SemanaUtil.associarRodadaAmistosaSemana(temporada, rodadas);
 		
@@ -187,7 +188,7 @@ public class RodadaAmistosaFactory {
 			clubesGrupo.clear();
 		}
 		return rodadas;
-	}
+	}*/
 	
 	private static void gerarPartidasGrupos(Map<Liga, List<Clube>> clubes, List<RodadaAmistosa> rodadas) {//Esperado 16 clubes
 		Set<Liga> ligas = clubes.keySet();
@@ -195,12 +196,15 @@ public class RodadaAmistosaFactory {
 		List<Clube> clubesGrupo = new ArrayList<Clube>();
 		
 		//List<RodadaAmistosa> rodadasGeral = new ArrayList<RodadaAmistosa>();
+		boolean reduzido = clubes.get(ligas.toArray()[0]).size() == 2;
+		int numGrupos = !reduzido ? Constantes.NRO_GRUPOS_AMISTOSOS : 2;
+		int numClubes = !reduzido ? Constantes.NRO_CLUBES_GRUPOS_AMISTOSOS : 2;
 		
-		for (int i = 0; i < Constantes.NRO_GRUPOS_AMISTOSOS; i++) {
+		for (int i = 0; i < numGrupos; i++) {
 			
 			int j = 0, pos = 0;
 			for (Liga l : ligas) {
-				pos = (i+j)%Constantes.NRO_CLUBES_GRUPOS_AMISTOSOS;
+				pos = (i + j) % numClubes;
 				clubesGrupo.add(clubes.get(l).get(pos));
 				j++;
 			}
@@ -214,7 +218,7 @@ public class RodadaAmistosaFactory {
 		//return rodadasGeral;
 	}
 
-	public static void gerarPartidasRodadas(List<Clube> clubes, List<RodadaAmistosa> rodadas) {
+	private static void gerarPartidasRodadas(List<Clube> clubes, List<RodadaAmistosa> rodadas) {
 		int nTimes = clubes.size();
 		
 		int nRodadas = rodadas.size(); //nTimes-1;

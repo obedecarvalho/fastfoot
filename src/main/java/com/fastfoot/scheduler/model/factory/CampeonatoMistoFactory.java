@@ -48,18 +48,21 @@ public class CampeonatoMistoFactory {
 		List<GrupoCampeonato> grupoCampeonatos = new ArrayList<GrupoCampeonato>();
 		GrupoCampeonato grupoCampeonato = null;
 		
-		for (int i = 0; i < Constantes.NRO_GRUPOS_CONT; i++) {
+		//int nroGruposCont = Constantes.NRO_GRUPOS_CONT;
+		int nroGruposCont = clubes.get(ligas.toArray()[0]).size();
+
+		for (int i = 0; i < nroGruposCont; i++) {
 			
 			int j = 0, pos = 0;
 			for (Liga l : ligas) {
-				pos = (i+j)%Constantes.NRO_CLUBES_GRUPOS;
+				pos = (i + j) % nroGruposCont;
 				clubesGrupo.add(clubes.get(l).get(pos));
 				j++;
 			}
 			
 			grupoCampeonato = new GrupoCampeonato();
 			grupoCampeonato.setCampeonato(campeonato);
-			grupoCampeonato.setNumero(i+1);
+			grupoCampeonato.setNumero(i + 1);
 			
 			List<Rodada> rodadas = CampeonatoFactory.gerarRodadas(clubesGrupo, null, grupoCampeonato);
 			List<Classificacao> classificacao = ClassificacaoFactory.gerarClassificacaoInicial(clubesGrupo, null, grupoCampeonato);

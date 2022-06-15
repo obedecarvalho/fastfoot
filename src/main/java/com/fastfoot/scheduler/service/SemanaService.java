@@ -20,7 +20,6 @@ import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -163,7 +162,7 @@ public class SemanaService {
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
-			//calcularProbabilidades(semana, temporada);
+			calcularProbabilidades(semana, temporada);
 		}
 
 		if (semana.isUltimaSemana()) {
@@ -307,42 +306,41 @@ public class SemanaService {
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
 
-			String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
+			//String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
-			RodadaEliminatoria rodadaInicial = null;
-			List<PartidaEliminatoriaResultado> partidas = null;
-			List<GrupoCampeonato> grupos = null;
+			Set<CampeonatoMisto> campeonatosMisto = semana.getRodadas().stream()
+					.map(r -> r.getGrupoCampeonato().getCampeonato()).collect(Collectors.toSet());
 			
-			Set<CampeonatoMisto> campeonatosMisto = new HashSet<CampeonatoMisto>();
+			/*Set<CampeonatoMisto> campeonatosMisto = new HashSet<CampeonatoMisto>();
 			
 			for (Rodada r : semana.getRodadas()) {
 				if (r.getGrupoCampeonato() != null) {//Continentais
 					campeonatosMisto.add(r.getGrupoCampeonato().getCampeonato());
 				}
-			}
+			}*/
 
 			for (CampeonatoMisto c : campeonatosMisto) {
-				grupos = grupoCampeonatoRepository.findByCampeonato(c);
-				for (GrupoCampeonato g : grupos) {
+				c.setGrupos(grupoCampeonatoRepository.findByCampeonato(c));
+				for (GrupoCampeonato g : c.getGrupos()) {
 					g.setClassificacao(classificacaoRepository.findByGrupoCampeonato(g));
 				}
-				rodadaInicial = rodadaEliminatoriaRepository.findFirstByCampeonatoMistoAndNumero(c, Constantes.NRO_PARTIDAS_FASE_GRUPOS + 1).get();
-				partidas = partidaEliminatoriaRepository.findByRodada(rodadaInicial);
-				c.setGrupos(grupos);
-				rodadaInicial.setPartidas(partidas);
-				c.setPrimeiraRodadaEliminatoria(rodadaInicial);
+				c.setPrimeiraRodadaEliminatoria(rodadaEliminatoriaRepository
+						.findFirstByCampeonatoMistoAndNumero(c, Constantes.NRO_PARTIDAS_FASE_GRUPOS + 1).get());
+				c.getPrimeiraRodadaEliminatoria()
+						.setPartidas(partidaEliminatoriaRepository.findByRodada(c.getPrimeiraRodadaEliminatoria()));
 			}
-			
-			getPromotorContinental(estrategiaPromotorCont).promover(campeonatosMisto);
+
+			//getPromotorContinental(estrategiaPromotorCont).promover(campeonatosMisto);
+			getPromotorContinental().promover(campeonatosMisto);
 			for (CampeonatoMisto c : campeonatosMisto) {
 				partidaEliminatoriaRepository.saveAll(c.getPrimeiraRodadaEliminatoria().getPartidas());
 			}
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
 
-			String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
+			//String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 			Boolean jogarCopaNacII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-			Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+			//Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 			
 			if (jogarCopaNacII) {
 				List<CampeonatoEliminatorio> campeonatos = semana.getRodadasEliminatorias().stream()
@@ -366,7 +364,8 @@ public class SemanaService {
 					rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
 					rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
 	
-					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(numeroRodadasCopaNacional, nroCompeticoes);
+					//PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(numeroRodadasCopaNacional, nroCompeticoes);
+					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria();
 					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
 					
 					partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
@@ -375,8 +374,21 @@ public class SemanaService {
 		}
 
 	}
+	
+	private PromotorContinental getPromotorContinental() {
+		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
+		PromotorContinental promotorContinental = null;
 
-	private PromotorContinental getPromotorContinental(String estrategia) {
+		if (parametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo()) {
+			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
+		} else if (parametroService.isEstrategiaPromotorContinentalMelhorEliminado()) {	
+			promotorContinental = new PromotorContinentalImplInterCampeonatos();
+		}
+
+		return promotorContinental;
+	}
+
+	/*private PromotorContinental getPromotorContinental(String estrategia) {
 		
 		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
 		PromotorContinental promotorContinental = null;
@@ -388,9 +400,32 @@ public class SemanaService {
 		}
 
 		return promotorContinental;
+	}*/
+	
+	private PromotorEliminatoria getPromotorEliminatoria() {
+		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
+		
+		PromotorEliminatoria promotorEliminatoria = null;
+		
+		if (numRodadas == 6) {
+			if (nroCompeticoesContinentais == 3) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteEOitoClubes();
+			} else if (nroCompeticoesContinentais == 2) {
+				promotorEliminatoria = new PromotorEliminatoriaImplTrintaEDoisClubes();
+			}
+		} else if (numRodadas == 5) {
+			if (nroCompeticoesContinentais == 3) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteClubes();
+			} else if (nroCompeticoesContinentais == 2) {
+				promotorEliminatoria = new PromotorEliminatoriaImplVinteEQuatroClubes();
+			}
+		}
+		
+		return promotorEliminatoria;
 	}
 
-	private PromotorEliminatoria getPromotorEliminatoria(String numeroRodadasCopaNacional, Integer nroCompeticoes) {
+	/*private PromotorEliminatoria getPromotorEliminatoria(String numeroRodadasCopaNacional, Integer nroCompeticoes) {
 		PromotorEliminatoria promotorEliminatoria = null;
 		
 		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
@@ -408,7 +443,7 @@ public class SemanaService {
 		}
 		
 		return promotorEliminatoria;
-	}
+	}*/
 
 	/*private void salvarPartidas(Semana semana) {
 		boolean salvarEstatisticas = false;

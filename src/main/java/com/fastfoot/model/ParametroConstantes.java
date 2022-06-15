@@ -28,6 +28,9 @@ public class ParametroConstantes {
 	public static final String MARCAR_AMISTOSOS_AUTOMATICAMENTE = "MARCAR_AMISTOSOS_AUTOMATICAMENTE";
 
 	//3, 2, 4
-	public static final String NUMERO_CLUBES_REBAIXADOS = "NUMERO_CLUBES_REBAIXADOS";
+	public static final String NUMERO_CLUBES_REBAIXADOS = "NUMERO_CLUBES_REBAIXADOS";//TODO
+	
+	//true, false
+	public static final String JOGAR_CONTINENTAL_III_REDUZIDO = "JOGAR_CONTINENTAL_III_REDUZIDO";
 
 }

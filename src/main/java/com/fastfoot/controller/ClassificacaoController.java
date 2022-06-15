@@ -43,7 +43,6 @@ public class ClassificacaoController {
 		return ResponseEntity.ok(classificacao);
 	}
 
-	//
 	@GetMapping("/probabilidade/campeonato/{idCampeonato}")
 	public ResponseEntity<List<ClubeProbabilidadeDTO>> getProbabilidadesCampeonato(@PathVariable(name = "idCampeonato") Long idCampeonato) {
 		List<ClubeProbabilidadeDTO> probabilidades = clubeProbabilidadeService.getProbabilidadePorCampeonato(idCampeonato);
@@ -52,8 +51,6 @@ public class ClassificacaoController {
 		}
 		return ResponseEntity.ok(probabilidades);
 	}
-	//
-
 	
 	@Autowired
 	private CalcularProbabilidadeService calcularProbabilidadeService; 
@@ -80,13 +77,14 @@ public class ClassificacaoController {
 		semana.setTemporada(t);
 		
 		/*for (Campeonato c : campeonatos) {
-			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(c));
+			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, c));
 		}*/
 		
 		//
 		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(0)));
 		
 		//calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(1)));
+		//
 		
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 		

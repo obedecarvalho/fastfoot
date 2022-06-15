@@ -135,14 +135,17 @@ public class TemporadaService {
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
 		Boolean jogarCopaNacII = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-		String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
+		//String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 
 		Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		//String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
 		Boolean marcarAmistosos = parametroService.getParametroBoolean(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
 		
 
-		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(numeroRodadasCopaNacional, nroCompeticoes);
+		//CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(numeroRodadasCopaNacional, nroCompeticoes);
+		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory();
 
 		Integer ano = temporada.getAno();
 
@@ -188,7 +191,14 @@ public class TemporadaService {
 			int posInicial = i * Constantes.NRO_CLUBES_POR_LIGA_CONT;
 			int posFinal = (i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT;
 			
-			
+			if (i == 2 //CIII
+					&& cIIIReduzido 
+					//&& ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategiaPromotorCont)
+					&& parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
+					) {
+				posFinal = 10;
+			}
+
 			for (Liga liga : Liga.getAll()) {
 				clubesContinental.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial + 1, posFinal));
 			}
@@ -202,16 +212,52 @@ public class TemporadaService {
 			Map<Liga, List<Clube>> clubesAmistosos = new HashMap<Liga, List<Clube>>();
 
 			int posInicial = nroCompeticoes * Constantes.NRO_CLUBES_POR_LIGA_CONT + 1;
+			int posFinal = 32;
+			
+			if (nroCompeticoes == 3 && cIIIReduzido
+					//&& ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategiaPromotorCont)
+					&& parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
+					) {
+				posInicial = 11;
+				//posFinal = 30;
+			}
+
 			for (Liga liga : Liga.getAll()) {
-				clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial, 32));
+				clubesAmistosos.put(liga, clubeRepository.findByLigaAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial, posFinal));
 			}
 
 			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosasAgrupaGrupo(temporada, clubesAmistosos));
 
 		}
 	}
+	
+	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory() {
+		
+		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 
-	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(String numeroRodadasCopaNacional, Integer nroCompeticoesContinentais) {
+		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
+
+		if (numRodadas == 4) {
+			campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplDezesseisClubes();
+		} else if (numRodadas == 6) {
+			if (nroCompeticoesContinentais == 2) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubes();
+			} else if (nroCompeticoesContinentais == 3) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
+			}
+		} else if (numRodadas == 5) {
+			if (nroCompeticoesContinentais == 2) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEQuatroClubes();
+			} else if (nroCompeticoesContinentais == 3) {
+				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteClubes();
+			}
+		}
+
+		return campeonatoEliminatorioFactory;
+	}
+
+	/*private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(String numeroRodadasCopaNacional, Integer nroCompeticoesContinentais) {
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
 
@@ -232,7 +278,7 @@ public class TemporadaService {
 		}
 
 		return campeonatoEliminatorioFactory;
-	}
+	}*/
 
 	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,

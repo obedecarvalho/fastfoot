@@ -226,7 +226,7 @@ public class PreCarregarService {
 		}
 	}
 	
-	private void inserirParametro() {
+	private void inserirParametro() {//TODO: usar ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_ELI em vez de "..."
 		
 		parametroRepository.deleteAll();
 
@@ -237,16 +237,20 @@ public class PreCarregarService {
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
 			//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
-			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "SEGUNDO_MELHOR_GRUPO", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
+			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
 
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true", "true, false"));
 
 			//4 (16 TIMES), 6 (28 a 32 TIMES)
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, "5 (20 a 24 TIMES)", "6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, 
+					ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R, 
+					"6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
 
-			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "false", "true, false"));
+			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true", "true, false"));
 			
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS, "3", "3, 2, 4"));//TODO
+			parametros.add(new Parametro(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS, "3", "3"));//TODO
+			
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO, "true", "false, true"));
 
 			parametroRepository.saveAll(parametros);
 		}
