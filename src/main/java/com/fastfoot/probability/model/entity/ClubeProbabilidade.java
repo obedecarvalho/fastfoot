@@ -49,8 +49,8 @@ public class ClubeProbabilidade {
 	
 	private Double probabilidadeClassificacaoCIII;
 	
-	//
-	private Integer qtdeClassificacaoCIII;
+	//TESTE
+	/*private Integer qtdeClassificacaoCIII;
 	
 	private Integer qtdeClassificacaoCII;
 	
@@ -63,6 +63,8 @@ public class ClubeProbabilidade {
 	private Integer qtdeRebaixamento;
 	
 	private Integer qtdeCampeao;
+	
+	private Boolean completo;*/
 	//
 	
 	private Double probabilidadeClassificacaoCNI;
@@ -81,13 +83,13 @@ public class ClubeProbabilidade {
 		probabilidadeClassificacaoCII = 0d;
 		probabilidadeClassificacaoCIII = 0d;
 		probabilidadeClassificacaoCNI = 0d;
-		qtdeClassificacaoCIII = 0;
+		/*qtdeClassificacaoCIII = 0;
 		qtdeClassificacaoCI = 0;
 		qtdeClassificacaoCII = 0;
 		qtdeClassificacaoCNI = 0;
 		qtdeCampeao = 0;
 		qtdeAcesso = 0;
-		qtdeRebaixamento = 0;
+		qtdeRebaixamento = 0;*/
 	}
 	
 	public Clube getClube() {
@@ -203,11 +205,11 @@ public class ClubeProbabilidade {
 	}
 
 	private String getDescricaoProcentagem(Double d) {
-		if (d > 0 && d < 0.0001d) {
+		if (d > 0d && d < 0.0001d) {
 			return "< 0,01%";
 		}
 		
-		return String.format("%.2f%s", d*100, "%");
+		return String.format("%.2f%s", d*100d, "%");
 	}
 
 	public Map<Integer, ClubeRankingPosicaoProbabilidade> getClubeProbabilidadePosicaoGeral() {
@@ -242,7 +244,7 @@ public class ClubeProbabilidade {
 				+ "]";
 	}
 
-	public Integer getQtdeClassificacaoCIII() {
+	/*public Integer getQtdeClassificacaoCIII() {
 		return qtdeClassificacaoCIII;
 	}
 
@@ -294,7 +296,15 @@ public class ClubeProbabilidade {
 		return qtdeCampeao;
 	}
 
+	public Boolean getCompleto() {
+		return completo;
+	}
+
+	public void setCompleto(Boolean completo) {
+		this.completo = completo;
+	}
+
 	public void setQtdeCampeao(Integer qtdeCampeao) {
 		this.qtdeCampeao = qtdeCampeao;
-	}
+	}*/
 }

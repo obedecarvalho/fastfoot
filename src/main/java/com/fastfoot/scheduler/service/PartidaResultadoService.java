@@ -31,6 +31,7 @@ import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
+import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
@@ -62,6 +63,9 @@ public class PartidaResultadoService {
 
 	@Autowired
 	private PartidaResultadoRepository partidaResultadoRepository;
+
+	@Autowired
+	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
 
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
@@ -214,6 +218,27 @@ public class PartidaResultadoService {
 		if (s.isPresent()) {
 			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaResultadoRepository.findByTemporadaAndSemana(temporada, s.get())));
 			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaEliminatoriaResultadoRepository.findByTemporadaAndSemana(temporada, s.get())));
+		}
+		return partidas;
+	}
+	
+	public List<PartidaResultadoDTO> getPartidasAmistosasPorSemana(Integer numeroSemana) {
+		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
+		if (temporadaOpt.isPresent()) {
+			return getPartidasAmistosasPorSemana(numeroSemana, temporadaOpt.get());
+		}
+		return null;
+	}
+	
+	public List<PartidaResultadoDTO> getPartidasAmistosasPorSemana(Integer numeroSemana, Temporada temporada) {
+		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
+		if (numeroSemana.equals(-1)) {
+			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaAmistosaResultadoRepository.findByTemporada(temporada)));
+		} else {
+			Optional<Semana> s = semanaRepository.findFirstByTemporadaAndNumero(temporada, numeroSemana);
+			if (s.isPresent()) {
+				partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaAmistosaResultadoRepository.findBySemana(s.get())));
+			}
 		}
 		return partidas;
 	}

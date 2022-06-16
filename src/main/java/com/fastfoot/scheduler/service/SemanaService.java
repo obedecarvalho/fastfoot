@@ -3,6 +3,7 @@ package com.fastfoot.scheduler.service;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -11,8 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.probability.service.CalcularProbabilidadeService;
+import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
@@ -37,6 +39,10 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.ParametroService;
+
+/*
+ * https://www.baeldung.com/apache-commons-collections-vs-guava
+ */
 
 @Service
 public class SemanaService {
@@ -80,8 +86,11 @@ public class SemanaService {
 	@Autowired
 	private ParametroService parametroService;
 	
+	/*@Autowired
+	private CalcularProbabilidadeService calcularProbabilidadeService;*/
+	
 	@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeService; 
+	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
 
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
@@ -176,10 +185,23 @@ public class SemanaService {
 		
 		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);
 		
+		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap =
+		campeonatos.stream().collect(Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
+		
 		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
-		for (Campeonato c : campeonatos) {
+		/*for (Campeonato c : campeonatos) {
 			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, c));
+		}
+		
+		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		calculoProbabilidadesFuture.clear();*/
+		
+		for (Liga l : Liga.getAll()) {
+			calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
+					semana, campeonatosMap.get(l).get(NivelCampeonato.NACIONAL).get(0),
+					campeonatosMap.get(l).get(NivelCampeonato.NACIONAL_II).get(0)));
 		}
 
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();

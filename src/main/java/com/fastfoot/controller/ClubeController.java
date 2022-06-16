@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
+import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
 import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
 import com.fastfoot.scheduler.model.dto.ClubeRankingDTO;
@@ -57,7 +59,23 @@ public class ClubeController {
 	}
 
 	@GetMapping("/clubes/campeoes/{ano}")
-	public ResponseEntity<Map<String, List<Clube>>> getClubesCampeoesPorAno(@PathVariable(name = "ano") Integer ano) {
-		return ResponseEntity.ok(clubeService.getClubesCampeoesPorAno(ano));
+	public ResponseEntity<List<ClubeTituloAnoDTO>> getClubesCampeoesPorAno(@PathVariable(name = "ano") Integer ano) {
+		List<ClubeTituloAnoDTO> clubesCampeoes = clubeService.getClubesCampeoesPorAno(ano);
+		
+		if (ValidatorUtil.isEmpty(clubesCampeoes)) {
+			return ResponseEntity.notFound().build();
+		}
+
+		return ResponseEntity.ok(clubesCampeoes);
+	}
+
+	@GetMapping("/clubesTitulosRankings/{liga}")
+	public ResponseEntity<List<ClubeTituloRankingDTO>> getClubesTitulosRankings(@PathVariable(name = "liga") String liga) {
+		List<ClubeTituloRankingDTO> partidas = clubeService.getClubesTitulosRankings(liga);
+		
+		if (ValidatorUtil.isEmpty(partidas)) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(partidas);
 	}
 }

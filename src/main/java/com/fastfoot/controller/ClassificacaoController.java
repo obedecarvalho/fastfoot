@@ -2,7 +2,9 @@ package com.fastfoot.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.model.Liga;
 import com.fastfoot.probability.model.dto.ClubeProbabilidadeDTO;
-import com.fastfoot.probability.service.CalcularProbabilidadeService;
+import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.probability.service.ClubeProbabilidadeService;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.ClassificacaoDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -52,14 +56,17 @@ public class ClassificacaoController {
 		return ResponseEntity.ok(probabilidades);
 	}
 	
-	@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeService; 
+	/*@Autowired
+	private CalcularProbabilidadeService calcularProbabilidadeService;*/ 
 	
 	@Autowired
 	private TemporadaService temporadaService;
 	
 	@Autowired
 	private CampeonatoRepository campeonatoRepository;
+	
+	@Autowired
+	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
 
 	@GetMapping("/calcularProbabilidades")
 	public ResponseEntity<Boolean> calcularProbabilidades(){
@@ -76,14 +83,19 @@ public class ClassificacaoController {
 		
 		semana.setTemporada(t);
 		
-		/*for (Campeonato c : campeonatos) {
-			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, c));
+		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap =
+				campeonatos.stream().collect(Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
+		
+		/*for (Liga l : Liga.getAll()) {
+			calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
+					semana, campeonatosMap.get(l).get(NivelCampeonato.NACIONAL).get(0),
+					campeonatosMap.get(l).get(NivelCampeonato.NACIONAL_II).get(0)));
 		}*/
 		
 		//
-		calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(0)));
-		
-		//calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, campeonatos.get(1)));
+		calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
+				semana, campeonatosMap.get(Liga.GENEBE).get(NivelCampeonato.NACIONAL).get(0),
+				campeonatosMap.get(Liga.GENEBE).get(NivelCampeonato.NACIONAL_II).get(0)));
 		//
 		
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();

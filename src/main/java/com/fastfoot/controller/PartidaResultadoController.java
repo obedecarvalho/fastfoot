@@ -48,4 +48,12 @@ public class PartidaResultadoController {
 		return ResponseEntity.ok(partidas);
 	}
 
+	@GetMapping("/partidas/amistosas/{numeroSemana}")
+	public ResponseEntity<List<PartidaResultadoDTO>> getPartidasAmistosas(@PathVariable(name = "numeroSemana") Integer numeroSemana){
+		List<PartidaResultadoDTO> partidas = partidaResultadoService.getPartidasAmistosasPorSemana(numeroSemana);
+		if (ValidatorUtil.isEmpty(partidas)) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok(partidas);
+	}
 }

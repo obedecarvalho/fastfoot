@@ -10,11 +10,11 @@ public class ClubeProbabilidadePosicao {
 	
 	private Integer probabilidade;
 
-	private Integer pontuacaoMaxima;
+	//private Integer pontuacaoMaxima;
 	
-	private Double pontuacaoMedia;
+	//private Double pontuacaoMedia;
 	
-	private Integer pontuacaoMinima;
+	//private Integer pontuacaoMinima;
 
 	public ClubeProbabilidade getClubeProbabilidade() {
 		return clubeProbabilidade;
@@ -40,7 +40,7 @@ public class ClubeProbabilidadePosicao {
 		this.probabilidade = probabilidade;
 	}
 
-	public Integer getPontuacaoMaxima() {
+	/*public Integer getPontuacaoMaxima() {
 		return pontuacaoMaxima;
 	}
 
@@ -62,5 +62,5 @@ public class ClubeProbabilidadePosicao {
 
 	public void setPontuacaoMinima(Integer pontuacaoMinima) {
 		this.pontuacaoMinima = pontuacaoMinima;
-	}
+	}*/
 }

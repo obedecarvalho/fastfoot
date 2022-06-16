@@ -88,36 +88,43 @@ public class ClubeRankingUtil {
 		for (ClubeRanking cr : campeoesContinentais) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosContinental(ctr.getTitulosContinental()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesContinentaisII) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosContinentalII(ctr.getTitulosContinentalII()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesContinentaisIII) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosContinentalIII(ctr.getTitulosContinentalIII()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesNacionais) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosNacional(ctr.getTitulosNacional()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesNacionaisII) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosNacionalII(ctr.getTitulosNacionalII()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesCopaNacionais) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosCopaNacional(ctr.getTitulosCopaNacional()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 		
 		for (ClubeRanking cr : campeoesCopaNacionaisII) {
 			ctr = rankingsTitulos.get(cr.getClube());
 			ctr.setTitulosCopaNacionalII(ctr.getTitulosCopaNacionalII()+1);
+			ctr.calcularPontuacao();//TODO
 		}
 	}
 

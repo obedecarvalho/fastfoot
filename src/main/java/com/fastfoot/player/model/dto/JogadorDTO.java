@@ -1,8 +1,12 @@
 package com.fastfoot.player.model.dto;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
 public class JogadorDTO {
@@ -14,6 +18,10 @@ public class JogadorDTO {
 	private String posicao;
 	
 	private Integer numero;
+	
+	private Integer idade;
+	
+	private Integer forcaGeral;
 	
 	//Ação Fim
 	
@@ -207,6 +215,22 @@ public class JogadorDTO {
 		this.valorJogoAereo = valorJogoAereo;
 	}
 
+	public Integer getIdade() {
+		return idade;
+	}
+
+	public void setIdade(Integer idade) {
+		this.idade = idade;
+	}
+
+	public Integer getForcaGeral() {
+		return forcaGeral;
+	}
+
+	public void setForcaGeral(Integer forcaGeral) {
+		this.forcaGeral = forcaGeral;
+	}
+
 	public static List<JogadorDTO> convertToDTO(List<Jogador> jogadores) {
 		return jogadores.stream().map(s -> convertToDTO(s)).collect(Collectors.toList());
 	}
@@ -217,21 +241,33 @@ public class JogadorDTO {
 		dto.setClubeNome(jogador.getClube().getNome());
 		dto.setPosicao(jogador.getPosicao().name());
 		dto.setNumero(jogador.getNumero());
-		/*dto.setValorPasse(jogador.getValorPasse());
-		dto.setValorFinalizacao(jogador.getValorFinalizacao());
-		dto.setValorCruzamento(jogador.getValorCruzamento());
-		dto.setValorArmacao(jogador.getValorArmacao());
-		dto.setValorCabeceio(jogador.getValorCabeceio());
-		dto.setValorMarcacao(jogador.getValorMarcacao());
-		dto.setValorDesarme(jogador.getValorDesarme());
-		dto.setValorInterceptacao(jogador.getValorInterceptacao());
-		dto.setValorVelocidade(jogador.getValorVelocidade());
-		dto.setValorDible(jogador.getValorDible());
-		dto.setValorForca(jogador.getValorForca());
-		dto.setValorPosicionamento(jogador.getValorPosicionamento());
-		dto.setValorDominio(jogador.getValorDominio());
-		dto.setValorReflexo(jogador.getValorReflexo());
-		dto.setValorJogoAereo(jogador.getValorJogoAereo());*/
+		dto.setIdade(jogador.getIdade());
+		dto.setForcaGeral(jogador.getForcaGeral());
+		
+		Map<Habilidade, HabilidadeValor> habs = jogador.getHabilidades().stream()
+				.collect(Collectors.toMap(HabilidadeValor::getHabilidade, Function.identity()));
+
+		dto.setValorPasse(habs.get(Habilidade.PASSE).getValor());
+		dto.setValorFinalizacao(habs.get(Habilidade.FINALIZACAO).getValor());
+		dto.setValorCruzamento(habs.get(Habilidade.CRUZAMENTO).getValor());
+		dto.setValorArmacao(habs.get(Habilidade.ARMACAO).getValor());
+		
+		dto.setValorCabeceio(habs.get(Habilidade.CABECEIO).getValor());
+		
+		dto.setValorMarcacao(habs.get(Habilidade.MARCACAO).getValor());
+		dto.setValorDesarme(habs.get(Habilidade.DESARME).getValor());
+		dto.setValorInterceptacao(habs.get(Habilidade.INTERCEPTACAO).getValor());
+		
+		dto.setValorVelocidade(habs.get(Habilidade.VELOCIDADE).getValor());
+		dto.setValorDible(habs.get(Habilidade.DIBLE).getValor());
+		dto.setValorForca(habs.get(Habilidade.FORCA).getValor());
+		
+		dto.setValorPosicionamento(habs.get(Habilidade.POSICIONAMENTO).getValor());
+		dto.setValorDominio(habs.get(Habilidade.DOMINIO).getValor());
+		
+		dto.setValorReflexo(habs.get(Habilidade.REFLEXO).getValor());
+		dto.setValorJogoAereo(habs.get(Habilidade.JOGO_AEREO).getValor());
+
 		return dto;
 	}
 }

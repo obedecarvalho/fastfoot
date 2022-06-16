@@ -26,6 +26,6 @@ public interface PartidaEliminatoriaResultadoRepository extends JpaRepository<Pa
 	public List<PartidaEliminatoriaResultado> findByTemporadaAndClube(@Param("temporada") Temporada temporada, @Param("clube") Clube clube);
 	
 	@Query("SELECT pe FROM PartidaEliminatoriaResultado pe WHERE pe.rodada.semana.temporada = :temporada AND pe.rodada.semana = :semana")
-	public List<PartidaEliminatoriaResultado> findByTemporadaAndSemana(@Param("temporada") Temporada temporada, @Param("semana") Semana semana);
+	public List<PartidaEliminatoriaResultado> findByTemporadaAndSemana(@Param("temporada") Temporada temporada, @Param("semana") Semana semana);//TODO: parametro temporada não é necessário
 
 }

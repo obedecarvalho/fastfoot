@@ -14,7 +14,7 @@ public enum Habilidade {
 	INTERCEPTACAO("Interceptacao", TipoHabilidade.REACAO),//7	//POSICIONAMENTO_DEFENSIVO
 
 	VELOCIDADE("Velocidade", TipoHabilidade.ACAO_MEIO),//8	//ACAO_MEIO_REACAO
-	DIBLE("Dible", TipoHabilidade.ACAO_MEIO),//9
+	DIBLE("Dible", TipoHabilidade.ACAO_MEIO),//9 //TODO:drible
 	FORCA("Forca", TipoHabilidade.ACAO_MEIO),//10			//ACAO_MEIO_REACAO
 
 	CABECEIO("Cabeceio", TipoHabilidade.ACAO_INICIO_FIM),//11

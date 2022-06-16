@@ -1,21 +1,13 @@
-package com.fastfoot.club.model.entity;
+package com.fastfoot.club.model.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.ClubeTituloRanking;
 
-@Entity
-public class ClubeTituloRanking {
-
-	@Id
-	private Integer id;
+public class ClubeTituloRankingDTO {
 	
-	@ManyToOne
-	@JoinColumn(name = "id_clube")
-	private Clube clube;
+	private String clubeNome;
 	
 	private Integer titulosNacional;
 	
@@ -31,39 +23,14 @@ public class ClubeTituloRanking {
 	
 	private Integer titulosContinentalIII;
 	
-	private Integer pontuacao;//TODO
+	private Integer pontuacao;
 	
-	public ClubeTituloRanking() {
-
-	}
-	
-	public ClubeTituloRanking(Integer id, Clube clube) {
-		this.id = id;
-		this.clube = clube;
-		this.titulosNacional = 0;	
-		this.titulosNacionalII = 0;	
-		this.titulosCopaNacional = 0;	
-		this.titulosCopaNacionalII = 0;	
-		this.titulosContinental = 0;	
-		this.titulosContinentalII = 0;
-		this.titulosContinentalIII = 0;
-		this.pontuacao = 0;
+	public String getClubeNome() {
+		return clubeNome;
 	}
 
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public Clube getClube() {
-		return clube;
-	}
-
-	public void setClube(Clube clube) {
-		this.clube = clube;
+	public void setClubeNome(String clubeNome) {
+		this.clubeNome = clubeNome;
 	}
 
 	public Integer getTitulosNacional() {
@@ -130,9 +97,28 @@ public class ClubeTituloRanking {
 		this.pontuacao = pontuacao;
 	}
 
-	public void calcularPontuacao() {
-		pontuacao = titulosContinental * 30 + titulosContinentalII * 20 + titulosContinentalIII * 10;
-		pontuacao += titulosCopaNacional * 20 + titulosCopaNacionalII * 7;
-		pontuacao += titulosNacional * 25 + titulosNacionalII * 8;
+	public static List<ClubeTituloRankingDTO> convertToDTO(List<ClubeTituloRanking> partidas) {
+		return partidas.stream().map(p -> convertToDTO(p)).collect(Collectors.toList());
+	}
+	
+	public static ClubeTituloRankingDTO convertToDTO(ClubeTituloRanking pr) {
+		
+		ClubeTituloRankingDTO dto = new ClubeTituloRankingDTO();
+		
+		dto.setClubeNome(pr.getClube().getNome());
+		
+		dto.setTitulosContinental(pr.getTitulosContinental());
+		dto.setTitulosContinentalII(pr.getTitulosContinentalII());
+		dto.setTitulosContinentalIII(pr.getTitulosContinentalIII());
+		
+		dto.setTitulosCopaNacional(pr.getTitulosCopaNacional());
+		dto.setTitulosCopaNacionalII(pr.getTitulosCopaNacionalII());
+		
+		dto.setTitulosNacional(pr.getTitulosNacional());
+		dto.setTitulosNacionalII(pr.getTitulosNacionalII());
+		
+		dto.setPontuacao(pr.getPontuacao());
+		
+		return dto;
 	}
 }

@@ -163,8 +163,10 @@ public class PartidaResultadoDTO {
 		dto.setAnoTemporada(pr.getRodada().getSemana().getTemporada().getAno());
 		dto.setNumeroSemanaAtualTemporada(pr.getRodada().getSemana().getTemporada().getSemanaAtual());
 
-		dto.setNivelCampeonato(pr.getRodada().getCampeonatoJogavel().getNivelCampeonato().name());
-		dto.setNomeCampeonato(pr.getRodada().getCampeonatoJogavel().getNome());
+		if (pr.getRodada().getCampeonatoJogavel() != null) {
+			dto.setNivelCampeonato(pr.getRodada().getCampeonatoJogavel().getNivelCampeonato().name());
+			dto.setNomeCampeonato(pr.getRodada().getCampeonatoJogavel().getNome());
+		}
 
 		if (pr.getRodada() instanceof Rodada && ((Rodada)pr.getRodada()).getGrupoCampeonato() != null) {
 			dto.setNumeroGrupoCampeonato(((Rodada)pr.getRodada()).getGrupoCampeonato().getNumero());
