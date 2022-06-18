@@ -7,8 +7,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.Constantes;
@@ -21,6 +23,7 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
  */
 
 @Entity
+@Table(indexes = { @Index(columnList = "id_temporada") })
 public class Semana {
 
 	@Id

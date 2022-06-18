@@ -6,14 +6,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.model.entity.Parametro;
-import com.fastfoot.model.repository.ClubeRepository;
 import com.fastfoot.model.repository.ParametroRepository;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;

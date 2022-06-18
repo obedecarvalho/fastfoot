@@ -6,17 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
-public class HabilidadeValor implements ElementoRoleta {
+@Table(indexes = { @Index(columnList = "id_jogador") })
+public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./entity/
 	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
@@ -34,9 +38,11 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	private Integer potencialDesenvolvimento;
 
-	private Integer quantidadeUso;
+	private Integer quantidadeUso;//TODO: ??
 	
-	private Integer quantidadeUsoVencedor;
+	private Integer quantidadeUsoVencedor;//TODO: ??
+	
+	private Boolean habilidadeEspecifica = false;
 
 	@Transient
 	private Integer valorN;
@@ -62,6 +68,17 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 		this.quantidadeUso = 0;
 		this.quantidadeUsoVencedor = 0;
+	}
+	
+	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento, Boolean especifica) {
+		super();
+		this.habilidade = habilidade;
+		this.valor = valor;
+		this.jogador = jogador;
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
+		this.quantidadeUso = 0;
+		this.quantidadeUsoVencedor = 0;
+		this.habilidadeEspecifica = especifica;
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -147,6 +164,14 @@ public class HabilidadeValor implements ElementoRoleta {
 
 	public void setHabilidadeValorEstatistica(HabilidadeValorEstatistica habilidadeValorEstatistica) {
 		this.habilidadeValorEstatistica = habilidadeValorEstatistica;
+	}
+
+	public Boolean getHabilidadeEspecifica() {
+		return habilidadeEspecifica;
+	}
+
+	public void setHabilidadeEspecifica(Boolean habilidadeEspecifica) {
+		this.habilidadeEspecifica = habilidadeEspecifica;
 	}
 
 	@Override

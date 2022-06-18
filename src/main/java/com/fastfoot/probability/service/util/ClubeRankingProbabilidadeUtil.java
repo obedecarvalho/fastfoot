@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;

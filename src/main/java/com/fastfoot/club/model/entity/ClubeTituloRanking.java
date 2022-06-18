@@ -5,8 +5,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-import com.fastfoot.model.entity.Clube;
-
 @Entity
 public class ClubeTituloRanking {
 

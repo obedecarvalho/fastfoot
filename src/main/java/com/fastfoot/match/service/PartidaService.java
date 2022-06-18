@@ -9,13 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
-import com.fastfoot.match.model.EsquemaFactoryDoisTresTresDois;
-import com.fastfoot.match.model.EsquemaFactoryDoisUmQuatroUmDois;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.entity.PartidaLance;
+import com.fastfoot.match.model.factory.EsquemaFactory;
+import com.fastfoot.match.model.factory.EsquemaFactoryDoisDoisDoisDoisDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryDoisTresTresDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryDoisUmQuatroUmDois;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeValor;
-import com.fastfoot.player.model.HabilidadeValorEstatistica;
+import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
@@ -117,7 +119,8 @@ public class PartidaService {
 		}*/
 
 		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
-		Esquema esquema = EsquemaFactoryDoisUmQuatroUmDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
+		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();
+		Esquema esquema = factory.gerarEsquema(jogadoresMandante, jogadoresVisitante);
 		
 		jogar(esquema, partidaResultado);
 		

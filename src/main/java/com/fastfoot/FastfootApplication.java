@@ -11,6 +11,8 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @SpringBootApplication
 @EnableAsync
 public class FastfootApplication {
+	
+	private static final Integer NUM_THREAD = 8;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FastfootApplication.class, args);
@@ -19,7 +21,7 @@ public class FastfootApplication {
 	@Bean(name = "partidaExecutor")
 	public Executor asyncPartidaExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(8);
+		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
 		executor.setThreadNamePrefix("PartidaExecutor-");
@@ -30,7 +32,7 @@ public class FastfootApplication {
 	@Bean(name = "jogadorServiceExecutor")
 	public Executor asyncJogadorServiceExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(8);
+		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
 		executor.setThreadNamePrefix("jogadorServiceExecutor-");
@@ -41,10 +43,10 @@ public class FastfootApplication {
 	@Bean(name = "probabilidadeExecutor")
 	public Executor asyncProbabilidadeExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(8);
+		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("jogadorServiceExecutor-");
+		executor.setThreadNamePrefix("probabilidadeExecutor-");
 		executor.initialize();
 		return executor;
     }

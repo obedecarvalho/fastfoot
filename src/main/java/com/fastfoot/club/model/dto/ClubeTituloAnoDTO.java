@@ -3,7 +3,7 @@ package com.fastfoot.club.model.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 
 public class ClubeTituloAnoDTO {

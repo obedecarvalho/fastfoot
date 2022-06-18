@@ -1,4 +1,4 @@
-package com.fastfoot.model.repository;
+package com.fastfoot.club.model.repository;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
 
 @Repository

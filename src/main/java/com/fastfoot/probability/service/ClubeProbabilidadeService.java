@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.probability.model.dto.ClubeProbabilidadeDTO;
 import com.fastfoot.probability.model.entity.ClubeProbabilidade;
 import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;

@@ -7,9 +7,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.entity.Clube;
 
 @Repository
 public interface ClubeTituloRankingRepository extends JpaRepository<ClubeTituloRanking, Long> {

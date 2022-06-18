@@ -7,9 +7,9 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.service.PartidaService;
-import com.fastfoot.model.entity.Clube;
-import com.fastfoot.model.repository.ClubeRepository;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.dto.PartidaResultadoDTO;

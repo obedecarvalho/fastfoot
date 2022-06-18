@@ -1008,8 +1008,23 @@ public class NomeUtil {
 			"Zyair",
 			"Zyaire"
 	};
+
+	private static final String[] INICIAIS = new String[] { "A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.",
+			"L.", "M.", "N.", "O.", "P.", "Q.", "R.", "S.", "T.", "U.", "V.", "X.", "Y.", "W.", "Z."}; 
 	
 	public static String getNome() {
 		return NOMES[R.nextInt(NOMES.length)];
+	}
+	
+	protected static String getSobrenome() {
+		return NOMES[R.nextInt(NOMES.length)];
+	}
+	
+	protected static String getInicial() {
+		return INICIAIS[R.nextInt(INICIAIS.length)];
+	}
+	
+	public static String sortearNome() {
+		return String.format("%s %s", getInicial(), getSobrenome());
 	}
 }

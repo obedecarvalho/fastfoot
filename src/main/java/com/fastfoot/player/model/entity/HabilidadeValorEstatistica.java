@@ -1,19 +1,23 @@
-package com.fastfoot.player.model;
+package com.fastfoot.player.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
+import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 @Entity
+@Table(indexes = { @Index(columnList = "id_habilidade_valor") })
 public class HabilidadeValorEstatistica {
 
 	@Id

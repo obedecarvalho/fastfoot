@@ -33,4 +33,9 @@ public class ParametroConstantes {
 	//true, false
 	public static final String JOGAR_CONTINENTAL_III_REDUZIDO = "JOGAR_CONTINENTAL_III_REDUZIDO";
 
+	//true, false
+	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO
+		
+	//true, false
+	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";//TODO
 }

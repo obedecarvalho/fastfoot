@@ -6,18 +6,21 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
+@Table(indexes = { @Index(columnList = "id_semana"), @Index(columnList = "id_semana, id_campeonato") })
 public class ClubeProbabilidade {
 	
 	@Id

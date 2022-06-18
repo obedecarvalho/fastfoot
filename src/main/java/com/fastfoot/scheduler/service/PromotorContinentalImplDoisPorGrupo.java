@@ -2,8 +2,8 @@ package com.fastfoot.scheduler.service;
 
 import java.util.Set;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 

@@ -1,6 +1,6 @@
 package com.fastfoot.probability.model;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 
 public class ClassificacaoProbabilidade implements Comparable<ClassificacaoProbabilidade> {

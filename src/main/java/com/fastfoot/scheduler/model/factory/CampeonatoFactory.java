@@ -3,8 +3,8 @@ package com.fastfoot.scheduler.model.factory;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;

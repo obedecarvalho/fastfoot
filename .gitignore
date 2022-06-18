@@ -33,5 +33,7 @@ build/
 .vscode/
 
 log/
+src/main/java/com/fastfoot/controller/DevController.java
 
 fastfoot-*.zip
+

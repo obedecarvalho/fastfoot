@@ -1,6 +1,6 @@
 package com.fastfoot.probability.model;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;

@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
 import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
+import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.entity.Clube;
-import com.fastfoot.model.repository.ClubeRepository;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;

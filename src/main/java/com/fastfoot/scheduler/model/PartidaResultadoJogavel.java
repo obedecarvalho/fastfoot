@@ -1,6 +1,6 @@
 package com.fastfoot.scheduler.model;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 
 public interface PartidaResultadoJogavel {
 

@@ -10,18 +10,21 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import com.fastfoot.model.entity.Clube;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
 
 @Entity
+@Table(indexes = { @Index(columnList = "id_clube") })
 public class Jogador {
 	
 	@Id
@@ -42,6 +45,8 @@ public class Jogador {
 	private Integer idade;
 
 	private Integer forcaGeral;
+	
+	private Integer forcaGeralPotencial;
 	
 	//@Transient
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
@@ -115,6 +120,14 @@ public class Jogador {
 
 	public void setForcaGeral(Integer forcaGeral) {
 		this.forcaGeral = forcaGeral;
+	}
+
+	public Integer getForcaGeralPotencial() {
+		return forcaGeralPotencial;
+	}
+
+	public void setForcaGeralPotencial(Integer forcaGeralPotencial) {
+		this.forcaGeralPotencial = forcaGeralPotencial;
 	}
 
 	@Override

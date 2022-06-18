@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;

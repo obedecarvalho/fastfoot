@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 

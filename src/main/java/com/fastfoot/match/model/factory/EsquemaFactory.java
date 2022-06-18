@@ -1,9 +1,12 @@
-package com.fastfoot.match.model;
+package com.fastfoot.match.model.factory;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import com.fastfoot.match.model.Esquema;
+import com.fastfoot.match.model.EsquemaPosicao;
+import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.player.model.entity.Jogador;
 
 public abstract class EsquemaFactory {
@@ -13,6 +16,8 @@ public abstract class EsquemaFactory {
 	protected static final Integer PESO_AVANCAR = 100;
 	
 	protected static final Integer PESO_RECUAR = 50;
+	
+	public abstract Esquema gerarEsquema(List<Jogador> mandantes, List<Jogador> visitantes);
 
 	protected static void ordenarJogadores(List<Jogador> jogadores) {
 		Collections.sort(jogadores, new Comparator<Jogador>() {
