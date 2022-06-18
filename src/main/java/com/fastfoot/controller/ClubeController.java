@@ -1,7 +1,6 @@
 package com.fastfoot.controller;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
 import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
-import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
 import com.fastfoot.scheduler.model.dto.ClubeRankingDTO;
 import com.fastfoot.service.ClubeService;
@@ -78,4 +76,6 @@ public class ClubeController {
 		}
 		return ResponseEntity.ok(partidas);
 	}
+	
+	//TODO: view com todos ClubeRanking de um Clube para comparar ano a ano 
 }

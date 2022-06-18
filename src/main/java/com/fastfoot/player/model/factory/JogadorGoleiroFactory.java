@@ -46,8 +46,8 @@ public class JogadorGoleiroFactory extends JogadorFactory {
 		HABILIDADES_OUTROS.add(Habilidade.POSICIONAMENTO);
 		HABILIDADES_OUTROS.add(Habilidade.DOMINIO);
 		
-		HABILIDADES_OUTROS.add(Habilidade.REFLEXO);
-		HABILIDADES_OUTROS.add(Habilidade.JOGO_AEREO);
+		HABILIDADES_ESPECIFICAS.add(Habilidade.REFLEXO);
+		HABILIDADES_ESPECIFICAS.add(Habilidade.JOGO_AEREO);
 	}
 
 	public List<Habilidade> getHabilidadesEspecificas() {
@@ -82,16 +82,21 @@ public class JogadorGoleiroFactory extends JogadorFactory {
 		}
 		return INSTANCE;
 	}
-
+	
 	@Override
 	public Jogador gerarJogador(Clube clube, Integer numero) {
+		return gerarJogador(clube, numero, null);
+	}
+
+	@Override
+	public Jogador gerarJogador(Clube clube, Integer numero, Boolean titular) {
 		Jogador jogador = new Jogador();
 
 		jogador.setNumero(numero);
 		jogador.setNome(NomeUtil.sortearNome());
 		jogador.setClube(clube);
 		jogador.setPosicao(Posicao.ZAGUEIRO);
-		jogador.setIdade(sortearIdade());
+		jogador.setIdade(sortearIdade(titular));
 
 		sortearHabilidadeValor(jogador, clube.getForcaGeral());
 		

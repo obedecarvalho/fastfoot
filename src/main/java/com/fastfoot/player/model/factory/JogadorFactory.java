@@ -6,10 +6,9 @@ import java.util.Random;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.service.util.NomeUtil;
 
 public abstract class JogadorFactory {
 	
@@ -29,33 +28,36 @@ public abstract class JogadorFactory {
 	
 	protected static final Integer VALOR_HABILIDADE_MIN = 1;
 	
-	private static final Integer IDADE_MIN = 18;
-	private static final Integer IDADE_MAX = 35;
+	protected static final Integer IDADE_MIN = 18;
+	protected static final Integer IDADE_MAX = 35;
 	
-	private static final Double POT_DES_PORC_INICIAL = 20d;
+	protected static final Integer IDADE_MIN_TITULAR = 25;
+	protected static final Integer IDADE_MAX_TITULAR = 33;
+	
+	protected static final Double POT_DES_PORC_INICIAL = 20d;
 	
 	//8 anos
 	//crescimento acelerado
-	private static final Integer FASE_1_IDADE_MIN = 18;
-	private static final Integer FASE_1_IDADE_MAX = 25;
-	private static final Double FASE_1_POT_DES_PORC = 80d;
-	private static final Double FASE_1_POT_DES_PASSO = (FASE_1_POT_DES_PORC - POT_DES_PORC_INICIAL)
+	protected static final Integer FASE_1_IDADE_MIN = 18;
+	protected static final Integer FASE_1_IDADE_MAX = 25;
+	protected static final Double FASE_1_POT_DES_PORC = 80d;
+	protected static final Double FASE_1_POT_DES_PASSO = (FASE_1_POT_DES_PORC - POT_DES_PORC_INICIAL)
 			/ (FASE_1_IDADE_MAX - FASE_1_IDADE_MIN + 1);
 	
 	//7 anos
 	//crescimento
-	private static final Integer FASE_2_IDADE_MIN = 26;
-	private static final Integer FASE_2_IDADE_MAX = 32;
-	private static final Double FASE_2_POT_DES_PORC = 100d;
-	private static final Double FASE_2_POT_DES_PASSO = (FASE_2_POT_DES_PORC - FASE_1_POT_DES_PORC)
+	protected static final Integer FASE_2_IDADE_MIN = 26;
+	protected static final Integer FASE_2_IDADE_MAX = 32;
+	protected static final Double FASE_2_POT_DES_PORC = 100d;
+	protected static final Double FASE_2_POT_DES_PASSO = (FASE_2_POT_DES_PORC - FASE_1_POT_DES_PORC)
 			/ (FASE_2_IDADE_MAX - FASE_2_IDADE_MIN + 1);
 
 	//5 anos
 	//decrescimento
-	private static final Integer FASE_3_IDADE_MIN = 33;
-	private static final Integer FASE_3_IDADE_MAX = 37;
-	private static final Double FASE_3_POT_DES_PORC = 75d;
-	private static final Double FASE_3_POT_DES_PASSO = (FASE_3_POT_DES_PORC - FASE_2_POT_DES_PORC)
+	protected static final Integer FASE_3_IDADE_MIN = 33;
+	protected static final Integer FASE_3_IDADE_MAX = 37;
+	protected static final Double FASE_3_POT_DES_PORC = 75d;
+	protected static final Double FASE_3_POT_DES_PASSO = (FASE_3_POT_DES_PORC - FASE_2_POT_DES_PORC)
 			/ (FASE_3_IDADE_MAX - FASE_3_IDADE_MIN + 1);//Negativo
 
 	protected Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
@@ -80,23 +82,37 @@ public abstract class JogadorFactory {
 		return Long.valueOf(Math.max(Math.min(Math.round(peso * (R.nextGaussian() * STDEV + media)), VALOR_HABILIDADE_MAX), VALOR_HABILIDADE_MIN)).intValue();
 	}
 	
-	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial){
+	/*protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial){
 		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial);
 		jogador.addHabilidade(hv);
-	}
+	}*/
 
 	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial, Boolean especifica){
 		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial, especifica);
 		jogador.addHabilidade(hv);
 	}
 	
-	protected void addHabilidade(Jogador jogador, Integer valor, Habilidade habilidade){
+	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial, Boolean especifica, Integer passoDesenvolvimentoAno){
+		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial, especifica, passoDesenvolvimentoAno);
+		jogador.addHabilidade(hv);
+	}
+	
+	/*protected void addHabilidade(Jogador jogador, Integer valor, Habilidade habilidade){
 		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, valor);
 		jogador.addHabilidade(hv);
+	}*/
+
+	protected Integer sortearIdade(Boolean titular) {
+		if (titular != null && titular) return sortearIdadeTitular();
+		return sortearIdade(); 
 	}
 
 	protected Integer sortearIdade() {
 		return IDADE_MIN + R.nextInt(IDADE_MAX - IDADE_MIN);
+	}
+	
+	protected Integer sortearIdadeTitular() {
+		return IDADE_MIN_TITULAR + R.nextInt(IDADE_MAX_TITULAR - IDADE_MIN_TITULAR);
 	}
 
 	protected Double getAjusteForca(Integer idade) {
@@ -123,15 +139,18 @@ public abstract class JogadorFactory {
 		sortearEletivas(habEspecificas, habComuns);
 		
 		Double ajusteForca = getAjusteForca(jogador.getIdade());
+		Double ajusteForcaProx = getAjusteForca(jogador.getIdade() + 1);
 		Integer potencialSorteado = null;
 		Double forca = null;
+		Double passoProx = null;
 		
 		//Comuns
 		habComuns.addAll(getHabilidadesComum());
 		for (Habilidade h : habComuns) {
 			potencialSorteado = gerarValorHabilidadeComum(potencial);
 			forca = potencialSorteado * ajusteForca;
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado);
+			passoProx = (potencialSorteado * ajusteForcaProx) - forca;
+			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx.intValue());
 		}
 		
 		//Especificas
@@ -139,9 +158,10 @@ public abstract class JogadorFactory {
 		for (Habilidade h : habEspecificas) {
 			potencialSorteado = gerarValorHabilidadeEspecifico(potencial);
 			forca = potencialSorteado * ajusteForca;
+			passoProx = (potencialSorteado * ajusteForcaProx) - forca;
 			valorHabilidadesEspecificasPot.add(potencialSorteado);
 			valorHabilidadesEspecificas.add(forca.intValue());
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, true);
+			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, true, passoProx.intValue());
 		}
 		jogador.setForcaGeral(
 				(new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
@@ -152,7 +172,8 @@ public abstract class JogadorFactory {
 		for (Habilidade h : getHabilidadesOutros()) {
 			potencialSorteado = gerarValorHabilidadeOutros(potencial);
 			forca = potencialSorteado * ajusteForca;
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado);
+			passoProx = (potencialSorteado * ajusteForcaProx) - forca;
+			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx.intValue());
 		}
 	}
 	
@@ -193,21 +214,51 @@ public abstract class JogadorFactory {
 		return posicoes;
 	}
 	
-	public abstract List<Habilidade> getHabilidadesEspecificas();
+	protected abstract List<Habilidade> getHabilidadesEspecificas();
 
-	public abstract List<Habilidade> getHabilidadesEspecificasEletivas();
+	protected abstract List<Habilidade> getHabilidadesEspecificasEletivas();
 
-	public abstract List<Habilidade> getHabilidadesComum();
+	protected abstract List<Habilidade> getHabilidadesComum();
 
-	public abstract List<Habilidade> getHabilidadesOutros();
+	protected abstract List<Habilidade> getHabilidadesOutros();
 
-	public abstract Integer getNumHabEspEletivas();
+	protected abstract Integer getNumHabEspEletivas();
 
-	public abstract Jogador gerarJogador(Clube clube, Integer numero);
+	protected abstract Jogador gerarJogador(Clube clube, Integer numero);
+
+	protected abstract Jogador gerarJogador(Clube clube, Integer numero, Boolean titular);
 	
 	//########	/SUPER CLASSE ABSTRACT	########################
+	
+	public static Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {		
+		return gerarJogador(clube, posicao, numero, null);
+	}
 
-	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
+	public static Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Boolean titular) {		
+		JogadorFactory jogadorFactory = getFactory(posicao);
+		return jogadorFactory.gerarJogador(clube, numero, titular);
+	}
+	
+	protected static JogadorFactory getFactory(Posicao posicao) {
+		
+		if (Posicao.GOLEIRO.equals(posicao)) {
+			return JogadorGoleiroFactory.getInstance();
+		} else if (Posicao.LATERAL.equals(posicao)) {
+			return JogadorLateralFactory.getInstance();
+		} else if (Posicao.ZAGUEIRO.equals(posicao)) {
+			return JogadorZagueiroFactory.getInstance();
+		} else if (Posicao.VOLANTE.equals(posicao)) {
+			return JogadorVolanteFactory.getInstance();
+		} else if (Posicao.MEIA.equals(posicao)) {
+			return JogadorMeiaFactory.getInstance();
+		} else if (Posicao.ATACANTE.equals(posicao)) {
+			return JogadorAtacanteFactory.getInstance();
+		}
+		
+		return null;
+	}
+
+	/*public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
 		Jogador jogador = null;
 		switch (posicao) {
 		case GOLEIRO:
@@ -222,9 +273,9 @@ public abstract class JogadorFactory {
 		case VOLANTE:
 			jogador = gerarVolante(clube, numero);
 			break;
-		case MEIA_LATERAL:
+		/*case MEIA_LATERAL:
 			jogador = gerarMeiaLateral(clube, numero);
-			break;
+			break;* /
 		case MEIA:
 			jogador = gerarMeia(clube, numero);
 			break;
@@ -378,7 +429,7 @@ public abstract class JogadorFactory {
 		return j;
 	}
 	
-	public Jogador gerarMeiaLateral(Clube clube, Integer numero) {
+	/*public Jogador gerarMeiaLateral(Clube clube, Integer numero) {
 		Jogador j = gerarMeiaLateral(clube.getForcaGeral(), numero);
 		j.setClube(clube);
 		return j;
@@ -411,7 +462,7 @@ public abstract class JogadorFactory {
 		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
-	}
+	}* /
 	
 	public Jogador gerarMeia(Clube clube, Integer numero) {
 		Jogador j = gerarMeia(clube.getForcaGeral(), numero);
@@ -481,6 +532,5 @@ public abstract class JogadorFactory {
 		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
 		
 		return j;
-	}
-	
+	}*/
 }

@@ -16,7 +16,7 @@ import com.fastfoot.match.model.factory.EsquemaFactoryDoisDoisDoisDoisDois;
 import com.fastfoot.match.model.factory.EsquemaFactoryDoisTresTresDois;
 import com.fastfoot.match.model.factory.EsquemaFactoryDoisUmQuatroUmDois;
 import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;

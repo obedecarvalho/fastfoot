@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
 public class JogadorCalcularForcaUtil {
@@ -26,8 +26,8 @@ public class JogadorCalcularForcaUtil {
 			Habilidade.DESARME, Habilidade.INTERCEPTACAO);
 
 	// ML
-	private static final List<Habilidade> HAB_ESP_MEI_LAT = Arrays.asList(Habilidade.PASSE, Habilidade.FINALIZACAO,
-			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.VELOCIDADE, Habilidade.DIBLE, Habilidade.DOMINIO);
+	/*private static final List<Habilidade> HAB_ESP_MEI_LAT = Arrays.asList(Habilidade.PASSE, Habilidade.FINALIZACAO,
+			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.VELOCIDADE, Habilidade.DIBLE, Habilidade.DOMINIO);*/
 
 	// M
 	private static final List<Habilidade> HAB_ESP_MEI = Arrays.asList(Habilidade.PASSE, Habilidade.FINALIZACAO,
@@ -37,6 +37,7 @@ public class JogadorCalcularForcaUtil {
 	private static final List<Habilidade> HAB_ESP_ATA = Arrays.asList(Habilidade.FINALIZACAO, Habilidade.CABECEIO,
 			Habilidade.DIBLE, Habilidade.FORCA, Habilidade.POSICIONAMENTO);
 
+	@Deprecated
 	public static void calcular(Jogador jogador) {
 		if (Posicao.GOLEIRO.equals(jogador.getPosicao())) {
 			calcular(jogador, HAB_ESP_GOL);
@@ -46,8 +47,8 @@ public class JogadorCalcularForcaUtil {
 			calcular(jogador, HAB_ESP_VOL);
 		} else if (Posicao.LATERAL.equals(jogador.getPosicao())) {
 			calcular(jogador, HAB_ESP_LAT);
-		} else if (Posicao.MEIA_LATERAL.equals(jogador.getPosicao())) {
-			calcular(jogador, HAB_ESP_MEI_LAT);
+		/*} else if (Posicao.MEIA_LATERAL.equals(jogador.getPosicao())) {
+			calcular(jogador, HAB_ESP_MEI_LAT);*/
 		} else if (Posicao.MEIA.equals(jogador.getPosicao())) {
 			calcular(jogador, HAB_ESP_MEI);
 		} else if (Posicao.ATACANTE.equals(jogador.getPosicao())) {
@@ -60,5 +61,10 @@ public class JogadorCalcularForcaUtil {
 				.round(jogador.getHabilidades().stream().filter(h -> habilidadesEspecificas.contains(h.getHabilidade()))
 						.mapToInt(HabilidadeValor::getValor).average().getAsDouble())))
 				.intValue());
+	}
+
+	public static void calcularForcaGeral(Jogador jogador) {
+		jogador.setForcaGeral((new Double(jogador.getHabilidades().stream().filter(h -> h.getHabilidadeEspecifica())
+				.mapToInt(h -> h.getValor()).average().getAsDouble())).intValue());
 	}
 }

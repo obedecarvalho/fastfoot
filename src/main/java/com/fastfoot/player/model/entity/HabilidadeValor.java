@@ -1,4 +1,4 @@
-package com.fastfoot.player.model;
+package com.fastfoot.player.model.entity;
 
 import java.util.Objects;
 
@@ -14,8 +14,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.Constantes;
-import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
-import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
@@ -38,11 +38,13 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 	
 	private Integer potencialDesenvolvimento;
 
-	private Integer quantidadeUso;//TODO: ??
+	//private Integer quantidadeUso;//TODO: ??
 	
-	private Integer quantidadeUsoVencedor;//TODO: ??
+	//private Integer quantidadeUsoVencedor;//TODO: ??
 	
 	private Boolean habilidadeEspecifica = false;
+	
+	private Integer passoDesenvolvimentoAno;
 
 	@Transient
 	private Integer valorN;
@@ -60,25 +62,39 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 		this.valor = valor;
 	}
 
-	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento) {
+	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento) {
 		super();
 		this.habilidade = habilidade;
 		this.valor = valor;
 		this.jogador = jogador;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		this.quantidadeUso = 0;
-		this.quantidadeUsoVencedor = 0;
-	}
+		//this.quantidadeUso = 0;
+		//this.quantidadeUsoVencedor = 0;
+	}*/
 	
-	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento, Boolean especifica) {
+	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+			Boolean especifica) {
 		super();
 		this.habilidade = habilidade;
 		this.valor = valor;
 		this.jogador = jogador;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		this.quantidadeUso = 0;
-		this.quantidadeUsoVencedor = 0;
+		// this.quantidadeUso = 0;
+		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
+	}
+
+	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+			Boolean especifica, Integer passoDesenvolvimentoAno) {
+		super();
+		this.habilidade = habilidade;
+		this.valor = valor;
+		this.jogador = jogador;
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
+		// this.quantidadeUso = 0;
+		// this.quantidadeUsoVencedor = 0;
+		this.habilidadeEspecifica = especifica;
+		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -134,7 +150,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 	
-	public Integer getQuantidadeUso() {
+	/*public Integer getQuantidadeUso() {
 		return quantidadeUso;
 	}
 
@@ -144,9 +160,9 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 
 	public void incrementarQuantidadeUso() {
 		this.quantidadeUso++;
-	}
+	}*/
 
-	public Integer getQuantidadeUsoVencedor() {
+	/*public Integer getQuantidadeUsoVencedor() {
 		return quantidadeUsoVencedor;
 	}
 
@@ -156,7 +172,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 
 	public void incrementarQuantidadeUsoVencedor() {
 		this.quantidadeUsoVencedor++;
-	}
+	}*/
 
 	public HabilidadeValorEstatistica getHabilidadeValorEstatistica() {
 		return habilidadeValorEstatistica;
@@ -172,6 +188,14 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 
 	public void setHabilidadeEspecifica(Boolean habilidadeEspecifica) {
 		this.habilidadeEspecifica = habilidadeEspecifica;
+	}
+
+	public Integer getPassoDesenvolvimentoAno() {
+		return passoDesenvolvimentoAno;
+	}
+
+	public void setPassoDesenvolvimentoAno(Integer passoDesenvolvimentoAno) {
+		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
 	}
 
 	@Override

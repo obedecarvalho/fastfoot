@@ -20,7 +20,6 @@ import javax.persistence.Transient;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.HabilidadeAcao;
-import com.fastfoot.player.model.HabilidadeValor;
 import com.fastfoot.player.model.Posicao;
 
 @Entity

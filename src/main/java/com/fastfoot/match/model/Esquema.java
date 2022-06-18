@@ -3,7 +3,7 @@ package com.fastfoot.match.model;
 import java.util.List;
 
 import com.fastfoot.player.model.HabilidadeAcao;
-import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
 public interface Esquema {

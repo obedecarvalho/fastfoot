@@ -6,7 +6,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValor;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
 public class JogadorDTO {

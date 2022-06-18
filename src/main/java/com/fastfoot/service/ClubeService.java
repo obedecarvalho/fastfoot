@@ -1,10 +1,7 @@
 package com.fastfoot.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -142,7 +139,7 @@ public class ClubeService {
 		return clubeTituloAnosList;
 	}
 	
-	private void getCampeoesContinentais(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
+	/*private void getCampeoesContinentais(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
 		//Campeoes
 		List<CampeonatoMisto> continentais = campeonatoMistoRepository.findByTemporada(t);
 		
@@ -160,7 +157,7 @@ public class ClubeService {
 				clubesCampeoes.put(ClassificacaoContinentalFinal.CIII_CAMPEAO.name(), Arrays.asList(p.get(0).getClubeVencedor()));
 			}
 		}
-	}
+	}*/
 	
 	private List<ClubeTituloAnoDTO> getCampeoesContinentais(Temporada t) {
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
@@ -187,7 +184,7 @@ public class ClubeService {
 		return clubeTituloAnosList;
 	}
 	
-	private void getCampeoes(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
+	/*private void getCampeoes(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
 
 		List<ClubeRanking> rankings = clubeRankingRepository.findByTemporada(t);
 
@@ -223,7 +220,7 @@ public class ClubeService {
 				.filter(r -> ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
 				.map(r -> r.getClube()).collect(Collectors.toList()));
 
-	}
+	}*/
 	
 	private List<ClubeTituloAnoDTO> getCampeoes(Temporada t) {
 		
@@ -260,7 +257,7 @@ public class ClubeService {
 		return clubeTituloAnosList;
 	}
 	
-	private void getCampeoesCopaNacional(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
+	/*private void getCampeoesCopaNacional(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
 
 		List<CampeonatoEliminatorio> copasNacionais = null;
 		
@@ -296,11 +293,11 @@ public class ClubeService {
 					clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CN_CAMPEAO.name(), p.get(0).getClubeVencedor());
 				} else if (c.getNivelCampeonato().isCopaNacionalII()) {
 					clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.name(), p.get(0).getClubeVencedor());
-				}*/
+				}* /
 			}
 		}
 
-	}
+	}*/
 	
 	private List<ClubeTituloAnoDTO> getCampeoesCopaNacional(Temporada t) {
 
