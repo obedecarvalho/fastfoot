@@ -8,13 +8,20 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Repository
 public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
-	public List<Jogador> findByClube(Clube clube);
+	public List<Jogador> findByClubeAndAposentado(Clube clube, Boolean aposentado);
 	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube ")
-	public List<Jogador> findByClubeFetchHabilidades(@Param("clube") Clube clube);
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube AND j.aposentado = :aposentado ")
+	public List<Jogador> findByClubeAndAposentadoFetchHabilidades(@Param("clube") Clube clube, @Param("aposentado") Boolean aposentado);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j = :jogador ")
+	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
+
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.grupoDesenvolvimentoJogador.celulaDesenvolvimento = :celulaDesenvolvimento AND j.grupoDesenvolvimentoJogador.ativo = :ativo")
+	public List<Jogador> findByCelulaDesenvolvimentoFetchHabilidades(@Param("celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento, @Param(value = "ativo") Boolean ativo);
 }

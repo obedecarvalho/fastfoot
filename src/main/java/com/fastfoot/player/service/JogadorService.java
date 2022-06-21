@@ -1,9 +1,11 @@
 package com.fastfoot.player.service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -12,13 +14,14 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.EscalacaoPosicao;
-import com.fastfoot.match.model.entity.Escalacao;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
-import com.fastfoot.match.model.repository.EscalacaoRepository;
+import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
@@ -37,8 +40,14 @@ public class JogadorService {
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 	
+	/*@Autowired
+	private EscalacaoRepository escalacaoRepository;*/
+
+	/*@Autowired
+	private GrupoDesenvolvimentoRepository grupoDesenvolvimentoRepository;*/
+
 	@Autowired
-	private EscalacaoRepository escalacaoRepository;
+	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
 	/*public void criarJogadoresClube() {
 		List<Clube> clubes = clubeRepository.findAll();
@@ -52,84 +61,149 @@ public class JogadorService {
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
 		//List<Clube> clubes = clubeRepository.findAll();
 		
+		/*List<GrupoDesenvolvimento> grupoDesenvolvimentos = Arrays.asList(
+				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_1),
+				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_2),
+				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_3),
+				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_4),
+				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_5));*/
+		
+		List<GrupoDesenvolvimentoJogador> gruposJogador = new ArrayList<GrupoDesenvolvimentoJogador>();
+		
 		for (Clube c : clubes) {
-			criarJogadoresClube(c);
+			criarJogadoresClube(c, gruposJogador);
 		}
+		
+		/*grupoDesenvolvimentoRepository.saveAll(grupoDesenvolvimentos);
+
+		for (GrupoDesenvolvimento gd : grupoDesenvolvimentos) {
+			grupoDesenvolvimentoJogadorRepository.saveAll(gd.getGrupoJogadores());
+		}*/
+		
+		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		
 		return CompletableFuture.completedFuture(true);
 	}
+	
+	/*protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimento> grupoDesenvolvimentos, int pos) {
+		int i = pos % grupoDesenvolvimentos.size();
+		grupoDesenvolvimentos.get(i).getGrupoJogadores()
+				.add(new GrupoDesenvolvimentoJogador(grupoDesenvolvimentos.get(i), j, true));
+	}*/
+
+	protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
+		int i = pos % CelulaDesenvolvimento.getAll().length;
+		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
+	}
 
 	//@Async("jogadorServiceExecutor")
-	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube) {
+	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
 		
-		Escalacao escalacao = new Escalacao();
-		escalacao.setClube(clube);
-		escalacao.setJogadorPosicoes(new ArrayList<EscalacaoJogadorPosicao>());
+		//Escalacao escalacao = new Escalacao();
+		//escalacao.setClube(clube);
+		//escalacao.setJogadorPosicoes(new ArrayList<EscalacaoJogadorPosicao>());
 		
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
+		int i = 0;
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 1, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_1, j));
+		//Goleiro
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 1);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 12);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 23);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
+		//Zagueiro
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 3, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_3, j));
+		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 3);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 4, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_4, j));
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 4);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 13);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 14);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 2, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_2, j));
+		//Lateral
+		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 2);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 6, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_6, j));
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 6);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 22);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 16);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 5, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_5, j));
+		//Volante
+		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 5);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 8, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_8, j));
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 8);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 15);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 18);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 7, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_7, j));
+		//Meia
+		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 7);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 10, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_10, j));
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 10);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 17);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 20);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 9, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_9, j));
+		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 9);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 11, true);
-		escalacao.addJogadorPosicao(new EscalacaoJogadorPosicao(escalacao, EscalacaoPosicao.P_11, j));
+		
+		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 11);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 19);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
 		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 21);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		/*clube = clubeRepository.getById(clube.getId());
@@ -147,18 +221,66 @@ public class JogadorService {
 			habilidadeValorRepository.saveAll(jog.getHabilidades());
 		}
 		
-		escalacaoRepository.save(escalacao);
+		List <EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);
+		//escalacaoRepository.save(escalacao);
 		
-		escalacaoJogadorPosicaoRepository.saveAll(escalacao.getJogadorPosicoes());
+		escalacaoJogadorPosicaoRepository.saveAll(escalacao);
 		
 		return CompletableFuture.completedFuture(true);
+	}
+	
+	private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
+		
+		Comparator<Jogador> comparator = new Comparator<Jogador>() {
+
+			@Override
+			public int compare(Jogador o1, Jogador o2) {
+				//return o1.getForcaGeral().compareTo(o2.getForcaGeral());
+				return o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
+			}
+		};
+		
+		/*Escalacao escalacao = new Escalacao();
+		escalacao.setClube(clube);
+		escalacao.setJogadorPosicoes(new ArrayList<EscalacaoJogadorPosicao>());*/
+		
+		List <EscalacaoJogadorPosicao> escalacao = new ArrayList<EscalacaoJogadorPosicao>();
+		
+		List<Jogador> jogPos = null;
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0)));
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1)));
+		
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1)));
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1)));
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1)));
+		
+		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1)));
+		
+		return escalacao;
 	}
 
 	public List<Jogador> getJogadoresPorClube(Integer idClube) {
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 
 		if (clubeOpt.isPresent()) {
-			return jogadorRepository.findByClube(clubeOpt.get());
+			return jogadorRepository.findByClubeAndAposentado(clubeOpt.get(), false);
 		}
 
 		return null;

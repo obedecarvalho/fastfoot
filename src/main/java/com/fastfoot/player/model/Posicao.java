@@ -5,8 +5,8 @@ public enum Posicao {
 	ZAGUEIRO, 
 	LATERAL, 
 	VOLANTE,
-	@Deprecated
-	MEIA_LATERAL, 
+	/*@Deprecated
+	MEIA_LATERAL,*/ 
 	MEIA, 
 	ATACANTE;
 }

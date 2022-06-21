@@ -20,7 +20,6 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
-import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
@@ -102,9 +101,9 @@ public class PartidaService {
 
 
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
-		//TODO: mudar de classe
-		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeMandante());//TODO: transformar em entidade Escalacao
-		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeFetchHabilidades(partidaResultado.getClubeVisitante());//TODO: transformar em entidade Escalacao
+		//TODO: mudar de classe Escalacao
+		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeMandante(), false);//TODO: transformar em entidade Escalacao
+		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeVisitante(), false);//TODO: transformar em entidade Escalacao
 		
 		inicializarEstatisticas(jogadoresMandante, partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado);

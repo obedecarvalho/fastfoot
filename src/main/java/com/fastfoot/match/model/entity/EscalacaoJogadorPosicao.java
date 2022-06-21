@@ -10,11 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.EscalacaoPosicao;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_escalacao") })
+@Table(indexes = { @Index(columnList = "id_clube"), @Index(columnList = "id_jogador") })
 public class EscalacaoJogadorPosicao {
 	
 	@Id
@@ -22,25 +23,36 @@ public class EscalacaoJogadorPosicao {
 	@SequenceGenerator(name = "escalacaoJogadorPosicaoSequence", sequenceName = "escalacao_jogador_posicao_seq")
 	private Long id;
 
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_escalacao")
-	private Escalacao escalacao;
+	private Escalacao escalacao;*/
 	
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
 	
 	private EscalacaoPosicao escalacaoPosicao;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_clube")
+	private Clube clube;
 
 	public EscalacaoJogadorPosicao() {
 
 	}
 
-	public EscalacaoJogadorPosicao(Escalacao escalacao, EscalacaoPosicao escalacaoPosicao, Jogador jogador) {
+	/*public EscalacaoJogadorPosicao(Escalacao escalacao, EscalacaoPosicao escalacaoPosicao, Jogador jogador) {
 		super();
 		this.escalacaoPosicao = escalacaoPosicao;
 		this.jogador = jogador;
-		this.escalacao = escalacao;
+		//this.escalacao = escalacao;
+	}*/
+	
+	public EscalacaoJogadorPosicao(Clube clube, EscalacaoPosicao escalacaoPosicao, Jogador jogador) {
+		super();
+		this.escalacaoPosicao = escalacaoPosicao;
+		this.jogador = jogador;
+		this.clube = clube;
 	}
 
 	public Long getId() {
@@ -67,11 +79,19 @@ public class EscalacaoJogadorPosicao {
 		this.jogador = jogador;
 	}
 
-	public Escalacao getEscalacao() {
+	/*public Escalacao getEscalacao() {
 		return escalacao;
 	}
 
 	public void setEscalacao(Escalacao escalacao) {
 		this.escalacao = escalacao;
+	}*/
+
+	public Clube getClube() {
+		return clube;
+	}
+
+	public void setClube(Clube clube) {
+		this.clube = clube;
 	}
 }

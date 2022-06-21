@@ -20,7 +20,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./entity/
+public class HabilidadeValor implements ElementoRoleta {
 	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
@@ -36,6 +36,8 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 
 	private Integer valor;
 	
+	private Double valorDecimal;
+	
 	private Integer potencialDesenvolvimento;
 
 	//private Integer quantidadeUso;//TODO: ??
@@ -44,7 +46,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 	
 	private Boolean habilidadeEspecifica = false;
 	
-	private Integer passoDesenvolvimentoAno;
+	private Double passoDesenvolvimentoAno;//TODO: renomear
 
 	@Transient
 	private Integer valorN;
@@ -85,7 +87,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 	}
 
 	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
-			Boolean especifica, Integer passoDesenvolvimentoAno) {
+			Boolean especifica, Double passoDesenvolvimentoAno) {
 		super();
 		this.habilidade = habilidade;
 		this.valor = valor;
@@ -95,6 +97,20 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
 		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+	}
+
+	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+			Boolean especifica, Double passoDesenvolvimentoAno, Double valorDecimal) {
+		super();
+		this.habilidade = habilidade;
+		this.valor = valor;
+		this.jogador = jogador;
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
+		// this.quantidadeUso = 0;
+		// this.quantidadeUsoVencedor = 0;
+		this.habilidadeEspecifica = especifica;
+		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+		this.valorDecimal = valorDecimal;
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -190,12 +206,24 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: mover para ./ent
 		this.habilidadeEspecifica = habilidadeEspecifica;
 	}
 
-	public Integer getPassoDesenvolvimentoAno() {
+	public Double getPassoDesenvolvimentoAno() {
 		return passoDesenvolvimentoAno;
 	}
 
-	public void setPassoDesenvolvimentoAno(Integer passoDesenvolvimentoAno) {
+	public void setPassoDesenvolvimentoAno(Double passoDesenvolvimentoAno) {
 		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+	}
+
+	public Double getValorDecimal() {
+		return valorDecimal;
+	}
+
+	public void setValorDecimal(Double valorDecimal) {
+		this.valorDecimal = valorDecimal;
+	}
+
+	public Double getValorTotal() {
+		return getValor() + getValorDecimal();
 	}
 
 	@Override

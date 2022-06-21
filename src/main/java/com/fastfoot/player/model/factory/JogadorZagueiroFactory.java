@@ -88,10 +88,10 @@ public class JogadorZagueiroFactory extends JogadorFactory {
 		return INSTANCE;
 	}
 	
-	@Override
+	/*@Override
 	public Jogador gerarJogador(Clube clube, Integer numero) {
 		return gerarJogador(clube, numero, null);
-	}
+	}*/
 
 	@Override
 	public Jogador gerarJogador(Clube clube, Integer numero, Boolean titular) {
@@ -102,6 +102,23 @@ public class JogadorZagueiroFactory extends JogadorFactory {
 		jogador.setClube(clube);
 		jogador.setPosicao(Posicao.ZAGUEIRO);
 		jogador.setIdade(sortearIdade(titular));
+		jogador.setAposentado(false);
+
+		sortearHabilidadeValor(jogador, clube.getForcaGeral());
+		
+		return jogador;
+	}
+	
+	@Override
+	public Jogador gerarJogador(Clube clube, Integer numero, Integer idade) {
+		Jogador jogador = new Jogador();
+
+		jogador.setNumero(numero);
+		jogador.setNome(NomeUtil.sortearNome());
+		jogador.setClube(clube);
+		jogador.setPosicao(Posicao.ZAGUEIRO);
+		jogador.setIdade(idade);
+		jogador.setAposentado(false);
 
 		sortearHabilidadeValor(jogador, clube.getForcaGeral());
 		
