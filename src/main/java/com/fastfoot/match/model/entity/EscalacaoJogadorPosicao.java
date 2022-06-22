@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -27,6 +28,7 @@ public class EscalacaoJogadorPosicao {
 	@JoinColumn(name = "id_escalacao")
 	private Escalacao escalacao;*/
 	
+	//@OneToOne
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;

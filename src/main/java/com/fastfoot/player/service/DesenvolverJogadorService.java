@@ -23,38 +23,12 @@ public class DesenvolverJogadorService {
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 	
-	/*@Autowired
-	private GrupoDesenvolvimentoRepository desenvolvimentoRepository;*/
-	
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	/*@Async("jogadorServiceExecutor")
-	public CompletableFuture<Boolean> desenvolverGrupo(GrupoDesenvolvimento grupoDesenvolvimento) {
-		/*List<GrupoDesenvolvimentoJogador> grupoJogador = grupoDesenvolvimentoJogadorRepository
-				.findByGrupoDesenvolvimentoAndAtivoFetchJogadorHabilidade(grupoDesenvolvimento, true);* /
-		
-		Jogador j = null;
-		
-		grupoDesenvolvimento.setQtdeExec(grupoDesenvolvimento.getQtdeExec() + 1);
-
-		for (GrupoDesenvolvimentoJogador gdj : grupoDesenvolvimento.getGrupoJogadores()) {
-			j = jogadorRepository.findByJogadorFetchHabilidades(gdj.getJogador()).get(0);
-			desenvolverJogador(grupoDesenvolvimento, gdj, j);
-		}
-		
-		if (grupoDesenvolvimento.getQtdeExec().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
-			grupoDesenvolvimento.setQtdeExec(0);
-		}
-
-		desenvolvimentoRepository.save(grupoDesenvolvimento);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
-	
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> desenvolverJogadores(List<Jogador> jogadores) {
 		
@@ -165,17 +139,6 @@ public class DesenvolverJogadorService {
 		//grupoDesenvolvimentoJogadorRepository.save(grupoDesenvolvimentoJogador);
 	}
 
-	/*private void criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero, CelulaDesenvolvimento celulaDesenvolvimento) {
-
-		Jogador novoJogador = JogadorFactory.gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
-		
-		GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador = new GrupoDesenvolvimentoJogador(celulaDesenvolvimento, novoJogador, true);
-
-		jogadorRepository.save(novoJogador);
-		habilidadeValorRepository.saveAll(novoJogador.getHabilidades());
-		grupoDesenvolvimentoJogadorRepository.save(grupoDesenvolvimentoJogador);
-	}*/
-	
 	private void ajustarPassoDesenvolvimentoProximoAno(Jogador j) {
 
 		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());

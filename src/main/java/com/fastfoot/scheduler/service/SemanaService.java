@@ -97,9 +97,6 @@ public class SemanaService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	/*@Autowired
-	private GrupoDesenvolvimentoRepository grupoDesenvolvimentoRepository;*/
-	
 	//#####	SERVICE	############
 	
 	@Autowired
@@ -114,47 +111,12 @@ public class SemanaService {
 	@Autowired
 	private DesenvolverJogadorService desenvolverJogadorService;
 	
-	/*@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeService;*/
-	
 	@Autowired
 	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
 	
 	@Autowired
 	private AposentarJogadorService aposentarJogadorService;
 
-	/*public SemanaDTO proximaSemana() {
-		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
-		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
-		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
-
-		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
-		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
-		
-		semana.setRodadas(rodadas);
-		semana.setRodadasEliminatorias(rodadaEliminatorias);
-
-		carregarPartidas(semana);
-		jogarPartidas(semana);
-		salvarPartidas(semana);
-		
-		if (semana.getRodadasJogavel().get(0).isUltimaRodadaPontosCorridos()) {
-			carregarClassificacao(semana);
-			classificarComDesempate(semana);
-			salvarClassificacao(semana);
-		}
-
-		promover(semana);
-
-		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
-		
-		if (semana.isUltimaSemana()) {
-			temporadaService.classificarClubesTemporadaAtual();
-		}
-
-		return SemanaDTO.convertToDTO(semana);
-	}*/
-	
 	public SemanaDTO proximaSemana() {//TODO: rastrear com StopWatch
 		
 		StopWatch stopWatch = new StopWatch();
@@ -174,17 +136,6 @@ public class SemanaService {
 		semana.setRodadasEliminatorias(rodadaEliminatorias);
 		semana.setRodadasAmistosas(rodadasAmistosas);
 
-		/*carregarPartidas(semana);
-		jogarPartidas(semana);
-		salvarPartidas(semana);
-		
-		if (semana.getRodadasJogavel().get(0).isUltimaRodadaPontosCorridos()) {
-			carregarClassificacao(semana);
-			classificarComDesempate(semana);
-			salvarClassificacao(semana);
-		}*/
-		
-		
 		stopWatch.split();//Jogar Rodada
 		mensagens.add("Semana:" + semana.getNumero());
 		mensagens.add("Carregar dados: " + stopWatch.getSplitNanoTime());
@@ -247,53 +198,8 @@ public class SemanaService {
 
 		return SemanaDTO.convertToDTO(semana);
 	}
-	
-	/*private void desenvolverJogadores(Semana semana) {
-		if (semana.getNumero() <= 25) {
-			CelulaDesenvolvimento cd = CelulaDesenvolvimento.getAll()[semana.getNumero()
-					% CelulaDesenvolvimento.getAll().length];
-			
-			List<GrupoDesenvolvimento> gds = grupoDesenvolvimentoRepository
-					.findByCelulaDesenvolvimentoAndAtivoFetchGrupoJogadores(cd, Boolean.TRUE);
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			for (GrupoDesenvolvimento gd : gds) {
-				desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(gd));
-			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		}
-	}*/
-	
+
 	private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = 8; 
-	
-	/*private void desenvolverJogadores(Semana semana) {
-		if (semana.getNumero() <= 25) {
-			CelulaDesenvolvimento cd = CelulaDesenvolvimento.getAll()[semana.getNumero()
-					% CelulaDesenvolvimento.getAll().length];
-			
-			List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository.findByCelulaDesenvolvimentoAndAtivo(cd, Boolean.TRUE);
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			int offset = gds.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
-			
-			//System.err.println("\t\t->Total: " + gds.size());
-			
-			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(gds.subList(i * offset, gds.size())));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
-				} else {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(gds.subList(i * offset, (i+1) * offset)));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
-				}
-			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		}
-	}*/
 	
 	private void desenvolverJogadores(Semana semana) {
 		if (semana.getNumero() <= 25) {
@@ -301,8 +207,6 @@ public class SemanaService {
 					% CelulaDesenvolvimento.getAll().length];
 			
 			List<Jogador> jogadores = jogadorRepository.findByCelulaDesenvolvimentoFetchHabilidades(cd, Boolean.TRUE);
-			
-			//List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository.findByCelulaDesenvolvimentoAndAtivo(cd, Boolean.TRUE);
 			
 			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 			
@@ -358,15 +262,7 @@ public class SemanaService {
 		campeonatos.stream().collect(Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
 		
 		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		/*for (Campeonato c : campeonatos) {
-			calculoProbabilidadesFuture.add(calcularProbabilidadeService.calcularProbabilidadesCampeonato(semana, c));
-		}
-		
-		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		calculoProbabilidadesFuture.clear();*/
-		
+
 		for (Liga l : Liga.getAll()) {
 			calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
 					semana, campeonatosMap.get(l).get(NivelCampeonato.NACIONAL).get(0),
@@ -375,52 +271,6 @@ public class SemanaService {
 
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
-
-	/*private void carregarClassificacao(Semana semana) {
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				if(r.getCampeonato() != null) {
-					r.getCampeonato().setClassificacao(classificacaoRepository.findByCampeonato(r.getCampeonato()));
-				} else if (r.getGrupoCampeonato() != null) {
-					r.getGrupoCampeonato().setClassificacao(classificacaoRepository.findByGrupoCampeonato(r.getGrupoCampeonato()));
-				}
-			}
-		}
-	}*/
-
-	/* *
-	 * Classifica os times com Desempate. Para ser executado na ultima rodada. 
-	 * @param semana
-	 */
-	/*private void classificarComDesempate(Semana semana) {
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				if(r.getCampeonato() != null) {
-					if (r.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
-						List<PartidaResultado> partidas = partidaRepository.findByCampeonato(r.getCampeonato());
-						ClassificacaoUtil.ordernarClassificacao(r.getCampeonato().getClassificacao(), partidas);
-					}
-				} else if (r.getGrupoCampeonato() != null) {
-					if (r.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
-						List<PartidaResultado> partidas = partidaRepository.findByGrupoCampeonato(r.getGrupoCampeonato());
-						ClassificacaoUtil.ordernarClassificacao(r.getGrupoCampeonato().getClassificacao(), partidas);
-					}
-				}
-			}
-		}
-	}*/
-
-	/*private void salvarClassificacao(Semana semana) {
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				if(r.getCampeonato() != null) {
-					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
-				} else if (r.getGrupoCampeonato() != null) {
-					classificacaoRepository.saveAll(r.getGrupoCampeonato().getClassificacao());
-				}
-			}
-		}
-	}*/
 
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
 		Set<Campeonato> camps1 = new HashSet<Campeonato>();
@@ -449,51 +299,6 @@ public class SemanaService {
 		campeonatoMistoRepository.saveAllAndFlush(camps3);
 	}
 
-	/*private void carregarPartidas(Semana semana) {
-
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				r.setPartidas(partidaRepository.findByRodada(r));
-				
-				if(r.getCampeonato() != null) {
-					r.getCampeonato().setClassificacao(classificacaoRepository.findByCampeonato(r.getCampeonato()));
-				} else if (r.getGrupoCampeonato() != null) {
-					r.getGrupoCampeonato().setClassificacao(classificacaoRepository.findByGrupoCampeonato(r.getGrupoCampeonato()));
-				}
-			}
-		}
-		if (semana.getRodadasEliminatorias() != null) {
-			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				r.setPartidas(partidaEliminatoriaRepository.findByRodada(r));
-			}
-		}
-	}*/
-
-	/*private void jogarPartidas(Semana semana) {
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				if(r.getCampeonato() != null) {
-					partidaResultadoService.jogarRodada(r, r.getCampeonato().getClassificacao());
-					
-					if (!r.isUltimaRodadaPontosCorridos()) {
-						ClassificacaoUtil.ordernarClassificacao(r.getCampeonato().getClassificacao(), false);
-					}
-				} else if (r.getGrupoCampeonato() != null) {
-					partidaResultadoService.jogarRodada(r, r.getGrupoCampeonato().getClassificacao());
-					
-					if (!r.isUltimaRodadaPontosCorridos()) {
-						ClassificacaoUtil.ordernarClassificacao(r.getGrupoCampeonato().getClassificacao(), false);
-					}
-				}
-			}
-		}
-		if (semana.getRodadasEliminatorias() != null) {
-			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				partidaResultadoService.jogarRodada(r);
-			}
-		}
-	}*/
-
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
 
@@ -501,14 +306,6 @@ public class SemanaService {
 
 			Set<CampeonatoMisto> campeonatosMisto = semana.getRodadas().stream()
 					.map(r -> r.getGrupoCampeonato().getCampeonato()).collect(Collectors.toSet());
-			
-			/*Set<CampeonatoMisto> campeonatosMisto = new HashSet<CampeonatoMisto>();
-			
-			for (Rodada r : semana.getRodadas()) {
-				if (r.getGrupoCampeonato() != null) {//Continentais
-					campeonatosMisto.add(r.getGrupoCampeonato().getCampeonato());
-				}
-			}*/
 
 			for (CampeonatoMisto c : campeonatosMisto) {
 				c.setGrupos(grupoCampeonatoRepository.findByCampeonato(c));
@@ -579,20 +376,6 @@ public class SemanaService {
 		return promotorContinental;
 	}
 
-	/*private PromotorContinental getPromotorContinental(String estrategia) {
-		
-		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
-		PromotorContinental promotorContinental = null;
-
-		if (ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_SEG.equals(estrategia)) {
-			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
-		} else if (ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategia)) {	
-			promotorContinental = new PromotorContinentalImplInterCampeonatos();
-		}
-
-		return promotorContinental;
-	}*/
-	
 	private PromotorEliminatoria getPromotorEliminatoria() {
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
@@ -615,46 +398,5 @@ public class SemanaService {
 		
 		return promotorEliminatoria;
 	}
-
-	/*private PromotorEliminatoria getPromotorEliminatoria(String numeroRodadasCopaNacional, Integer nroCompeticoes) {
-		PromotorEliminatoria promotorEliminatoria = null;
-		
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoes == 3) {
-				promotorEliminatoria = new PromotorEliminatoriaImplVinteEOitoClubes();
-			} else if (nroCompeticoes == 2) {
-				promotorEliminatoria = new PromotorEliminatoriaImplTrintaEDoisClubes();
-			}
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoes == 3) {
-				promotorEliminatoria = new PromotorEliminatoriaImplVinteClubes();
-			} else if (nroCompeticoes == 2) {
-				promotorEliminatoria = new PromotorEliminatoriaImplVinteEQuatroClubes();
-			}
-		}
-		
-		return promotorEliminatoria;
-	}*/
-
-	/*private void salvarPartidas(Semana semana) {
-		boolean salvarEstatisticas = false;
-		if (semana.getRodadas() != null) {
-			for (Rodada r : semana.getRodadas()) {
-				partidaRepository.saveAll(r.getPartidas());
-				//if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
-				if(r.getCampeonato() != null) {
-					classificacaoRepository.saveAll(r.getCampeonato().getClassificacao());
-				} else if (r.getGrupoCampeonato() != null) {
-					classificacaoRepository.saveAll(r.getGrupoCampeonato().getClassificacao());
-				}
-			}
-		}
-		if (semana.getRodadasEliminatorias() != null) {
-			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				partidaEliminatoriaRepository.saveAll(r.getPartidas());//TODO: salvar proximaPartida
-				//if (salvarEstatisticas) { salvarEstatisticas(r.getPartidas()); }
-			}
-		}
-	}*/
 
 }

@@ -85,33 +85,6 @@ public class ClubeService {
 		return clubeRankingRepository.findAnosClubeRanking();
 	}
 
-	/*public Map<String, List<Clube>> getClubesCampeoesPorAno(Integer ano) {
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		
-		Map<String, List<Clube>> clubesCampeoes = new HashMap<String, List<Clube>>();
-		
-		if (temporada.getAno().equals(ano)) {
-			
-			if (temporada.getSemanaAtual() >= 16) {
-				getCampeoesCopaNacional(temporada, clubesCampeoes);
-			}
-
-			if (temporada.getSemanaAtual() >= 22) {
-				getCampeoesContinentais(temporada, clubesCampeoes);
-			}
-
-		} else {
-			
-			Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAno(ano);
-			
-			if (temporadaOpt.isPresent()) {
-				getCampeoes(temporadaOpt.get(), clubesCampeoes);
-			}
-		}
-
-		return clubesCampeoes;
-	}*/
-	
 	public List<ClubeTituloAnoDTO> getClubesCampeoesPorAno(Integer ano) {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		
@@ -138,27 +111,7 @@ public class ClubeService {
 
 		return clubeTituloAnosList;
 	}
-	
-	/*private void getCampeoesContinentais(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
-		//Campeoes
-		List<CampeonatoMisto> continentais = campeonatoMistoRepository.findByTemporada(t);
-		
-		RodadaEliminatoria r = null;
-		List<PartidaEliminatoriaResultado> p = null;
 
-		for (CampeonatoMisto c : continentais) {
-			r = rodadaEliminatoriaRepository.findFirstByCampeonatoMistoAndNumero(c, 6).get();
-			p = partidaEliminatoriaResultadoRepository.findByRodada(r);
-			if (c.getNivelCampeonato().isContinental()) {
-				clubesCampeoes.put(ClassificacaoContinentalFinal.C_CAMPEAO.name(), Arrays.asList(p.get(0).getClubeVencedor()));
-			} else if (c.getNivelCampeonato().isContinentalII()) {
-				clubesCampeoes.put(ClassificacaoContinentalFinal.CII_CAMPEAO.name(), Arrays.asList(p.get(0).getClubeVencedor()));
-			} else if (c.getNivelCampeonato().isContinentalIII()) {
-				clubesCampeoes.put(ClassificacaoContinentalFinal.CIII_CAMPEAO.name(), Arrays.asList(p.get(0).getClubeVencedor()));
-			}
-		}
-	}*/
-	
 	private List<ClubeTituloAnoDTO> getCampeoesContinentais(Temporada t) {
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
 		
@@ -183,45 +136,7 @@ public class ClubeService {
 		
 		return clubeTituloAnosList;
 	}
-	
-	/*private void getCampeoes(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
 
-		List<ClubeRanking> rankings = clubeRankingRepository.findByTemporada(t);
-
-		clubesCampeoes.put(ClassificacaoContinentalFinal.C_CAMPEAO.name(),
-				rankings.stream()
-						.filter(r -> ClassificacaoContinentalFinal.C_CAMPEAO.equals(r.getClassificacaoContinental()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoContinentalFinal.CII_CAMPEAO.name(),
-				rankings.stream()
-						.filter(r -> ClassificacaoContinentalFinal.CII_CAMPEAO.equals(r.getClassificacaoContinental()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoContinentalFinal.CIII_CAMPEAO.name(),
-				rankings.stream()
-						.filter(r -> ClassificacaoContinentalFinal.CIII_CAMPEAO.equals(r.getClassificacaoContinental()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoNacionalFinal.N_1.name(),
-				rankings.stream().filter(r -> ClassificacaoNacionalFinal.N_1.equals(r.getClassificacaoNacional()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoNacionalFinal.NII_1.name(),
-				rankings.stream().filter(r -> ClassificacaoNacionalFinal.NII_1.equals(r.getClassificacaoNacional()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CN_CAMPEAO.name(),
-				rankings.stream()
-						.filter(r -> ClassificacaoCopaNacionalFinal.CN_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
-						.map(r -> r.getClube()).collect(Collectors.toList()));
-
-		clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.name(), rankings.stream()
-				.filter(r -> ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
-				.map(r -> r.getClube()).collect(Collectors.toList()));
-
-	}*/
-	
 	private List<ClubeTituloAnoDTO> getCampeoes(Temporada t) {
 		
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
@@ -256,49 +171,7 @@ public class ClubeService {
 
 		return clubeTituloAnosList;
 	}
-	
-	/*private void getCampeoesCopaNacional(Temporada t, Map<String, List<Clube>> clubesCampeoes) {
 
-		List<CampeonatoEliminatorio> copasNacionais = null;
-		
-		List<Clube> clubes = null;
-		
-		RodadaEliminatoria r = null;
-		List<PartidaEliminatoriaResultado> p = null;
-
-		int numeroRodadas = parametroService.getNumeroRodadasCopaNacional();
-		
-		for (Liga liga : Liga.getAll()) {
-		
-			copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
-	
-			for (CampeonatoEliminatorio c : copasNacionais) {
-	
-				r = rodadaEliminatoriaRepository.findFirstByCampeonatoEliminatorioAndNumero(c,
-						c.getNivelCampeonato().isCopaNacional() ? numeroRodadas : 4).get();
-				p = partidaEliminatoriaResultadoRepository.findByRodada(r);
-				
-				clubes = clubesCampeoes.get(c.getNivelCampeonato().name());
-				
-				if (clubes == null) {
-					clubes = new ArrayList<Clube>();
-					
-					//clubesCampeoes.put(c.getNivelCampeonato().name(), clubes);
-					clubesCampeoes.put(ClassificacaoCopaNacionalFinal.getClassificacaoCampeao(c.getNivelCampeonato()).name(), clubes);
-				}
-				
-				clubes.add(p.get(0).getClubeVencedor());
-	
-				/*if (c.getNivelCampeonato().isCopaNacional()) {
-					clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CN_CAMPEAO.name(), p.get(0).getClubeVencedor());
-				} else if (c.getNivelCampeonato().isCopaNacionalII()) {
-					clubesCampeoes.put(ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.name(), p.get(0).getClubeVencedor());
-				}* /
-			}
-		}
-
-	}*/
-	
 	private List<ClubeTituloAnoDTO> getCampeoesCopaNacional(Temporada t) {
 
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();

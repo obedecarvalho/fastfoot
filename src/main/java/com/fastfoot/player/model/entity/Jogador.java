@@ -53,6 +53,9 @@ public class Jogador {
 	@OneToOne(mappedBy = "jogador")
 	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;
 	
+	/*@OneToOne(mappedBy = "jogador")
+	private EscalacaoJogadorPosicao escalacaoJogadorPosicao;*/
+	
 	//@Transient
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeValor> habilidades;
@@ -150,6 +153,14 @@ public class Jogador {
 	public void setGrupoDesenvolvimentoJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador) {
 		this.grupoDesenvolvimentoJogador = grupoDesenvolvimentoJogador;
 	}
+	
+	/*public EscalacaoJogadorPosicao getEscalacaoJogadorPosicao() {
+		return escalacaoJogadorPosicao;
+	}
+
+	public void setEscalacaoJogadorPosicao(EscalacaoJogadorPosicao escalacaoJogadorPosicao) {
+		this.escalacaoJogadorPosicao = escalacaoJogadorPosicao;
+	}*/
 
 	@Override
 	public String toString() {

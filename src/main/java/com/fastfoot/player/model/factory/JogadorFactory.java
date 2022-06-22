@@ -94,11 +94,6 @@ public abstract class JogadorFactory {
 						VALOR_HABILIDADE_MIN))
 				.intValue();
 	}
-	
-	/*protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial){
-		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial);
-		jogador.addHabilidade(hv);
-	}*/
 
 	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial,
 			Boolean especifica) {
@@ -112,11 +107,6 @@ public abstract class JogadorFactory {
 				passoDesenvolvimentoAno, valorDecimal);
 		jogador.addHabilidade(hv);
 	}
-	
-	/*protected void addHabilidade(Jogador jogador, Integer valor, Habilidade habilidade){
-		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, valor);
-		jogador.addHabilidade(hv);
-	}*/
 
 	protected Integer sortearIdade(Boolean titular) {
 		if (titular != null && titular) return sortearIdadeTitular();
@@ -234,8 +224,6 @@ public abstract class JogadorFactory {
 
 		}
 		
-		//System.err.println(posicoes);
-		
 		return posicoes;
 	}
 	
@@ -248,8 +236,6 @@ public abstract class JogadorFactory {
 	protected abstract List<Habilidade> getHabilidadesOutros();
 
 	protected abstract Integer getNumHabEspEletivas();
-
-	//protected abstract Jogador gerarJogador(Clube clube, Integer numero);
 
 	protected abstract Jogador gerarJogador(Clube clube, Integer numero, Boolean titular);
 	
@@ -290,279 +276,4 @@ public abstract class JogadorFactory {
 		return null;
 	}
 
-	/*public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
-		Jogador jogador = null;
-		switch (posicao) {
-		case GOLEIRO:
-			jogador = gerarGoleiro(clube, numero);
-			break;
-		case ZAGUEIRO:
-			jogador = gerarZagueiro(clube, numero);		
-			break;
-		case LATERAL:
-			jogador = gerarLateral(clube, numero);
-			break;
-		case VOLANTE:
-			jogador = gerarVolante(clube, numero);
-			break;
-		/*case MEIA_LATERAL:
-			jogador = gerarMeiaLateral(clube, numero);
-			break;* /
-		case MEIA:
-			jogador = gerarMeia(clube, numero);
-			break;
-		case ATACANTE:
-			jogador = gerarAtacante(clube, numero);
-			break;
-		default:
-			break;
-		}
-		//JogadorCalcularForcaUtil.calcular(jogador);
-		return jogador;
-	}
-
-	public Jogador gerarGoleiro(Clube clube, Integer numero) {
-		Jogador j = gerarGoleiro(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarGoleiro(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.GOLEIRO);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.JOGO_AEREO);
-		
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}
-	
-	public Jogador gerarZagueiro(Clube clube, Integer numero) {
-		Jogador j = gerarZagueiro(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarZagueiro(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.ZAGUEIRO);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}
-	
-	public Jogador gerarLateral(Clube clube, Integer numero) {
-		Jogador j = gerarLateral(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarLateral(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.LATERAL);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}
-	
-	public Jogador gerarVolante(Clube clube, Integer numero) {
-		Jogador j = gerarVolante(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarVolante(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.VOLANTE);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}
-	
-	/*public Jogador gerarMeiaLateral(Clube clube, Integer numero) {
-		Jogador j = gerarMeiaLateral(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarMeiaLateral(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.MEIA_LATERAL);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-		
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}* /
-	
-	public Jogador gerarMeia(Clube clube, Integer numero) {
-		Jogador j = gerarMeia(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarMeia(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.MEIA);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-		
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}
-	
-	public Jogador gerarAtacante(Clube clube, Integer numero) {
-		Jogador j = gerarAtacante(clube.getForcaGeral(), numero);
-		j.setClube(clube);
-		return j;
-	}
-
-	public Jogador gerarAtacante(Integer overhall, Integer numero) {
-		Jogador j = new Jogador();
-		
-		j.setPosicao(Posicao.ATACANTE);
-		j.setNumero(numero);
-		j.setNome(NomeUtil.getNome());
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.PASSE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FINALIZACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.CRUZAMENTO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.ARMACAO);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.CABECEIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.MARCACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.DESARME);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.INTERCEPTACAO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.VELOCIDADE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.DIBLE);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.FORCA);
-		addHabilidade(j, gerarValorHabilidadeEspecifico(overhall, valorHabilidadesEspecificas), Habilidade.POSICIONAMENTO);
-		addHabilidade(j, gerarValorHabilidadeComum(overhall), Habilidade.DOMINIO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.REFLEXO);
-		addHabilidade(j, gerarValorHabilidadeOutros(overhall), Habilidade.JOGO_AEREO);
-		
-		j.setForcaGeral((new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
-		
-		return j;
-	}*/
 }

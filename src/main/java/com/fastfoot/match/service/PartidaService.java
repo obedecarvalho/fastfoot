@@ -10,11 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.factory.EsquemaFactory;
 import com.fastfoot.match.model.factory.EsquemaFactoryDoisDoisDoisDoisDois;
 import com.fastfoot.match.model.factory.EsquemaFactoryDoisTresTresDois;
 import com.fastfoot.match.model.factory.EsquemaFactoryDoisUmQuatroUmDois;
+import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
@@ -39,6 +41,9 @@ public class PartidaService {
 
 	@Autowired
 	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;
+	
+	@Autowired
+	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 
 	private double NUM_LANCES_POR_MINUTO = 1;
 	
@@ -99,8 +104,30 @@ public class PartidaService {
 		//habilidadeValorEstatisticaRepository.saveAll(estatisticas);
 	}
 
-
 	public void jogar(PartidaResultadoJogavel partidaResultado) {
+		List<EscalacaoJogadorPosicao> escalacaoMandante = escalacaoJogadorPosicaoRepository
+				.findByClubeFetchJogadorHabilidades(partidaResultado.getClubeMandante());
+
+		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalacaoJogadorPosicaoRepository
+				.findByClubeFetchJogadorHabilidades(partidaResultado.getClubeVisitante());
+
+		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
+		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
+		
+		inicializarEstatisticas(jogadoresMandante, partidaResultado);
+		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
+
+		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
+		/*EsquemaFactory*/ EsquemaFactoryDoisDoisDoisDoisDois factory = new EsquemaFactoryDoisDoisDoisDoisDois();
+		Esquema esquema = factory.gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
+		
+		jogar(esquema, partidaResultado);
+		
+		salvarEstatisticas(jogadoresMandante);
+		salvarEstatisticas(jogadoresVisitante);
+	}
+
+	public void jogar(PartidaResultadoJogavel partidaResultado, Boolean old) {
 		//TODO: mudar de classe Escalacao
 		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeMandante(), false);//TODO: transformar em entidade Escalacao
 		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeVisitante(), false);//TODO: transformar em entidade Escalacao

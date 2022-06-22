@@ -39,57 +39,23 @@ public class JogadorService {
 
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
-	
-	/*@Autowired
-	private EscalacaoRepository escalacaoRepository;*/
-
-	/*@Autowired
-	private GrupoDesenvolvimentoRepository grupoDesenvolvimentoRepository;*/
 
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
-	/*public void criarJogadoresClube() {
-		List<Clube> clubes = clubeRepository.findAll();
-		
-		for (Clube c : clubes) {
-			criarJogadoresClube(c);
-		}
-	}*/
-
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
-		//List<Clube> clubes = clubeRepository.findAll();
-		
-		/*List<GrupoDesenvolvimento> grupoDesenvolvimentos = Arrays.asList(
-				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_1),
-				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_2),
-				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_3),
-				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_4),
-				new GrupoDesenvolvimento(CelulaDesenvolvimento.CELULA_5));*/
-		
+
 		List<GrupoDesenvolvimentoJogador> gruposJogador = new ArrayList<GrupoDesenvolvimentoJogador>();
 		
 		for (Clube c : clubes) {
 			criarJogadoresClube(c, gruposJogador);
 		}
 		
-		/*grupoDesenvolvimentoRepository.saveAll(grupoDesenvolvimentos);
-
-		for (GrupoDesenvolvimento gd : grupoDesenvolvimentos) {
-			grupoDesenvolvimentoJogadorRepository.saveAll(gd.getGrupoJogadores());
-		}*/
-		
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		
 		return CompletableFuture.completedFuture(true);
 	}
-	
-	/*protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimento> grupoDesenvolvimentos, int pos) {
-		int i = pos % grupoDesenvolvimentos.size();
-		grupoDesenvolvimentos.get(i).getGrupoJogadores()
-				.add(new GrupoDesenvolvimentoJogador(grupoDesenvolvimentos.get(i), j, true));
-	}*/
 
 	protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
 		int i = pos % CelulaDesenvolvimento.getAll().length;
@@ -98,11 +64,7 @@ public class JogadorService {
 
 	//@Async("jogadorServiceExecutor")
 	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
-		
-		//Escalacao escalacao = new Escalacao();
-		//escalacao.setClube(clube);
-		//escalacao.setJogadorPosicoes(new ArrayList<EscalacaoJogadorPosicao>());
-		
+
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
 		int i = 0;
@@ -222,7 +184,6 @@ public class JogadorService {
 		}
 		
 		List <EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);
-		//escalacaoRepository.save(escalacao);
 		
 		escalacaoJogadorPosicaoRepository.saveAll(escalacao);
 		
@@ -239,10 +200,6 @@ public class JogadorService {
 				return o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
 			}
 		};
-		
-		/*Escalacao escalacao = new Escalacao();
-		escalacao.setClube(clube);
-		escalacao.setJogadorPosicoes(new ArrayList<EscalacaoJogadorPosicao>());*/
 		
 		List <EscalacaoJogadorPosicao> escalacao = new ArrayList<EscalacaoJogadorPosicao>();
 		

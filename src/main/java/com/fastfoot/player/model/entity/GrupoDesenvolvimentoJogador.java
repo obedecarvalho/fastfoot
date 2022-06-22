@@ -14,10 +14,7 @@ import javax.persistence.Table;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_jogador"), 
-		//@Index(columnList = "id_grupo_desenvolvimento"),
-		//@Index(columnList = "id_grupo_desenvolvimento, ativo"), 
-		@Index(columnList = "celula_desenvolvimento, ativo") })
+@Table(indexes = { @Index(columnList = "id_jogador"), @Index(columnList = "celula_desenvolvimento, ativo") })
 public class GrupoDesenvolvimentoJogador {
 
 	@Id
@@ -28,10 +25,6 @@ public class GrupoDesenvolvimentoJogador {
 	@OneToOne
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_grupo_desenvolvimento")
-	private GrupoDesenvolvimento grupoDesenvolvimento;*/
 
 	@Column(name = "ativo")
 	private Boolean ativo;
@@ -44,13 +37,6 @@ public class GrupoDesenvolvimentoJogador {
 	public GrupoDesenvolvimentoJogador() {
 	
 	}
-
-	/*public GrupoDesenvolvimentoJogador(GrupoDesenvolvimento grupoDesenvolvimento, Jogador jogador, Boolean ativo) {
-		super();
-		this.grupoDesenvolvimento = grupoDesenvolvimento;
-		this.jogador = jogador;
-		this.ativo = ativo;
-	}*/
 
 	public GrupoDesenvolvimentoJogador(CelulaDesenvolvimento celulaDesenvolvimento, Jogador jogador, Boolean ativo) {
 		super();
@@ -75,14 +61,6 @@ public class GrupoDesenvolvimentoJogador {
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
-
-	/*public GrupoDesenvolvimento getGrupoDesenvolvimento() {
-		return grupoDesenvolvimento;
-	}
-
-	public void setGrupoDesenvolvimento(GrupoDesenvolvimento grupoDesenvolvimento) {
-		this.grupoDesenvolvimento = grupoDesenvolvimento;
-	}*/
 
 	public Boolean getAtivo() {
 		return ativo;

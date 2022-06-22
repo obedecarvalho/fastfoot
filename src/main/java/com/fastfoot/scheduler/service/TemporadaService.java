@@ -112,7 +112,7 @@ public class TemporadaService {
 				CompletableFuture<Boolean> cj4 = jogadorService.criarJogadoresClube(clubes.subList(96, 112));
 				CompletableFuture<Boolean> cj8 = jogadorService.criarJogadoresClube(clubes.subList(112, 128));
 				
-				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();//TODO: remover??
+				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();
 			}
 		}
 
@@ -256,29 +256,6 @@ public class TemporadaService {
 
 		return campeonatoEliminatorioFactory;
 	}
-
-	/*private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(String numeroRodadasCopaNacional, Integer nroCompeticoesContinentais) {
-
-		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
-
-		if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R.equals(numeroRodadasCopaNacional)) {
-			campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplDezesseisClubes();
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 2) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubes();
-			} else if (nroCompeticoesContinentais == 3) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
-			}
-		} else if (ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R.equals(numeroRodadasCopaNacional)) {
-			if (nroCompeticoesContinentais == 2) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEQuatroClubes();
-			} else if (nroCompeticoesContinentais == 3) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteClubes();
-			}
-		}
-
-		return campeonatoEliminatorioFactory;
-	}*/
 
 	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,

@@ -176,46 +176,6 @@ public class ClubeRankingUtil {
 
 	/*public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
 		
-		Optional<ClubeRanking> tmp = null;
-		List<ClubeRanking> tmps = null;
-		int posFinal = 1, qtdeAtualizada = 0;
-		
-		for (OrdemClassificacaoGeral ocg: OrdemClassificacaoGeral.ORDEM) {
-			tmp = null; tmps = null;
-			
-			if (ocg.isContinental()) {
-				tmp = findClassificacaoContinental(rankingsLiga, ocg.getClassificacaoContinental());
-			} else if (ocg.isNacional()) {
-				tmps = findClassificacaoNacional(rankingsLiga, ocg.getClassificacaoNacional());
-			} else if (ocg.isCopaNacional()) {
-				tmp = findClassificacaoCopaNacional(rankingsLiga, ocg.getClassificacaoCopaNacional());
-			}
-			
-			if (tmp != null && tmp.isPresent()) {
-				tmps = Arrays.asList(tmp.get());
-			}
-			
-			if (!ValidatorUtil.isEmpty(tmps)) {
-				qtdeAtualizada = 0;
-				for (ClubeRanking cr : tmps) {
-					if (cr.getPosicaoGeral() == -1) {
-						cr.setPosicaoGeral(posFinal);
-						qtdeAtualizada++;
-					}
-				}
-				posFinal += qtdeAtualizada;
-			}
-			
-			/*if (tmp.isPresent() && tmp.get().getPosicaoGeral() == -1) {
-				tmp.get().setPosicaoGeral(posFinal);
-				posFinal++;
-			}* /
-		}
-		
-	}*/
-
-	/*public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
-		
 		//C1, N1, N2, N3, CII1, CN1, N4
 		
 		//CII1, CN1, N4, CNII1, N5, N6, N7, N8
