@@ -12,6 +12,9 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
@@ -22,6 +25,7 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AposentarJogadorService;
+import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.DesenvolverJogadorService;
 import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -96,6 +100,9 @@ public class SemanaService {
 
 	@Autowired
 	private JogadorRepository jogadorRepository;
+
+	@Autowired
+	private ClubeRepository clubeRepository;
 	
 	//#####	SERVICE	############
 	
@@ -116,6 +123,12 @@ public class SemanaService {
 	
 	@Autowired
 	private AposentarJogadorService aposentarJogadorService;
+
+	@Autowired
+	private EscalarClubeService escalarClubeService;
+
+	@Autowired
+	private CalcularValorTransferenciaService calcularValorTransferenciaService;
 
 	public SemanaDTO proximaSemana() {//TODO: rastrear com StopWatch
 		
@@ -186,12 +199,15 @@ public class SemanaService {
 		
 		StopWatch stopWatch2 = new StopWatch();
 		stopWatch2.start();
+		calcularValorTransferenciaJogadores(semana);
 		desenvolverJogadores(semana);
 		aposentarJogadores(semana);
 		stopWatch2.stop();
 		stopWatch.stop();
 		
 		mensagens.add("Desenvolver jogadores: " + stopWatch.getSplitNanoTime());
+		
+		escalarClubes(semana);
 		
 		//System.err.println(mensagens);
 		System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getSplitNanoTime());
@@ -206,20 +222,20 @@ public class SemanaService {
 			CelulaDesenvolvimento cd = CelulaDesenvolvimento.getAll()[semana.getNumero()
 					% CelulaDesenvolvimento.getAll().length];
 			
-			List<Jogador> jogadores = jogadorRepository.findByCelulaDesenvolvimentoFetchHabilidades(cd, Boolean.TRUE);
+			List<GrupoDesenvolvimentoJogador> celulasDevJog = grupoDesenvolvimentoJogadorRepository.findByCelulaDesenvolvimentoAndAtivoFetchJogadorHabilidades(cd, Boolean.TRUE);
 			
 			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 			
-			int offset = jogadores.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
+			int offset = celulasDevJog.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
 			
 			//System.err.println("\t\t->Total: " + gds.size());
 			
 			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
 				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverJogadores(jogadores.subList(i * offset, jogadores.size())));
+					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(celulasDevJog.subList(i * offset, celulasDevJog.size())));
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 				} else {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverJogadores(jogadores.subList(i * offset, (i+1) * offset)));
+					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(celulasDevJog.subList(i * offset, (i+1) * offset)));
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 				}
 			}
@@ -246,6 +262,51 @@ public class SemanaService {
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 				} else {
 					desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, (i+1) * offset)));
+					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+				}
+			}
+			
+			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		}
+	}
+
+	private void escalarClubes(Semana semana) {
+		if (semana.getNumero() % 5 == 0) {
+			List<Clube> clubes = clubeRepository.findAll(); 
+			
+			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+			
+			int offset = clubes.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
+			
+			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
+				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
+					desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
+					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+				} else {
+					desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
+					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+				}
+			}
+			
+			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		}
+	}
+	
+	private void calcularValorTransferenciaJogadores(Semana semana) {
+		if (semana.getNumero() == 1) {
+			
+			List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
+			
+			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+			
+			int offset = jogadores.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
+			
+			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
+				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
+					desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
+					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+				} else {
+					desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, (i+1) * offset)));
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 				}
 			}

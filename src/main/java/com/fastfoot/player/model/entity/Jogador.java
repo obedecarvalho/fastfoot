@@ -49,9 +49,11 @@ public class Jogador {
 	private Integer forcaGeralPotencial;
 	
 	private Boolean aposentado;
+	
+	private Double valorTransferencia;
 
-	@OneToOne(mappedBy = "jogador")
-	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;
+	/*@OneToOne(mappedBy = "jogador")
+	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;*/
 	
 	/*@OneToOne(mappedBy = "jogador")
 	private EscalacaoJogadorPosicao escalacaoJogadorPosicao;*/
@@ -146,13 +148,13 @@ public class Jogador {
 		this.aposentado = aposentado;
 	}
 
-	public GrupoDesenvolvimentoJogador getGrupoDesenvolvimentoJogador() {
+	/*public GrupoDesenvolvimentoJogador getGrupoDesenvolvimentoJogador() {
 		return grupoDesenvolvimentoJogador;
 	}
 
 	public void setGrupoDesenvolvimentoJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador) {
 		this.grupoDesenvolvimentoJogador = grupoDesenvolvimentoJogador;
-	}
+	}*/
 	
 	/*public EscalacaoJogadorPosicao getEscalacaoJogadorPosicao() {
 		return escalacaoJogadorPosicao;
@@ -161,6 +163,14 @@ public class Jogador {
 	public void setEscalacaoJogadorPosicao(EscalacaoJogadorPosicao escalacaoJogadorPosicao) {
 		this.escalacaoJogadorPosicao = escalacaoJogadorPosicao;
 	}*/
+
+	public Double getValorTransferencia() {
+		return valorTransferencia;
+	}
+
+	public void setValorTransferencia(Double valorTransferencia) {
+		this.valorTransferencia = valorTransferencia;
+	}
 
 	@Override
 	public String toString() {

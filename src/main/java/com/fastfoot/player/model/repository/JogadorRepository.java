@@ -21,7 +21,6 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j = :jogador ")
 	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
-
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.grupoDesenvolvimentoJogador.celulaDesenvolvimento = :celulaDesenvolvimento AND j.grupoDesenvolvimentoJogador.ativo = :ativo")
-	public List<Jogador> findByCelulaDesenvolvimentoFetchHabilidades(@Param("celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento, @Param(value = "ativo") Boolean ativo);
+	
+	public List<Jogador> findByAposentado(Boolean aposentado);
 }

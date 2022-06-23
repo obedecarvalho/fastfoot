@@ -29,7 +29,7 @@ public class DesenvolverJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	@Async("jogadorServiceExecutor")
+	/*@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> desenvolverJogadores(List<Jogador> jogadores) {
 		
 		//Jogador j = null;
@@ -67,29 +67,25 @@ public class DesenvolverJogadorService {
 		//desenvolvimentoRepository.save(grupoDesenvolvimento);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 	
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> desenvolverGrupo(List<GrupoDesenvolvimentoJogador> grupoDesenvolvimento) {
 		
-		Jogador j = null;
-		
-		//grupoDesenvolvimento.setQtdeExec(grupoDesenvolvimento.getQtdeExec() + 1);
+		//Jogador j = null;
 
 		for (GrupoDesenvolvimentoJogador gdj : grupoDesenvolvimento) {
-			j = jogadorRepository.findByJogadorFetchHabilidades(gdj.getJogador()).get(0);
+			//j = jogadorRepository.findByJogadorFetchHabilidades(gdj.getJogador()).get(0);
 			gdj.setQtdeExecAno((gdj.getQtdeExecAno() + 1));
-			desenvolverJogador(gdj, j);
-			gdj.setJogador(j);//
+			desenvolverJogador(gdj, gdj.getJogador());
+			//gdj.setJogador(j);//
 			
 			if (gdj.getQtdeExecAno().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
 				gdj.setQtdeExecAno(0);
 			}
-			
-			//grupoDesenvolvimentoJogadorRepository.save(gdj);
+
 		}
 
-		//
 		List<Jogador> jogadores = null;
 		
 		jogadores = grupoDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
@@ -99,9 +95,6 @@ public class DesenvolverJogadorService {
 		}
 		
 		grupoDesenvolvimentoJogadorRepository.saveAll(grupoDesenvolvimento);
-		//
-
-		//desenvolvimentoRepository.save(grupoDesenvolvimento);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
@@ -139,7 +132,7 @@ public class DesenvolverJogadorService {
 		//grupoDesenvolvimentoJogadorRepository.save(grupoDesenvolvimentoJogador);
 	}
 
-	private void ajustarPassoDesenvolvimentoProximoAno(Jogador j) {
+	private void ajustarPassoDesenvolvimentoProximoAno(Jogador j) {//TODO: não atualizar passo para 38a
 
 		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);

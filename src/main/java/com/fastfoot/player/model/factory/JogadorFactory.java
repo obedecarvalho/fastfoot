@@ -1,6 +1,7 @@
 package com.fastfoot.player.model.factory;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -34,13 +35,13 @@ public abstract class JogadorFactory {
 	protected static final Integer IDADE_MIN_TITULAR = 25;
 	protected static final Integer IDADE_MAX_TITULAR = 33;
 	
-	protected static final Double POT_DES_PORC_INICIAL = 17d;
+	protected static final Double POT_DES_PORC_INICIAL = 23d;
 	
 	//6 anos
 	//crescimento I - 7.0
 	protected static final Integer FASE_1_IDADE_MIN = 17;
 	protected static final Integer FASE_1_IDADE_MAX = 22;
-	protected static final Double FASE_1_POT_DES_PORC = 59d;
+	protected static final Double FASE_1_POT_DES_PORC = 65d;
 	protected static final Double FASE_1_POT_DES_PASSO = (FASE_1_POT_DES_PORC - POT_DES_PORC_INICIAL)
 			/ (FASE_1_IDADE_MAX - FASE_1_IDADE_MIN + 1);
 	
@@ -48,27 +49,38 @@ public abstract class JogadorFactory {
 	//crescimento II - 5.0
 	protected static final Integer FASE_2_IDADE_MIN = 23;
 	protected static final Integer FASE_2_IDADE_MAX = 26;
-	protected static final Double FASE_2_POT_DES_PORC = 79d;
+	protected static final Double FASE_2_POT_DES_PORC = 85d;
 	protected static final Double FASE_2_POT_DES_PASSO = (FASE_2_POT_DES_PORC - FASE_1_POT_DES_PORC)
 			/ (FASE_2_IDADE_MAX - FASE_2_IDADE_MIN + 1);
 	
-	//7 anos
+	//5 anos
 	//crescimento III - 3.0
 	protected static final Integer FASE_3_IDADE_MIN = 27;
-	protected static final Integer FASE_3_IDADE_MAX = 33;
+	protected static final Integer FASE_3_IDADE_MAX = 31;
 	protected static final Double FASE_3_POT_DES_PORC = 100d;
 	protected static final Double FASE_3_POT_DES_PASSO = (FASE_3_POT_DES_PORC - FASE_2_POT_DES_PORC)
 			/ (FASE_3_IDADE_MAX - FASE_3_IDADE_MIN + 1);
 
-	//4 anos
-	//decrescimento - -7.5
-	protected static final Integer FASE_4_IDADE_MIN = 34;
-	protected static final Integer FASE_4_IDADE_MAX = 37;
-	protected static final Double FASE_4_POT_DES_PORC = 70d;
+	//3 anos
+	//decrescimento I - -5.0
+	protected static final Integer FASE_4_IDADE_MIN = 32;
+	protected static final Integer FASE_4_IDADE_MAX = 34;
+	protected static final Double FASE_4_POT_DES_PORC = 85d;
 	protected static final Double FASE_4_POT_DES_PASSO = (FASE_4_POT_DES_PORC - FASE_3_POT_DES_PORC)
 			/ (FASE_4_IDADE_MAX - FASE_4_IDADE_MIN + 1);//Negativo
 	
+	//3 anos
+	//decrescimento I - -8.0
+	protected static final Integer FASE_5_IDADE_MIN = 35;
+	protected static final Integer FASE_5_IDADE_MAX = 37;
+	protected static final Double FASE_5_POT_DES_PORC = 61d;
+	protected static final Double FASE_5_POT_DES_PASSO = (FASE_5_POT_DES_PORC - FASE_4_POT_DES_PORC)
+			/ (FASE_5_IDADE_MAX - FASE_5_IDADE_MIN + 1);//Negativo
+	
 	public static final Double NUMERO_DESENVOLVIMENTO_ANO_JOGADOR = 5d;
+
+	//17 a 38 anos
+	public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.23d, 0.30d, 0.37d, 0.44d, 0.51d, 0.58d, 0.65d, 0.70d, 0.75d, 0.80d, 0.85d, 0.88d, 0.91d, 0.94d, 0.97d, 1.00d, 0.95d, 0.90d, 0.85d, 0.77d, 0.69d, 0.61d);
 
 	protected Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
 		Integer valor = gerarValorHabilidade(media, PESO_HABILIDADE_ESPECIFICO);
@@ -132,8 +144,10 @@ public abstract class JogadorFactory {
 			x = FASE_2_POT_DES_PORC + FASE_3_POT_DES_PASSO * (idade - FASE_3_IDADE_MIN);
 		} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
 			x = FASE_3_POT_DES_PORC + FASE_4_POT_DES_PASSO * (idade - FASE_4_IDADE_MIN);
+		} else if (idade >= FASE_5_IDADE_MIN && idade <= FASE_5_IDADE_MAX) {
+			x = FASE_4_POT_DES_PORC + FASE_5_POT_DES_PASSO * (idade - FASE_5_IDADE_MIN);
 		} else if (IDADE_MAX == idade) {
-			x = FASE_4_POT_DES_PORC;
+			x = FASE_5_POT_DES_PORC;
 		}
 		
 		return x/100d;

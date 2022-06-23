@@ -13,22 +13,8 @@ import com.fastfoot.player.model.entity.Jogador;
 
 @Repository
 public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<GrupoDesenvolvimentoJogador, Long>{
-	
-	//public List<GrupoDesenvolvimentoJogador> findByGrupoDesenvolvimento(GrupoDesenvolvimento grupoDesenvolvimento);
 
 	public List<GrupoDesenvolvimentoJogador> findByJogador(Jogador jogador);
-	
-	/*@Query(" SELECT gdj FROM GrupoDesenvolvimentoJogador gdj WHERE gdj.grupoDesenvolvimento.celulaDesenvolvimento = :celulaDesenvolvimento ")
-	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimento(
-			@Param(value = "celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento);*/
-	
-	/*public List<GrupoDesenvolvimentoJogador> findByGrupoDesenvolvimentoAndAtivo(
-			GrupoDesenvolvimento grupoDesenvolvimento, Boolean ativo);*/
-
-	/*@Query(" SELECT DISTINCT gdj FROM GrupoDesenvolvimentoJogador gdj INNER JOIN gdj.jogador j INNER JOIN FETCH gdj.jogador.habilidades hv WHERE gdj.grupoDesenvolvimento = :grupoDesenvolvimento AND gdj.ativo = :ativo ")
-	public List<GrupoDesenvolvimentoJogador> findByGrupoDesenvolvimentoAndAtivoFetchJogadorHabilidade(
-			@Param(value = "grupoDesenvolvimento") GrupoDesenvolvimento grupoDesenvolvimento,
-			@Param(value = "ativo") Boolean ativo);*/
 
 	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimento(CelulaDesenvolvimento celulaDesenvolvimento);
 	
@@ -36,4 +22,9 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 
 	@Query(" SELECT gdj FROM GrupoDesenvolvimentoJogador gdj WHERE gdj.jogador.idade = :idadeJogador AND gdj.ativo = :ativo ")
 	public List<GrupoDesenvolvimentoJogador> findByAtivoAndIdadeJogador(@Param(value = "ativo") Boolean ativo, @Param(value = "idadeJogador") Integer idadeJogador);
+	
+	@Query(" SELECT DISTINCT gdj FROM GrupoDesenvolvimentoJogador gdj INNER JOIN FETCH gdj.jogador j INNER JOIN FETCH j.habilidades WHERE gdj.celulaDesenvolvimento = :celulaDesenvolvimento AND gdj.ativo = :ativo ")
+	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimentoAndAtivoFetchJogadorHabilidades(
+			@Param(value = "celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento,
+			@Param(value = "ativo") Boolean ativo);
 }

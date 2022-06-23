@@ -429,3 +429,13 @@ left join campeonato c on cp.id_campeonato = c.id
 inner join semana s on s.id = cp.id_semana
 group by id_campeonato, c.liga, c.nivel_campeonato, s.numero
 order by s.numero, c.liga, nivel
+
+--numero jogos por jogador
+select tmp.id_jogador, count(*)
+from (
+	select hve.id_partida_resultado, hve.id_partida_eliminatoria_resultado, hve.id_partida_amistosa_resultado, hv.id_jogador
+	from habilidade_valor_estatistica hve
+	inner join habilidade_valor hv on hv.id = hve.id_habilidade_valor
+	group by hve.id_partida_resultado, hve.id_partida_eliminatoria_resultado, hve.id_partida_amistosa_resultado, hv.id_jogador
+) tmp
+group by tmp.id_jogador

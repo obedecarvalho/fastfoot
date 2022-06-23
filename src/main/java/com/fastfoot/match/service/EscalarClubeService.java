@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -28,6 +30,14 @@ public class EscalarClubeService {
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 
+	@Async("jogadorServiceExecutor")
+	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
+		for (Clube c : clubes) {
+			escalarClube(c);
+		}
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
 	public void escalarClube(Clube clube) {
 		
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClube(clube);

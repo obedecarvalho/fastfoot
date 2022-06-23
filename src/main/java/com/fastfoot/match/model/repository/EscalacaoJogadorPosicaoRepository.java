@@ -14,8 +14,6 @@ import com.fastfoot.player.model.entity.Jogador;
 @Repository
 public interface EscalacaoJogadorPosicaoRepository extends JpaRepository<EscalacaoJogadorPosicao, Long>{
 
-	//public List<EscalacaoJogadorPosicao> findByEscalacao(Escalacao escalacao);
-	
 	public List<EscalacaoJogadorPosicao> findByClube(Clube clube);
 	
 	public List<EscalacaoJogadorPosicao> findByJogador(Jogador jogador);
