@@ -11,5 +11,12 @@ public enum EscalacaoPosicao {
 	P_8,
 	P_9,
 	P_10,
-	P_11
+	P_11,
+	//Suprentes
+	P_12, //GOL
+	P_13, //ZAG
+	P_15, //VOL
+	P_16, //LAT
+	P_17, //MEI
+	P_19 //ATA
 }

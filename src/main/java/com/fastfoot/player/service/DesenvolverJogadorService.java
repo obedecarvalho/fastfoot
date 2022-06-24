@@ -98,13 +98,22 @@ public class DesenvolverJogadorService {
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
+	
+	private Integer getPesoPassoDesenvolvimento() {
+		//TODO:
+		/*
+		 * 90% do passo + 20% de uso das habilidades?
+		 * ir variando por idade?
+		 */
+		return 1;
+	}
 
 	private void desenvolverJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador, Jogador j) {
 		//Caso for usar so passo, pode ser substuido por sql UPDATE tab SET valor = valor + passo ....
 		Double newValorTotal = null;
 		Double newValorDecimal = null;
 		for (HabilidadeValor hv : j.getHabilidades()) {
-			newValorTotal = hv.getValorTotal() + hv.getPassoDesenvolvimentoAno();
+			newValorTotal = hv.getValorTotal() + (hv.getPassoDesenvolvimentoAno() * getPesoPassoDesenvolvimento());
 			
 			newValorDecimal = newValorTotal - newValorTotal.intValue();
 			
