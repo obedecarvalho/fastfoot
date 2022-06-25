@@ -29,7 +29,7 @@ public class ClubeTituloRanking {
 	
 	private Integer titulosContinentalIII;
 	
-	private Integer pontuacao;//TODO
+	private Integer pontuacao;
 	
 	public ClubeTituloRanking() {
 
@@ -128,9 +128,9 @@ public class ClubeTituloRanking {
 		this.pontuacao = pontuacao;
 	}
 
-	public void calcularPontuacao() {
+	/*public void calcularPontuacao() {
 		pontuacao = titulosContinental * 30 + titulosContinentalII * 20 + titulosContinentalIII * 10;
 		pontuacao += titulosCopaNacional * 20 + titulosCopaNacionalII * 7;
 		pontuacao += titulosNacional * 25 + titulosNacionalII * 8;
-	}
+	}*/
 }

@@ -1,18 +1,26 @@
 package com.fastfoot.player.service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.player.model.CelulaDesenvolvimento;
+import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
-public class JogadorService {
+public class CriarJogadoresClubeService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -20,16 +28,16 @@ public class JogadorService {
 	@Autowired
 	private ClubeRepository clubeRepository;
 
-	/*@Autowired
-	private HabilidadeValorRepository habilidadeValorRepository;*/
+	@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;
 
 	/*@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;*/
 
-	/*@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;*/
+	@Autowired
+	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
-	/*@Async("jogadorServiceExecutor")
+	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
 
 		List<GrupoDesenvolvimentoJogador> gruposJogador = new ArrayList<GrupoDesenvolvimentoJogador>();
@@ -41,15 +49,15 @@ public class JogadorService {
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		
 		return CompletableFuture.completedFuture(true);
-	}*/
+	}
 
-	/*protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
+	protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
 		int i = pos % CelulaDesenvolvimento.getAll().length;
 		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
-	}*/
+	}
 
 	//@Async("jogadorServiceExecutor")
-	/*protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
+	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
 
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
@@ -155,9 +163,9 @@ public class JogadorService {
 		jogadores.add(j);
 		
 		/*clube = clubeRepository.getById(clube.getId());
-		clube.getForcaGeralAtual();* /
+		clube.getForcaGeralAtual();*/
 
-		//TO DO: somente titulares ou usar potencial??
+		//TODO: somente titulares ou usar potencial??
 		clube.setForcaGeralAtual(
 				(new Long(Math.round(jogadores.stream().mapToLong(Jogador::getForcaGeral).average().getAsDouble())))
 						.intValue());
@@ -171,10 +179,10 @@ public class JogadorService {
 		
 		/*List <EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);
 		
-		escalacaoJogadorPosicaoRepository.saveAll(escalacao);* /
+		escalacaoJogadorPosicaoRepository.saveAll(escalacao);*/
 		
 		return CompletableFuture.completedFuture(true);
-	}*/
+	}
 	
 	/*private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
 		
@@ -218,14 +226,4 @@ public class JogadorService {
 		
 		return escalacao;
 	}*/
-
-	public List<Jogador> getJogadoresPorClube(Integer idClube) {
-		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
-
-		if (clubeOpt.isPresent()) {
-			return jogadorRepository.findByClubeAndAposentado(clubeOpt.get(), false);
-		}
-
-		return null;
-	}
 }

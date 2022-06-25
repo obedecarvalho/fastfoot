@@ -22,7 +22,6 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
-import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -33,8 +32,18 @@ import com.fastfoot.service.util.RoletaUtil;
 @Service
 public class PartidaService {
 	
-	@Autowired
-	private JogadorRepository jogadorRepository;
+	/*
+	 * TODO:
+	 * 
+	 * Inserir FALTA (estilo HabilidadeValor(Habilidade.FORA) na roleta) e CARTOES
+	 * Inserir ERRO (estilo HabilidadeValor(Habilidade.FORA) na roleta)
+	 * Disputa penalts
+	 * Substituicoes
+	 * 
+	 */
+	
+	/*@Autowired
+	private JogadorRepository jogadorRepository;*/
 
 	/*@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;*/
@@ -118,7 +127,7 @@ public class PartidaService {
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
 
 		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
-		/*EsquemaFactory*/ EsquemaFactoryDoisDoisDoisDoisDois factory = new EsquemaFactoryDoisDoisDoisDoisDois();
+		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();
 		Esquema esquema = factory.gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
 		
 		jogar(esquema, partidaResultado);
@@ -127,10 +136,10 @@ public class PartidaService {
 		salvarEstatisticas(jogadoresVisitante);
 	}
 
-	public void jogar(PartidaResultadoJogavel partidaResultado, Boolean old) {
-		//TODO: mudar de classe Escalacao
-		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeMandante(), false);//TODO: transformar em entidade Escalacao
-		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeVisitante(), false);//TODO: transformar em entidade Escalacao
+	/*public void jogar(PartidaResultadoJogavel partidaResultado) {
+
+		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeMandante(), false);
+		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeVisitante(), false);
 		
 		inicializarEstatisticas(jogadoresMandante, partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
@@ -142,7 +151,7 @@ public class PartidaService {
 
 		for (Jogador j : jogadoresVisitante) {
 			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
-		}*/
+		}* /
 
 		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
 		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();
@@ -156,11 +165,11 @@ public class PartidaService {
 	
 		for (Jogador j : jogadoresVisitante) {
 			habilidadeValorRepository.saveAll(j.getHabilidades());
-		}*/
+		}* /
 		
 		salvarEstatisticas(jogadoresMandante);
 		salvarEstatisticas(jogadoresVisitante);
-	}
+	}*/
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
@@ -277,7 +286,7 @@ public class PartidaService {
 						if (imprimir) System.err.println("\t\tFORA!!!!");
 						partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
 					}
-					esquema.inverterPosse();//TODO
+					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 				} else {
 					//PASSE, CRUZAMENTO, ARMACAO
 					EsquemaTransicao t = (EsquemaTransicao) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getTransicoesPosse());
@@ -300,7 +309,6 @@ public class PartidaService {
 		//JogadorAgruparGrupoEstatisticasUtil.agruparEstatisticas(lances);
 
 		if (imprimir) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
-		//TODO: penalts
 		
 		partidaResultado.setPartidaJogada(true);
 	}

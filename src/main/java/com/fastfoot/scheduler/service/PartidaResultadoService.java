@@ -216,8 +216,8 @@ public class PartidaResultadoService {
 		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
 		Optional<Semana> s = semanaRepository.findFirstByTemporadaAndNumero(temporada, numeroSemana);
 		if (s.isPresent()) {
-			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaResultadoRepository.findByTemporadaAndSemana(temporada, s.get())));
-			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaEliminatoriaResultadoRepository.findByTemporadaAndSemana(temporada, s.get())));
+			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaResultadoRepository.findBySemana(s.get())));
+			partidas.addAll(PartidaResultadoDTO.convertToDTO(partidaEliminatoriaResultadoRepository.findBySemana(s.get())));
 		}
 		return partidas;
 	}

@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Repository
@@ -23,4 +22,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
 	
 	public List<Jogador> findByAposentado(Boolean aposentado);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.aposentado = :aposentado ")
+	public List<Jogador> findByAposentadoFetchHabilidades(@Param("aposentado") Boolean aposentado);
 }

@@ -12,7 +12,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class FastfootApplication {
 	
-	private static final Integer NUM_THREAD = 8;
+	public static final Integer NUM_THREAD = 8;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FastfootApplication.class, args);

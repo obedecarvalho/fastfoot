@@ -40,7 +40,7 @@ public class JogadorZagueiroFactory extends JogadorFactory {
 		HABILIDADES_ESPECIFICAS.add(Habilidade.INTERCEPTACAO);
 		
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.VELOCIDADE);
-		HABILIDADES_OUTROS.add(Habilidade.DIBLE);
+		HABILIDADES_OUTROS.add(Habilidade.DRIBLE);
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.FORCA);
 		
 		HABILIDADES_OUTROS.add(Habilidade.POSICIONAMENTO);

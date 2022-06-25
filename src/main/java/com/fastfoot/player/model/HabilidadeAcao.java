@@ -18,7 +18,7 @@ public class HabilidadeAcao {
 	public static final HabilidadeAcao INTERCEPTACAO = new HabilidadeAcao(Habilidade.INTERCEPTACAO);
 
 	public static final HabilidadeAcao VELOCIDADE = new HabilidadeAcao(Habilidade.VELOCIDADE);
-	public static final HabilidadeAcao DIBLE = new HabilidadeAcao(Habilidade.DIBLE);
+	public static final HabilidadeAcao DRIBLE = new HabilidadeAcao(Habilidade.DRIBLE);
 	public static final HabilidadeAcao FORCA = new HabilidadeAcao(Habilidade.FORCA);
 	
 	public static final HabilidadeAcao CABECEIO = new HabilidadeAcao(Habilidade.CABECEIO);
@@ -72,8 +72,8 @@ public class HabilidadeAcao {
 		VELOCIDADE.setPossiveisReacoes(Arrays.asList(DESARME, VELOCIDADE));
 
 		
-		//Dible AM --> Desarme
-		DIBLE.setPossiveisReacoes(Arrays.asList(DESARME));
+		//Drible AM --> Desarme
+		DRIBLE.setPossiveisReacoes(Arrays.asList(DESARME));
 
 		
 		//Força AM --> {Desarme, Força}?
@@ -95,7 +95,7 @@ public class HabilidadeAcao {
 		HABILIDADE_ACAO.put(Habilidade.DESARME, DESARME);
 		HABILIDADE_ACAO.put(Habilidade.INTERCEPTACAO, INTERCEPTACAO);
 		HABILIDADE_ACAO.put(Habilidade.VELOCIDADE, VELOCIDADE);
-		HABILIDADE_ACAO.put(Habilidade.DIBLE, DIBLE);
+		HABILIDADE_ACAO.put(Habilidade.DRIBLE, DRIBLE);
 		HABILIDADE_ACAO.put(Habilidade.FORCA, FORCA);
 		HABILIDADE_ACAO.put(Habilidade.CABECEIO, CABECEIO);
 		HABILIDADE_ACAO.put(Habilidade.POSICIONAMENTO, POSICIONAMENTO);

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.scheduler.model.dto.CampeonatoDTO;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
+import com.fastfoot.scheduler.service.CriarCalendarioTemporadaService;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
@@ -26,11 +27,14 @@ public class TemporadaController {
 
 	@Autowired
 	private SemanaService semanaService;
+	
+	@Autowired
+	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;
 
 	@GetMapping("/novaTemporada")
 	public ResponseEntity<TemporadaDTO> criarTemporada() {
 		try {
-			return ResponseEntity.ok(temporadaService.criarTemporada());
+			return ResponseEntity.ok(criarCalendarioTemporadaService.criarTemporada());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -52,15 +56,11 @@ public class TemporadaController {
 		try {
 			return ResponseEntity.ok(semanaService.proximaSemana());
 		} catch (Exception e) {
-			e.printStackTrace();//TODO
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
-	
-	/* TODO: Corrreção no app: ao alterar algum dos campos do Clube Ranking, limpar DataSource
-	 */
 
-	@GetMapping("/jogarTemporadaCompleta")
+	/*@GetMapping("/jogarTemporadaCompleta")
 	public ResponseEntity<SemanaDTO> jogarTemporadaCompleta() {
 		try {
 			SemanaDTO semana = null;
@@ -71,10 +71,10 @@ public class TemporadaController {
 
 			return ResponseEntity.ok(semana);
 		} catch (Exception e) {
-			e.printStackTrace();//TODO
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 
 	@GetMapping("/campeonatosTemporadaAtual")
 	public ResponseEntity<List<CampeonatoDTO>> getCampeonatosTemporada(@RequestParam(name = "nivel") String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'

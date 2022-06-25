@@ -77,6 +77,7 @@ public class DesenvolverJogadorService {
 		for (GrupoDesenvolvimentoJogador gdj : grupoDesenvolvimento) {
 			//j = jogadorRepository.findByJogadorFetchHabilidades(gdj.getJogador()).get(0);
 			gdj.setQtdeExecAno((gdj.getQtdeExecAno() + 1));
+			gdj.setQtdeExec((gdj.getQtdeExec() + 1));
 			desenvolverJogador(gdj, gdj.getJogador());
 			//gdj.setJogador(j);//
 			
@@ -113,7 +114,8 @@ public class DesenvolverJogadorService {
 		Double newValorTotal = null;
 		Double newValorDecimal = null;
 		for (HabilidadeValor hv : j.getHabilidades()) {
-			newValorTotal = hv.getValorTotal() + (hv.getPassoDesenvolvimentoAno() * getPesoPassoDesenvolvimento());
+			//newValorTotal = hv.getValorTotal() + (hv.getPassoDesenvolvimento() * getPesoPassoDesenvolvimento());
+			newValorTotal = hv.getValorTotal() + hv.getPassoDesenvolvimento();
 			
 			newValorDecimal = newValorTotal - newValorTotal.intValue();
 			
@@ -123,25 +125,17 @@ public class DesenvolverJogadorService {
 		
 		JogadorCalcularForcaUtil.calcularForcaGeral(j);
 		
-		if (grupoDesenvolvimentoJogador.getQtdeExecAno().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
+		/*if (grupoDesenvolvimentoJogador.getQtdeExecAno().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
 			j.setIdade(j.getIdade() + 1);
-			/*if (JogadorFactory.IDADE_MAX.equals(j.getIdade())) {
-				//aposentar
-				j.setAposentado(true);
-				grupoDesenvolvimentoJogador.setAtivo(false);
-				
-				criarNovoJogadorSubsAposentado(j.getClube(), j.getPosicao(), j.getNumero(), grupoDesenvolvimentoJogador.getCelulaDesenvolvimento());
-			} else {*/
 			ajustarPassoDesenvolvimentoProximoAno(j);
-			//}
-		}
+		}*/
 		
 		//habilidadeValorRepository.saveAll(j.getHabilidades());
 		//jogadorRepository.save(j);
 		//grupoDesenvolvimentoJogadorRepository.save(grupoDesenvolvimentoJogador);
 	}
 
-	private void ajustarPassoDesenvolvimentoProximoAno(Jogador j) {//TODO: não atualizar passo para 38a
+	/*private void ajustarPassoDesenvolvimentoProximoAno(Jogador j) {
 
 		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
@@ -155,5 +149,5 @@ public class DesenvolverJogadorService {
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;			
 			hv.setPassoDesenvolvimentoAno(passoProx);
 		}
-	}
+	}*/
 }

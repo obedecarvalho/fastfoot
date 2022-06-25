@@ -166,7 +166,7 @@ public class RodadaService {
 		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
 	}
 
-	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {//TODO
+	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {//TODO: salvar PartidaLance
 		List<PartidaLance> lances = null;
 
 		for (PartidaResultadoJogavel partida : partidas) {

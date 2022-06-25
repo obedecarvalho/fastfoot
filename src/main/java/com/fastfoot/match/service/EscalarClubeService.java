@@ -83,6 +83,11 @@ public class EscalarClubeService {
 			ejp.setJogador(jogPos.get(0));
 		}
 		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_12);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 1) {
+			ejp.setJogador(jogPos.get(1));
+		}
+		
 		//Zag
 		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		
@@ -94,6 +99,11 @@ public class EscalarClubeService {
 		ejp = escalacaoMap.get(EscalacaoPosicao.P_4);
 		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 1) {
 			ejp.setJogador(jogPos.get(1));
+		}
+		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_13);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
+			ejp.setJogador(jogPos.get(2));
 		}
 		
 		//Lat
@@ -109,6 +119,11 @@ public class EscalarClubeService {
 			ejp.setJogador(jogPos.get(1));
 		}
 		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_16);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
+			ejp.setJogador(jogPos.get(2));
+		}
+		
 		//Vol
 		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		
@@ -120,6 +135,11 @@ public class EscalarClubeService {
 		ejp = escalacaoMap.get(EscalacaoPosicao.P_8);
 		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 1) {
 			ejp.setJogador(jogPos.get(1));
+		}
+		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_15);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
+			ejp.setJogador(jogPos.get(2));
 		}
 		
 		//Mei
@@ -135,6 +155,11 @@ public class EscalarClubeService {
 			ejp.setJogador(jogPos.get(1));
 		}
 		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_17);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
+			ejp.setJogador(jogPos.get(2));
+		}
+		
 		//Ata
 		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		
@@ -146,6 +171,11 @@ public class EscalarClubeService {
 		ejp = escalacaoMap.get(EscalacaoPosicao.P_11);
 		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 1) {
 			ejp.setJogador(jogPos.get(1));
+		}
+		
+		ejp = escalacaoMap.get(EscalacaoPosicao.P_19);
+		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
+			ejp.setJogador(jogPos.get(2));
 		}
 	}
 	
@@ -160,27 +190,33 @@ public class EscalarClubeService {
 		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_12, jogPos.get(1)));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0)));
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_13, jogPos.get(2)));
 		
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0)));
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_16, jogPos.get(2)));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0)));
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_15, jogPos.get(2)));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0)));
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_17, jogPos.get(2)));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0)));
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_19, jogPos.get(2)));
 		
 		return escalacao;
 	}

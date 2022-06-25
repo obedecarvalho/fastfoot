@@ -77,5 +77,5 @@ public class ClubeController {
 		return ResponseEntity.ok(partidas);
 	}
 	
-	//TODO: view com todos ClubeRanking de um Clube para comparar ano a ano 
+	//TODO: (Implementar APP) view com todos ClubeRanking de um Clube para comparar ano a ano 
 }

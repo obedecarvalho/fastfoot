@@ -1,25 +1,67 @@
 package com.fastfoot.scheduler.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.FastfootApplication;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
-import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
-import com.fastfoot.scheduler.model.dto.CampeonatoDTO;
+import com.fastfoot.match.service.EscalarClubeService;
+import com.fastfoot.model.Constantes;
+import com.fastfoot.model.Liga;
+import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.AposentarJogadorService;
+import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
+import com.fastfoot.player.service.CalcularValorTransferenciaService;
+import com.fastfoot.player.service.CriarJogadoresClubeService;
+import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
+import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
+import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
+import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactory;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplDezesseisClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaEDoisClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEOitoClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEQuatroClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoFactory;
+import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactory;
+import com.fastfoot.scheduler.model.factory.RodadaAmistosaFactory;
+import com.fastfoot.scheduler.model.factory.TemporadaFactory;
 import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
+import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.scheduler.service.util.ClubeRankingUtil;
-import com.fastfoot.scheduler.service.util.ClubeTituloRankingUtil;
+import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.PreCarregarParametrosService;
+import com.fastfoot.service.PreCarregarClubeService;
 
 @Service
-public class TemporadaService {
+public class CriarCalendarioTemporadaService {
+	
+	//########	REPOSITORY	##########
+	
+	@Autowired
+	private TemporadaRepository temporadaRepository;
+	
+	@Autowired
+	private JogadorRepository jogadorRepository;
 	
 	@Autowired
 	private ClubeRepository clubeRepository;
@@ -28,33 +70,47 @@ public class TemporadaService {
 	private ClubeRankingRepository clubeRankingRepository;
 	
 	@Autowired
-	private ClubeTituloRankingRepository clubeTituloRankingRepository;
+	private SemanaRepository semanaRepository;
 	
 	@Autowired
-	private TemporadaRepository temporadaRepository;
+	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
+	
+	//#######	SERVICE	#############
+	
+	@Autowired
+	private PreCarregarClubeService preCarregarService;
+	
+	@Autowired
+	private PreCarregarParametrosService preCarregarParametrosService;
 
 	/*@Autowired
-	private SemanaRepository semanaRepository;*/
+	private JogadorService jogadorService;*/
 
-	/*@Autowired
-	private JogadorRepository jogadorRepository;*/
+	@Autowired
+	private ParametroService parametroService;
 	
 	@Autowired
 	private CampeonatoService campeonatoService;
 	
-	/*@Autowired
-	private PreCarregarService preCarregarService;*/
+	@Autowired
+	private RodadaAmistosaService rodadaAmistosaService;
+
+	@Autowired
+	private AposentarJogadorService aposentarJogadorService;
 	
-	/*@Autowired
-	private JogadorService jogadorService;*/
+	@Autowired
+	private CalcularValorTransferenciaService calcularValorTransferenciaService;
+	
+	@Autowired
+	private EscalarClubeService escalarClubeService;
 
-	/*@Autowired
-	private ParametroService parametroService;*/
+	@Autowired
+	private CriarJogadoresClubeService criarJogadoresClubeService;
 
-	/*@Autowired
-	private RodadaAmistosaService rodadaAmistosaService;*/
+	@Autowired
+	private AtualizarPassoDesenvolvimentoJogadorService atualizarPassoDesenvolvimentoJogadorService;
 
-	/*public TemporadaDTO criarTemporada() {
+	public TemporadaDTO criarTemporada() {
 
 		Temporada temporada = null;
 		Integer ano = Constantes.ANO_INICIAL;
@@ -70,25 +126,29 @@ public class TemporadaService {
 			temporada.setAtual(false);
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
+			
+			//TODO: mesclar atualizarPassoDesenvolvimentoJogador() e aposentarJogadores()
+			atualizarPassoDesenvolvimentoJogador();
+			aposentarJogadores();
 		} else {
+
+			preCarregarParametrosService.preCarregarParametros();
+
 			preCarregarService.preCarregarClubes();
 			
-			if (jogadorRepository.findAll().isEmpty()) {
+			if (jogadorRepository.findAll().isEmpty()) {//TODO: usado em DEV
 				List<Clube> clubes = clubeRepository.findAll();
-				
 				
 				List<CompletableFuture<Boolean>> criarJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 				
-				Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = 8;
+				int offset = clubes.size() / FastfootApplication.NUM_THREAD;
 				
-				int offset = clubes.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
-				
-				for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-					if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
-						criarJogadorFuture.add(jogadorService.criarJogadoresClube(clubes.subList(i * offset, clubes.size())));
+				for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+					if ((i + 1) == FastfootApplication.NUM_THREAD) {
+						criarJogadorFuture.add(criarJogadoresClubeService.criarJogadoresClube(clubes.subList(i * offset, clubes.size())));
 						//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 					} else {
-						criarJogadorFuture.add(jogadorService.criarJogadoresClube(clubes.subList(i * offset, (i+1) * offset)));
+						criarJogadorFuture.add(criarJogadoresClubeService.criarJogadoresClube(clubes.subList(i * offset, (i+1) * offset)));
 						//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 					}
 				}
@@ -104,9 +164,12 @@ public class TemporadaService {
 				CompletableFuture<Boolean> cj4 = jogadorService.criarJogadoresClube(clubes.subList(96, 112));
 				CompletableFuture<Boolean> cj8 = jogadorService.criarJogadoresClube(clubes.subList(112, 128));
 
-				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();* /
+				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();*/
 			}
 		}
+
+		escalarClubes();
+		calcularValorTransferenciaJogadores();
 
 		temporada = TemporadaFactory.criarTempordada(ano);	
 		
@@ -120,9 +183,9 @@ public class TemporadaService {
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		
 		return TemporadaDTO.convertToDTO(temporada);
-	}*/
+	}
 	
-	/*private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,
+	private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
@@ -221,9 +284,9 @@ public class TemporadaService {
 			rodadaAmistosaAutomaticas.addAll(RodadaAmistosaFactory.criarRodadasAmistosasAgrupaGrupo(temporada, clubesAmistosos));
 
 		}
-	}*/
+	}
 	
-	/*private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory() {
+	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory() {
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
@@ -247,9 +310,9 @@ public class TemporadaService {
 		}
 
 		return campeonatoEliminatorioFactory;
-	}*/
+	}
 
-	/*private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
+	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 		salvarTemporada(temporada);
@@ -263,47 +326,104 @@ public class TemporadaService {
 			campeonatoService.salvarCampeonatoMisto(campeonatoMisto);
 		}
 		rodadaAmistosaService.salvarRodadasAmistosas(rodadaAmistosaAutomaticas);
-	}*/
+	}
 	
-	/*private void salvarTemporada(Temporada temporada) {
+	private void salvarTemporada(Temporada temporada) {
 		temporadaRepository.save(temporada);
 		semanaRepository.saveAll(temporada.getSemanas());
-	}*/
-
-	public void classificarClubesTemporadaAtual() {
-		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
-		campeonatoService.carregarCampeonatosTemporada(temporada);
-		List<ClubeRanking> rankings = ClubeRankingUtil.rankearClubesTemporada(temporada, clubeRepository.findAll());
-		List<ClubeTituloRanking> rankingsTitulos = clubeTituloRankingRepository.findAll();
-		ClubeTituloRankingUtil.atualizarRankingTitulos(rankings, rankingsTitulos);
-		clubeRankingRepository.saveAll(rankings);
-		clubeTituloRankingRepository.saveAll(rankingsTitulos);
 	}
 
-	public List<CampeonatoDTO> getCampeonatosTemporada(String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'
+	private void aposentarJogadores() {
+
+		//if (semana.getNumero() == 25) {
+			
+		List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);
 		
-		List<CampeonatoDTO> campeonatos = null;
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
-		if (temporadaOpt.isPresent()) {
-			campeonatos = CampeonatoDTO.convertToDTO(campeonatoService.carregarCampeonatosTemporada(temporadaOpt.get(), nivel));
+		int offset = gds.size() / FastfootApplication.NUM_THREAD;
+		
+		//System.err.println("\t\t->Total: " + gds.size());
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, gds.size())));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+			}
 		}
-		return campeonatos;
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
 	}
 
-	public Temporada getTemporadaAtual() {
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
-		if (temporadaOpt.isPresent()) {
-			return temporadaOpt.get();
+	private void calcularValorTransferenciaJogadores() {
+		//if (semana.getNumero() == 1) {
+			
+		List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+			}
 		}
-		return null;
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
 	}
 
-	public List<TemporadaDTO> getTemporadas() {
-		return TemporadaDTO.convertToDTO(temporadaRepository.findAll());
+	private void escalarClubes() {
+		//if (semana.getNumero() % 5 == 0) {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
 	}
 
-	public List<Integer> getAnosTemporadas(){
-		return temporadaRepository.getAnosTemporadas();
+	private void atualizarPassoDesenvolvimentoJogador() {
+		//if (semana.getNumero() == 1) {
+			
+		List<Jogador> jogadores = jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(jogadores.subList(i * offset, jogadores.size())));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(jogadores.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
 	}
 }

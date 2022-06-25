@@ -27,15 +27,15 @@ public class JogadorCalcularForcaUtil {
 
 	// ML
 	/*private static final List<Habilidade> HAB_ESP_MEI_LAT = Arrays.asList(Habilidade.PASSE, Habilidade.FINALIZACAO,
-			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.VELOCIDADE, Habilidade.DIBLE, Habilidade.DOMINIO);*/
+			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.VELOCIDADE, Habilidade.DRIBLE, Habilidade.DOMINIO);*/
 
 	// M
 	private static final List<Habilidade> HAB_ESP_MEI = Arrays.asList(Habilidade.PASSE, Habilidade.FINALIZACAO,
-			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.DIBLE, Habilidade.POSICIONAMENTO, Habilidade.DOMINIO);
+			Habilidade.CRUZAMENTO, Habilidade.ARMACAO, Habilidade.DRIBLE, Habilidade.POSICIONAMENTO, Habilidade.DOMINIO);
 
 	// A
 	private static final List<Habilidade> HAB_ESP_ATA = Arrays.asList(Habilidade.FINALIZACAO, Habilidade.CABECEIO,
-			Habilidade.DIBLE, Habilidade.FORCA, Habilidade.POSICIONAMENTO);
+			Habilidade.DRIBLE, Habilidade.FORCA, Habilidade.POSICIONAMENTO);
 
 	@Deprecated
 	public static void calcular(Jogador jogador) {

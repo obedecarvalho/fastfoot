@@ -4,9 +4,9 @@ import com.fastfoot.model.Liga;
 
 public interface CampeonatoJogavel {
 	
-	public Long getId();//TODO
+	public Long getId();
 	
-	public Liga getLiga();//TODO
+	public Liga getLiga();
 
 	public String getNome();
 

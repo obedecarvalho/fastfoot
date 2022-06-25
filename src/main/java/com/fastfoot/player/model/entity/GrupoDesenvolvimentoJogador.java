@@ -34,6 +34,8 @@ public class GrupoDesenvolvimentoJogador {
 
 	private Integer qtdeExecAno;
 	
+	private Integer qtdeExec;
+	
 	public GrupoDesenvolvimentoJogador() {
 	
 	}
@@ -44,6 +46,7 @@ public class GrupoDesenvolvimentoJogador {
 		this.jogador = jogador;
 		this.ativo = ativo;
 		this.qtdeExecAno = 0;
+		this.qtdeExec = 0;
 	}
 
 	public Long getId() {
@@ -84,5 +87,13 @@ public class GrupoDesenvolvimentoJogador {
 
 	public void setQtdeExecAno(Integer qtdeExecAno) {
 		this.qtdeExecAno = qtdeExecAno;
+	}
+
+	public Integer getQtdeExec() {
+		return qtdeExec;
+	}
+
+	public void setQtdeExec(Integer qtdeExec) {
+		this.qtdeExec = qtdeExec;
 	}
 }

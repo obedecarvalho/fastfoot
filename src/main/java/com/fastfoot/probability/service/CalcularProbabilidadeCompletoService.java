@@ -2,8 +2,6 @@ package com.fastfoot.probability.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +24,7 @@ import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
 import com.fastfoot.probability.model.entity.ClubeProbabilidade;
 import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;
+import com.fastfoot.probability.service.util.ClassificacaoProbabilidadeUtil;
 import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeCompletoUtil;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
@@ -149,7 +148,7 @@ public class CalcularProbabilidadeCompletoService {
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListI = new ArrayList<ClassificacaoProbabilidade>(
 					classificacaoProbabilidadesI.values());
 			
-			ordernarClassificacao(classificacaoProbabilidadesListI, true);
+			ClassificacaoProbabilidadeUtil.ordernarClassificacao(classificacaoProbabilidadesListI, true);
 			
 			agruparClubeProbabilidade(clubeProbabilidades, classificacaoProbabilidadesListI);
 			
@@ -166,7 +165,7 @@ public class CalcularProbabilidadeCompletoService {
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListII = new ArrayList<ClassificacaoProbabilidade>(
 					classificacaoProbabilidadesII.values());
 			
-			ordernarClassificacao(classificacaoProbabilidadesListII, true);
+			ClassificacaoProbabilidadeUtil.ordernarClassificacao(classificacaoProbabilidadesListII, true);
 
 			agruparClubeProbabilidade(clubeProbabilidades, classificacaoProbabilidadesListII);
 			
@@ -476,9 +475,8 @@ public class CalcularProbabilidadeCompletoService {
 		clasMandante.calcularProbabilidades();
 		clasVisitante.calcularProbabilidades();
 	}
-	
-	//TODO: transformar em Util
-	public static void ordernarClassificacao(List<ClassificacaoProbabilidade> classificacao, boolean desempatar) throws RuntimeException {
+
+	/*public static void ordernarClassificacao(List<ClassificacaoProbabilidade> classificacao, boolean desempatar) throws RuntimeException {
 
 		Collections.sort(classificacao, new Comparator<ClassificacaoProbabilidade>() {
 
@@ -517,14 +515,14 @@ public class CalcularProbabilidadeCompletoService {
 			}
 		}
 
-	}
+	}*/
 	
-	private static void sortearPosicao(List<ClassificacaoProbabilidade> classificacao, Integer posInicial) {
+	/*private static void sortearPosicao(List<ClassificacaoProbabilidade> classificacao, Integer posInicial) {
 		Collections.shuffle(classificacao);
 		for (ClassificacaoProbabilidade c : classificacao) {
 			c.setPosicao(posInicial++);
 		}
-	}
+	}*/
 	
 	private Integer getPosicoesClassificamCIMin() { return 1; }
 	

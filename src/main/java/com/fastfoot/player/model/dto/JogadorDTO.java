@@ -47,7 +47,7 @@ public class JogadorDTO {
 
 	private Integer valorVelocidade;
 
-	private Integer valorDible;
+	private Integer valorDrible;
 
 	private Integer valorForca;
 	
@@ -167,12 +167,12 @@ public class JogadorDTO {
 		this.valorVelocidade = valorVelocidade;
 	}
 
-	public Integer getValorDible() {
-		return valorDible;
+	public Integer getValorDrible() {
+		return valorDrible;
 	}
 
-	public void setValorDible(Integer valorDible) {
-		this.valorDible = valorDible;
+	public void setValorDrible(Integer valorDrible) {
+		this.valorDrible = valorDrible;
 	}
 
 	public Integer getValorForca() {
@@ -259,7 +259,7 @@ public class JogadorDTO {
 		dto.setValorInterceptacao(habs.get(Habilidade.INTERCEPTACAO).getValor());
 		
 		dto.setValorVelocidade(habs.get(Habilidade.VELOCIDADE).getValor());
-		dto.setValorDible(habs.get(Habilidade.DIBLE).getValor());
+		dto.setValorDrible(habs.get(Habilidade.DRIBLE).getValor());
 		dto.setValorForca(habs.get(Habilidade.FORCA).getValor());
 		
 		dto.setValorPosicionamento(habs.get(Habilidade.POSICIONAMENTO).getValor());

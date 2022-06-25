@@ -39,7 +39,7 @@ public class ClubeRanking {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 	
-	private Integer ano;//TODO: remover??
+	private Integer ano;//TODO: remover?? pode ser recuperado pela temporada
 	
 	private ClassificacaoNacionalFinal classificacaoNacional;
 	

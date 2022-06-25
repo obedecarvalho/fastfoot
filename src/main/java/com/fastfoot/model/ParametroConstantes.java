@@ -28,14 +28,14 @@ public class ParametroConstantes {
 	public static final String MARCAR_AMISTOSOS_AUTOMATICAMENTE = "MARCAR_AMISTOSOS_AUTOMATICAMENTE";
 
 	//3, 2, 4
-	public static final String NUMERO_CLUBES_REBAIXADOS = "NUMERO_CLUBES_REBAIXADOS";//TODO
+	public static final String NUMERO_CLUBES_REBAIXADOS = "NUMERO_CLUBES_REBAIXADOS";//TODO: implementar logica
 	
 	//true, false
 	public static final String JOGAR_CONTINENTAL_III_REDUZIDO = "JOGAR_CONTINENTAL_III_REDUZIDO";
 
 	//true, false
-	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO
+	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO: implementar logica
 		
 	//true, false
-	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";//TODO
+	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";//TODO: implementar logica
 }

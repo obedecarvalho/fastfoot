@@ -40,13 +40,13 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	private Integer potencialDesenvolvimento;
 
-	//private Integer quantidadeUso;//TODO: ??
+	//private Integer quantidadeUso;
 	
-	//private Integer quantidadeUsoVencedor;//TODO: ??
+	//private Integer quantidadeUsoVencedor;
 	
 	private Boolean habilidadeEspecifica = false;
 	
-	private Double passoDesenvolvimentoAno;//TODO: renomear
+	private Double passoDesenvolvimento;
 
 	@Transient
 	private Integer valorN;
@@ -96,7 +96,7 @@ public class HabilidadeValor implements ElementoRoleta {
 		// this.quantidadeUso = 0;
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
-		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+		this.passoDesenvolvimento = passoDesenvolvimentoAno;
 	}
 
 	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
@@ -109,7 +109,7 @@ public class HabilidadeValor implements ElementoRoleta {
 		// this.quantidadeUso = 0;
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
-		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+		this.passoDesenvolvimento = passoDesenvolvimentoAno;
 		this.valorDecimal = valorDecimal;
 	}
 
@@ -206,12 +206,12 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.habilidadeEspecifica = habilidadeEspecifica;
 	}
 
-	public Double getPassoDesenvolvimentoAno() {
-		return passoDesenvolvimentoAno;
+	public Double getPassoDesenvolvimento() {
+		return passoDesenvolvimento;
 	}
 
-	public void setPassoDesenvolvimentoAno(Double passoDesenvolvimentoAno) {
-		this.passoDesenvolvimentoAno = passoDesenvolvimentoAno;
+	public void setPassoDesenvolvimento(Double passoDesenvolvimento) {
+		this.passoDesenvolvimento = passoDesenvolvimento;
 	}
 
 	public Double getValorDecimal() {

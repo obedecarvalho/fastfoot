@@ -12,6 +12,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.service.EscalarClubeService;
@@ -20,12 +21,7 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
-import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
-import com.fastfoot.player.model.repository.JogadorRepository;
-import com.fastfoot.player.service.AposentarJogadorService;
-import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.DesenvolverJogadorService;
 import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -55,6 +51,9 @@ import com.fastfoot.service.ParametroService;
 
 /*
  * https://www.baeldung.com/apache-commons-collections-vs-guava
+ * https://thorben-janssen.com/tips-to-boost-your-hibernate-performance/
+ * https://thorben-janssen.com/criteria-updatedelete-easy-way-to/
+ * 
  */
 
 @Service
@@ -98,8 +97,8 @@ public class SemanaService {
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
-	@Autowired
-	private JogadorRepository jogadorRepository;
+	/*@Autowired
+	private JogadorRepository jogadorRepository;*/
 
 	@Autowired
 	private ClubeRepository clubeRepository;
@@ -121,21 +120,22 @@ public class SemanaService {
 	@Autowired
 	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
 	
-	@Autowired
-	private AposentarJogadorService aposentarJogadorService;
+	/*@Autowired
+	private AposentarJogadorService aposentarJogadorService;*/
 
 	@Autowired
 	private EscalarClubeService escalarClubeService;
 
-	@Autowired
-	private CalcularValorTransferenciaService calcularValorTransferenciaService;
+	/*@Autowired
+	private CalcularValorTransferenciaService calcularValorTransferenciaService;*/
 
-	public SemanaDTO proximaSemana() {//TODO: rastrear com StopWatch
+	public SemanaDTO proximaSemana() {
 		
-		StopWatch stopWatch = new StopWatch();
+		StopWatch stopWatch = new StopWatch();		
+		stopWatch.start();
+		//List<String> mensagens = new ArrayList<String>();
 		
-		stopWatch.start();//Carregar dados
-		List<String> mensagens = new ArrayList<String>();
+		//Carregar dados
 		
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
@@ -149,10 +149,7 @@ public class SemanaService {
 		semana.setRodadasEliminatorias(rodadaEliminatorias);
 		semana.setRodadasAmistosas(rodadasAmistosas);
 
-		stopWatch.split();//Jogar Rodada
-		mensagens.add("Semana:" + semana.getNumero());
-		mensagens.add("Carregar dados: " + stopWatch.getSplitNanoTime());
-
+		//Jogar Rodada
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
 
 		for (Rodada r : semana.getRodadas()) {
@@ -168,54 +165,51 @@ public class SemanaService {
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		
-		stopWatch.split();//Promover
-		mensagens.add("Jogar Rodada: " + stopWatch.getSplitNanoTime());
+
+		//Promover
 		promover(semana);
 
 		
-		stopWatch.split();//Incrementar rodada atual
-		mensagens.add("Promover: " + stopWatch.getSplitNanoTime());
+		//Incrementar rodada atual
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
 		
-		stopWatch.split();//calcular probabilidades
-		mensagens.add("Incrementar rodada atual: " + stopWatch.getSplitNanoTime());
+		//calcular probabilidades
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
 			calcularProbabilidades(semana, temporada);
 		}
 
 		
-		stopWatch.split();//gerar ClubeRanking
-		mensagens.add("calcular probabilidades: " + stopWatch.getSplitNanoTime());
+		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
-			//mensagens.add("entrou...");
 			temporadaService.classificarClubesTemporadaAtual();
 		}
-		
-		stopWatch.split();//Desenvolver jogadores
-		mensagens.add("gerar ClubeRanking: " + stopWatch.getSplitNanoTime());
-		
+
 		StopWatch stopWatch2 = new StopWatch();
 		stopWatch2.start();
-		calcularValorTransferenciaJogadores(semana);
+
+		//Desenvolver jogadores
 		desenvolverJogadores(semana);
-		aposentarJogadores(semana);
+
 		stopWatch2.stop();
+		
+		//Escalar clubes
+		if (semana.getNumero() % 5 == 0) {
+			escalarClubes(semana);
+		}
+		
 		stopWatch.stop();
 		
-		mensagens.add("Desenvolver jogadores: " + stopWatch.getSplitNanoTime());
+		//calcularValorTransferenciaJogadores(semana);
 		
-		escalarClubes(semana);
-		
-		//System.err.println(mensagens);
-		System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getSplitNanoTime());
+		//aposentarJogadores(semana);
+
+		System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getNanoTime());
 
 		return SemanaDTO.convertToDTO(semana);
 	}
 
-	private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = 8; 
+	//private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = FastfootApplication.NUM_THREAD; 
 	
 	private void desenvolverJogadores(Semana semana) {
 		if (semana.getNumero() <= 25) {
@@ -226,12 +220,12 @@ public class SemanaService {
 			
 			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 			
-			int offset = celulasDevJog.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
+			int offset = celulasDevJog.size() / FastfootApplication.NUM_THREAD;
 			
 			//System.err.println("\t\t->Total: " + gds.size());
 			
-			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
+			for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+				if ((i + 1) == FastfootApplication.NUM_THREAD) {
 					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(celulasDevJog.subList(i * offset, celulasDevJog.size())));
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 				} else {
@@ -244,7 +238,7 @@ public class SemanaService {
 		}
 	}
 	
-	private void aposentarJogadores(Semana semana) {
+	/*private void aposentarJogadores(Semana semana) {
 
 		if (semana.getNumero() == 25) {
 			
@@ -268,7 +262,7 @@ public class SemanaService {
 			
 			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		}
-	}
+	}*/
 
 	private void escalarClubes(Semana semana) {
 		if (semana.getNumero() % 5 == 0) {
@@ -276,10 +270,10 @@ public class SemanaService {
 			
 			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 			
-			int offset = clubes.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
+			int offset = clubes.size() / FastfootApplication.NUM_THREAD;
 			
-			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
+			for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+				if ((i + 1) == FastfootApplication.NUM_THREAD) {
 					desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
 					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 				} else {
@@ -292,7 +286,7 @@ public class SemanaService {
 		}
 	}
 	
-	private void calcularValorTransferenciaJogadores(Semana semana) {
+	/*private void calcularValorTransferenciaJogadores(Semana semana) {
 		if (semana.getNumero() == 1) {
 			
 			List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
@@ -313,7 +307,7 @@ public class SemanaService {
 			
 			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		}
-	}
+	}*/
 
 	private void calcularProbabilidades(Semana semana, Temporada temporada) {
 		

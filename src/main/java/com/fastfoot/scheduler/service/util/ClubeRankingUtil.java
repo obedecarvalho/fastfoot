@@ -9,7 +9,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
@@ -46,86 +45,6 @@ public class ClubeRankingUtil {
 		gerarPosicaoGeral(rankings);
 		
 		return rankings;
-	}
-	
-	/*
-		select cr.ano, cr.classificacao_nacional, count(*)
-		from clube_ranking cr 
-		where cr.classificacao_nacional in (1, 17)
-		group by cr.ano, cr.classificacao_nacional
-		order by count(*);
-		
-		select cr.ano, cr.classificacao_copa_nacional, count(*), array_agg(c.liga) 
-		from clube_ranking cr 
-		inner join clube c on cr.id_clube = c.id 
-		where cr.classificacao_copa_nacional in (5, 10)
-		group by cr.ano, cr.classificacao_copa_nacional
-		order by count(*), ano;
-		
-		select cr.ano, cr.classificacao_continental, count(*)
-		from clube_ranking cr 
-		where cr.classificacao_continental in (5, 10)
-		group by cr.ano, cr.classificacao_continental
-		order by count(*), ano;
-	 */
-	
-	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<ClubeTituloRanking> rankingsTitulos) {//TODO: transformar em consulta SQL
-		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(ClubeTituloRanking::getClube, Function.identity())));
-	}
-	
-	protected static void atualizarRankingTitulos(List<ClubeRanking> rankings, Map<Clube, ClubeTituloRanking> rankingsTitulos) {
-
-		List<ClubeRanking> campeoesContinentais = rankings.stream().filter(r -> r.isCampeaoContinental()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesContinentaisII = rankings.stream().filter(r -> r.isCampeaoContinentalII()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesContinentaisIII = rankings.stream().filter(r -> r.isCampeaoContinentalIII()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesNacionais = rankings.stream().filter(r -> r.isCampeaoNacional()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesNacionaisII = rankings.stream().filter(r -> r.isCampeaoNacionalII()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesCopaNacionais = rankings.stream().filter(r -> r.isCampeaoCopaNacional()).collect(Collectors.toList());
-		List<ClubeRanking> campeoesCopaNacionaisII = rankings.stream().filter(r -> r.isCampeaoCopaNacionalII()).collect(Collectors.toList());
-
-		ClubeTituloRanking ctr = null;
-
-		for (ClubeRanking cr : campeoesContinentais) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosContinental(ctr.getTitulosContinental()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesContinentaisII) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosContinentalII(ctr.getTitulosContinentalII()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesContinentaisIII) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosContinentalIII(ctr.getTitulosContinentalIII()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesNacionais) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosNacional(ctr.getTitulosNacional()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesNacionaisII) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosNacionalII(ctr.getTitulosNacionalII()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesCopaNacionais) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosCopaNacional(ctr.getTitulosCopaNacional()+1);
-			ctr.calcularPontuacao();//TODO
-		}
-		
-		for (ClubeRanking cr : campeoesCopaNacionaisII) {
-			ctr = rankingsTitulos.get(cr.getClube());
-			ctr.setTitulosCopaNacionalII(ctr.getTitulosCopaNacionalII()+1);
-			ctr.calcularPontuacao();//TODO
-		}
 	}
 
 	protected static void gerarPosicaoGeral(List<ClubeRanking> rankings) {

@@ -51,7 +51,7 @@ public class ClubeProbabilidadeService {
 		Optional<Campeonato> campeonatoOpt = campeonatoRepository.findById(idCampeonato);
 		
 		if (!campeonatoOpt.isPresent()) {
-			return null; //TODO
+			return null; //TODO: lancar exception?
 		}
 		
 		Temporada t = temporadaService.getTemporadaAtual();

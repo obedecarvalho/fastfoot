@@ -6,6 +6,7 @@ import java.util.List;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaImpl;
 import com.fastfoot.match.model.EsquemaPosicao;
+import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.player.model.entity.Jogador;
 
 public class EsquemaFactoryDoisTresTresDois extends EsquemaFactory {
@@ -101,6 +102,13 @@ public class EsquemaFactoryDoisTresTresDois extends EsquemaFactory {
 		//print(Arrays.asList(zd, ze, ld, le, v, md, me, m, ad, ae));
 
 		return esquema;
+	}
+
+	@Override
+	public Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
+			List<EscalacaoJogadorPosicao> visitantes) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*synchronized private static void print(List<EsquemaPosicao> x) {

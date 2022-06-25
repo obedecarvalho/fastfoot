@@ -7,6 +7,7 @@ import java.util.List;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.player.model.entity.Jogador;
 
 public abstract class EsquemaFactory {
@@ -18,6 +19,8 @@ public abstract class EsquemaFactory {
 	protected static final Integer PESO_RECUAR = 50;
 	
 	public abstract Esquema gerarEsquema(List<Jogador> mandantes, List<Jogador> visitantes);
+	
+	public abstract Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes, List<EscalacaoJogadorPosicao> visitantes);
 
 	protected static void ordenarJogadores(List<Jogador> jogadores) {
 		Collections.sort(jogadores, new Comparator<Jogador>() {

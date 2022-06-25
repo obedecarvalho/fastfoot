@@ -32,6 +32,8 @@ public class JogadorEstatisticasTemporada {
 	private Integer numeroJogos;
 	
 	private Integer golsMarcados;
+	
+	private Integer faltas;
 
 	public Long getId() {
 		return id;
@@ -71,5 +73,13 @@ public class JogadorEstatisticasTemporada {
 
 	public void setGolsMarcados(Integer golsMarcados) {
 		this.golsMarcados = golsMarcados;
+	}
+
+	public Integer getFaltas() {
+		return faltas;
+	}
+
+	public void setFaltas(Integer faltas) {
+		this.faltas = faltas;
 	}
 }

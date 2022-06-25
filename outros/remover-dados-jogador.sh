@@ -1,5 +1,5 @@
 #!/bin/bash
-#--sem remover jogadores e clubes
+#--remover jogadores
 psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "
 delete from habilidade_valor_estatistica;
 delete from habilidade_valor;

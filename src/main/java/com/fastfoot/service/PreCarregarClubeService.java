@@ -12,9 +12,6 @@ import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
-import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.model.entity.Parametro;
-import com.fastfoot.model.repository.ParametroRepository;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
 import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
@@ -29,7 +26,7 @@ import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
  */
 
 @Service
-public class PreCarregarService {
+public class PreCarregarClubeService {
 	
 	@Autowired
 	private ClubeRepository clubeRepository;
@@ -40,14 +37,10 @@ public class PreCarregarService {
 	@Autowired
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
-	@Autowired
-	private ParametroRepository parametroRepository;
-
 	public void preCarregarClubes () {
 		inserirClubes();
 		inserirClubesRanking();
 		inserirClubeTituloRanking();
-		inserirParametro();
 	}
 
 	private void inserirClubes() {
@@ -225,42 +218,12 @@ public class PreCarregarService {
 			clubeRepository.saveAll(clubes);
 		}
 	}
-	
-	private void inserirParametro() {//TODO: usar ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_ELI em vez de "..."
-		
-		parametroRepository.deleteAll();
-
-		if (parametroRepository.findAll().isEmpty()) {
-
-			List<Parametro> parametros = new ArrayList<Parametro>();
-
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
-
-			//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
-			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
-
-			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true", "true, false"));
-
-			//4 (16 TIMES), 6 (28 a 32 TIMES)
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, 
-					ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R, 
-					"6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
-
-			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true", "true, false"));
-			
-			parametros.add(new Parametro(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS, "3", "3"));//TODO
-			
-			parametros.add(new Parametro(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO, "true", "false, true"));
-
-			parametroRepository.saveAll(parametros);
-		}
-	}
 
 	private void inserirClubeTituloRanking() {
 		if (clubeTituloRankingRepository.findAll().isEmpty()) {
 			List<ClubeTituloRanking> rankingTitulos = new ArrayList<ClubeTituloRanking>();
 			
-			rankingTitulos.add(new ClubeTituloRanking(101, new Clube(101)));//TODO: transformar em 'for'
+			rankingTitulos.add(new ClubeTituloRanking(101, new Clube(101)));
 			rankingTitulos.add(new ClubeTituloRanking(102, new Clube(102)));
 			rankingTitulos.add(new ClubeTituloRanking(103, new Clube(103)));
 			rankingTitulos.add(new ClubeTituloRanking(104, new Clube(104)));
@@ -399,7 +362,7 @@ public class PreCarregarService {
 			
 			int ano = Constantes.ANO_INICIAL - 1;
 			
-			ranking.add(new ClubeRanking(1, new Clube(101), ano, 1, posicaoToClassificacaoNacional(1), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));//TODO: transformar em 'for'
+			ranking.add(new ClubeRanking(1, new Clube(101), ano, 1, posicaoToClassificacaoNacional(1), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(2, new Clube(102), ano, 2, posicaoToClassificacaoNacional(2), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(3, new Clube(103), ano, 3, posicaoToClassificacaoNacional(3), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(4, new Clube(104), ano, 4, posicaoToClassificacaoNacional(4), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));

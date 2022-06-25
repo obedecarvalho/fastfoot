@@ -40,7 +40,7 @@ public class JogadorGoleiroFactory extends JogadorFactory {
 		HABILIDADES_OUTROS.add(Habilidade.INTERCEPTACAO);
 		
 		HABILIDADES_OUTROS.add(Habilidade.VELOCIDADE);
-		HABILIDADES_OUTROS.add(Habilidade.DIBLE);
+		HABILIDADES_OUTROS.add(Habilidade.DRIBLE);
 		HABILIDADES_OUTROS.add(Habilidade.FORCA);
 		
 		HABILIDADES_OUTROS.add(Habilidade.POSICIONAMENTO);

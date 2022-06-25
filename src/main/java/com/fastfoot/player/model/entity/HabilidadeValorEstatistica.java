@@ -32,9 +32,9 @@ public class HabilidadeValorEstatistica {
 	
 	private Integer quantidadeUsoVencedor;
 
-	//TODO: partida, temporada
+	//TODO: temporada
 
-	//TODO: boolean agrupado
+	//TODO: boolean agrupado: indica se é o agrupamento de vários HabilidadeValorEstatistica
 	
 	@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
