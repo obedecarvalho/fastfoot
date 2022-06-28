@@ -26,6 +26,7 @@ import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
+import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -90,10 +91,10 @@ public class PartidaService {
 		}
 	}
 
-	private void inicializarEstatisticas(List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
+	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana, PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
 			for (HabilidadeValor hv : j.getHabilidades()) {
-				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, partidaResultado));
+				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana, partidaResultado));
 			}
 		}
 	}
@@ -123,8 +124,8 @@ public class PartidaService {
 		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		
-		inicializarEstatisticas(jogadoresMandante, partidaResultado);
-		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
+		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
 
 		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
 		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();

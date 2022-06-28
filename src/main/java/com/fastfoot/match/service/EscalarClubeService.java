@@ -49,7 +49,7 @@ public class EscalarClubeService {
 			atualizarEscalacao(clube, escalacao, jogadores);
 		}
 		
-		escalacaoJogadorPosicaoRepository.saveAll(escalacao);
+		escalacaoJogadorPosicaoRepository.saveAll(escalacao);//TODO: fazer apenas um para todos os Clubes??
 	}
 	
 	private Comparator<Jogador> getComparator() {

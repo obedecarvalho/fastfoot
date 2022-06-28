@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -45,7 +44,7 @@ public class CalcularValorTransferenciaService {
 			
 			double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
 			
-			double valorAj = (ajuste * jogador.getForcaGeralPotencial()) /  Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
+			double valorAj = (ajuste * jogador.getForcaGeralPotencialEfetiva()) /  Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
 			
 			valor += valorAj;
 		}

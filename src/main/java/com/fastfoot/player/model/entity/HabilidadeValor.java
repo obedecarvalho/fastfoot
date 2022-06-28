@@ -38,7 +38,9 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	private Double valorDecimal;
 	
-	private Integer potencialDesenvolvimento;
+	private Double potencialDesenvolvimento;
+	
+	private Double potencialDesenvolvimentoEfetivo;
 
 	//private Integer quantidadeUso;
 	
@@ -74,7 +76,7 @@ public class HabilidadeValor implements ElementoRoleta {
 		//this.quantidadeUsoVencedor = 0;
 	}*/
 	
-	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
 			Boolean especifica) {
 		super();
 		this.habilidade = habilidade;
@@ -84,9 +86,9 @@ public class HabilidadeValor implements ElementoRoleta {
 		// this.quantidadeUso = 0;
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
-	}
+	}*/
 
-	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
 			Boolean especifica, Double passoDesenvolvimentoAno) {
 		super();
 		this.habilidade = habilidade;
@@ -97,10 +99,10 @@ public class HabilidadeValor implements ElementoRoleta {
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
 		this.passoDesenvolvimento = passoDesenvolvimentoAno;
-	}
+	}*/
 
-	public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
-			Boolean especifica, Double passoDesenvolvimentoAno, Double valorDecimal) {
+	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
+			Boolean especifica, Double passoDesenvolvimento, Double valorDecimal, Double potencialDesenvolvimentoEfetivo) {
 		super();
 		this.habilidade = habilidade;
 		this.valor = valor;
@@ -109,8 +111,25 @@ public class HabilidadeValor implements ElementoRoleta {
 		// this.quantidadeUso = 0;
 		// this.quantidadeUsoVencedor = 0;
 		this.habilidadeEspecifica = especifica;
-		this.passoDesenvolvimento = passoDesenvolvimentoAno;
+		this.passoDesenvolvimento = passoDesenvolvimento;
 		this.valorDecimal = valorDecimal;
+		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
+	}*/
+	
+	public HabilidadeValor(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
+			Boolean especifica, Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
+			Double passoDesenvolvimento) {
+		super();
+		this.jogador = jogador;
+		this.habilidade = habilidade;
+		this.valor = valor;
+		this.valorDecimal = valorDecimal;
+		this.habilidadeEspecifica = especifica;
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
+		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
+		this.passoDesenvolvimento = passoDesenvolvimento;
+		// this.quantidadeUso = 0;
+		// this.quantidadeUsoVencedor = 0;	
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -158,11 +177,11 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.habilidade = habilidade;
 	}
 
-	public Integer getPotencialDesenvolvimento() {
+	public Double getPotencialDesenvolvimento() {
 		return potencialDesenvolvimento;
 	}
 
-	public void setPotencialDesenvolvimento(Integer potencialDesenvolvimento) {
+	public void setPotencialDesenvolvimento(Double potencialDesenvolvimento) {
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 	
@@ -224,6 +243,14 @@ public class HabilidadeValor implements ElementoRoleta {
 
 	public Double getValorTotal() {
 		return getValor() + getValorDecimal();
+	}
+
+	public Double getPotencialDesenvolvimentoEfetivo() {
+		return potencialDesenvolvimentoEfetivo;
+	}
+
+	public void setPotencialDesenvolvimentoEfetivo(Double potencialDesenvolvimentoEfetivo) {
+		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
 	}
 
 	@Override

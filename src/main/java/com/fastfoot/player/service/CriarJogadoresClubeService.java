@@ -174,7 +174,7 @@ public class CriarJogadoresClubeService {
 
 		jogadorRepository.saveAll(jogadores);
 		for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());
+			habilidadeValorRepository.saveAll(jog.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
 		}
 		
 		/*List <EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);

@@ -94,7 +94,7 @@ public class RodadaService {
 
 		partidaRepository.saveAllAndFlush(r.getPartidas());
 
-		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
+		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
 
 		if(r.getCampeonato() != null) {
 			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
@@ -160,18 +160,18 @@ public class RodadaService {
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
-			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());
+			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());//TODO: agrupar proximas partidas e fazer apenas um saveAll??
 		}
 
-		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
+		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
 	}
 
-	private void salvarEstatisticas(List<? extends PartidaResultadoJogavel> partidas) {//TODO: salvar PartidaLance
+	private void salvarLances(List<? extends PartidaResultadoJogavel> partidas) {//TODO: salvar PartidaLance
 		List<PartidaLance> lances = null;
 
 		for (PartidaResultadoJogavel partida : partidas) {
 			lances = null;//partida.getPartidaLances();
-			partidaLanceRepository.saveAll(lances);
+			partidaLanceRepository.saveAll(lances);//TODO: agrupar lances e fazer apenas um saveAll??
 		}
 	}
 
@@ -197,6 +197,6 @@ public class RodadaService {
 
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		
-		if (SALVAR_ESTATISTICAS) { salvarEstatisticas(r.getPartidas()); }
+		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
 	}
 }

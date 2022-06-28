@@ -67,7 +67,7 @@ public class AposentarJogadorService {
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(newGruposDesenvolvimento);
 		for (Jogador j : jogadores) {
-			habilidadeValorRepository.saveAll(j.getHabilidades());
+			habilidadeValorRepository.saveAll(j.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
 		}
 
 		jogadores = gruposDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());

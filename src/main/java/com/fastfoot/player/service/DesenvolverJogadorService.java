@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -92,7 +93,7 @@ public class DesenvolverJogadorService {
 		jogadores = grupoDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
 		jogadorRepository.saveAll(jogadores);
 		for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());
+			habilidadeValorRepository.saveAll(jog.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
 		}
 		
 		grupoDesenvolvimentoJogadorRepository.saveAll(grupoDesenvolvimento);
@@ -100,14 +101,18 @@ public class DesenvolverJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	private Integer getPesoPassoDesenvolvimento() {
+	public void desenvolverCelula(CelulaDesenvolvimento celulaDesenvolvimento) {
+		habilidadeValorRepository.desenvolverHabilidadesByCelulaDesenvolvimento(celulaDesenvolvimento.ordinal());
+	}
+	
+	/*private Integer getPesoPassoDesenvolvimento() {//TODO: usar estatisticas para calcular passo desenvolvimento proxima temporada
 		//TODO:
 		/*
 		 * 90% do passo + 20% de uso das habilidades?
 		 * ir variando por idade?
-		 */
+		 * /
 		return 1;
-	}
+	}*/
 
 	private void desenvolverJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador, Jogador j) {
 		//Caso for usar so passo, pode ser substuido por sql UPDATE tab SET valor = valor + passo ....

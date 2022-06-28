@@ -19,10 +19,7 @@ import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.player.model.CelulaDesenvolvimento;
-import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
-import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
-import com.fastfoot.player.service.DesenvolverJogadorService;
+import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -94,14 +91,17 @@ public class SemanaService {
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
 	
-	@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
+	/*@Autowired
+	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;*/
 
 	/*@Autowired
 	private JogadorRepository jogadorRepository;*/
 
 	@Autowired
 	private ClubeRepository clubeRepository;
+
+	@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;
 	
 	//#####	SERVICE	############
 	
@@ -114,8 +114,8 @@ public class SemanaService {
 	@Autowired
 	private ParametroService parametroService;
 
-	@Autowired
-	private DesenvolverJogadorService desenvolverJogadorService;
+	/*@Autowired
+	private DesenvolverJogadorService desenvolverJogadorService;*/
 	
 	@Autowired
 	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
@@ -189,7 +189,10 @@ public class SemanaService {
 		stopWatch2.start();
 
 		//Desenvolver jogadores
-		desenvolverJogadores(semana);
+		//desenvolverJogadores(semana);
+		if (semana.getNumero() % 5 == 0) {
+			habilidadeValorRepository.desenvolverTodasHabilidades();
+		}
 
 		stopWatch2.stop();
 		
@@ -204,14 +207,14 @@ public class SemanaService {
 		
 		//aposentarJogadores(semana);
 
-		System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getNanoTime());
+		//System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getNanoTime());
 
 		return SemanaDTO.convertToDTO(semana);
 	}
 
 	//private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = FastfootApplication.NUM_THREAD; 
 	
-	private void desenvolverJogadores(Semana semana) {
+	/*private void desenvolverJogadores(Semana semana) {
 		if (semana.getNumero() <= 25) {
 			CelulaDesenvolvimento cd = CelulaDesenvolvimento.getAll()[semana.getNumero()
 					% CelulaDesenvolvimento.getAll().length];
@@ -236,7 +239,7 @@ public class SemanaService {
 			
 			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		}
-	}
+	}*/
 	
 	/*private void aposentarJogadores(Semana semana) {
 
@@ -327,7 +330,7 @@ public class SemanaService {
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
-	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
+	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {//TODO: avaliar necessidade
 		Set<Campeonato> camps1 = new HashSet<Campeonato>();
 		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
 		Set<CampeonatoMisto> camps3 = new HashSet<CampeonatoMisto>();

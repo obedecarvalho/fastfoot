@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -111,6 +112,11 @@ public class CriarCalendarioTemporadaService {
 	private AtualizarPassoDesenvolvimentoJogadorService atualizarPassoDesenvolvimentoJogadorService;
 
 	public TemporadaDTO criarTemporada() {
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		List<String> mensagens = new ArrayList<String>();
+		long inicio = 0, fim = 0;
 
 		Temporada temporada = null;
 		Integer ano = Constantes.ANO_INICIAL;
@@ -127,9 +133,20 @@ public class CriarCalendarioTemporadaService {
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
 			
-			//TODO: mesclar atualizarPassoDesenvolvimentoJogador() e aposentarJogadores()
+			//TODO: mesclar atualizarPassoDesenvolvimentoJogador() e aposentarJogadores()??
+
+			stopWatch.split();
+			inicio = stopWatch.getSplitNanoTime();
 			atualizarPassoDesenvolvimentoJogador();
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));//35%
+			
+			inicio = stopWatch.getSplitNanoTime();
 			aposentarJogadores();
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
 		} else {
 
 			preCarregarParametrosService.preCarregarParametros();
@@ -168,8 +185,18 @@ public class CriarCalendarioTemporadaService {
 			}
 		}
 
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		escalarClubes();
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#escalarClubes:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitNanoTime();
 		calcularValorTransferenciaJogadores();
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
 		temporada = TemporadaFactory.criarTempordada(ano);	
 		
@@ -178,9 +205,22 @@ public class CriarCalendarioTemporadaService {
 		List<CampeonatoEliminatorio> copasNacionais = new ArrayList<CampeonatoEliminatorio>();
 		List<RodadaAmistosa> rodadaAmistosaAutomaticas = new ArrayList<RodadaAmistosa>();
 
+		inicio = stopWatch.getSplitNanoTime();
 		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#criarCampeonatos:" + (fim - inicio));
 
+		inicio = stopWatch.getSplitNanoTime();
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvar:" + (fim - inicio));//40%
+		
+		stopWatch.stop();
+		mensagens.add("\tTempo total:" + stopWatch.getNanoTime());
+		
+		System.err.println(mensagens);
 		
 		return TemporadaDTO.convertToDTO(temporada);
 	}
@@ -315,17 +355,26 @@ public class CriarCalendarioTemporadaService {
 	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
+
 		salvarTemporada(temporada);
-		for(Campeonato campeonato : campeonatosNacionais) {
+
+		/*for(Campeonato campeonato : campeonatosNacionais) {
 			campeonatoService.salvarCampeonato(campeonato);
-		}
-		for(CampeonatoEliminatorio campeonatoEliminatorio : copasNacionais) {
+		}*/
+		campeonatoService.salvarCampeonato(campeonatosNacionais);
+
+		/*for(CampeonatoEliminatorio campeonatoEliminatorio : copasNacionais) {
 			campeonatoService.salvarCampeonatoEliminatorio(campeonatoEliminatorio);
-		}
-		for(CampeonatoMisto campeonatoMisto : campeonatosContinentais) {
+		}*/
+		campeonatoService.salvarCampeonatoEliminatorio(copasNacionais);
+
+		/*for(CampeonatoMisto campeonatoMisto : campeonatosContinentais) {
 			campeonatoService.salvarCampeonatoMisto(campeonatoMisto);
-		}
+		}*/
+		campeonatoService.salvarCampeonatoMisto(campeonatosContinentais);
+
 		rodadaAmistosaService.salvarRodadasAmistosas(rodadaAmistosaAutomaticas);
+
 	}
 	
 	private void salvarTemporada(Temporada temporada) {

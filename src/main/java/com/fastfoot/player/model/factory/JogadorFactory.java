@@ -25,15 +25,19 @@ public abstract class JogadorFactory {
 	
 	protected static final Double PESO_HABILIDADE_OUTROS = 0.4;
 	
-	protected static final Integer VALOR_HABILIDADE_MAX = 100;
+	//protected static final Integer VALOR_HABILIDADE_MAX = 100;
 	
-	protected static final Integer VALOR_HABILIDADE_MIN = 1;
+	//protected static final Integer VALOR_HABILIDADE_MIN = 1;
+	
+	protected static final Double VALOR_HABILIDADE_MAX = 100d;
+	
+	protected static final Double VALOR_HABILIDADE_MIN = 1d;
 	
 	public static final Integer IDADE_MIN = 17;
 	public static final Integer IDADE_MAX = 38;
 	
-	protected static final Integer IDADE_MIN_TITULAR = 25;
-	protected static final Integer IDADE_MAX_TITULAR = 33;
+	//protected static final Integer IDADE_MIN_TITULAR = 25;
+	//protected static final Integer IDADE_MAX_TITULAR = 33;
 	
 	protected static final Double POT_DES_PORC_INICIAL = 23d;
 	
@@ -70,7 +74,7 @@ public abstract class JogadorFactory {
 			/ (FASE_4_IDADE_MAX - FASE_4_IDADE_MIN + 1);//Negativo
 	
 	//3 anos
-	//decrescimento I - -8.0
+	//decrescimento II - -8.0
 	protected static final Integer FASE_5_IDADE_MIN = 35;
 	protected static final Integer FASE_5_IDADE_MAX = 37;
 	protected static final Double FASE_5_POT_DES_PORC = 61d;
@@ -82,46 +86,59 @@ public abstract class JogadorFactory {
 	//17 a 38 anos
 	public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.23d, 0.30d, 0.37d, 0.44d, 0.51d, 0.58d, 0.65d, 0.70d, 0.75d, 0.80d, 0.85d, 0.88d, 0.91d, 0.94d, 0.97d, 1.00d, 0.95d, 0.90d, 0.85d, 0.77d, 0.69d, 0.61d);
 
-	protected Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
+	/*protected Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
 		Integer valor = gerarValorHabilidade(media, PESO_HABILIDADE_ESPECIFICO);
 		valorHabilidadesEspecificas.add(valor);
 		return valor;
-	}
+	}*/
 	
-	protected Integer gerarValorHabilidadeEspecifico(Integer media) {
+	protected Double gerarValorHabilidadeEspecifico(Integer media) {
 		return gerarValorHabilidade(media, PESO_HABILIDADE_ESPECIFICO);
 	}
 	
-	protected Integer gerarValorHabilidadeComum(Integer media) {
+	protected Double gerarValorHabilidadeComum(Integer media) {
 		return gerarValorHabilidade(media, PESO_HABILIDADE_COMUM);
 	}
 	
-	protected Integer gerarValorHabilidadeOutros(Integer media) {
+	protected Double gerarValorHabilidadeOutros(Integer media) {
 		return gerarValorHabilidade(media, PESO_HABILIDADE_OUTROS);
 	}
 
-	protected Integer gerarValorHabilidade(Integer media, Double peso) {
+	/*protected Integer gerarValorHabilidade(Integer media, Double peso) {
 		return Long
 				.valueOf(Math.max(Math.min(Math.round(peso * (R.nextGaussian() * STDEV + media)), VALOR_HABILIDADE_MAX),
 						VALOR_HABILIDADE_MIN))
 				.intValue();
+	}*/
+
+	protected Double gerarValorHabilidade(Integer media, Double peso) {
+		return Math.max(Math.min(peso * (R.nextGaussian() * STDEV + media), VALOR_HABILIDADE_MAX),
+				VALOR_HABILIDADE_MIN);
 	}
 
-	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial,
+	/*protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial,
 			Boolean especifica) {
 		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial, especifica);
 		jogador.addHabilidade(hv);
-	}
+	}*/
 	
-	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial,
-			Boolean especifica, Double passoDesenvolvimentoAno, Double valorDecimal) {
+	/*protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Integer potencial,
+			Boolean especifica, Double passoDesenvolvimento, Double valorDecimal, Double potencialDesenvolvimentoEfetivo) {
 		HabilidadeValor hv = new HabilidadeValor(habilidade, valor, jogador, potencial, especifica,
-				passoDesenvolvimentoAno, valorDecimal);
+				passoDesenvolvimento, valorDecimal, potencialDesenvolvimentoEfetivo);
+		jogador.addHabilidade(hv);
+	}*/
+	
+	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
+			Boolean especifica, Double potencial, Double potencialDesenvolvimentoEfetivo,
+			Double passoDesenvolvimento) {
+		HabilidadeValor hv = new HabilidadeValor(jogador, habilidade, valor, valorDecimal, especifica, potencial,
+				potencialDesenvolvimentoEfetivo, passoDesenvolvimento);
 		jogador.addHabilidade(hv);
 	}
 
 	protected Integer sortearIdade(Boolean titular) {
-		if (titular != null && titular) return sortearIdadeTitular();
+		//if (titular != null && titular) return sortearIdadeTitular();
 		return sortearIdade(); 
 	}
 
@@ -129,9 +146,9 @@ public abstract class JogadorFactory {
 		return IDADE_MIN + R.nextInt(IDADE_MAX - IDADE_MIN);
 	}
 	
-	protected Integer sortearIdadeTitular() {
+	/*protected Integer sortearIdadeTitular() {
 		return IDADE_MIN_TITULAR + R.nextInt(IDADE_MAX_TITULAR - IDADE_MIN_TITULAR);
-	}
+	}*/
 
 	public static Double getAjusteForca(Integer idade) {
 		Double x = 0d;
@@ -153,21 +170,61 @@ public abstract class JogadorFactory {
 		return x/100d;
 	}
 	
+	public static Double getPercVariacaoPassoDesenvolvimento(Integer idade) {
+		Double x = 0d;
+		
+		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
+			x = 0.15d;//15%
+		} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
+			x = 0.10d;//10%
+		} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
+			x = 0.07d;//7%
+		//} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
+		//	x = 0.05d;
+		//} else if (idade >= FASE_5_IDADE_MIN && idade <= FASE_5_IDADE_MAX) {
+		//	x = 0.03d;
+		//} else if (IDADE_MAX == idade) {
+		//	x = 0.00d;
+		}
+		
+		/**
+		 * Se multiplicar x por:
+		 * 
+		 * 		1.000 - 70% estaram no range [-x, x]
+		 * 		0.850 - 76% estaram no range [-x, x]
+		 * 		0.800 - 80% estaram no range [-x, x]
+		 * 		0.666 - 85% estaram no range [-x, x]
+		 * 		0.600 - 90% estaram no range [-x, x]
+		 * 		0.500 - 96% estaram no range [-x, x]
+		 * 		0.333 - 99% estaram no range [-x, x]
+		 * 
+		 */
+		return x * 0.6d;
+	}
+	
+	private Double gerarVariacaoPassoDesenvolvimento(Double passo, Integer idade) {
+		Double stdev = JogadorFactory.getPercVariacaoPassoDesenvolvimento(idade) * passo;
+		return R.nextGaussian() * stdev;
+	}
+	
 	protected void sortearHabilidadeValor(Jogador jogador, Integer potencial) {
 		List<Habilidade> habEspecificas = new ArrayList<Habilidade>();
 		List<Habilidade> habComuns = new ArrayList<Habilidade>();
 		
-		List<Integer> valorHabilidadesEspecificas = new ArrayList<Integer>();
-		List<Integer> valorHabilidadesEspecificasPot = new ArrayList<Integer>();
+		List<Double> valorHabilidadesEspecificas = new ArrayList<Double>();
+		List<Double> valorHabilidadesEspecificasPot = new ArrayList<Double>();
+		List<Double> valorHabilidadesEspecificasPotEfetiva = new ArrayList<Double>();
 		
 		sortearEletivas(habEspecificas, habComuns);
 		
 		Double ajusteForca = getAjusteForca(jogador.getIdade());
 		Double ajusteForcaProx = getAjusteForca(jogador.getIdade() + 1);
-		Integer potencialSorteado = null;
+		Double potencialSorteado = null;
 		Double forca = null;
 		Double passoProx = null;
 		Double forcaDecimal = null;
+		
+		Double variacao = null;//Remover essa variavel para Passo desenvolvimento REGULAR
 		
 		//Comuns
 		habComuns.addAll(getHabilidadesComum());
@@ -175,8 +232,10 @@ public abstract class JogadorFactory {
 			potencialSorteado = gerarValorHabilidadeComum(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx, forcaDecimal);
+			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, false, potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 		
 		//Especificas
@@ -185,24 +244,31 @@ public abstract class JogadorFactory {
 			potencialSorteado = gerarValorHabilidadeEspecifico(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
 			valorHabilidadesEspecificasPot.add(potencialSorteado);
-			valorHabilidadesEspecificas.add(forca.intValue());
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, true, passoProx, forcaDecimal);
+			valorHabilidadesEspecificas.add(forca);
+			valorHabilidadesEspecificasPotEfetiva.add(potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR);
+			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, true, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, true, potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 		jogador.setForcaGeral(
-				(new Double(valorHabilidadesEspecificas.stream().mapToInt(v -> v).average().getAsDouble())).intValue());
+				(new Double(valorHabilidadesEspecificas.stream().mapToDouble(v -> v).average().getAsDouble())).intValue());
 		jogador.setForcaGeralPotencial(
-				(new Double(valorHabilidadesEspecificasPot.stream().mapToInt(v -> v).average().getAsDouble()))
+				(new Double(valorHabilidadesEspecificasPot.stream().mapToDouble(v -> v).average().getAsDouble()))
 						.intValue());
+		jogador.setForcaGeralPotencialEfetiva(
+				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
 		
 		//Outros
 		for (Habilidade h : getHabilidadesOutros()) {
 			potencialSorteado = gerarValorHabilidadeOutros(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx, forcaDecimal);
+			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, false, potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 	}
 	

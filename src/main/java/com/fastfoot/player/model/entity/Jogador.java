@@ -3,6 +3,7 @@ package com.fastfoot.player.model.entity;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.persistence.Entity;
@@ -46,6 +47,8 @@ public class Jogador {
 	private Integer forcaGeral;
 	
 	private Integer forcaGeralPotencial;
+	
+	private Double forcaGeralPotencialEfetiva;
 	
 	private Boolean aposentado;
 	
@@ -171,13 +174,38 @@ public class Jogador {
 		this.valorTransferencia = valorTransferencia;
 	}
 
+	public Double getForcaGeralPotencialEfetiva() {
+		return forcaGeralPotencialEfetiva;
+	}
+
+	public void setForcaGeralPotencialEfetiva(Double forcaGeralPotencialEfetiva) {
+		this.forcaGeralPotencialEfetiva = forcaGeralPotencialEfetiva;
+	}
+
 	@Override
 	public String toString() {
 		return "Jogador [posicao=" + posicao + ", numero=" + numero + "]";
 	}
 	
-	//###	METODOS AUXILIARES	###
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Jogador other = (Jogador) obj;
+		return Objects.equals(id, other.id);
+	}
 	
+	//###	METODOS AUXILIARES	###
+
 	public void addHabilidade(HabilidadeValor habilidadeValor) {
 		if (getHabilidades() == null) {
 			setHabilidades(new ArrayList<HabilidadeValor>());

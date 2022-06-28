@@ -14,6 +14,7 @@ import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
+import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_habilidade_valor") })
@@ -27,6 +28,10 @@ public class HabilidadeValorEstatistica {
 	@ManyToOne
 	@JoinColumn(name = "id_habilidade_valor")
 	private HabilidadeValor habilidadeValor;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_semana")
+	private Semana semana;
 
 	private Integer quantidadeUso;
 	
@@ -59,10 +64,11 @@ public class HabilidadeValorEstatistica {
 		this.habilidadeValor = habilidadeValor;
 	}
 	
-	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, PartidaResultadoJogavel partidaResultado) {
+	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, PartidaResultadoJogavel partidaResultado) {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
+		this.semana = semana;
 		
 		if (partidaResultado instanceof PartidaResultado) {
 			setPartidaResultado((PartidaResultado) partidaResultado);
@@ -135,5 +141,13 @@ public class HabilidadeValorEstatistica {
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
+	}
+
+	public Semana getSemana() {
+		return semana;
+	}
+
+	public void setSemana(Semana semana) {
+		this.semana = semana;
 	}
 }
