@@ -29,4 +29,22 @@ public interface HabilidadeValorEstatisticaRepository extends JpaRepository<Habi
 			+ " WHERE s.id_temporada = ?1 " + " GROUP BY id_habilidade_valor ")
 	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada);
 	
+	@Query(nativeQuery = true, value = " SELECT "
+			+ " 	percentile_disc(0.25) within group (order by quantidade_uso) as qu_q3, "
+			+ " 	percentile_disc(0.5) within group (order by quantidade_uso) as qu_q2, "
+			+ " 	percentile_disc(0.75) within group (order by quantidade_uso) as qu_q1, "
+			+ " 	percentile_disc(0.25) within group (order by quantidade_uso_vencedor) as quv_q3, "
+			+ " 	percentile_disc(0.5) within group (order by quantidade_uso_vencedor) as quv_q2, "
+			+ " 	percentile_disc(0.75) within group (order by quantidade_uso_vencedor) as quv_q1, " 
+			//
+			+ " 	percentile_disc(0.25) within group (order by porc_acerto) as pa_q3, "
+			+ " 	percentile_disc(0.5) within group (order by porc_acerto) as pa_q2, "
+			+ " 	percentile_disc(0.75) within group (order by porc_acerto) as pa_q1 "
+			//
+			+ " FROM ( "
+			+ " 	SELECT hve.id_habilidade_valor, "
+			+ " 		SUM(hve.quantidade_uso) AS quantidade_uso, SUM(hve.quantidade_uso_vencedor) AS quantidade_uso_vencedor "
+			+ " 	FROM habilidade_valor_estatistica hve " + " 	INNER JOIN semana s ON hve.id_semana = s.id "
+			+ " 	WHERE s.id_temporada = ?1 " + " 	GROUP BY id_habilidade_valor " + " ) tmp ")
+	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada);
 }

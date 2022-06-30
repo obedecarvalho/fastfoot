@@ -20,6 +20,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
+import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -94,8 +95,8 @@ public class SemanaService {
 	/*@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;*/
 
-	/*@Autowired
-	private JogadorRepository jogadorRepository;*/
+	@Autowired
+	private JogadorRepository jogadorRepository;
 
 	@Autowired
 	private ClubeRepository clubeRepository;
@@ -192,6 +193,7 @@ public class SemanaService {
 		//desenvolverJogadores(semana);
 		if (semana.getNumero() % 5 == 0) {
 			habilidadeValorRepository.desenvolverTodasHabilidades();
+			jogadorRepository.calcularForcaGeral();
 		}
 
 		stopWatch2.stop();

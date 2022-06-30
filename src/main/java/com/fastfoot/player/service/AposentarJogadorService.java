@@ -81,7 +81,7 @@ public class AposentarJogadorService {
 	
 	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero, CelulaDesenvolvimento celulaDesenvolvimento) {
 
-		Jogador novoJogador = JogadorFactory.gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
+		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
 		
 		GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador = new GrupoDesenvolvimentoJogador(celulaDesenvolvimento, novoJogador, true);
 

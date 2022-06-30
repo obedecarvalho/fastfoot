@@ -31,9 +31,6 @@ public class CriarJogadoresClubeService {
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 
-	/*@Autowired
-	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;*/
-
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
@@ -65,100 +62,100 @@ public class CriarJogadoresClubeService {
 		
 		//Goleiro
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 1);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 1);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 12);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 12);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.GOLEIRO, 23);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 23);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		//Zagueiro
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 3);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 3);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 4);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 4);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 13);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 13);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ZAGUEIRO, 14);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 14);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Lateral
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 2);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 2);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 6);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 6);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 22);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 22);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.LATERAL, 16);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 16);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Volante
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 5);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 5);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 8);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 8);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 15);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 15);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.VOLANTE, 18);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 18);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Meia
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 7);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 7);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 10);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 10);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 17);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 17);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.MEIA, 20);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 20);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 9);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 9);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 11);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 11);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 19);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 19);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		j = JogadorFactory.gerarJogador(clube, Posicao.ATACANTE, 21);
+		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 21);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
@@ -176,54 +173,8 @@ public class CriarJogadoresClubeService {
 		for (Jogador jog : jogadores) {
 			habilidadeValorRepository.saveAll(jog.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
 		}
-		
-		/*List <EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);
-		
-		escalacaoJogadorPosicaoRepository.saveAll(escalacao);*/
-		
+
 		return CompletableFuture.completedFuture(true);
 	}
-	
-	/*private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
-		
-		Comparator<Jogador> comparator = new Comparator<Jogador>() {
 
-			@Override
-			public int compare(Jogador o1, Jogador o2) {
-				//return o1.getForcaGeral().compareTo(o2.getForcaGeral());
-				return o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
-			}
-		};
-		
-		List <EscalacaoJogadorPosicao> escalacao = new ArrayList<EscalacaoJogadorPosicao>();
-		
-		List<Jogador> jogPos = null;
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0)));
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1)));
-		
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1)));
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1)));
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1)));
-		
-		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1)));
-		
-		return escalacao;
-	}*/
 }

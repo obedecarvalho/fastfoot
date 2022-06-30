@@ -23,6 +23,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
@@ -110,6 +111,9 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private AtualizarPassoDesenvolvimentoJogadorService atualizarPassoDesenvolvimentoJogadorService;
+	
+	@Autowired
+	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -129,6 +133,10 @@ public class CriarCalendarioTemporadaService {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 			
+			//
+			agruparHabilidadeValorEstatisticaService.agrupar(temporada);
+			//
+			
 			temporada.setAtual(false);
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
@@ -147,6 +155,7 @@ public class CriarCalendarioTemporadaService {
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
 			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
+
 		} else {
 
 			preCarregarParametrosService.preCarregarParametros();

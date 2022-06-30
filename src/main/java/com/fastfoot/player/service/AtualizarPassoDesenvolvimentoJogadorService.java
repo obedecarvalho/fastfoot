@@ -2,18 +2,25 @@ package com.fastfoot.player.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
 import com.fastfoot.player.model.entity.HabilidadeValor;
+import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
 @Service
 public class AtualizarPassoDesenvolvimentoJogadorService {
@@ -23,8 +30,17 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
+
+	@Autowired
+	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
+
+	@Autowired
+	private TemporadaRepository temporadaRepository;
 	
-	private static final Random R = new Random();
+	@Autowired
+	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
+
+	//private static final Random R = new Random();
 	
 	/*@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
@@ -47,10 +63,26 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
+		//
+		Temporada temporada = null;
+		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();
+
+		//agruparHabilidadeValorEstatisticaService.agrupar(temporada);
+
+		HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
+		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
+				.findByTemporada(temporada);
+		
+		Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
+				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));
+		
+		//
+		
 		for (Jogador j : jogadores) {
 			j.setIdade(j.getIdade() + 1);
 			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
-				ajustarPassoDesenvolvimento(j);
+				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
+				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
 			}
 		}
 		
@@ -84,7 +116,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		}
 	}*/
 
-	private void ajustarPassoDesenvolvimento(Jogador j) {
+	/*private void ajustarPassoDesenvolvimento(Jogador j) {
 
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
 		Double passoProx = null;
@@ -105,10 +137,10 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		
 		j.setForcaGeralPotencialEfetiva(
 				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
-	}
+	}*/
 	
-	private Double gerarVariacaoPassoDesenvolvimento(Double passo, Integer idade) {
+	/*private Double gerarVariacaoPassoDesenvolvimento(Double passo, Integer idade) {
 		Double stdev = JogadorFactory.getPercVariacaoPassoDesenvolvimento(idade) * passo;
 		return R.nextGaussian() * stdev;
-	}
+	}*/
 }

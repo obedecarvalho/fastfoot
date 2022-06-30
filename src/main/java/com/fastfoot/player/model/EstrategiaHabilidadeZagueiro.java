@@ -1,15 +1,9 @@
-package com.fastfoot.player.model.factory;
+package com.fastfoot.player.model;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.Posicao;
-import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.service.util.NomeUtil;
-
-public class JogadorZagueiroFactory extends JogadorFactory {
+public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicaoJogador {
 
 	protected static final List<Habilidade> HABILIDADES_ESPECIFICAS;
 	
@@ -75,54 +69,17 @@ public class JogadorZagueiroFactory extends JogadorFactory {
 		return NUM_HAB_ESP_ELETIVAS;
 	}
 	
-	private static JogadorZagueiroFactory INSTANCE;
+	private static EstrategiaHabilidadeZagueiro INSTANCE;
 	
-	protected JogadorZagueiroFactory() {
+	protected EstrategiaHabilidadeZagueiro() {
 
 	}
 	
-	public static JogadorZagueiroFactory getInstance() {
+	public static EstrategiaHabilidadeZagueiro getInstance() {
 		if (INSTANCE == null) {
-			INSTANCE = new JogadorZagueiroFactory();
+			INSTANCE = new EstrategiaHabilidadeZagueiro();
 		}
 		return INSTANCE;
-	}
-	
-	/*@Override
-	public Jogador gerarJogador(Clube clube, Integer numero) {
-		return gerarJogador(clube, numero, null);
-	}*/
-
-	@Override
-	public Jogador gerarJogador(Clube clube, Integer numero, Boolean titular) {
-		Jogador jogador = new Jogador();
-
-		jogador.setNumero(numero);
-		jogador.setNome(NomeUtil.sortearNome());
-		jogador.setClube(clube);
-		jogador.setPosicao(Posicao.ZAGUEIRO);
-		jogador.setIdade(sortearIdade(titular));
-		jogador.setAposentado(false);
-
-		sortearHabilidadeValor(jogador, clube.getForcaGeral());
-		
-		return jogador;
-	}
-	
-	@Override
-	public Jogador gerarJogador(Clube clube, Integer numero, Integer idade) {
-		Jogador jogador = new Jogador();
-
-		jogador.setNumero(numero);
-		jogador.setNome(NomeUtil.sortearNome());
-		jogador.setClube(clube);
-		jogador.setPosicao(Posicao.ZAGUEIRO);
-		jogador.setIdade(idade);
-		jogador.setAposentado(false);
-
-		sortearHabilidadeValor(jogador, clube.getForcaGeral());
-		
-		return jogador;
 	}
 
 }
