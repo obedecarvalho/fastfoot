@@ -101,16 +101,19 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 
 
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
+		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
 		Double passoProx = null, passo = null, peso = null;
 		
 		Double variacao = null;
 		List<Double> valorHabilidadesEspecificasPotEfetiva = new ArrayList<Double>();
 		
 		for (HabilidadeValor hv : j.getHabilidades()) {
-			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			//passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - (hv.getPotencialDesenvolvimentoEfetivo() * ajusteForca)) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
 			//
 			peso = getPesoHabilidadeValor(habilidadeEstatisticaPercentil, estatisticaGrupoMap.get(hv));
-			passo = getPercDesenvolvimentoFixo(j.getIdade()) * passoProx + getPercDesenvolvimentoEstatisticas(j.getIdade()) * passoProx * peso;
+			//passo = getPercDesenvolvimentoFixo(j.getIdade()) * passoProx + getPercDesenvolvimentoEstatisticas(j.getIdade()) * passoProx * peso;
+			passo = passoProx + passoProx * peso * 0.1;
 			variacao = passo - passoProx;
 			//
 			hv.setPassoDesenvolvimento(passo);
@@ -126,10 +129,10 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
 	}
 	
-	private static final Double PESO_Q1 = 1.0;
-	private static final Double PESO_Q2 = 0.8;
-	private static final Double PESO_Q3 = 0.6;
-	private static final Double PESO_Q4 = 0.4;
+	private static final Double PESO_Q1 = 1.00;
+	private static final Double PESO_Q2 = 0.67;
+	private static final Double PESO_Q3 = 0.33;
+	private static final Double PESO_Q4 = 0.00;
 	
 	private Double getPesoHabilidadeValor(HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil,
 			HabilidadeValorEstatisticaGrupo habilidadeValorEstatisticaGrupo) {
