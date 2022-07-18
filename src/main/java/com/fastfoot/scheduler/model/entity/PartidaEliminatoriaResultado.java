@@ -203,16 +203,16 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	@Override
 	public Clube getClubeVencedor() {
-		if (golsMandante >= golsVisitante) return clubeMandante;
-		if (golsVisitante > golsMandante) return clubeVisitante;
+		if (partidaJogada && golsMandante >= golsVisitante) return clubeMandante;
+		if (partidaJogada && golsVisitante > golsMandante) return clubeVisitante;
 		//TODO: penalts
 		return null;
 	}
 
 	@Override
 	public Clube getClubePerdedor() {
-		if (golsMandante < golsVisitante) return clubeMandante;
-		if (golsVisitante <= golsMandante) return clubeVisitante;
+		if (partidaJogada && golsMandante < golsVisitante) return clubeMandante;
+		if (partidaJogada && golsVisitante <= golsMandante) return clubeVisitante;
 		//TODO: penalts
 		return null;
 	}

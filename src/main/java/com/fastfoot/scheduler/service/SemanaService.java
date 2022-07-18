@@ -179,6 +179,9 @@ public class SemanaService {
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
 			calcularProbabilidades(semana, temporada);
 		}
+		if (semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17) {
+			calcularProbabilidades(semana, temporada);
+		}
 
 		
 		//gerar ClubeRanking

@@ -181,17 +181,17 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	
 	@Override
 	public Clube getClubeVencedor() {
-		if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
-		if (golsMandante > golsVisitante) return clubeMandante;
-		if (golsVisitante > golsMandante) return clubeVisitante;
+		//if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
+		if (partidaJogada && golsMandante > golsVisitante) return clubeMandante;
+		if (partidaJogada && golsVisitante > golsMandante) return clubeVisitante;
 		return null;//Empate
 	}
 
 	@Override
 	public Clube getClubePerdedor() {
-		if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
-		if (golsMandante < golsVisitante) return clubeMandante;
-		if (golsVisitante < golsMandante) return clubeVisitante;
+		//if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
+		if (partidaJogada && golsMandante < golsVisitante) return clubeMandante;
+		if (partidaJogada && golsVisitante < golsMandante) return clubeVisitante;
 		return null;//Empate
 	}
 

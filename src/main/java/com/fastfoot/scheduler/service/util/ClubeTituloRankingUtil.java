@@ -11,12 +11,12 @@ import com.fastfoot.scheduler.model.entity.ClubeRanking;
 
 public class ClubeTituloRankingUtil {
 	
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 30;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 40;
 	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 20;
 	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_III = 10;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 20;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 7;
-	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 25;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 24;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 6;
+	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 32;
 	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 8;
 
 	/*

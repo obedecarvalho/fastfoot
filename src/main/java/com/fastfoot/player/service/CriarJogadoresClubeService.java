@@ -143,6 +143,7 @@ public class CriarJogadoresClubeService {
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
+		//Atacante
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 9);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);

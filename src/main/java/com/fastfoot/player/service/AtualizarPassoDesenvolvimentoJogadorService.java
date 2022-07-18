@@ -81,8 +81,8 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		for (Jogador j : jogadores) {
 			j.setIdade(j.getIdade() + 1);
 			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
-				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
-				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
+				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
+				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
 			}
 		}
 		

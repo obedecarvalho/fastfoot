@@ -99,6 +99,13 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	public void ajustarPassoDesenvolvimento(Jogador j, HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil,
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticaGrupoMap) {
 
+		/*
+		 * TODO:
+		 * Limitar desenvolvimento para não passar do MAXIMO (100)
+		 * Ajustar o desen adicional (0.1) para valores especificos por idade
+		 *
+		 */
+
 
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
 		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
@@ -113,7 +120,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			//
 			peso = getPesoHabilidadeValor(habilidadeEstatisticaPercentil, estatisticaGrupoMap.get(hv));
 			//passo = getPercDesenvolvimentoFixo(j.getIdade()) * passoProx + getPercDesenvolvimentoEstatisticas(j.getIdade()) * passoProx * peso;
-			passo = passoProx + passoProx * peso * 0.1;
+			passo = passoProx + passoProx * peso * getPercDesenvolvimentoMaximo(j.getIdade());
 			variacao = passo - passoProx;
 			//
 			hv.setPassoDesenvolvimento(passo);
@@ -188,11 +195,31 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		return pesoUso * pesoPorcAcerto;
 	}
 	
-	private Double getPercDesenvolvimentoFixo(Integer idade) {
-		return getPercDesenvolvimentoMaximo(idade) - getPercDesenvolvimentoEstatisticas(idade);
+	private Double getPercDesenvolvimentoMaximo(Integer idade) {
+		Double x = 0.00d;
+		
+		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
+			x = 0.15d;
+		} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
+			x = 0.10d;
+		} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
+			x = 0.05d;
+		//} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
+		//	x = 1.00d;
+		//} else if (idade >= FASE_5_IDADE_MIN && idade <= FASE_5_IDADE_MAX) {
+		//	x = 1.00d;
+		//} else if (IDADE_MAX == idade) {
+		//	x = 1.00d;
+		}
+
+		return x;
 	}
 	
-	private Double getPercDesenvolvimentoMaximo(Integer idade) {
+	/*private Double getPercDesenvolvimentoFixo(Integer idade) {
+		return getPercDesenvolvimentoMaximo(idade, true) - getPercDesenvolvimentoEstatisticas(idade);
+	}
+
+	private Double getPercDesenvolvimentoMaximo(Integer idade, boolean old) {
 		Double x = 1.00d;
 		
 		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
@@ -210,9 +237,9 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		}
 
 		return x;
-	}
+	}*/
 	
-	private Double getPercDesenvolvimentoEstatisticas(Integer idade) {
+	/*private Double getPercDesenvolvimentoEstatisticas(Integer idade) {
 		Double x = 0.00d;
 		
 		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
@@ -230,5 +257,5 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		}
 
 		return x;
-	}
+	}*/
 }

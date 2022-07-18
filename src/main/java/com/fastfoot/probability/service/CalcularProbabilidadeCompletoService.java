@@ -47,6 +47,12 @@ import com.fastfoot.service.ParametroService;
 @Service
 public class CalcularProbabilidadeCompletoService {
 	
+	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
+	
+	private static final Integer NUM_SIMULACOES_SEM_19 = 10000;
+	
+	private static final Integer NUM_SIMULACOES_SEM_21 = 10000;
+	
 	private static final Integer NUM_SIMULACOES_SEM_22 = 10000;
 	
 	private static final Integer NUM_SIMULACOES_SEM_23 = 10000;
@@ -230,54 +236,51 @@ public class CalcularProbabilidadeCompletoService {
 				//cp.setQtdeAcesso(probabilidadeAcesso);
 			}
 			
-			//CI
-			Integer probabilidadeClassificacaoCI = 0;
-			for (int i = getPosicoesClassificamCIMin(); i <= getPosicoesClassificamCIMax(); i++ ) {
-				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-				if (crpp != null) {
-					probabilidadeClassificacaoCI += crpp.getProbabilidade();
+			if (semana.getNumero() >= 22) {
+				//CI
+				Integer probabilidadeClassificacaoCI = 0;
+				for (int i = getPosicoesClassificamCIMin(); i <= getPosicoesClassificamCIMax(); i++ ) {
+					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+					if (crpp != null) {
+						probabilidadeClassificacaoCI += crpp.getProbabilidade();
+					}
 				}
-			}
-			//cp.setQtdeClassificacaoCI(probabilidadeClassificacaoCI);
-			cp.setProbabilidadeClassificacaoCI(probabilidadeClassificacaoCI.doubleValue()/getNumeroSimulacoes(semana));
-
-			//CII
-			Integer probabilidadeClassificacaoCII = 0;
-			for (int i = getPosicoesClassificamCIIMin(); i <= getPosicoesClassificamCIIMax(); i++ ) {
-				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-				if (crpp != null) {
-					probabilidadeClassificacaoCII += crpp.getProbabilidade();
+				//cp.setQtdeClassificacaoCI(probabilidadeClassificacaoCI);
+				cp.setProbabilidadeClassificacaoCI(probabilidadeClassificacaoCI.doubleValue()/getNumeroSimulacoes(semana));
+	
+				//CII
+				Integer probabilidadeClassificacaoCII = 0;
+				for (int i = getPosicoesClassificamCIIMin(); i <= getPosicoesClassificamCIIMax(); i++ ) {
+					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+					if (crpp != null) {
+						probabilidadeClassificacaoCII += crpp.getProbabilidade();
+					}
 				}
-			}
-			//cp.setQtdeClassificacaoCII(probabilidadeClassificacaoCII);
-			cp.setProbabilidadeClassificacaoCII(probabilidadeClassificacaoCII.doubleValue()/getNumeroSimulacoes(semana));
-
-			//CIII
-			Integer probabilidadeClassificacaoCIII = 0;
-			for (int i = getPosicoesClassificamCIIIMin(); i <= getPosicoesClassificamCIIIMax(); i++ ) {
-				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-				if (crpp != null) {
-					probabilidadeClassificacaoCIII += crpp.getProbabilidade();
+				//cp.setQtdeClassificacaoCII(probabilidadeClassificacaoCII);
+				cp.setProbabilidadeClassificacaoCII(probabilidadeClassificacaoCII.doubleValue()/getNumeroSimulacoes(semana));
+	
+				//CIII
+				Integer probabilidadeClassificacaoCIII = 0;
+				for (int i = getPosicoesClassificamCIIIMin(); i <= getPosicoesClassificamCIIIMax(); i++ ) {
+					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+					if (crpp != null) {
+						probabilidadeClassificacaoCIII += crpp.getProbabilidade();
+					}
 				}
-			}
-			//cp.setQtdeClassificacaoCIII(probabilidadeClassificacaoCIII);
-			cp.setProbabilidadeClassificacaoCIII(probabilidadeClassificacaoCIII.doubleValue()/getNumeroSimulacoes(semana));
-
-			//CNI
-			/*
-			 * Quando a COPA NACIONAL tem 4 rodadas as estatísticas de classificação para CNI apresentam distorções
-			 * devido aos campeões (CI, CII, CIII, CNI e CNII) poderem estar ou não na zona de rebaixamento (14, 15, 16).
-			 *  
-			 */
-			Integer probabilidadeClassificacaoCNI = 0;
-			for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(); i++ ) {
-				crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
-				if (crpp != null) {
-					probabilidadeClassificacaoCNI += crpp.getProbabilidade();
+				//cp.setQtdeClassificacaoCIII(probabilidadeClassificacaoCIII);
+				cp.setProbabilidadeClassificacaoCIII(probabilidadeClassificacaoCIII.doubleValue()/getNumeroSimulacoes(semana));
+	
+				//CNI
+				Integer probabilidadeClassificacaoCNI = 0;
+				for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(); i++ ) {
+					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
+					if (crpp != null) {
+						probabilidadeClassificacaoCNI += crpp.getProbabilidade();
+					}
 				}
+				//cp.setQtdeClassificacaoCNI(probabilidadeClassificacaoCNI);
+				cp.setProbabilidadeClassificacaoCNI(probabilidadeClassificacaoCNI.doubleValue()/getNumeroSimulacoes(semana));
 			}
-			//cp.setQtdeClassificacaoCNI(probabilidadeClassificacaoCNI);
-			cp.setProbabilidadeClassificacaoCNI(probabilidadeClassificacaoCNI.doubleValue()/getNumeroSimulacoes(semana));
 
 		}
 
@@ -415,6 +418,12 @@ public class CalcularProbabilidadeCompletoService {
 	private Integer getNumeroSimulacoes(Semana semana) {
 		//return 100;
 
+		if (semana.getNumero() == 17)
+			return NUM_SIMULACOES_SEM_17;
+		if (semana.getNumero() == 19)
+			return NUM_SIMULACOES_SEM_19;
+		if (semana.getNumero() == 21)
+			return NUM_SIMULACOES_SEM_21;
 		if (semana.getNumero() == 22)
 			return NUM_SIMULACOES_SEM_22;
 		if (semana.getNumero() == 23)
