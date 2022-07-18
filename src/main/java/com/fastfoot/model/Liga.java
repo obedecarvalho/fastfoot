@@ -10,10 +10,10 @@ public enum Liga {
 	SPAPOR,
 	ITAFRA,
 	ENGLND,
-	/*BRASIL*/
+	BRASIL
 	;
 
 	public static List<Liga> getAll() {
-		return Arrays.asList(Liga.GENEBE, Liga.SPAPOR, Liga.ITAFRA, Liga.ENGLND);
+		return Arrays.asList(Liga.GENEBE, Liga.SPAPOR, Liga.ITAFRA, Liga.ENGLND, Liga.BRASIL);
 	}
 }

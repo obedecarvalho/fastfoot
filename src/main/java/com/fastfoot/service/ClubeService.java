@@ -1,7 +1,9 @@
 package com.fastfoot.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -111,6 +113,68 @@ public class ClubeService {
 
 		return clubeTituloAnosList;
 	}
+	
+	public Map<ClassificacaoContinentalFinal, Clube> getCampeoesContinentaisPorTemporada(Temporada t) {
+		Map<ClassificacaoContinentalFinal, Clube> campeoesContinentais = new HashMap<ClassificacaoContinentalFinal, Clube>();
+
+		campeoesContinentais.put(ClassificacaoContinentalFinal.C_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByTemporadaAndClassificacaoContinental(t, ClassificacaoContinentalFinal.C_CAMPEAO)
+						.get().getClube());
+		campeoesContinentais.put(ClassificacaoContinentalFinal.CII_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByTemporadaAndClassificacaoContinental(t, ClassificacaoContinentalFinal.CII_CAMPEAO)
+						.get().getClube());
+		campeoesContinentais.put(ClassificacaoContinentalFinal.CIII_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByTemporadaAndClassificacaoContinental(t, ClassificacaoContinentalFinal.CIII_CAMPEAO)
+						.get().getClube());
+
+		return campeoesContinentais;
+	}
+	
+	public Map<ClassificacaoContinentalFinal, Clube> getCampeoesContinentaisPorAno(Integer ano) {
+		Map<ClassificacaoContinentalFinal, Clube> campeoesContinentais = new HashMap<ClassificacaoContinentalFinal, Clube>();
+
+		campeoesContinentais.put(ClassificacaoContinentalFinal.C_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByAnoAndClassificacaoContinental(ano, ClassificacaoContinentalFinal.C_CAMPEAO)
+						.get().getClube());
+		campeoesContinentais.put(ClassificacaoContinentalFinal.CII_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByAnoAndClassificacaoContinental(ano, ClassificacaoContinentalFinal.CII_CAMPEAO)
+						.get().getClube());
+		campeoesContinentais.put(ClassificacaoContinentalFinal.CIII_CAMPEAO,
+				clubeRankingRepository
+						.findFirstByAnoAndClassificacaoContinental(ano, ClassificacaoContinentalFinal.CIII_CAMPEAO)
+						.get().getClube());
+
+		return campeoesContinentais;
+	}
+	
+	/*public Map<ClassificacaoContinentalFinal, Clube> getCampeoesContinentaisPorTemporada(Temporada t) {
+		Map<ClassificacaoContinentalFinal, Clube> campeoesContinentais = new HashMap<ClassificacaoContinentalFinal, Clube>();
+		
+		//Campeoes
+		List<CampeonatoMisto> continentais = campeonatoMistoRepository.findByTemporada(t);
+		
+		RodadaEliminatoria r = null;
+		List<PartidaEliminatoriaResultado> p = null;
+
+		for (CampeonatoMisto c : continentais) {
+			r = rodadaEliminatoriaRepository.findFirstByCampeonatoMistoAndNumero(c, 6).get();
+			p = partidaEliminatoriaResultadoRepository.findByRodada(r);
+			if (c.getNivelCampeonato().isContinental()) {
+				campeoesContinentais.put(ClassificacaoContinentalFinal.C_CAMPEAO, p.get(0).getClubeVencedor());
+			} else if (c.getNivelCampeonato().isContinentalII()) {
+				campeoesContinentais.put(ClassificacaoContinentalFinal.CII_CAMPEAO, p.get(0).getClubeVencedor());
+			} else if (c.getNivelCampeonato().isContinentalIII()) {
+				campeoesContinentais.put(ClassificacaoContinentalFinal.CIII_CAMPEAO, p.get(0).getClubeVencedor());
+			}
+		}
+
+		return campeoesContinentais;
+	}*/
 
 	private List<ClubeTituloAnoDTO> getCampeoesContinentais(Temporada t) {
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();

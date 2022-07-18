@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.model.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.model.Liga;
+import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -24,4 +28,14 @@ public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Inte
 
 	@Query("SELECT DISTINCT cr.ano FROM ClubeRanking cr ORDER BY cr.ano DESC ")
 	public List<Integer> findAnosClubeRanking();
+	
+	public List<ClubeRanking> findByTemporadaAndClassificacaoContinental(Temporada temporada, ClassificacaoContinentalFinal classificacaoContinental);
+	
+	public List<ClubeRanking> findByTemporadaAndClassificacaoCopaNacional(Temporada temporada, ClassificacaoCopaNacionalFinal classificacaoCopaNacional);
+	
+	public List<ClubeRanking> findByTemporadaAndClassificacaoNacional(Temporada temporada, ClassificacaoNacionalFinal classificacaoNacional);
+	
+	public Optional<ClubeRanking> findFirstByTemporadaAndClassificacaoContinental(Temporada temporada, ClassificacaoContinentalFinal classificacaoContinental);
+	
+	public Optional<ClubeRanking> findFirstByAnoAndClassificacaoContinental(Integer ano, ClassificacaoContinentalFinal classificacaoContinental);
 }

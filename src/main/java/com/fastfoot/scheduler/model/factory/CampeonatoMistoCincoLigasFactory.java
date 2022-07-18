@@ -1,9 +1,10 @@
 package com.fastfoot.scheduler.model.factory;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Queue;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
@@ -18,16 +19,16 @@ import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 
-public class CampeonatoMistoFactory {
-
+public class CampeonatoMistoCincoLigasFactory {
+	
 	public static CampeonatoMisto criarCampeonato(Temporada temporada, Map<Liga, List<Clube>> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoMisto campeonato = new CampeonatoMisto();
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		
-		List<GrupoCampeonato> grupos = CampeonatoMistoFactory.gerarRodadasGrupo(clubes, campeonato);
-		List<RodadaEliminatoria> eliminatorias = CampeonatoMistoFactory.gerarRodadas(campeonato);
+		List<GrupoCampeonato> grupos = gerarRodadasGrupo(clubes, campeonato);
+		List<RodadaEliminatoria> eliminatorias = gerarRodadas(campeonato);
 		
 		campeonato.setGrupos(grupos);
 		campeonato.setRodadasEliminatorias(eliminatorias);
@@ -38,23 +39,49 @@ public class CampeonatoMistoFactory {
 	}
 
 	private static List<GrupoCampeonato> gerarRodadasGrupo(Map<Liga, List<Clube>> clubes, CampeonatoMisto campeonato) {
-		Set<Liga> ligas = clubes.keySet();
+		List<Liga> ligas = new ArrayList<Liga>(clubes.keySet());
 		
 		List<Clube> clubesGrupo = new ArrayList<Clube>();
 		List<GrupoCampeonato> grupoCampeonatos = new ArrayList<GrupoCampeonato>();
 		GrupoCampeonato grupoCampeonato = null;
+		List<Clube> clubesLiga = null;
 		
-		//int nroGruposCont = Constantes.NRO_GRUPOS_CONT;
-		int nroGruposCont = clubes.get(ligas.toArray()[0]).size();
+		int nroGruposCont = Constantes.NRO_GRUPOS_CONT;
+		//int nroGruposCont = clubes.get(ligas.toArray()[0]).size();
+		
+		Queue<Clube> clubeQ = new LinkedList<Clube>(clubes.get(ligas.get(Constantes.NRO_CLUBES_GRUPOS)));
 
 		for (int i = 0; i < nroGruposCont; i++) {
 			
-			int j = 0, pos = 0;
+			/*int j = 0, pos = 0;
 			for (Liga l : ligas) {
 				pos = (i + j) % nroGruposCont;
 				clubesGrupo.add(clubes.get(l).get(pos));
 				j++;
+			}*/
+
+			//
+			int pos = 0;
+			for (int j = 0; j < Constantes.NRO_CLUBES_GRUPOS; j++) {
+				Liga l = ligas.get(j);
+
+				clubesLiga = clubes.get(l);
+				
+				pos = (i + j) % nroGruposCont;
+				
+				if (pos < (Constantes.NRO_CLUBES_GRUPOS - 1)) {
+					clubesGrupo.add(clubesLiga.get(pos));
+				} else if (pos == (Constantes.NRO_CLUBES_GRUPOS - 1)) {
+					if (clubesLiga.size() == Constantes.NRO_CLUBES_GRUPOS) {
+						clubesGrupo.add(clubesLiga.get(pos));
+					} else {
+						/*clubesLiga = clubes.get(ligas.get(Constantes.NRO_CLUBES_GRUPOS));
+						clubesGrupo.add(clubesLiga.get(i));*/
+						clubesGrupo.add(clubeQ.poll());
+					}
+				}
 			}
+			//
 			
 			grupoCampeonato = new GrupoCampeonato();
 			grupoCampeonato.setCampeonato(campeonato);

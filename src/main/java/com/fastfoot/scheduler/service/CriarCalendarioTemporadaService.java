@@ -114,6 +114,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
+	
+	@Autowired
+	private CriarCampeonatosCincoLigas criarCampeonatosCincoLigas;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -215,7 +218,7 @@ public class CriarCalendarioTemporadaService {
 		List<RodadaAmistosa> rodadaAmistosaAutomaticas = new ArrayList<RodadaAmistosa>();
 
 		inicio = stopWatch.getSplitNanoTime();
-		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
+		criarCampeonatosCincoLigas.criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#criarCampeonatos:" + (fim - inicio));
