@@ -39,8 +39,10 @@ import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplDezesseisClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaEDoisClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEDoisClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEOitoClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEQuatroClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoFactory;
@@ -339,6 +341,7 @@ public class CriarCalendarioTemporadaService {
 		
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
+		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
 
@@ -348,13 +351,21 @@ public class CriarCalendarioTemporadaService {
 			if (nroCompeticoesContinentais == 2) {
 				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubes();
 			} else if (nroCompeticoesContinentais == 3) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
+				if (cIIIReduzido) {
+					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaClubes();
+				} else {
+					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
+				}
 			}
 		} else if (numRodadas == 5) {
 			if (nroCompeticoesContinentais == 2) {
 				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEQuatroClubes();
 			} else if (nroCompeticoesContinentais == 3) {
-				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteClubes();
+				if (cIIIReduzido) {
+					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEDoisClubes();
+				} else {
+					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteClubes();
+				}
 			}
 		}
 

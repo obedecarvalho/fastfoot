@@ -442,18 +442,27 @@ public class SemanaService {
 	private PromotorEliminatoria getPromotorEliminatoria() {
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
+		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		
 		PromotorEliminatoria promotorEliminatoria = null;
 		
 		if (numRodadas == 6) {
 			if (nroCompeticoesContinentais == 3) {
-				promotorEliminatoria = new PromotorEliminatoriaImplVinteEOitoClubes();
+				if (cIIIReduzido) {
+					promotorEliminatoria = new PromotorEliminatoriaImplTrintaClubes();
+				} else {
+					promotorEliminatoria = new PromotorEliminatoriaImplVinteEOitoClubes();
+				}
 			} else if (nroCompeticoesContinentais == 2) {
 				promotorEliminatoria = new PromotorEliminatoriaImplTrintaEDoisClubes();
 			}
 		} else if (numRodadas == 5) {
 			if (nroCompeticoesContinentais == 3) {
-				promotorEliminatoria = new PromotorEliminatoriaImplVinteClubes();
+				if (cIIIReduzido) {
+					promotorEliminatoria = new PromotorEliminatoriaImplVinteEDoisClubes();
+				} else {
+					promotorEliminatoria = new PromotorEliminatoriaImplVinteClubes();
+				}
 			} else if (nroCompeticoesContinentais == 2) {
 				promotorEliminatoria = new PromotorEliminatoriaImplVinteEQuatroClubes();
 			}
