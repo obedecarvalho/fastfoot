@@ -191,43 +191,41 @@ public class PreCarregarClubeService {
 			clubes.add(new Clube(430, Liga.ENGLND, FORCA_NIVEL_7, "Swansea City"));
 			clubes.add(new Clube(431, Liga.ENGLND, FORCA_NIVEL_7, "West Bromwich"));
 			clubes.add(new Clube(432, Liga.ENGLND, FORCA_NIVEL_7, "Blackpool"));
-			/*clubes.add(new Clube(129, Liga.ENGLND, 61, "Birmingham"));
-			clubes.add(new Clube(130, Liga.ENGLND, 61, "Cardiff"));
-			clubes.add(new Clube(131, Liga.ENGLND, 61, "Wigan"));
-			clubes.add(new Clube(132, Liga.ENGLND, 61, "Bolton Wanderers"));*/
-			
-			/*clubes.add(new Clube(501, Liga.BRASIL, 85, "Flamengo"));
-			clubes.add(new Clube(502, Liga.BRASIL, 85, "Atlético"));
-			clubes.add(new Clube(503, Liga.BRASIL, 82, "Palmeiras"));
-			clubes.add(new Clube(504, Liga.BRASIL, 82, "Athlético"));
-			clubes.add(new Clube(505, Liga.BRASIL, 82, "São Paulo"));
-			clubes.add(new Clube(506, Liga.BRASIL, 78, "Santos"));
-			clubes.add(new Clube(507, Liga.BRASIL, 78, "Fluminense"));
-			clubes.add(new Clube(508, Liga.BRASIL, 78, "Fortaleza"));
-			clubes.add(new Clube(509, Liga.BRASIL, 78, "Grêmio"));
-			clubes.add(new Clube(510, Liga.BRASIL, 75, "Corinthians"));
-			clubes.add(new Clube(511, Liga.BRASIL, 75, "Internacional"));
-			clubes.add(new Clube(512, Liga.BRASIL, 75, "Ceará"));
-			clubes.add(new Clube(513, Liga.BRASIL, 75, "América"));
-			clubes.add(new Clube(514, Liga.BRASIL, 75, "Bahia"));
-			clubes.add(new Clube(515, Liga.BRASIL, 71, "Atlético - GO"));
-			clubes.add(new Clube(516, Liga.BRASIL, 71, "Botafogo"));
-			clubes.add(new Clube(517, Liga.BRASIL, 71, "Red Bull Bragantino"));
-			clubes.add(new Clube(518, Liga.BRASIL, 71, "Goiás"));
-			clubes.add(new Clube(519, Liga.BRASIL, 71, "Cuiabá"));
-			clubes.add(new Clube(520, Liga.BRASIL, 71, "Cruzeiro"));
-			clubes.add(new Clube(521, Liga.BRASIL, 68, "Juventude"));
-			clubes.add(new Clube(522, Liga.BRASIL, 68, "Coritiba"));
-			clubes.add(new Clube(523, Liga.BRASIL, 68, "Vasco"));
-			clubes.add(new Clube(524, Liga.BRASIL, 68, "Chapecoense"));
-			clubes.add(new Clube(525, Liga.BRASIL, 68, "Avaí"));
-			clubes.add(new Clube(526, Liga.BRASIL, 68, "Sport"));
-			clubes.add(new Clube(527, Liga.BRASIL, 64, "CRB"));
-			clubes.add(new Clube(528, Liga.BRASIL, 64, "Vitória"));
-			clubes.add(new Clube(529, Liga.BRASIL, 64, "Vila Nova"));
-			clubes.add(new Clube(530, Liga.BRASIL, 64, "Ponte Preta"));
-			clubes.add(new Clube(531, Liga.BRASIL, 64, "Sampaio Corrêa"));
-			clubes.add(new Clube(532, Liga.BRASIL, 64, "ABC"));*/
+
+			/*
+			clubes.add(new Clube(501, Liga.BRASIL, FORCA_NIVEL_1, "Palmeiras"));
+			clubes.add(new Clube(502, Liga.BRASIL, FORCA_NIVEL_1, "Atlético"));
+			clubes.add(new Clube(503, Liga.BRASIL, FORCA_NIVEL_2, "Flamengo"));
+			clubes.add(new Clube(504, Liga.BRASIL, FORCA_NIVEL_2, "Athlético"));
+			clubes.add(new Clube(505, Liga.BRASIL, FORCA_NIVEL_2, "Corinthians"));
+			clubes.add(new Clube(506, Liga.BRASIL, FORCA_NIVEL_3, "Santos"));
+			clubes.add(new Clube(507, Liga.BRASIL, FORCA_NIVEL_3, "Fluminense"));
+			clubes.add(new Clube(508, Liga.BRASIL, FORCA_NIVEL_3, "Internacional"));
+			clubes.add(new Clube(509, Liga.BRASIL, FORCA_NIVEL_3, "São Paulo"));
+			clubes.add(new Clube(510, Liga.BRASIL, FORCA_NIVEL_4, "Fortaleza"));
+			clubes.add(new Clube(511, Liga.BRASIL, FORCA_NIVEL_4, "Botafogo"));
+			clubes.add(new Clube(512, Liga.BRASIL, FORCA_NIVEL_4, "Ceará"));
+			clubes.add(new Clube(513, Liga.BRASIL, FORCA_NIVEL_4, "América"));
+			clubes.add(new Clube(514, Liga.BRASIL, FORCA_NIVEL_4, "Red Bull Bragantino"));
+			clubes.add(new Clube(515, Liga.BRASIL, FORCA_NIVEL_5, "Bahia"));
+			clubes.add(new Clube(516, Liga.BRASIL, FORCA_NIVEL_5, "Atlético - GO"));
+			clubes.add(new Clube(517, Liga.BRASIL, FORCA_NIVEL_5, "Goiás"));
+			clubes.add(new Clube(518, Liga.BRASIL, FORCA_NIVEL_5, "Cuiabá"));
+			clubes.add(new Clube(519, Liga.BRASIL, FORCA_NIVEL_5, "Cruzeiro"));
+			clubes.add(new Clube(520, Liga.BRASIL, FORCA_NIVEL_5, "Grêmio"));
+			clubes.add(new Clube(521, Liga.BRASIL, FORCA_NIVEL_6, "Juventude"));
+			clubes.add(new Clube(522, Liga.BRASIL, FORCA_NIVEL_6, "Coritiba"));
+			clubes.add(new Clube(523, Liga.BRASIL, FORCA_NIVEL_6, "Vasco"));
+			clubes.add(new Clube(524, Liga.BRASIL, FORCA_NIVEL_6, "Chapecoense"));
+			clubes.add(new Clube(525, Liga.BRASIL, FORCA_NIVEL_6, "Avaí"));
+			clubes.add(new Clube(526, Liga.BRASIL, FORCA_NIVEL_6, "Sport"));
+			clubes.add(new Clube(527, Liga.BRASIL, FORCA_NIVEL_7, "CRB"));
+			clubes.add(new Clube(528, Liga.BRASIL, FORCA_NIVEL_7, "Vitória"));
+			clubes.add(new Clube(529, Liga.BRASIL, FORCA_NIVEL_7, "Vila Nova"));
+			clubes.add(new Clube(530, Liga.BRASIL, FORCA_NIVEL_7, "Ponte Preta"));
+			clubes.add(new Clube(531, Liga.BRASIL, FORCA_NIVEL_7, "Sampaio Corrêa"));
+			clubes.add(new Clube(532, Liga.BRASIL, FORCA_NIVEL_7, "ABC"));
+			*/
 
 			clubeRepository.saveAll(clubes);
 		}
@@ -365,6 +363,40 @@ public class PreCarregarClubeService {
 			rankingTitulos.add(new ClubeTituloRanking(430, new Clube(430)));
 			rankingTitulos.add(new ClubeTituloRanking(431, new Clube(431)));
 			rankingTitulos.add(new ClubeTituloRanking(432, new Clube(432)));
+			
+			/*rankingTitulos.add(new ClubeTituloRanking(501, new Clube(501)));
+			rankingTitulos.add(new ClubeTituloRanking(502, new Clube(502)));
+			rankingTitulos.add(new ClubeTituloRanking(503, new Clube(503)));
+			rankingTitulos.add(new ClubeTituloRanking(504, new Clube(504)));
+			rankingTitulos.add(new ClubeTituloRanking(505, new Clube(505)));
+			rankingTitulos.add(new ClubeTituloRanking(506, new Clube(506)));
+			rankingTitulos.add(new ClubeTituloRanking(507, new Clube(507)));
+			rankingTitulos.add(new ClubeTituloRanking(508, new Clube(508)));
+			rankingTitulos.add(new ClubeTituloRanking(509, new Clube(509)));
+			rankingTitulos.add(new ClubeTituloRanking(510, new Clube(510)));
+			rankingTitulos.add(new ClubeTituloRanking(511, new Clube(511)));
+			rankingTitulos.add(new ClubeTituloRanking(512, new Clube(512)));
+			rankingTitulos.add(new ClubeTituloRanking(513, new Clube(513)));
+			rankingTitulos.add(new ClubeTituloRanking(514, new Clube(514)));
+			rankingTitulos.add(new ClubeTituloRanking(515, new Clube(515)));
+			rankingTitulos.add(new ClubeTituloRanking(516, new Clube(516)));
+			rankingTitulos.add(new ClubeTituloRanking(517, new Clube(517)));
+			rankingTitulos.add(new ClubeTituloRanking(518, new Clube(518)));
+			rankingTitulos.add(new ClubeTituloRanking(519, new Clube(519)));
+			rankingTitulos.add(new ClubeTituloRanking(520, new Clube(520)));
+			rankingTitulos.add(new ClubeTituloRanking(521, new Clube(521)));
+			rankingTitulos.add(new ClubeTituloRanking(522, new Clube(522)));
+			rankingTitulos.add(new ClubeTituloRanking(523, new Clube(523)));
+			rankingTitulos.add(new ClubeTituloRanking(524, new Clube(524)));
+			rankingTitulos.add(new ClubeTituloRanking(525, new Clube(525)));
+			rankingTitulos.add(new ClubeTituloRanking(526, new Clube(526)));
+			rankingTitulos.add(new ClubeTituloRanking(527, new Clube(527)));
+			rankingTitulos.add(new ClubeTituloRanking(528, new Clube(528)));
+			rankingTitulos.add(new ClubeTituloRanking(529, new Clube(529)));
+			rankingTitulos.add(new ClubeTituloRanking(530, new Clube(530)));
+			rankingTitulos.add(new ClubeTituloRanking(531, new Clube(531)));
+			rankingTitulos.add(new ClubeTituloRanking(532, new Clube(532)));*/
+			
 			clubeTituloRankingRepository.saveAll(rankingTitulos);
 		}
 	}
@@ -504,6 +536,39 @@ public class PreCarregarClubeService {
 			ranking.add(new ClubeRanking(126, new Clube(430), ano, 30, posicaoToClassificacaoNacional(30), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(127, new Clube(431), ano, 31, posicaoToClassificacaoNacional(31), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
 			ranking.add(new ClubeRanking(128, new Clube(432), ano, 32, posicaoToClassificacaoNacional(32), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			
+			/*ranking.add(new ClubeRanking(129, new Clube(501), ano, 1, posicaoToClassificacaoNacional(1), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.C_CAMPEAO));
+			ranking.add(new ClubeRanking(130, new Clube(502), ano, 2, posicaoToClassificacaoNacional(2), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.CII_CAMPEAO));
+			ranking.add(new ClubeRanking(131, new Clube(503), ano, 3, posicaoToClassificacaoNacional(3), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.CIII_CAMPEAO));
+			ranking.add(new ClubeRanking(132, new Clube(504), ano, 4, posicaoToClassificacaoNacional(4), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(133, new Clube(505), ano, 5, posicaoToClassificacaoNacional(5), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(134, new Clube(506), ano, 6, posicaoToClassificacaoNacional(6), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(135, new Clube(507), ano, 7, posicaoToClassificacaoNacional(7), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(136, new Clube(508), ano, 8, posicaoToClassificacaoNacional(8), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(137, new Clube(509), ano, 9, posicaoToClassificacaoNacional(9), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(138, new Clube(510), ano, 10, posicaoToClassificacaoNacional(10), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(139, new Clube(511), ano, 11, posicaoToClassificacaoNacional(11), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(140, new Clube(512), ano, 12, posicaoToClassificacaoNacional(12), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(141, new Clube(513), ano, 13, posicaoToClassificacaoNacional(13), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(142, new Clube(514), ano, 14, posicaoToClassificacaoNacional(14), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(143, new Clube(515), ano, 15, posicaoToClassificacaoNacional(15), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(144, new Clube(516), ano, 16, posicaoToClassificacaoNacional(16), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(145, new Clube(517), ano, 17, posicaoToClassificacaoNacional(17), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(146, new Clube(518), ano, 18, posicaoToClassificacaoNacional(18), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(147, new Clube(519), ano, 19, posicaoToClassificacaoNacional(19), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(148, new Clube(520), ano, 20, posicaoToClassificacaoNacional(20), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(149, new Clube(521), ano, 21, posicaoToClassificacaoNacional(21), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(150, new Clube(522), ano, 22, posicaoToClassificacaoNacional(22), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(151, new Clube(523), ano, 23, posicaoToClassificacaoNacional(23), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(152, new Clube(524), ano, 24, posicaoToClassificacaoNacional(24), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(153, new Clube(525), ano, 25, posicaoToClassificacaoNacional(25), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(154, new Clube(526), ano, 26, posicaoToClassificacaoNacional(26), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(155, new Clube(527), ano, 27, posicaoToClassificacaoNacional(27), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(156, new Clube(528), ano, 28, posicaoToClassificacaoNacional(28), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(157, new Clube(529), ano, 29, posicaoToClassificacaoNacional(29), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(158, new Clube(530), ano, 30, posicaoToClassificacaoNacional(30), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(159, new Clube(531), ano, 31, posicaoToClassificacaoNacional(31), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));
+			ranking.add(new ClubeRanking(160, new Clube(532), ano, 32, posicaoToClassificacaoNacional(32), ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU, ClassificacaoContinentalFinal.NAO_PARTICIPOU));*/
 			
 			clubeRankingRepository.saveAll(ranking);
 		}
