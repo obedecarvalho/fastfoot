@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.EscalacaoPosicao;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
@@ -29,12 +30,16 @@ public class EscalarClubeService {
 	
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+	
+	@Autowired
+	private ClubeRepository clubeRepository;
 
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
 		for (Clube c : clubes) {
 			escalarClube(c);
 		}
+		clubeRepository.saveAll(clubes);
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
@@ -49,6 +54,12 @@ public class EscalarClubeService {
 			atualizarEscalacao(clube, escalacao, jogadores);
 		}
 		
+		//
+		clube.setForcaGeralAtual(new Double(escalacao.stream()
+				.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
+				.mapToDouble(e -> e.getJogador().getForcaGeral()).average().getAsDouble()).intValue());
+		//
+
 		escalacaoJogadorPosicaoRepository.saveAll(escalacao);//TODO: fazer apenas um para todos os Clubes??
 	}
 	
@@ -65,6 +76,8 @@ public class EscalarClubeService {
 	}
 	
 	private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
+		//TODO: setar null quando não houver jogador pra ser escalado
+		//TODO: inverter MEI e ATA
 		
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> escalacaoMap = escalacao.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));

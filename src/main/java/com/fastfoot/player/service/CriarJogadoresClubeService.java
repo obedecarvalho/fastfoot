@@ -164,9 +164,9 @@ public class CriarJogadoresClubeService {
 		clube.getForcaGeralAtual();*/
 
 		//TODO: somente titulares ou usar potencial??
-		clube.setForcaGeralAtual(
+		/*clube.setForcaGeralAtual(
 				(new Long(Math.round(jogadores.stream().mapToLong(Jogador::getForcaGeral).average().getAsDouble())))
-						.intValue());
+						.intValue());*/
 		
 		clubeRepository.save(clube);
 

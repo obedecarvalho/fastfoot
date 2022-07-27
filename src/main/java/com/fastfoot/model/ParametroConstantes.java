@@ -15,14 +15,14 @@ public class ParametroConstantes {
 	//true, false
 	public static final String JOGAR_COPA_NACIONAL_II = "JOGAR_COPA_NACIONAL_II";
 
-	//4 (16 TIMES), 5 (20 a 24 TIMES), 6 (28 a 32 TIMES)
+	//4 (16 TIMES), 5 (20, 22 ou 24 TIMES), 6 (28, 30 ou 32 TIMES)
 	public static final String NUMERO_RODADAS_COPA_NACIONAL = "NUMERO_RODADAS_COPA_NACIONAL";
 
 	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R = "4 (16 TIMES)";
 
-	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R = "6 (28 a 32 TIMES)";
+	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R = "6 (28, 30 ou 32 TIMES)";
 
-	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R = "5 (20 a 24 TIMES)";
+	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R = "5 (20, 22 ou 24 TIMES)";
 
 	//true, false
 	public static final String MARCAR_AMISTOSOS_AUTOMATICAMENTE = "MARCAR_AMISTOSOS_AUTOMATICAMENTE";

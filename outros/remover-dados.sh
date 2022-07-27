@@ -2,6 +2,7 @@
 
 #--sem remover jogadores e clubes
 psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "
+truncate table habilidade_valor_estatistica_grupo;
 truncate table habilidade_valor_estatistica;
 delete from clube_probabilidade;
 delete from partida_amistosa_resultado;

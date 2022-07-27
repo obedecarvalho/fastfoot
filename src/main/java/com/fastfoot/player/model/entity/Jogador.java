@@ -182,6 +182,10 @@ public class Jogador {
 		this.forcaGeralPotencialEfetiva = forcaGeralPotencialEfetiva;
 	}
 
+	public Double getNivelDesenvolvimento() {
+		return getForcaGeral() / getForcaGeralPotencialEfetiva();
+	}
+
 	@Override
 	public String toString() {
 		return "Jogador [posicao=" + posicao + ", numero=" + numero + "]";

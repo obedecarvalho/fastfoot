@@ -33,8 +33,10 @@ public class PreCarregarParametrosService {
 
 			//4 (16 TIMES), 6 (28 a 32 TIMES)
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL, 
-					ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R, 
-					"6 (28 a 32 TIMES), 5 (20 a 24 TIMES), 4 (16 TIMES)"));
+					ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R, 
+					ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R + ", "
+							+ ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R + ", "
+							+ ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R));
 
 			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true", "true, false"));
 			
