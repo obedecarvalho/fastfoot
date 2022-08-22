@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.Posicao;
 
@@ -47,6 +48,14 @@ public class Jogador {
 	private Integer forcaGeral;
 	
 	private Integer forcaGeralPotencial;
+	
+	//
+	private Double tmpForcaGeralZag;
+	private Double tmpForcaGeralLat;
+	private Double tmpForcaGeralVol;
+	private Double tmpForcaGeralMei;
+	private Double tmpForcaGeralAta;
+	//
 	
 	private Double forcaGeralPotencialEfetiva;
 	
@@ -134,6 +143,48 @@ public class Jogador {
 		this.forcaGeral = forcaGeral;
 	}
 
+	//
+	public Double getTmpForcaGeralZag() {
+		return tmpForcaGeralZag;
+	}
+
+	public void setTmpForcaGeralZag(Double tmpForcaGeralZag) {
+		this.tmpForcaGeralZag = tmpForcaGeralZag;
+	}
+
+	public Double getTmpForcaGeralLat() {
+		return tmpForcaGeralLat;
+	}
+
+	public void setTmpForcaGeralLat(Double tmpForcaGeralLat) {
+		this.tmpForcaGeralLat = tmpForcaGeralLat;
+	}
+
+	public Double getTmpForcaGeralVol() {
+		return tmpForcaGeralVol;
+	}
+
+	public void setTmpForcaGeralVol(Double tmpForcaGeralVol) {
+		this.tmpForcaGeralVol = tmpForcaGeralVol;
+	}
+
+	public Double getTmpForcaGeralMei() {
+		return tmpForcaGeralMei;
+	}
+
+	public void setTmpForcaGeralMei(Double tmpForcaGeralMei) {
+		this.tmpForcaGeralMei = tmpForcaGeralMei;
+	}
+
+	public Double getTmpForcaGeralAta() {
+		return tmpForcaGeralAta;
+	}
+
+	public void setTmpForcaGeralAta(Double tmpForcaGeralAta) {
+		this.tmpForcaGeralAta = tmpForcaGeralAta;
+	}
+	//
+
 	public Integer getForcaGeralPotencial() {
 		return forcaGeralPotencial;
 	}
@@ -219,6 +270,10 @@ public class Jogador {
 
 	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
 		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
+	}
+	
+	public List<HabilidadeValor> getHabilidadeValorByHabilidade(List<Habilidade> habilidades) {
+		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
 	}
 
 	public List<HabilidadeValor> getHabilidadesAcaoFimValor() {

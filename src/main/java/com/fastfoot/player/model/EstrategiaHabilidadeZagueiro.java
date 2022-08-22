@@ -11,14 +11,19 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	
 	protected static final List<Habilidade> HABILIDADES_COMUM;
 	
+	protected static final List<Habilidade> HABILIDADES_COMUNS_ELETIVAS;
+	
 	protected static final List<Habilidade> HABILIDADES_OUTROS;
 
 	protected static final Integer NUM_HAB_ESP_ELETIVAS = 2;
+	
+	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 0;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();
 		HABILIDADES_ESPECIFICAS_ELETIVAS = new ArrayList<Habilidade>();
 		HABILIDADES_COMUM = new ArrayList<Habilidade>();
+		HABILIDADES_COMUNS_ELETIVAS = new ArrayList<Habilidade>();
 		HABILIDADES_OUTROS = new ArrayList<Habilidade>();
 		
 		HABILIDADES_COMUM.add(Habilidade.PASSE);
@@ -58,6 +63,11 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	public List<Habilidade> getHabilidadesComum() {
 		return HABILIDADES_COMUM;
 	}
+	
+	@Override
+	public List<Habilidade> getHabilidadesComunsEletivas() {
+		return HABILIDADES_COMUNS_ELETIVAS;
+	}
 
 	@Override
 	public List<Habilidade> getHabilidadesOutros() {
@@ -67,6 +77,11 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	@Override
 	public Integer getNumHabEspEletivas() {
 		return NUM_HAB_ESP_ELETIVAS;
+	}
+	
+	@Override
+	public Integer getNumHabComunsEletivas() {
+		return NUM_HAB_COMUNS_ELETIVAS;
 	}
 	
 	private static EstrategiaHabilidadeZagueiro INSTANCE;

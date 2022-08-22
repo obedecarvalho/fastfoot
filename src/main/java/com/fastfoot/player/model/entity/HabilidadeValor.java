@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
@@ -46,7 +47,9 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	//private Integer quantidadeUsoVencedor;
 	
-	private Boolean habilidadeEspecifica = false;
+	//private Boolean habilidadeEspecifica = false;
+
+	private HabilidadeTipo habilidadeTipo;
 	
 	private Double passoDesenvolvimento;
 
@@ -117,14 +120,17 @@ public class HabilidadeValor implements ElementoRoleta {
 	}*/
 	
 	public HabilidadeValor(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
-			Boolean especifica, Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
+			/*Boolean especifica, Boolean habComum,*/
+			HabilidadeTipo habilidadeTipo,
+			Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
 			Double passoDesenvolvimento) {
 		super();
 		this.jogador = jogador;
 		this.habilidade = habilidade;
 		this.valor = valor;
 		this.valorDecimal = valorDecimal;
-		this.habilidadeEspecifica = especifica;
+		//this.habilidadeEspecifica = especifica;
+		this.habilidadeTipo = habilidadeTipo;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
 		this.passoDesenvolvimento = passoDesenvolvimento;
@@ -217,12 +223,32 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.habilidadeValorEstatistica = habilidadeValorEstatistica;
 	}
 
-	public Boolean getHabilidadeEspecifica() {
+	/*public Boolean getHabilidadeEspecifica() {
 		return habilidadeEspecifica;
 	}
 
 	public void setHabilidadeEspecifica(Boolean habilidadeEspecifica) {
 		this.habilidadeEspecifica = habilidadeEspecifica;
+	}*/
+	
+	public Boolean isHabilidadeEspecifica() {
+		return HabilidadeTipo.ESPECIFICA.equals(habilidadeTipo);
+	}
+	
+	public Boolean isHabilidadeComum() {
+		return HabilidadeTipo.COMUM.equals(habilidadeTipo);
+	}
+	
+	public Boolean isHabilidadeOutro() {
+		return HabilidadeTipo.OUTRO.equals(habilidadeTipo);
+	}
+
+	public HabilidadeTipo getHabilidadeTipo() {
+		return habilidadeTipo;
+	}
+
+	public void setHabilidadeTipo(HabilidadeTipo habilidadeTipo) {
+		this.habilidadeTipo = habilidadeTipo;
 	}
 
 	public Double getPassoDesenvolvimento() {

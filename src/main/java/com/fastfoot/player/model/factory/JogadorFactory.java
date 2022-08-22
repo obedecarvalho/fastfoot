@@ -16,6 +16,7 @@ import com.fastfoot.player.model.EstrategiaHabilidadeVolante;
 import com.fastfoot.player.model.EstrategiaHabilidadeZagueiro;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
+import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
@@ -30,11 +31,11 @@ public abstract class JogadorFactory {
 	
 	protected static final Double STDEV = 3.5; 
 	
-	protected static final Double PESO_HABILIDADE_COMUM = 0.8;
+	protected static final Double PESO_HABILIDADE_COMUM = 0.75;
 	
 	protected static final Double PESO_HABILIDADE_ESPECIFICO = 1.0;
 	
-	protected static final Double PESO_HABILIDADE_OUTROS = 0.4;
+	protected static final Double PESO_HABILIDADE_OUTROS = 0.3;
 	
 	//protected static final Integer VALOR_HABILIDADE_MAX = 100;
 	
@@ -142,9 +143,11 @@ public abstract class JogadorFactory {
 	}*/
 	
 	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
-			Boolean especifica, Double potencial, Double potencialDesenvolvimentoEfetivo,
+			/*Boolean especifica, Boolean habComum,*/
+			HabilidadeTipo habilidadeTipo, Double potencial, Double potencialDesenvolvimentoEfetivo,
 			Double passoDesenvolvimento) {
-		HabilidadeValor hv = new HabilidadeValor(jogador, habilidade, valor, valorDecimal, especifica, potencial,
+		HabilidadeValor hv = new HabilidadeValor(jogador, habilidade, valor, valorDecimal, /*especifica, habComum,*/
+				habilidadeTipo, potencial,
 				potencialDesenvolvimentoEfetivo, passoDesenvolvimento);
 		jogador.addHabilidade(hv);
 	}
@@ -261,7 +264,7 @@ public abstract class JogadorFactory {
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticaGrupoMap);
 	
 	protected void sortearEletivas(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habEspecificas, List<Habilidade> habComuns) {
-		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia);
+		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesEspecificasEletivas().size(), estrategia.getNumHabEspEletivas());
 		
 		for (int i = 0; i < estrategia.getHabilidadesEspecificasEletivas().size(); i++) {
 			if (posicoesElet.contains(i)) {
@@ -272,7 +275,44 @@ public abstract class JogadorFactory {
 		}
 	}
 	
-	protected List<Integer> sortearPosicoesHabilidadesEletivas(EstrategiaHabilidadePosicaoJogador estrategia) {
+	protected void sortearHabComunsEletivas(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habComuns, List<Habilidade> habOutros) {
+		//List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia);
+		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesComunsEletivas().size(), estrategia.getNumHabComunsEletivas());
+		
+		for (int i = 0; i < estrategia.getHabilidadesComunsEletivas().size(); i++) {
+			if (posicoesElet.contains(i)) {
+				habComuns.add(estrategia.getHabilidadesComunsEletivas().get(i));
+			} else {
+				habOutros.add(estrategia.getHabilidadesComunsEletivas().get(i));
+			}
+		}
+	}
+	
+	protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear) {
+		//int totalHabEspEle = estrategia.getHabilidadesEspecificasEletivas().size();
+		
+		List<Integer> posicoes = new ArrayList<Integer>();
+		
+		int qtde = 0;
+		
+		Integer sorteado = null; 
+		
+		//while (qtde < estrategia.getNumHabEspEletivas()) {
+		while (qtde < qtdeHabSortear) {
+			
+			sorteado = R.nextInt(qtdeHabTotal);
+			
+			if (!posicoes.contains(sorteado)) {
+				posicoes.add(sorteado);
+				qtde++;
+			}
+
+		}
+		
+		return posicoes;
+	}
+	
+	/*protected List<Integer> sortearPosicoesHabilidadesEletivas(EstrategiaHabilidadePosicaoJogador estrategia) {
 		int totalHabEspEle = estrategia.getHabilidadesEspecificasEletivas().size();
 		
 		List<Integer> posicoes = new ArrayList<Integer>();
@@ -293,7 +333,7 @@ public abstract class JogadorFactory {
 		}
 		
 		return posicoes;
-	}
+	}*/
 	
 	/*protected abstract List<Habilidade> getHabilidadesEspecificas();
 
@@ -325,7 +365,7 @@ public abstract class JogadorFactory {
 		return getInstance().gerarJogador(estrategia, clube, posicao, numero, idade);
 	}
 	
-	protected static EstrategiaHabilidadePosicaoJogador getEstrategiaPosicaoJogador(Posicao posicao) {
+	public static EstrategiaHabilidadePosicaoJogador getEstrategiaPosicaoJogador(Posicao posicao) {
 		
 		if (Posicao.GOLEIRO.equals(posicao)) {
 			return EstrategiaHabilidadeGoleiro.getInstance();
@@ -372,5 +412,23 @@ public abstract class JogadorFactory {
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
 		
 		return jogador;
+	}
+	
+	public static Double calcularForcaGeral(Jogador jogador, EstrategiaHabilidadePosicaoJogador estrategiaHabilidadePosicaoJogador) {
+		List<HabilidadeValor> habilidades = new ArrayList<HabilidadeValor>();
+		habilidades.addAll(jogador.getHabilidadeValorByHabilidade(estrategiaHabilidadePosicaoJogador.getHabilidadesEspecificas()));
+		habilidades.addAll(jogador.getHabilidadeValorByHabilidade(estrategiaHabilidadePosicaoJogador.getHabilidadesEspecificasEletivas()));
+		
+		Double sumHabValor = 0.0d;
+		
+		for (HabilidadeValor hv : habilidades) {
+			if (hv.isHabilidadeEspecifica()) {
+				sumHabValor += hv.getValorTotal();
+			} else {
+				sumHabValor += (hv.getValorTotal()/PESO_HABILIDADE_COMUM);
+			}
+		}
+		
+		return sumHabValor / habilidades.size();
 	}
 }
