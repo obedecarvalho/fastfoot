@@ -17,7 +17,7 @@ public class EstrategiaHabilidadeVolante implements EstrategiaHabilidadePosicaoJ
 
 	protected static final Integer NUM_HAB_ESP_ELETIVAS = 2;
 	
-	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 2;
+	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 3;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();
@@ -26,7 +26,7 @@ public class EstrategiaHabilidadeVolante implements EstrategiaHabilidadePosicaoJ
 		HABILIDADES_COMUNS_ELETIVAS = new ArrayList<Habilidade>();
 		HABILIDADES_OUTROS = new ArrayList<Habilidade>();
 		
-		HABILIDADES_ESPECIFICAS.add(Habilidade.PASSE);
+		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.PASSE);
 		
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.FINALIZACAO);
 		HABILIDADES_OUTROS.add(Habilidade.CRUZAMENTO);

@@ -17,7 +17,7 @@ public class EstrategiaHabilidadeMeia implements EstrategiaHabilidadePosicaoJoga
 
 	protected static final Integer NUM_HAB_ESP_ELETIVAS = 3;
 	
-	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 1;
+	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 2;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();
@@ -34,7 +34,7 @@ public class EstrategiaHabilidadeMeia implements EstrategiaHabilidadePosicaoJoga
 		
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.CABECEIO);
 		
-		HABILIDADES_OUTROS.add(Habilidade.MARCACAO);
+		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.MARCACAO);
 		HABILIDADES_OUTROS.add(Habilidade.DESARME);
 		HABILIDADES_OUTROS.add(Habilidade.INTERCEPTACAO);
 		
