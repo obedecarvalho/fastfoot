@@ -15,6 +15,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -25,7 +26,7 @@ import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.Posicao;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_clube") })
+@Table(indexes = { @Index(columnList = "id_clube") }) //TODO: i-dex JogadorEstatisticasTemporada
 public class Jogador {
 	
 	@Id
@@ -55,6 +56,12 @@ public class Jogador {
 	private Double tmpForcaGeralVol;
 	private Double tmpForcaGeralMei;
 	private Double tmpForcaGeralAta;
+	
+	private Double tmpForcaGeralZag2;
+	private Double tmpForcaGeralLat2;
+	private Double tmpForcaGeralVol2;
+	private Double tmpForcaGeralMei2;
+	private Double tmpForcaGeralAta2;
 	//
 	
 	private Double forcaGeralPotencialEfetiva;
@@ -62,6 +69,11 @@ public class Jogador {
 	private Boolean aposentado;
 	
 	private Double valorTransferencia;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
+	/*@OneToOne(mappedBy = "jogador")*/
+	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
 
 	/*@OneToOne(mappedBy = "jogador")
 	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;*/
@@ -176,6 +188,46 @@ public class Jogador {
 		this.tmpForcaGeralMei = tmpForcaGeralMei;
 	}
 
+	public Double getTmpForcaGeralZag2() {
+		return tmpForcaGeralZag2;
+	}
+
+	public void setTmpForcaGeralZag2(Double tmpForcaGeralZag2) {
+		this.tmpForcaGeralZag2 = tmpForcaGeralZag2;
+	}
+
+	public Double getTmpForcaGeralLat2() {
+		return tmpForcaGeralLat2;
+	}
+
+	public void setTmpForcaGeralLat2(Double tmpForcaGeralLat2) {
+		this.tmpForcaGeralLat2 = tmpForcaGeralLat2;
+	}
+
+	public Double getTmpForcaGeralVol2() {
+		return tmpForcaGeralVol2;
+	}
+
+	public void setTmpForcaGeralVol2(Double tmpForcaGeralVol2) {
+		this.tmpForcaGeralVol2 = tmpForcaGeralVol2;
+	}
+
+	public Double getTmpForcaGeralMei2() {
+		return tmpForcaGeralMei2;
+	}
+
+	public void setTmpForcaGeralMei2(Double tmpForcaGeralMei2) {
+		this.tmpForcaGeralMei2 = tmpForcaGeralMei2;
+	}
+
+	public Double getTmpForcaGeralAta2() {
+		return tmpForcaGeralAta2;
+	}
+
+	public void setTmpForcaGeralAta2(Double tmpForcaGeralAta2) {
+		this.tmpForcaGeralAta2 = tmpForcaGeralAta2;
+	}
+
 	public Double getTmpForcaGeralAta() {
 		return tmpForcaGeralAta;
 	}
@@ -223,6 +275,14 @@ public class Jogador {
 
 	public void setValorTransferencia(Double valorTransferencia) {
 		this.valorTransferencia = valorTransferencia;
+	}
+
+	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
+		return jogadorEstatisticasTemporadaAtual;
+	}
+
+	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporada) {
+		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
 	}
 
 	public Double getForcaGeralPotencialEfetiva() {

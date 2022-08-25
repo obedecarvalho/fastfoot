@@ -431,4 +431,28 @@ public abstract class JogadorFactory {
 		
 		return sumHabValor / habilidades.size();
 	}
+	
+	public static Double calcularForcaGeral2(Jogador jogador, EstrategiaHabilidadePosicaoJogador estrategiaHabilidadePosicaoJogador) {
+		List<HabilidadeValor> habilidades = new ArrayList<HabilidadeValor>();
+		habilidades.addAll(jogador.getHabilidadeValorByHabilidade(estrategiaHabilidadePosicaoJogador.getHabilidadesEspecificas()));
+		habilidades.addAll(jogador.getHabilidadeValorByHabilidade(estrategiaHabilidadePosicaoJogador.getHabilidadesEspecificasEletivas()));
+		
+		Double sumHabValor = 0.0d;
+		Integer peso = 0;
+		
+		Integer PESO_ESPECIFICO = 5;
+		Integer PESO_COMUM = 1;
+		
+		for (HabilidadeValor hv : habilidades) {
+			if (hv.isHabilidadeEspecifica()) {
+				sumHabValor += hv.getValorTotal() * PESO_ESPECIFICO;
+				peso += PESO_ESPECIFICO;
+			} else {
+				sumHabValor += hv.getValorTotal() * PESO_COMUM;
+				peso += PESO_COMUM;
+			}
+		}
+		
+		return sumHabValor / peso;
+	}
 }

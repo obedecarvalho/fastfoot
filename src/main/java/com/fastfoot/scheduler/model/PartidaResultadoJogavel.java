@@ -37,4 +37,6 @@ public interface PartidaResultadoJogavel {
 	public void setPartidaJogada(Boolean partidaJogada);
 	
 	public Boolean getPartidaJogada();
+
+	public boolean isAmistoso();
 }

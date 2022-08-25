@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,10 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
@@ -78,6 +81,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
+	
+	@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -209,8 +215,8 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
-		temporada = TemporadaFactory.criarTempordada(ano);	
-		
+		temporada = TemporadaFactory.criarTempordada(ano);
+
 		List<Campeonato> campeonatosNacionais = new ArrayList<Campeonato>();
 		List<CampeonatoMisto> campeonatosContinentais = new ArrayList<CampeonatoMisto>();
 		List<CampeonatoEliminatorio> copasNacionais = new ArrayList<CampeonatoEliminatorio>();
@@ -228,12 +234,29 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#salvar:" + (fim - inicio));//40%
 		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		criarEstatisticasJogadorTemporada(temporada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#criarEstatisticasJogadorTemporada:" + (fim - inicio));
+		
 		stopWatch.stop();
 		mensagens.add("\tTempo total:" + stopWatch.getNanoTime());
 		
 		System.err.println(mensagens);
 		
 		return TemporadaDTO.convertToDTO(temporada);
+	}
+
+	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
+
+		List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
+		
+		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada)));
+		
+		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
+		jogadorRepository.saveAll(jogadores);
 	}
 	
 	private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,

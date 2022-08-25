@@ -21,12 +21,15 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -54,6 +57,9 @@ public class PartidaService {
 	
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+
+	@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;  
 
 	private double NUM_LANCES_POR_MINUTO = 1;
 	
@@ -124,6 +130,12 @@ public class PartidaService {
 		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		
+		/*inicializarEstatisticasJogador(jogadoresMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
+		inicializarEstatisticasJogador(jogadoresVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);*/
+		
+		inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
+		inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
+		
 		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
 
@@ -135,6 +147,32 @@ public class PartidaService {
 		
 		salvarEstatisticas(jogadoresMandante);
 		salvarEstatisticas(jogadoresVisitante);
+		salvarEstatisticasJogador(jogadoresMandante);
+		salvarEstatisticasJogador(jogadoresVisitante);
+	}
+	
+	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Temporada temporada, PartidaResultadoJogavel partidaResultado) {
+		//TODO: apenas titular e substituicoes
+		
+		if (!partidaResultado.isAmistoso()) {//Partidas Oficiais
+			/*jogadores.stream().forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
+					.setNumeroJogos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogos() + 1));*/
+
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
+							.setNumeroJogos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogos() + 1));
+
+		} else {
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
+							.setNumeroJogosAmistosos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogosAmistosos() + 1));
+		}
+	}
+	
+	private void salvarEstatisticasJogador(List<Jogador> jogadores) {
+
+		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
+
 	}
 
 	/*public void jogar(PartidaResultadoJogavel partidaResultado) {
@@ -280,12 +318,16 @@ public class PartidaService {
 							golVisitante++;
 						}
 						partidaResultado.incrementarGol(esquema.getPosseBolaMandante());
+						if (!partidaResultado.isAmistoso()) habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarGolsMarcados();
+						if (partidaResultado.isAmistoso()) habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarGolsMarcadosAmistosos();
 					} else if (goleiroVenceu) {
 						if (imprimir) System.err.println("\t\tGOLEIRO DEFENDEU");
 						partidaResultado.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
+						if (!partidaResultado.isAmistoso()) habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarFinalizacoesDefendidas();
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (imprimir) System.err.println("\t\tFORA!!!!");
 						partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
+						if (!partidaResultado.isAmistoso()) habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarFinalizacoesFora();
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 				} else {

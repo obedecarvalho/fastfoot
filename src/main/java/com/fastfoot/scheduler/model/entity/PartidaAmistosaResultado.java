@@ -14,7 +14,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_rodada_amistosa") })
+@Table(indexes = { @Index(columnList = "id_rodada_amistosa") }) //TODO: i_dex Clube
 public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 
 	@Id
@@ -176,6 +176,11 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	public void setLancesVisitante(Integer lancesVisitante) {
 		this.lancesVisitante = lancesVisitante;
 	}
+
+	@Override
+	public boolean isAmistoso() {
+		return true;
+	}
 	
 	//###	METODOS AUXILIARES	###
 
@@ -236,4 +241,5 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 		return "PartidaAmistosaResultado [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " " + golsMandante
 				+ " x " + golsVisitante + " " + clubeVisitante.getNome() + "]";
 	}
+
 }

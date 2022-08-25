@@ -176,6 +176,11 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	public void setRodada(Rodada rodada) {
 		this.rodada = rodada;
 	}
+
+	@Override
+	public boolean isAmistoso() {
+		return false;
+	}
 	
 	//###	METODOS AUXILIARES	###
 	

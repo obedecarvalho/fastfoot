@@ -64,17 +64,18 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
 		//
-		Temporada temporada = null;
-		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();
+		//TODO: mover para CriarCalendarioTemporadaService.atualizarPassoDesenvolvimentoJogador()
+		/*Temporada temporada = null;
+		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();*/
 
 		//agruparHabilidadeValorEstatisticaService.agrupar(temporada);
 
-		HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
-		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
-				.findByTemporada(temporada);
+		//HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
+		/*List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
+				.findByTemporada(temporada);*/
 		
-		Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
-				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));
+		/*Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
+				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));*/
 		
 		//
 		

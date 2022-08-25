@@ -28,7 +28,7 @@ public class EstrategiaHabilidadeVolante implements EstrategiaHabilidadePosicaoJ
 		
 		HABILIDADES_ESPECIFICAS.add(Habilidade.PASSE);
 		
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.FINALIZACAO);
+		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.FINALIZACAO);
 		HABILIDADES_OUTROS.add(Habilidade.CRUZAMENTO);
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.ARMACAO);
 		

@@ -198,6 +198,11 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	public void setClassificaAMandante(Boolean classificaAMandante) {
 		this.classificaAMandante = classificaAMandante;
 	}
+
+	@Override
+	public boolean isAmistoso() {
+		return false;
+	}
 	
 	//###	METODOS AUXILIARES	###
 
