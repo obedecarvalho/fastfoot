@@ -89,3 +89,30 @@ from jogador_estatisticas_temporada jet
 inner join jogador j on j.id = jet.id_jogador 
 group by j.posicao
 order by j.posicao;
+
+
+--total de gols por posicao
+select j.posicao,
+	sum(jet.numero_jogos) as numero_jogos, sum(jet.gols_marcados) as gols_marcados 
+from jogador_estatisticas_temporada jet 
+inner join jogador j on j.id = jet.id_jogador 
+group by j.posicao
+order by j.posicao;
+
+select j.posicao, hv.habilidade, hv.habilidade_tipo, count(*) 
+from jogador j 
+inner join habilidade_valor hv on hv.id_jogador = j.id 
+where hv.habilidade in (2, 11)
+	and j.posicao in (2, 3, 4)
+	--and hv.habilidade_tipo in (0, 1)
+group by j.posicao, hv.habilidade, hv.habilidade_tipo
+order by j.posicao, hv.habilidade, hv.habilidade_tipo;
+
+--estatisticas sobre habilidades por posicao
+select j.posicao, hv.habilidade, hv.habilidade_tipo, sum(hve.quantidade_uso), sum(hve.quantidade_uso_vencedor)
+from jogador j 
+inner join habilidade_valor hv on hv.id_jogador = j.id 
+inner join habilidade_valor_estatistica hve on hve.id_habilidade_valor = hv.id
+group by j.posicao, hv.habilidade, hv.habilidade_tipo
+order by j.posicao, hv.habilidade, hv.habilidade_tipo
+;
