@@ -116,3 +116,10 @@ inner join habilidade_valor_estatistica hve on hve.id_habilidade_valor = hv.id
 group by j.posicao, hv.habilidade, hv.habilidade_tipo
 order by j.posicao, hv.habilidade, hv.habilidade_tipo
 ;
+
+--distribuição das habilidades por posição
+select j.posicao, hv.habilidade, hv.habilidade_tipo, count(*)
+from habilidade_valor hv
+inner join jogador j on j.id = hv.id_jogador
+group by j.posicao, hv.habilidade, hv.habilidade_tipo
+order by j.posicao, hv.habilidade, hv.habilidade_tipo;

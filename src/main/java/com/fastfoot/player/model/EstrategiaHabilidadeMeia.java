@@ -17,7 +17,7 @@ public class EstrategiaHabilidadeMeia implements EstrategiaHabilidadePosicaoJoga
 
 	protected static final Integer NUM_HAB_ESP_ELETIVAS = 3;
 	
-	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 2;
+	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 1;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();

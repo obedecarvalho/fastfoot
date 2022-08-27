@@ -2,6 +2,8 @@
 
 #--sem remover jogadores e clubes
 psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "
+update jogador set id_jogador_estatisticas_temporada_atual = null;
+delete from jogador_estatisticas_temporada;
 truncate table habilidade_valor_estatistica_grupo;
 truncate table habilidade_valor_estatistica;
 delete from clube_probabilidade;

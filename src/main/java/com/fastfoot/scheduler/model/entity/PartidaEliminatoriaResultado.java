@@ -11,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
 @Entity
@@ -44,7 +45,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	private Boolean classificaAMandante;
 	
-	private Integer finalizacacoesForaMandante;
+	/*private Integer finalizacacoesForaMandante;
 	
 	private Integer finalizacacoesForaVisitante;
 	
@@ -54,19 +55,23 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	
 	private Integer lancesMandante;
 	
-	private Integer lancesVisitante;
+	private Integer lancesVisitante;*/
 	
 	private Boolean partidaJogada;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_partida_estatisticas")
+	private PartidaEstatisticas partidaEstatisticas;
 
 	public PartidaEliminatoriaResultado() {
 		this.golsMandante = 0;
 		this.golsVisitante = 0;
-		this.finalizacacoesForaMandante = 0;
+		/*this.finalizacacoesForaMandante = 0;
 		this.finalizacacoesForaVisitante = 0;
 		this.finalizacacoesDefendidasMandante = 0;
 		this.finalizacacoesDefendidasVisitante = 0;
 		this.lancesMandante = 0;
-		this.lancesVisitante = 0;
+		this.lancesVisitante = 0;*/
 		this.partidaJogada = false;
 	}
 
@@ -120,7 +125,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		return golsVisitante;
 	}
 
-	public Integer getFinalizacacoesForaMandante() {
+	/*public Integer getFinalizacacoesForaMandante() {
 		return finalizacacoesForaMandante;
 	}
 
@@ -166,7 +171,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	public void setLancesVisitante(Integer lancesVisitante) {
 		this.lancesVisitante = lancesVisitante;
-	}
+	}*/
 
 	@Override
 	public Boolean getPartidaJogada() {
@@ -176,6 +181,15 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@Override
 	public void setPartidaJogada(Boolean partidaJogada) {
 		this.partidaJogada = partidaJogada;
+	}
+
+	public PartidaEstatisticas getPartidaEstatisticas() {
+		return partidaEstatisticas;
+	}
+
+	@Override
+	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas) {
+		this.partidaEstatisticas = partidaEstatisticas;
 	}
 
 	@Override
@@ -222,7 +236,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		return null;
 	}
 
-	@Override
+	/*@Override
 	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante) {
 		if (posseBolaMandante) {
 			this.finalizacacoesDefendidasMandante++;
@@ -247,7 +261,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		} else {
 			this.lancesVisitante++;
 		}
-	}
+	}*/
 
 	@Override
 	public void incrementarGol(boolean posseBolaMandante) {
@@ -256,6 +270,21 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		} else {
 			this.golsVisitante++;
 		}
+	}
+	
+	@Override
+	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante) {
+		partidaEstatisticas.incrementarFinalizacaoDefendida(posseBolaMandante);
+	}
+
+	@Override
+	public void incrementarFinalizacaoFora(boolean posseBolaMandante) {
+		partidaEstatisticas.incrementarFinalizacaoFora(posseBolaMandante);
+	}
+
+	@Override
+	public void incrementarLance(boolean posseBolaMandante) {
+		partidaEstatisticas.incrementarLance(posseBolaMandante);
 	}
 
 	@Override

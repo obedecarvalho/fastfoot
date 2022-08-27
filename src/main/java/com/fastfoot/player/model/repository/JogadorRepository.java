@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Repository
@@ -33,7 +34,8 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	@Query(nativeQuery = true, value = " update jogador jog " + " set forca_geral = tmp.forca_geral " + " from ( "
 			+ " 	select j.id, avg(hv.valor) as forca_geral " + " 	from jogador j "
 			+ " 	inner join habilidade_valor hv on hv.id_jogador = j.id "
-			+ " 	where hv.habilidade_especifica and not j.aposentado " + " 	group by j.id " + " ) tmp "
+			+ " 	where hv.habilidade_tipo = 0 " //HabilidadeTipo.ESPECIFICA 
+			+ " and not j.aposentado " + " 	group by j.id " + " ) tmp "
 			+ " where jog.id = tmp.id "
 	)
 	public void calcularForcaGeral();

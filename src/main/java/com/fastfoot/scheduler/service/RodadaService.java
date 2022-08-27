@@ -2,16 +2,23 @@ package com.fastfoot.scheduler.service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
+import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
@@ -42,17 +49,28 @@ public class RodadaService {
 	@Autowired
 	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
 	
+	@Autowired
+	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;
+
+	@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
+	
+	@Autowired
+	private PartidaEstatisticasRepository partidaEstatisticasRepository;
+	
 	//###	SERVICE	###
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
 
-	private static final Boolean SALVAR_ESTATISTICAS = false;
+	private static final Boolean SALVAR_LANCES = false;
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
+		
+		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 
 		carregarPartidas(rodada);
-		jogarPartidas(rodada);
+		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
 
 		if (rodada.isUltimaRodadaPontosCorridos()){
@@ -60,19 +78,21 @@ public class RodadaService {
 			classificarComDesempate(rodada);
 			salvarClassificacao(rodada);
 		}
+		
+		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
 
 		return CompletableFuture.completedFuture(rodada);
 	}
 
-	private void jogarPartidas(Rodada rodada) {
+	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		if(rodada.getCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, rodada.getCampeonato().getClassificacao());
+			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO, rodada.getCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getCampeonato().getClassificacao(), false);
 			}
 		} else if (rodada.getGrupoCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, rodada.getGrupoCampeonato().getClassificacao());
+			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO, rodada.getGrupoCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getGrupoCampeonato().getClassificacao(), false);
@@ -91,10 +111,13 @@ public class RodadaService {
 	}
 
 	private void salvarPartidas(Rodada r) {
+		
+		partidaEstatisticasRepository.saveAll(
+				r.getPartidas().stream().map(PartidaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaRepository.saveAllAndFlush(r.getPartidas());
 
-		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
+		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 
 		if(r.getCampeonato() != null) {
 			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
@@ -140,10 +163,14 @@ public class RodadaService {
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
+		
+		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 
 		carregarPartidas(rodada);
-		jogarPartidas(rodada);
+		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
+		
+		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -152,18 +179,21 @@ public class RodadaService {
 		rodada.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada));
 	}
 
-	private void jogarPartidas(RodadaEliminatoria rodada) {
-		partidaResultadoService.jogarRodada(rodada);
+	private void jogarPartidas(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 	}
 
 	private void salvarPartidas(RodadaEliminatoria r) {
+		
+		partidaEstatisticasRepository.saveAll(
+				r.getPartidas().stream().map(PartidaEliminatoriaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
 			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());//TODO: agrupar proximas partidas e fazer apenas um saveAll??
 		}
 
-		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
+		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}
 
 	private void salvarLances(List<? extends PartidaResultadoJogavel> partidas) {//TODO: salvar PartidaLance
@@ -177,26 +207,37 @@ public class RodadaService {
 
 	@Async("partidaExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
+		
+		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 
 		carregarPartidas(rodada);
-		jogarPartidas(rodada);
+		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
+		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
 
 		return CompletableFuture.completedFuture(rodada);
+	}
+	
+	private void salvarPartidaJogadorEstatisticas(PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
+		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
 	}
 
 	private void carregarPartidas(RodadaAmistosa rodada) {
 		rodada.setPartidas(partidaAmistosaResultadoRepository.findByRodada(rodada));
 	}
 
-	private void jogarPartidas(RodadaAmistosa rodada) {
-		partidaResultadoService.jogarRodada(rodada);
+	private void jogarPartidas(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 	}
 
 	private void salvarPartidas(RodadaAmistosa r) {
+		
+		partidaEstatisticasRepository.saveAll(
+				r.getPartidas().stream().map(PartidaAmistosaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		
-		if (SALVAR_ESTATISTICAS) { salvarLances(r.getPartidas()); }
+		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}
 }

@@ -10,6 +10,7 @@ drop table if exists pontuacao_probabilidade;
 --jogadores
 drop table if exists escalacao_jogador_posicao;
 drop table if exists grupo_desenvolvimento_jogador;
+drop table if exists habilidade_valor_estatistica_grupo;
 drop table if exists habilidade_valor_estatistica;
 drop table if exists habilidade_valor;
 drop table if exists jogador_estatisticas_temporada;
@@ -17,11 +18,11 @@ drop table if exists partida_lance;
 drop table if exists jogador;
 
 drop table if exists clube_probabilidade;
-drop table if exists habilidade_valor_estatistica;
 drop table if exists partida_amistosa_resultado;
 drop table if exists rodada_amistosa;
 drop table if exists partida_resultado;
 drop table if exists partida_eliminatoria_resultado;
+drop table if exists partida_estatisticas;
 drop table if exists rodada;
 drop table if exists rodada_eliminatoria;
 drop table if exists classificacao;

@@ -14,7 +14,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class JogadorEstatisticasTemporada {//TODO: contabilizar estatísticas de amistosos separadamente
+public class JogadorEstatisticasTemporada {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasTemporadaSequence")	
@@ -42,6 +42,14 @@ public class JogadorEstatisticasTemporada {//TODO: contabilizar estatísticas de
 	private Integer numeroJogosAmistosos;
 	
 	private Integer golsMarcadosAmistosos;
+	
+	private Integer assistencias;
+	
+	private Integer assistenciasAmistosos;
+	
+	//TODO: estatisticas goleiro: gols tomados, defesas
+	
+	//TODO: assistencias
 
 	public JogadorEstatisticasTemporada() {
 		
@@ -57,6 +65,8 @@ public class JogadorEstatisticasTemporada {//TODO: contabilizar estatísticas de
 		this.numeroJogosAmistosos = 0;
 		this.golsMarcadosAmistosos = 0;
 		this.faltas = 0;
+		this.assistencias = 0;
+		this.assistenciasAmistosos = 0;
 	}
 	
 	public Long getId() {
@@ -154,4 +164,35 @@ public class JogadorEstatisticasTemporada {//TODO: contabilizar estatísticas de
 	public void incrementarGolsMarcadosAmistosos() {
 		this.golsMarcadosAmistosos++;
 	}
+
+	public Integer getAssistencias() {
+		return assistencias;
+	}
+
+	public void setAssistencias(Integer assistencias) {
+		this.assistencias = assistencias;
+	}
+
+	public Integer getAssistenciasAmistosos() {
+		return assistenciasAmistosos;
+	}
+
+	public void setAssistenciasAmistosos(Integer assistenciasAmistosos) {
+		this.assistenciasAmistosos = assistenciasAmistosos;
+	}
+	
+	public void incrementarAssistencias() {
+		this.assistencias++;
+	}
+
+	public void incrementarAssistenciasAmistosos() {
+		this.assistenciasAmistosos++;
+	}
+
+	@Override
+	public String toString() {
+		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos="
+				+ numeroJogos + ", golsMarcados=" + golsMarcados + ", assistencias=" + assistencias + "]";
+	}
+
 }

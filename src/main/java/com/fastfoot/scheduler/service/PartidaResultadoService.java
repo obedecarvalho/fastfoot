@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.service.PartidaService;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -85,8 +86,8 @@ public class PartidaResultadoService {
 	@Autowired
 	private TemporadaRepository temporadaRepository;
 
-	private void jogarPartida(PartidaResultadoJogavel partida) {
-		partidaService.jogar(partida);
+	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		partidaService.jogar(partida, partidaJogadorEstatisticaDTO);
 	}
 
 	/*private void jogarPartida(PartidaResultadoJogavel partida, Integer numeroJogadas) {
@@ -107,21 +108,21 @@ public class PartidaResultadoService {
 
 	}*/
 
-	public void jogarRodada(Rodada rodada, List<Classificacao> classificacao) {
+	public void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
 			//jogarPartida(p, Constantes.NRO_JOGADAS_PARTIDA);
-			jogarPartida(p);
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
 	}
 
-	public void jogarRodada(RodadaEliminatoria rodada) {
+	public void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
 			//jogarPartida(p, Constantes.NRO_JOGADAS_ELIMINATORIA);
-			jogarPartida(p);
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
 			
 			if (p.getProximaPartida() != null) {
 				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
@@ -129,9 +130,9 @@ public class PartidaResultadoService {
 		}
 	}
 
-	public void jogarRodada(RodadaAmistosa rodada) {
+	public void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
-			jogarPartida(p);
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
 		}
 	}
 
