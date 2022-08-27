@@ -15,7 +15,7 @@ public class EstrategiaHabilidadeLateral implements EstrategiaHabilidadePosicaoJ
 	
 	protected static final List<Habilidade> HABILIDADES_OUTROS;
 
-	protected static final Integer NUM_HAB_ESP_ELETIVAS = 1;
+	protected static final Integer NUM_HAB_ESP_ELETIVAS = 5;
 	
 	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 1;
 	
@@ -29,16 +29,16 @@ public class EstrategiaHabilidadeLateral implements EstrategiaHabilidadePosicaoJ
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.PASSE);
 		
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.FINALIZACAO);
-		HABILIDADES_ESPECIFICAS.add(Habilidade.CRUZAMENTO);
+		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.CRUZAMENTO);
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.ARMACAO);
 		
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.CABECEIO);
 		
-		HABILIDADES_ESPECIFICAS.add(Habilidade.MARCACAO);
-		HABILIDADES_ESPECIFICAS.add(Habilidade.DESARME);
+		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.MARCACAO);
+		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.DESARME);
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.INTERCEPTACAO);
 		
-		HABILIDADES_ESPECIFICAS.add(Habilidade.VELOCIDADE);
+		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.VELOCIDADE);
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.DRIBLE);
 		HABILIDADES_COMUNS_ELETIVAS.add(Habilidade.FORCA);
 		
