@@ -23,9 +23,6 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
-import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -47,25 +44,13 @@ public class PartidaService {
 	 * Substituicoes
 	 * 
 	 */
-	
-	/*@Autowired
-	private JogadorRepository jogadorRepository;*/
 
-	/*@Autowired
-	private HabilidadeValorRepository habilidadeValorRepository;*/
-
-	/*@Autowired
-	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;*/
-	
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 
-	/*@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/  
-
 	private static final Double NUM_LANCES_POR_MINUTO = 1d;
 	
-	private static final Double PESO_FORCA_GERAL = 1.1d;
+	/*private static final Double PESO_FORCA_GERAL = 1.1d;*/
 	
 	private static final Integer MINUTOS = 90;
 
@@ -147,10 +132,7 @@ public class PartidaService {
 
 		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
-		
-		/*inicializarEstatisticasJogador(jogadoresMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		inicializarEstatisticasJogador(jogadoresVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);*/
-		
+
 		inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
 		inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
 		
@@ -195,41 +177,6 @@ public class PartidaService {
 	
 	/*private void salvarEstatisticasJogador(List<Jogador> jogadores) {
 		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
-	}*/
-
-	/*public void jogar(PartidaResultadoJogavel partidaResultado) {
-
-		List<Jogador> jogadoresMandante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeMandante(), false);
-		List<Jogador> jogadoresVisitante = jogadorRepository.findByClubeAndAposentadoFetchHabilidades(partidaResultado.getClubeVisitante(), false);
-		
-		inicializarEstatisticas(jogadoresMandante, partidaResultado);
-		inicializarEstatisticas(jogadoresVisitante, partidaResultado);
-		
-		
-		/*for (Jogador j : jogadoresMandante) {
-			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
-		}
-
-		for (Jogador j : jogadoresVisitante) {
-			j.setHabilidades(habilidadeValorRepository.findByJogador(j));
-		}* /
-
-		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
-		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();
-		Esquema esquema = factory.gerarEsquema(jogadoresMandante, jogadoresVisitante);
-		
-		jogar(esquema, partidaResultado);
-		
-		/*for (Jogador j : jogadoresMandante) {
-			habilidadeValorRepository.saveAll(j.getHabilidades());
-		}
-	
-		for (Jogador j : jogadoresVisitante) {
-			habilidadeValorRepository.saveAll(j.getHabilidades());
-		}* /
-		
-		salvarEstatisticas(jogadoresMandante);
-		salvarEstatisticas(jogadoresVisitante);
 	}*/
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
@@ -308,7 +255,7 @@ public class PartidaService {
 					//fora
 					//habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
 					habilidadeFora = new HabilidadeValor(Habilidade.FORA, (int) Math.round(Math.max(
-							((habilidadeValorAcao.getJogador().getForcaGeral() * PESO_FORCA_GERAL) - habilidadeValorAcao.getValor()),
+							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 

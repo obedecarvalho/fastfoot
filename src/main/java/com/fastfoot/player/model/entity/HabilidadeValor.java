@@ -21,7 +21,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class HabilidadeValor implements ElementoRoleta {
+public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para JogadorHabilidade ??
 	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
@@ -43,15 +43,17 @@ public class HabilidadeValor implements ElementoRoleta {
 	
 	private Double potencialDesenvolvimentoEfetivo;
 
-	//private Integer quantidadeUso;
-	
-	//private Integer quantidadeUsoVencedor;
-	
-	//private Boolean habilidadeEspecifica = false;
-
 	private HabilidadeTipo habilidadeTipo;
 	
 	private Double passoDesenvolvimento;
+
+	/*
+	 * TODO:
+	 * 	* Usar em PartidaService similar a Habilidade.FORA
+	 * 	* A probabilidade vai ser definida semelhante a JogadorFactoryImplDesenVariavel
+	 * 
+	 */
+	private Double probabilidadeErro;
 
 	@Transient
 	private Integer valorN;
@@ -69,73 +71,18 @@ public class HabilidadeValor implements ElementoRoleta {
 		this.valor = valor;
 	}
 
-	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento) {
-		super();
-		this.habilidade = habilidade;
-		this.valor = valor;
-		this.jogador = jogador;
-		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		//this.quantidadeUso = 0;
-		//this.quantidadeUsoVencedor = 0;
-	}*/
-	
-	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
-			Boolean especifica) {
-		super();
-		this.habilidade = habilidade;
-		this.valor = valor;
-		this.jogador = jogador;
-		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		// this.quantidadeUso = 0;
-		// this.quantidadeUsoVencedor = 0;
-		this.habilidadeEspecifica = especifica;
-	}*/
-
-	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
-			Boolean especifica, Double passoDesenvolvimentoAno) {
-		super();
-		this.habilidade = habilidade;
-		this.valor = valor;
-		this.jogador = jogador;
-		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		// this.quantidadeUso = 0;
-		// this.quantidadeUsoVencedor = 0;
-		this.habilidadeEspecifica = especifica;
-		this.passoDesenvolvimento = passoDesenvolvimentoAno;
-	}*/
-
-	/*public HabilidadeValor(Habilidade habilidade, Integer valor, Jogador jogador, Integer potencialDesenvolvimento,
-			Boolean especifica, Double passoDesenvolvimento, Double valorDecimal, Double potencialDesenvolvimentoEfetivo) {
-		super();
-		this.habilidade = habilidade;
-		this.valor = valor;
-		this.jogador = jogador;
-		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		// this.quantidadeUso = 0;
-		// this.quantidadeUsoVencedor = 0;
-		this.habilidadeEspecifica = especifica;
-		this.passoDesenvolvimento = passoDesenvolvimento;
-		this.valorDecimal = valorDecimal;
-		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
-	}*/
-	
 	public HabilidadeValor(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
-			/*Boolean especifica, Boolean habComum,*/
-			HabilidadeTipo habilidadeTipo,
-			Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
+			HabilidadeTipo habilidadeTipo, Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
 			Double passoDesenvolvimento) {
 		super();
 		this.jogador = jogador;
 		this.habilidade = habilidade;
 		this.valor = valor;
 		this.valorDecimal = valorDecimal;
-		//this.habilidadeEspecifica = especifica;
 		this.habilidadeTipo = habilidadeTipo;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
-		this.passoDesenvolvimento = passoDesenvolvimento;
-		// this.quantidadeUso = 0;
-		// this.quantidadeUsoVencedor = 0;	
+		this.passoDesenvolvimento = passoDesenvolvimento;	
 	}
 
 	public HabilidadeAcao getHabilidadeAcao() {
@@ -190,30 +137,6 @@ public class HabilidadeValor implements ElementoRoleta {
 	public void setPotencialDesenvolvimento(Double potencialDesenvolvimento) {
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
-	
-	/*public Integer getQuantidadeUso() {
-		return quantidadeUso;
-	}
-
-	public void setQuantidadeUso(Integer quantidadeUso) {
-		this.quantidadeUso = quantidadeUso;
-	}
-
-	public void incrementarQuantidadeUso() {
-		this.quantidadeUso++;
-	}*/
-
-	/*public Integer getQuantidadeUsoVencedor() {
-		return quantidadeUsoVencedor;
-	}
-
-	public void setQuantidadeUsoVencedor(Integer quantidadeUsoVencedor) {
-		this.quantidadeUsoVencedor = quantidadeUsoVencedor;
-	}
-
-	public void incrementarQuantidadeUsoVencedor() {
-		this.quantidadeUsoVencedor++;
-	}*/
 
 	public HabilidadeValorEstatistica getHabilidadeValorEstatistica() {
 		return habilidadeValorEstatistica;
@@ -222,14 +145,6 @@ public class HabilidadeValor implements ElementoRoleta {
 	public void setHabilidadeValorEstatistica(HabilidadeValorEstatistica habilidadeValorEstatistica) {
 		this.habilidadeValorEstatistica = habilidadeValorEstatistica;
 	}
-
-	/*public Boolean getHabilidadeEspecifica() {
-		return habilidadeEspecifica;
-	}
-
-	public void setHabilidadeEspecifica(Boolean habilidadeEspecifica) {
-		this.habilidadeEspecifica = habilidadeEspecifica;
-	}*/
 	
 	public Boolean isHabilidadeEspecifica() {
 		return HabilidadeTipo.ESPECIFICA.equals(habilidadeTipo);
@@ -269,6 +184,14 @@ public class HabilidadeValor implements ElementoRoleta {
 
 	public Double getValorTotal() {
 		return getValor() + getValorDecimal();
+	}
+
+	public Double getProbabilidadeErro() {
+		return probabilidadeErro;
+	}
+
+	public void setProbabilidadeErro(Double probabilidadeErro) {
+		this.probabilidadeErro = probabilidadeErro;
 	}
 
 	public Double getPotencialDesenvolvimentoEfetivo() {

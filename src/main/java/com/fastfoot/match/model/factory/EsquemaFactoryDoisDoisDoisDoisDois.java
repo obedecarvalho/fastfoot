@@ -144,42 +144,42 @@ public class EsquemaFactoryDoisDoisDoisDoisDois extends EsquemaFactory {
 		
 		//ZD ZE
 		EsquemaPosicao zd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_3).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_11).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_11).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
 		i++;
 		EsquemaPosicao ze = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_4).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_9).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_9).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
 		i++;
 		
 		//VD VE
 		EsquemaPosicao vd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_5).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_10).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_10).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
 		i++;
 		EsquemaPosicao ve = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_8).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_7).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_7).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
 		i++;
 
 		//LD LE
 		EsquemaPosicao ld = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_2).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_6).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_6).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
 		i++;
 		EsquemaPosicao le = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_6).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_2).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_2).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
 		i++;
 
 		//MD ME
 		EsquemaPosicao md = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_7).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_8).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_8).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
 		i++;
 		EsquemaPosicao me = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_10).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_5).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_5).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
 		i++;
 
 		//AD AE
 		EsquemaPosicao ad = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_9).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_4).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_4).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
 		i++;
 		EsquemaPosicao ae = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_11).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_3).getJogador());
+				visitantesMap.get(EscalacaoPosicao.P_3).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
 		i++;
 
 		//GV

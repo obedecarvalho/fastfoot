@@ -48,8 +48,6 @@ public class JogadorEstatisticasTemporada {
 	private Integer assistenciasAmistosos;
 	
 	//TODO: estatisticas goleiro: gols tomados, defesas
-	
-	//TODO: assistencias
 
 	public JogadorEstatisticasTemporada() {
 		

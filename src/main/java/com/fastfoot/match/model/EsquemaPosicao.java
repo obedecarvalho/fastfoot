@@ -19,10 +19,16 @@ public class EsquemaPosicao {
 	
 	private List<EsquemaTransicao> transicoesVisitante;
 	
+	private Double probabilidadeArremateForaMandante;
+	
+	private Double probabilidadeArremateForaVisitante;
+	
 	public EsquemaPosicao(Integer numero, Jogador goleiro) {
 		super();
 		this.goleiro = goleiro;
 		this.numero = numero;
+		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
+		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
 	}
 
 	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante) {
@@ -30,6 +36,20 @@ public class EsquemaPosicao {
 		this.mandante = mandante;
 		this.visitante = visitante;
 		this.numero = numero;
+		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
+		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
+	}
+	
+	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante, Double probabilidadeArremateForaMandante,
+			Double probabilidadeArremateForaVisitante) {
+		super();
+		this.mandante = mandante;
+		this.visitante = visitante;
+		this.numero = numero;
+		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
+		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
+		this.probabilidadeArremateForaMandante = probabilidadeArremateForaMandante;
+		this.probabilidadeArremateForaVisitante = probabilidadeArremateForaVisitante;
 	}
 
 	public Jogador getMandante() {
@@ -80,17 +100,41 @@ public class EsquemaPosicao {
 		this.goleiro = goleiro;
 	}
 
-	public void addTransicaoMandante(EsquemaTransicao esquemaTransicao) {
-		if (transicoesMandante == null) {
-			transicoesMandante = new ArrayList<EsquemaTransicao>();
+	public Double getProbabilidadeArremateForaMandante() {
+		return probabilidadeArremateForaMandante;
+	}
+
+	public void setProbabilidadeArremateForaMandante(Double probabilidadeArremateForaMandante) {
+		this.probabilidadeArremateForaMandante = probabilidadeArremateForaMandante;
+	}
+
+	public Double getProbabilidadeArremateForaVisitante() {
+		return probabilidadeArremateForaVisitante;
+	}
+
+	public void setProbabilidadeArremateForaVisitante(Double probabilidadeArremateForaVisitante) {
+		this.probabilidadeArremateForaVisitante = probabilidadeArremateForaVisitante;
+	}
+	
+	public Double getProbabilidadeArremateFora(boolean posseMandante) {
+		if (posseMandante) {
+			return probabilidadeArremateForaMandante;
+		} else {
+			return probabilidadeArremateForaVisitante;
 		}
+	}
+
+	public void addTransicaoMandante(EsquemaTransicao esquemaTransicao) {
+		/*if (transicoesMandante == null) {
+			transicoesMandante = new ArrayList<EsquemaTransicao>();
+		}*/
 		transicoesMandante.add(esquemaTransicao);
 	}
 
 	public void addTransicaoVisitante(EsquemaTransicao esquemaTransicao) {
-		if (transicoesVisitante == null) {
+		/*if (transicoesVisitante == null) {
 			transicoesVisitante = new ArrayList<EsquemaTransicao>();
-		}
+		}*/
 		transicoesVisitante.add(esquemaTransicao);
 	}
 

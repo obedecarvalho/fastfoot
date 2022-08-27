@@ -36,4 +36,5 @@ public interface Esquema {
 	
 	public Jogador getJogadorSemPosse();
 
+	public Double getProbabilidadeArremateForaPosicaoPosse();
 }

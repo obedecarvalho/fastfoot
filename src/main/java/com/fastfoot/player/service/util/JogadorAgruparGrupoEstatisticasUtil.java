@@ -8,6 +8,7 @@ import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.entity.Jogador;
 
+@Deprecated
 public class JogadorAgruparGrupoEstatisticasUtil {
 
 	public static Map<Jogador, Map<Habilidade, List<PartidaLance>>> agruparEstatisticas(List<PartidaLance> lances) {

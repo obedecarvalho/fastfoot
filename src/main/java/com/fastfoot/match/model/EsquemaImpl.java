@@ -155,4 +155,9 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getVisitante();
 		}
 	}
+	
+	@Override
+	public Double getProbabilidadeArremateForaPosicaoPosse() {
+		return getPosicaoAtual().getProbabilidadeArremateFora(getPosseBolaMandante());
+	}
 }
