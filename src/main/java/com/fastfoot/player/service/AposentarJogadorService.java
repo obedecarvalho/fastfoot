@@ -13,6 +13,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
@@ -66,9 +67,13 @@ public class AposentarJogadorService {
 		jogadores = newGruposDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(newGruposDesenvolvimento);
+		List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();
 		for (Jogador j : jogadores) {
-			habilidadeValorRepository.saveAll(j.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
+			//habilidadeValorRepository.saveAll(j.getHabilidades());
+			jogHab.addAll(j.getHabilidades());
 		}
+		habilidadeValorRepository.saveAll(jogHab);
+		
 
 		jogadores = gruposDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
 		jogadorRepository.saveAll(jogadores);

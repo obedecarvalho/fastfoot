@@ -36,14 +36,16 @@ public class EscalarClubeService {
 
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
+		List<EscalacaoJogadorPosicao> escalacoes = new ArrayList<EscalacaoJogadorPosicao>();
 		for (Clube c : clubes) {
-			escalarClube(c);
+			escalarClube(c, escalacoes);
 		}
+		escalacaoJogadorPosicaoRepository.saveAll(escalacoes);
 		clubeRepository.saveAll(clubes);
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	public void escalarClube(Clube clube) {
+	public void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
 		
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClube(clube);
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndAposentado(clube, Boolean.FALSE);
@@ -60,7 +62,8 @@ public class EscalarClubeService {
 				.mapToDouble(e -> e.getJogador().getForcaGeral()).average().getAsDouble()).intValue());
 		//
 
-		escalacaoJogadorPosicaoRepository.saveAll(escalacao);//TODO: fazer apenas um para todos os Clubes??
+		//escalacaoJogadorPosicaoRepository.saveAll(escalacao);
+		escalacoes.addAll(escalacao);
 	}
 	
 	private Comparator<Jogador> getComparator() {
@@ -77,7 +80,7 @@ public class EscalarClubeService {
 	
 	private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
 		//TODO: setar null quando não houver jogador pra ser escalado
-		//TODO: inverter MEI e ATA
+		//TODO: inverter (dir/esq) MEI e ATA
 		
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> escalacaoMap = escalacao.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));

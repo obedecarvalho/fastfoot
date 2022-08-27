@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -19,11 +20,15 @@ import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.HabilidadeValor;
+import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
@@ -84,6 +89,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
+	
+	@Autowired
+	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -511,6 +519,45 @@ public class CriarCalendarioTemporadaService {
 				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(jogadores.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
+	}
+	
+	private void atualizarPassoDesenvolvimentoJogador2() {
+		//if (semana.getNumero() == 1) {
+		
+		//
+		//TODO: mover para CriarCalendarioTemporadaService.atualizarPassoDesenvolvimentoJogador()
+		Temporada temporada = null;
+		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();
+
+		HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
+		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
+				.findByTemporada(temporada);
+		
+		Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
+				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));
+		
+		//
+			
+		List<Jogador> jogadores = jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(
+						jogadores.subList(i * offset, jogadores.size()), hep, estatisticasGrupoMap));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(
+						jogadores.subList(i * offset, (i + 1) * offset), hep, estatisticasGrupoMap));
 				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}

@@ -31,14 +31,14 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	@Autowired
-	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
+	/*@Autowired
+	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;*/
 
-	@Autowired
-	private TemporadaRepository temporadaRepository;
+	/*@Autowired
+	private TemporadaRepository temporadaRepository;*/
 	
-	@Autowired
-	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
+	/*@Autowired
+	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;*/
 
 	//private static final Random R = new Random();
 	
@@ -68,8 +68,6 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		/*Temporada temporada = null;
 		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();*/
 
-		//agruparHabilidadeValorEstatisticaService.agrupar(temporada);
-
 		//HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
 		/*List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
 				.findByTemporada(temporada);*/
@@ -94,9 +92,44 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		
 		jogadorRepository.saveAll(jogadores);
 		habilidadeValorRepository.saveAll(habilidadeValores);
-		/*for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());
-		}*/
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("jogadorServiceExecutor")
+	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores,
+			HabilidadeEstatisticaPercentil hep,
+			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap) {
+		
+		//
+		//TODO: mover para CriarCalendarioTemporadaService.atualizarPassoDesenvolvimentoJogador()
+		/*Temporada temporada = null;
+		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();*/
+
+		//HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
+		/*List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
+				.findByTemporada(temporada);*/
+		
+		/*Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
+				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));*/
+		
+		//
+		
+		for (Jogador j : jogadores) {
+			j.setIdade(j.getIdade() + 1);
+			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
+				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
+				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
+			}
+		}
+		
+		List<HabilidadeValor> habilidadeValores = new ArrayList<HabilidadeValor>();
+		for (Jogador jog : jogadores) {
+			habilidadeValores.addAll(jog.getHabilidades());
+		}
+		
+		jogadorRepository.saveAll(jogadores);
+		habilidadeValorRepository.saveAll(habilidadeValores);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}

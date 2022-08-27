@@ -12,6 +12,7 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 
+@Deprecated
 public class JogadorFactoryImplDesenVariavel extends JogadorFactory {
 	
 	private static JogadorFactory INSTANCE;

@@ -127,7 +127,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			//
 			peso = getPesoHabilidadeValor(habilidadeEstatisticaPercentil, estatisticaGrupoMap.get(hv));
 			//passo = getPercDesenvolvimentoFixo(j.getIdade()) * passoProx + getPercDesenvolvimentoEstatisticas(j.getIdade()) * passoProx * peso;
-			passo = passoProx + passoProx * peso * getPercDesenvolvimentoMaximo(j.getIdade());
+			passo = passoProx + (passoProx * peso * getPercDesenvolvimentoMaximo(j.getIdade()));
 			variacao = passo - passoProx;
 			//
 			hv.setPassoDesenvolvimento(passo);
