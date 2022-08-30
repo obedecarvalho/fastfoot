@@ -9,7 +9,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;

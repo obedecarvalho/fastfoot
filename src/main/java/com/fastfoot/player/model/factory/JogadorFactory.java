@@ -2,6 +2,7 @@ package com.fastfoot.player.model.factory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -24,6 +25,8 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.service.util.NomeUtil;
 
 public abstract class JogadorFactory {
+	
+	private static Comparator<Jogador> COMPARATOR;
 	
 	//########	SUPER CLASSE ABSTRACT	########################
 	
@@ -51,26 +54,26 @@ public abstract class JogadorFactory {
 	//protected static final Integer IDADE_MIN_TITULAR = 25;
 	//protected static final Integer IDADE_MAX_TITULAR = 33;
 	
-	protected static final Double POT_DES_PORC_INICIAL = 23d;
+	public static final Double POT_DES_PORC_INICIAL = 26d;//23d;
 	
 	//6 anos
-	//crescimento I - 7.0
+	//crescimento I - 8.0 --7.0
 	protected static final Integer FASE_1_IDADE_MIN = 17;
 	protected static final Integer FASE_1_IDADE_MAX = 22;
-	protected static final Double FASE_1_POT_DES_PORC = 65d;
+	protected static final Double FASE_1_POT_DES_PORC = 74d;//65d;
 	protected static final Double FASE_1_POT_DES_PASSO = (FASE_1_POT_DES_PORC - POT_DES_PORC_INICIAL)
 			/ (FASE_1_IDADE_MAX - FASE_1_IDADE_MIN + 1);
 	
 	//4 anos
-	//crescimento II - 5.0
+	//crescimento II - 4.0 --5.0
 	protected static final Integer FASE_2_IDADE_MIN = 23;
 	protected static final Integer FASE_2_IDADE_MAX = 26;
-	protected static final Double FASE_2_POT_DES_PORC = 85d;
+	protected static final Double FASE_2_POT_DES_PORC = 90d;//85d;
 	protected static final Double FASE_2_POT_DES_PASSO = (FASE_2_POT_DES_PORC - FASE_1_POT_DES_PORC)
 			/ (FASE_2_IDADE_MAX - FASE_2_IDADE_MIN + 1);
 	
 	//5 anos
-	//crescimento III - 3.0
+	//crescimento III - 2.0 --3.0
 	protected static final Integer FASE_3_IDADE_MIN = 27;
 	protected static final Integer FASE_3_IDADE_MAX = 31;
 	protected static final Double FASE_3_POT_DES_PORC = 100d;
@@ -96,8 +99,10 @@ public abstract class JogadorFactory {
 	public static final Double NUMERO_DESENVOLVIMENTO_ANO_JOGADOR = 5d;
 
 	//17 a 38 anos
-	public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.23d, 0.30d, 0.37d, 0.44d, 0.51d, 0.58d, 0.65d,
-			0.70d, 0.75d, 0.80d, 0.85d, 0.88d, 0.91d, 0.94d, 0.97d, 1.00d, 0.95d, 0.90d, 0.85d, 0.77d, 0.69d, 0.61d);
+	/*public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.23d, 0.30d, 0.37d, 0.44d, 0.51d, 0.58d, 0.65d,
+			0.70d, 0.75d, 0.80d, 0.85d, 0.88d, 0.91d, 0.94d, 0.97d, 1.00d, 0.95d, 0.90d, 0.85d, 0.77d, 0.69d, 0.61d);*/
+	public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.26d, 0.34d, 0.42d, 0.50d, 0.58d, 0.66d, 0.74d,
+			0.78d, 0.82d, 0.86d, 0.90d, 0.92d, 0.94d, 0.96d, 0.98d, 1.00d, 0.95d, 0.90d, 0.85d, 0.77d, 0.69d, 0.61d);
 
 	/*protected Integer gerarValorHabilidadeEspecifico(Integer media, List<Integer> valorHabilidadesEspecificas) {
 		Integer valor = gerarValorHabilidade(media, PESO_HABILIDADE_ESPECIFICO);
@@ -454,5 +459,19 @@ public abstract class JogadorFactory {
 		}
 		
 		return sumHabValor / peso;
+	}
+	
+	public static Comparator<Jogador> getComparator() {
+		if (COMPARATOR == null) {
+			COMPARATOR = new Comparator<Jogador>() {
+	
+				@Override
+				public int compare(Jogador o1, Jogador o2) {
+					//return o1.getForcaGeral().compareTo(o2.getForcaGeral());
+					return o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
+				}
+			};
+		}
+		return COMPARATOR;
 	}
 }

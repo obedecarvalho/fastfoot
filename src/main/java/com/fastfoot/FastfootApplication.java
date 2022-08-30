@@ -24,7 +24,7 @@ public class FastfootApplication {
 		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("PartidaExecutor-");
+		executor.setThreadNamePrefix("partidaExecutor-");
 		executor.initialize();
 		return executor;
     }

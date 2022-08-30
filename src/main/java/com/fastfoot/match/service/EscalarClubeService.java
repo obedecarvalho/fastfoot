@@ -19,6 +19,7 @@ import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -65,19 +66,7 @@ public class EscalarClubeService {
 		//escalacaoJogadorPosicaoRepository.saveAll(escalacao);
 		escalacoes.addAll(escalacao);
 	}
-	
-	private Comparator<Jogador> getComparator() {
-		 Comparator<Jogador> comparator = new Comparator<Jogador>() {
 
-			@Override
-			public int compare(Jogador o1, Jogador o2) {
-				//return o1.getForcaGeral().compareTo(o2.getForcaGeral());
-				return o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
-			}
-		};
-		return comparator;
-	}
-	
 	private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
 		//TODO: setar null quando não houver jogador pra ser escalado
 		//TODO: inverter (dir/esq) MEI e ATA
@@ -85,7 +74,7 @@ public class EscalarClubeService {
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> escalacaoMap = escalacao.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
 		
-		Comparator<Jogador> comparator = getComparator();
+		Comparator<Jogador> comparator = JogadorFactory.getComparator();
 		
 		List<Jogador> jogPos = null;
 		
@@ -197,7 +186,7 @@ public class EscalarClubeService {
 	
 	private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
 		
-		Comparator<Jogador> comparator = getComparator();
+		Comparator<Jogador> comparator = JogadorFactory.getComparator();
 		
 		List <EscalacaoJogadorPosicao> escalacao = new ArrayList<EscalacaoJogadorPosicao>();
 		

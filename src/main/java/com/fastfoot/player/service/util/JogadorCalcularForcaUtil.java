@@ -1,17 +1,5 @@
 package com.fastfoot.player.service.util;
 
-import java.util.Arrays;
-import java.util.List;
-
-import com.fastfoot.player.model.EstrategiaHabilidadeAtacante;
-import com.fastfoot.player.model.EstrategiaHabilidadeGoleiro;
-import com.fastfoot.player.model.EstrategiaHabilidadeLateral;
-import com.fastfoot.player.model.EstrategiaHabilidadeMeia;
-import com.fastfoot.player.model.EstrategiaHabilidadeVolante;
-import com.fastfoot.player.model.EstrategiaHabilidadeZagueiro;
-import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.Posicao;
-import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 

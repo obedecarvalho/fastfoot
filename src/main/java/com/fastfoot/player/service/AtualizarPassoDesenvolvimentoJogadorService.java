@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -16,11 +14,8 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
-import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
-import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
 @Service
 public class AtualizarPassoDesenvolvimentoJogadorService {
