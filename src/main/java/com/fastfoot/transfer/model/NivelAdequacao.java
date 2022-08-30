@@ -5,8 +5,8 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 public enum NivelAdequacao {//TODO: adequar porcentagemMinima
 	
 	A(0.875), 
-	B(0.800), 
-	C(0.700), 
+	B(0.775), 
+	C(0.675), 
 	D(0.500), 
 	E(JogadorFactory.POT_DES_PORC_INICIAL / 100),
 	F(0d);

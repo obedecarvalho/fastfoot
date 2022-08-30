@@ -59,7 +59,8 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(Long idTemporada, Integer idClube, Integer posicao, Double forcaMin, Double forcaMax);//TODO: colocar em repository especifico*/
 	
 	@Query(nativeQuery = true, value =
-			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral, j.id_clube AS id_clube_jog, ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disp_neg " +
+			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral, j.id_clube AS id_clube, " +
+			" 	ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disponivel_negociacao " +
 			" FROM necessidade_contratacao_clube ncc " +
 			" INNER JOIN clube c ON ncc.id_clube = c.id " +
 			" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.aposentado = false) " +

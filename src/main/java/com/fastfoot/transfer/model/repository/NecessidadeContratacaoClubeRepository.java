@@ -15,7 +15,7 @@ public interface NecessidadeContratacaoClubeRepository extends JpaRepository<Nec
 
 	public List<NecessidadeContratacaoClube> findByClubeAndTemporada(Clube clube, Temporada temporada);
 	
-	public List<NecessidadeContratacaoClube> findByClubeAndTemporadaAndNivelAdequacaoMax(Clube clube, Temporada temporada, NivelAdequacao nivelAdequacaoMax);
+	public List<NecessidadeContratacaoClube> findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMin(Clube clube, Temporada temporada, NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin);
 
 	public List<NecessidadeContratacaoClube> findByTemporada(Temporada temporada);
 	

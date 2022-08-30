@@ -91,6 +91,14 @@ public class Jogador {
 	@Transient
 	private List<HabilidadeValor> habilidadesAcaoMeioFim;
 
+	public Jogador() {
+		
+	}
+	
+	public Jogador(Long id) {
+		this.id = id;
+	}
+
 	public String getNome() {
 		return nome;
 	}
