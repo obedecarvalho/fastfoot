@@ -13,11 +13,15 @@ import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 @Repository
 public interface PropostaTransferenciaJogadorRepository extends JpaRepository<PropostaTransferenciaJogador, Long> {
 
-	public List<PropostaTransferenciaJogador> findByJogador(Jogador jogador);
+	//public List<PropostaTransferenciaJogador> findByJogador(Jogador jogador);
 	
-	public List<PropostaTransferenciaJogador> findByClubeOrigem(Clube clube);
+	//public List<PropostaTransferenciaJogador> findByClubeOrigem(Clube clube);
 	
-	public List<PropostaTransferenciaJogador> findByClubeDestino(Clube clube);
+	//public List<PropostaTransferenciaJogador> findByClubeDestino(Clube clube);
 	
 	public List<PropostaTransferenciaJogador> findByTemporada(Temporada temporada);
+	
+	public List<PropostaTransferenciaJogador> findByTemporadaAndClubeOrigem(Temporada temporada, Clube clubeOrigem);
+	
+	public List<PropostaTransferenciaJogador> findByTemporadaAndClubeDestino(Temporada temporada, Clube clubeDestino);
 }

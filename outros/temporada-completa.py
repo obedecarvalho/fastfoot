@@ -5,6 +5,7 @@ import sys
 
 url = 'http://localhost:8081/proximaSemana'
 urlNovaTemporada = 'http://localhost:8081/novaTemporada'
+urlTrans = 'http://localhost:8081/gerarTransferencias'
 
 numero = 0
 
@@ -38,6 +39,7 @@ for i in range(1, numTemporada+1):
 		else:
 			print('Error (Criando Temporada): ' + str(r.status_code))
 			exit()
+		r = requests.get(urlTrans)
 	
 	novaTemporada = True #Tratar caso de mais de uma temporada
 	numero = 0

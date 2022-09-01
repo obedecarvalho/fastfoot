@@ -9,15 +9,18 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador"), @Index(columnList = "id_clube_origem"), @Index(columnList = "id_clube_destino") })
-public class PropostaTransferenciaJogador {
+public class PropostaTransferenciaJogador implements ElementoRoleta {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transferenciaJogadorSequence")
@@ -55,6 +58,12 @@ public class PropostaTransferenciaJogador {
 	private Double valorTransferencia;
 	
 	private Boolean propostaAceita;
+	
+	@Transient
+	private Integer peso;
+	
+	@Transient
+	private Integer pesoN;
 
 	public Long getId() {
 		return id;
@@ -126,6 +135,24 @@ public class PropostaTransferenciaJogador {
 
 	public void setNecessidadeContratacaoClube(NecessidadeContratacaoClube necessidadeContratacaoClube) {
 		this.necessidadeContratacaoClube = necessidadeContratacaoClube;
+	}
+
+	@Override
+	public Integer getValor() {
+		if (peso == null) {
+			peso = Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
+					/ ((getClubeDestino().getForcaGeral() - getJogador().getForcaGeral()) + 1);
+		}
+		return peso;
+	}
+
+	@Override
+	public Integer getValorN() {
+		if (pesoN == null) {
+			pesoN = new Double(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
+					/ (Math.pow((getClubeDestino().getForcaGeral() - getJogador().getForcaGeral()), 2) + 1)).intValue();
+		}
+		return pesoN;
 	}
 
 	/*public AdequacaoElencoPosicao getAdequacaoElencoPosicao() {

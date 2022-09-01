@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -25,11 +27,13 @@ import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 
 @Service
-public class CalcularAdequacaoJogadorService {//TODO: melhorar nome
+public class CalcularNecessidadeContratacaoClubeService {
 	
 	private static final Integer IDADE_MAX_EMPRESTAR = 22;
 	
 	private static Comparator<AdequacaoJogadorDTO> COMPARATOR;
+	
+	//###	REPOSITORY	###
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -43,6 +47,8 @@ public class CalcularAdequacaoJogadorService {//TODO: melhorar nome
 	@Autowired
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
 	
+	//###	SERVICE	###
+
 	@Autowired
 	private TemporadaService temporadaService;
 	
@@ -50,9 +56,19 @@ public class CalcularAdequacaoJogadorService {//TODO: melhorar nome
 		return (double) forcaJogador/forcaClube;
 	}
 
-	public void calcularAdequacaoJogadorPorClube(Clube clube) {
+	@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		
+		for (Clube c : clubes) {
+			calcularNecessidadeContratacaoClube(c, temporada);
+		}
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+
+	public void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada) {
+
 		List<Jogador> jogs = jogadorRepository.findByClubeAndAposentado(clube, false);
 		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
@@ -124,8 +140,8 @@ public class CalcularAdequacaoJogadorService {//TODO: melhorar nome
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isAtacante()).collect(Collectors.toList()),
 				contratacoes, negociaveis, temporada, clube, Posicao.ATACANTE);
 		
-		necessidadeContratacaoClubeRepository.saveAll(contratacoes);
-		disponivelNegociacaoRepository.saveAll(negociaveis);
+		necessidadeContratacaoClubeRepository.saveAll(contratacoes);//TODO: apenas um saveAll para todos clubes??
+		disponivelNegociacaoRepository.saveAll(negociaveis);//TODO: apenas um saveAll para todos clubes??
 
 	}
 	

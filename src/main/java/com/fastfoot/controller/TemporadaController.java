@@ -40,6 +40,17 @@ public class TemporadaController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}
+	
+	@GetMapping("/gerarTransferencias")
+	public ResponseEntity<Boolean> gerarTransferencias() {
+		try {
+			criarCalendarioTemporadaService.gerarTransferencias();
+			return ResponseEntity.ok(Boolean.TRUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
 
 	/*@GetMapping("/classificarClubesTemporadaAtual")
 	public ResponseEntity<Boolean> classificarClubesTemporadaAtual() {

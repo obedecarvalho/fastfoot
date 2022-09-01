@@ -62,6 +62,9 @@ import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.PreCarregarParametrosService;
+import com.fastfoot.transfer.service.AnalisarPropostaTransferenciaService;
+import com.fastfoot.transfer.service.CalcularNecessidadeContratacaoClubeService;
+import com.fastfoot.transfer.service.GerarPropostaTransferenciaService;
 import com.fastfoot.service.PreCarregarClubeService;
 
 @Service
@@ -130,6 +133,15 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
+	
+	@Autowired
+	private CalcularNecessidadeContratacaoClubeService calcularNecessidadeContratacaoClubeService;
+	
+	@Autowired
+	private GerarPropostaTransferenciaService gerarPropostaTransferenciaService;
+	
+	@Autowired
+	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -156,8 +168,6 @@ public class CriarCalendarioTemporadaService {
 			temporada.setAtual(false);
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
-			
-			//TODO: mesclar atualizarPassoDesenvolvimentoJogador() e aposentarJogadores()??
 
 			stopWatch.split();
 			inicio = stopWatch.getSplitNanoTime();
@@ -188,10 +198,8 @@ public class CriarCalendarioTemporadaService {
 				for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 					if ((i + 1) == FastfootApplication.NUM_THREAD) {
 						criarJogadorFuture.add(criarJogadoresClubeService.criarJogadoresClube(clubes.subList(i * offset, clubes.size())));
-						//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 					} else {
 						criarJogadorFuture.add(criarJogadoresClubeService.criarJogadoresClube(clubes.subList(i * offset, (i+1) * offset)));
-						//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 					}
 				}
 				
@@ -242,6 +250,12 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#salvar:" + (fim - inicio));//40%
 		
+		/*inicio = stopWatch.getSplitNanoTime();
+		gerarTransferencias();
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#gerarTransferencias:" + (fim - inicio));*/
+		
 		stopWatch.split();
 		inicio = stopWatch.getSplitNanoTime();
 		criarEstatisticasJogadorTemporada(temporada);
@@ -261,7 +275,7 @@ public class CriarCalendarioTemporadaService {
 
 		List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
 		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada)));
+		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada, j.getClube())));
 		
 		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
@@ -443,15 +457,11 @@ public class CriarCalendarioTemporadaService {
 		
 		int offset = gds.size() / FastfootApplication.NUM_THREAD;
 		
-		//System.err.println("\t\t->Total: " + gds.size());
-		
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, gds.size())));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, (i+1) * offset)));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		
@@ -471,10 +481,8 @@ public class CriarCalendarioTemporadaService {
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, (i+1) * offset)));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		
@@ -493,10 +501,8 @@ public class CriarCalendarioTemporadaService {
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		
@@ -516,10 +522,8 @@ public class CriarCalendarioTemporadaService {
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(jogadores.subList(i * offset, jogadores.size())));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(jogadores.subList(i * offset, (i+1) * offset)));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		
@@ -527,6 +531,55 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 	
+	public void gerarTransferencias() {
+		//if (semana.getNumero() == 0, 1, 2, 3) {
+		List<Clube> clubes = clubeRepository.findAll(); 
+
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		//Calcular necessidade contratacao
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(clubes.subList(i * offset, clubes.size())));
+			} else {
+				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(clubes.subList(i * offset, (i+1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		transferenciasFuture.clear();
+		
+		//Fazer propostas transferencia
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(clubes.subList(i * offset, clubes.size())));
+			} else {
+				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(clubes.subList(i * offset, (i+1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		
+		transferenciasFuture.clear();
+		
+		//Fazer propostas transferencia
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(clubes.subList(i * offset, clubes.size())));
+			} else {
+				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(clubes.subList(i * offset, (i+1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
+	}
+	
+	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador2() {
 		//if (semana.getNumero() == 1) {
 		
@@ -554,11 +607,9 @@ public class CriarCalendarioTemporadaService {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(
 						jogadores.subList(i * offset, jogadores.size()), hep, estatisticasGrupoMap));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento(
 						jogadores.subList(i * offset, (i + 1) * offset), hep, estatisticasGrupoMap));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		

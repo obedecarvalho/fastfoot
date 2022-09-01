@@ -50,5 +50,16 @@ public class FastfootApplication {
 		executor.initialize();
 		return executor;
     }
+	
+	@Bean(name = "transferenciaExecutor")
+	public Executor asyncTransferenciaExecutor() {
+		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(NUM_THREAD);
+		//executor.setMaxPoolSize(8);
+		//executor.setQueueCapacity(32);
+		executor.setThreadNamePrefix("transferenciaExecutor-");
+		executor.initialize();
+		return executor;
+    }
 
 }

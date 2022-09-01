@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class RoletaUtil {
+public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 
 	private static final Random R = new Random();
 
@@ -142,5 +142,12 @@ public class RoletaUtil {
 		}
 
 		return elementos[i];
+	}
+	
+	public static <T> T sortearPesoUm(List<T> elements) {
+		
+		if (elements == null || elements.isEmpty()) return null;
+		
+		return elements.get(R.nextInt(elements.size()));
 	}
 }

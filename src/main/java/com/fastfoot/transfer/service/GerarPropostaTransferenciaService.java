@@ -4,8 +4,10 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -14,6 +16,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.dto.JogadorAlvoDTO;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -55,13 +58,26 @@ public class GerarPropostaTransferenciaService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
-	
+
+	//###	SERVICE	###
+
 	@Autowired
 	private TemporadaService temporadaService;
 	
-	public void gerarPropostaTransferenciaClube(Clube clube) {
+	@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> gerarPropostaTransferencia(List<Clube> clubes) {
+		
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		
+		for (Clube c : clubes) {
+			gerarPropostaTransferenciaClube(c, temporada);
+		}
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+
+	public void gerarPropostaTransferenciaClube(Clube clube, Temporada temporada) {
+
 		List<Map<String, Object>> possiveisJogadores = null;
 
 		List<NecessidadeContratacaoClube> necessidadesContratacao = necessidadeContratacaoClubeRepository
@@ -71,29 +87,21 @@ public class GerarPropostaTransferenciaService {
 				.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMin(clube, temporada, NivelAdequacao.B, NivelAdequacao.B));
 		
 		for (NecessidadeContratacaoClube nc : necessidadesContratacao) {
-			/*possiveisJogadores = jogadorRepository.findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(temporada.getId(), clube.getId(),
-					nc.getPosicao().ordinal(), nc.getNivelAdequacaoMin().getPorcentagemMinima(),
-					nc.getNivelAdequacaoMax().getPorcentagemMinima());*/
 			
 			double diferencaForca = DIFERENCA_FORCA_PASSO_MIN;
 			int jogadoresEncontrados = 0;
-			//System.err.println("\n\t\tXXX");
 			double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
 			
-			while (diferencaForca < (1.0 - nc.getNivelAdequacaoMin().getPorcentagemMinima()) && jogadoresEncontrados < NUM_MIN_JOGADORES) {
+			while (diferencaForca < (1.0 - nc.getNivelAdequacaoMin().getPorcentagemMinima())//TODO: corrigir while 
+					&& jogadoresEncontrados < NUM_MIN_JOGADORES) {
+
 				possiveisJogadores = jogadorRepository.findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
-						/*temporada.getId(), clube.getId(), nc.getPosicao().ordinal(),*/
 						nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
 				
 				jogadoresEncontrados = possiveisJogadores.size();
 				diferencaForca += DIFERENCA_FORCA_PASSO;
-				
-				//System.err.println("\t\t" + (forcaBase - diferencaForca) + "\t" + (forcaBase + diferencaForca));
-				//System.err.println(jogadoresEncontrados);
-				//System.err.println(diferenca_forca);
+
 			}
-			
-			//System.err.println(diferenca_forca);
 			
 			if (possiveisJogadores.size() > 0) {
 				
@@ -110,11 +118,21 @@ public class GerarPropostaTransferenciaService {
 					j.setTitular((Boolean) jogMap.get("titular"));
 					j.setDisponivelNegociacao((Boolean) jogMap.get("disponivel_negociacao"));
 					j.setPosicao(Posicao.values()[(int) jogMap.get("posicao")]);
+					j.setIdade((int) jogMap.get("idade"));
+					j.setValorTransferencia((double) jogMap.get("valor_transferencia"));
 					
 					jogadoresPossiveis.add(j);
 				}
 				
-				List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
+				//
+				//System.err.println(String.format("\t\tDN: %d", jogadoresPossiveis.stream().filter(jgd -> jgd.isDisponivelNegociacao()).count()));
+				//
+				
+				jogadoresPossiveis.stream().forEach(JogadorAlvoDTO::calcularRankTransferencia);//TODO: favorecer jogadores na lista de transferencia (DispNego)
+				
+				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.executar(jogadoresPossiveis);
+
+				/*List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
 				PropostaTransferenciaJogador prop = null;
 				
 				for (JogadorAlvoDTO jog : jogadoresPossiveis) {
@@ -127,9 +145,16 @@ public class GerarPropostaTransferenciaService {
 					prop.setTemporada(temporada);
 					
 					props.add(prop);
-				}
+				}*/
 				
-				propostaTransferenciaJogadorRepository.saveAll(props);
+				PropostaTransferenciaJogador proposta = new PropostaTransferenciaJogador();
+				proposta.setJogador(new Jogador(jogadorSelecionado.getIdJogador()));
+				proposta.setClubeDestino(clube);
+				proposta.setClubeOrigem(new Clube(jogadorSelecionado.getIdClube()));
+				proposta.setNecessidadeContratacaoClube(nc);
+				proposta.setTemporada(temporada);
+				
+				propostaTransferenciaJogadorRepository.save(proposta);//TODO: apenas um saveAll para todos clubes??
 				
 			} else {
 				System.err.println("\t\tNão foi encontrado jogadores para negociar");

@@ -34,6 +34,7 @@ build/
 
 log/
 src/main/java/com/fastfoot/controller/DevController.java
+src/main/java/com/fastfoot/controller/DataViewUtil.java
 src/main/java/com/fastfoot/outros
 fastfoot_src
 

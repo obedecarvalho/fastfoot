@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
@@ -28,6 +29,10 @@ public class JogadorEstatisticasTemporada {
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_clube")
+	private Clube clube;
 	
 	private Integer numeroJogos;
 	
@@ -53,7 +58,7 @@ public class JogadorEstatisticasTemporada {
 		
 	}
 	
-	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada) {
+	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada, Clube clube) {
 		this.jogador = jogador;
 		this.temporada = temporada;
 		this.numeroJogos = 0;
@@ -65,6 +70,7 @@ public class JogadorEstatisticasTemporada {
 		this.faltas = 0;
 		this.assistencias = 0;
 		this.assistenciasAmistosos = 0;
+		this.clube = clube;
 	}
 	
 	public Long getId() {
@@ -89,6 +95,14 @@ public class JogadorEstatisticasTemporada {
 
 	public void setTemporada(Temporada temporada) {
 		this.temporada = temporada;
+	}
+
+	public Clube getClube() {
+		return clube;
+	}
+
+	public void setClube(Clube clube) {
+		this.clube = clube;
 	}
 
 	public Integer getNumeroJogos() {

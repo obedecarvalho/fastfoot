@@ -19,6 +19,6 @@ public interface NecessidadeContratacaoClubeRepository extends JpaRepository<Nec
 
 	public List<NecessidadeContratacaoClube> findByTemporada(Temporada temporada);
 	
-	public List<NecessidadeContratacaoClube> findByClube(Clube clube);
+	//public List<NecessidadeContratacaoClube> findByClube(Clube clube);
 
 }

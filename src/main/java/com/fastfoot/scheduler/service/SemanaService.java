@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -471,4 +472,8 @@ public class SemanaService {
 		return promotorEliminatoria;
 	}
 
+	public Semana getSemanaAtual() {
+		Optional<Semana> s = semanaRepository.findSemanaAtual();
+		return s.isPresent() ? s.get() : null;
+	}
 }

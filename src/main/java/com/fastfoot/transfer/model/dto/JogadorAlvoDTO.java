@@ -1,8 +1,9 @@
 package com.fastfoot.transfer.model.dto;
 
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.service.util.ElementoRoleta;
 
-public class JogadorAlvoDTO {
+public class JogadorAlvoDTO implements ElementoRoleta {
 	
 	private Long idJogador;
 	
@@ -10,11 +11,17 @@ public class JogadorAlvoDTO {
 	
 	private Integer forcaGeralJogador;
 	
+	private Integer idade;
+	
+	private Double valorTransferencia;
+	
 	private Posicao posicao;
 	
 	private Boolean titular;
 	
 	private Boolean disponivelNegociacao;
+	
+	private Integer rankTransferencia;
 
 	public Long getIdJogador() {
 		return idJogador;
@@ -62,6 +69,67 @@ public class JogadorAlvoDTO {
 
 	public void setPosicao(Posicao posicao) {
 		this.posicao = posicao;
+	}
+
+	public Integer getIdade() {
+		return idade;
+	}
+
+	public void setIdade(Integer idade) {
+		this.idade = idade;
+	}
+
+	public Double getValorTransferencia() {
+		return valorTransferencia;
+	}
+
+	public void setValorTransferencia(Double valorTransferencia) {
+		this.valorTransferencia = valorTransferencia;
+	}
+
+	public Boolean getTitular() {
+		return titular;
+	}
+
+	public Boolean getDisponivelNegociacao() {
+		return disponivelNegociacao;
+	}
+
+	public Integer getRankTransferencia() {
+		return rankTransferencia;
+	}
+
+	public void setRankTransferencia(Integer rankTransferencia) {
+		this.rankTransferencia = rankTransferencia;
+	}
+	
+	public void calcularRankTransferencia() {//TODO: melhorar calculo
+		if (rankTransferencia == null) {
+			Double rankTransferencia = valorTransferencia;
+
+			if (titular == null) titular = false;
+			if (disponivelNegociacao == null) disponivelNegociacao = false;
+
+			if (titular && disponivelNegociacao) {
+				//Nada
+			} else if (titular) {
+				rankTransferencia = rankTransferencia / 1.1;
+			} else if (disponivelNegociacao) {
+				rankTransferencia = rankTransferencia / 0.9;
+			}
+			
+			this.rankTransferencia = rankTransferencia.intValue();
+		}
+	}
+
+	@Override
+	public Integer getValor() {
+		return rankTransferencia;
+	}
+
+	@Override
+	public Integer getValorN() {
+		return rankTransferencia;
 	}
 
 }
