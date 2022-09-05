@@ -17,26 +17,16 @@ import com.fastfoot.player.model.entity.Jogador;
 @Repository
 public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
-	//public List<Jogador> findByClubeAndAposentado(Clube clube, Boolean aposentado);
-	
 	public List<Jogador> findByClubeAndStatusJogador(Clube clube, StatusJogador status);
-	
-	/*@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube AND j.aposentado = :aposentado ")
-	public List<Jogador> findByClubeAndAposentadoFetchHabilidades(@Param("clube") Clube clube, @Param("aposentado") Boolean aposentado);*/
-	
+
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube AND j.statusJogador = :status ")
 	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidades(@Param("clube") Clube clube, @Param("status") StatusJogador status);
-	
+
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j = :jogador ")
 	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
-	
-	//public List<Jogador> findByAposentado(Boolean aposentado);
-	
+
 	public List<Jogador> findByStatusJogador(StatusJogador status);
-	
-	/*@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.aposentado = :aposentado ")
-	public List<Jogador> findByAposentadoFetchHabilidades(@Param("aposentado") Boolean aposentado);*/
-	
+
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.statusJogador = :status ")
 	public List<Jogador> findByStatusJogadorFetchHabilidades(@Param("status") StatusJogador status);
 

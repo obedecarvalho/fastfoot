@@ -42,7 +42,7 @@ public class AposentarJogadorService {
 		for (GrupoDesenvolvimentoJogador gdj : gruposDesenvolvimento) {
 
 			//aposentar
-			gdj.getJogador().setAposentado(true);
+			//gdj.getJogador().setAposentado(true);
 			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
 			gdj.setAtivo(false);
 

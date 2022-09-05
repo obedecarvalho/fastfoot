@@ -403,7 +403,7 @@ public abstract class JogadorFactory {
 		jogador.setClube(clube);
 		jogador.setPosicao(posicao);
 		jogador.setIdade(sortearIdade());
-		jogador.setAposentado(false);
+		//jogador.setAposentado(false);
 		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
@@ -419,7 +419,7 @@ public abstract class JogadorFactory {
 		jogador.setClube(clube);
 		jogador.setPosicao(posicao);
 		jogador.setIdade(idade);
-		jogador.setAposentado(false);
+		//jogador.setAposentado(false);
 		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
@@ -435,7 +435,7 @@ public abstract class JogadorFactory {
 		jogador.setClube(clube);
 		jogador.setPosicao(posicao);
 		jogador.setIdade(idade);
-		jogador.setAposentado(false);
+		//jogador.setAposentado(false);
 		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, forcaGeral);

@@ -66,8 +66,6 @@ public class Jogador {
 	
 	private Double forcaGeralPotencialEfetiva;
 	
-	private Boolean aposentado;
-	
 	private StatusJogador statusJogador;
 	
 	private Double valorTransferencia;
@@ -253,14 +251,6 @@ public class Jogador {
 
 	public void setForcaGeralPotencial(Integer forcaGeralPotencial) {
 		this.forcaGeralPotencial = forcaGeralPotencial;
-	}
-
-	public Boolean getAposentado() {
-		return aposentado;
-	}
-
-	public void setAposentado(Boolean aposentado) {
-		this.aposentado = aposentado;
 	}
 
 	/*public GrupoDesenvolvimentoJogador getGrupoDesenvolvimentoJogador() {

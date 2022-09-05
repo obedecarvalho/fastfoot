@@ -24,7 +24,8 @@ public interface AdequacaoElencoPosicaoRepository extends JpaRepository<Adequaca
 			" SELECT j.id as id_jogador, j.posicao, j.forca_geral, j.id_clube as id_clube_jog " +
 			" FROM adequacao_elenco_posicao aep " +
 			" INNER JOIN clube c ON aep.id_clube = c.id " +
-			" INNER JOIN jogador j ON (j.id_clube <> c.id AND aep.posicao = j.posicao AND j.aposentado = false) " +
+			//" INNER JOIN jogador j ON (j.id_clube <> c.id AND aep.posicao = j.posicao AND j.aposentado = false) " +
+			" INNER JOIN jogador j ON (j.id_clube <> c.id AND aep.posicao = j.posicao AND j.status_jogador = 0) " + //StatusJogador.ATIVO
 			" LEFT JOIN escalacao_jogador_posicao ejp ON ejp.id_jogador = j.id  " +
 			" left join proposta_transferencia_jogador ptj on ptj.id_jogador = j.id " +//TODO: usar para evitar negociar novamente na mesma temporada
 			" WHERE true " +
