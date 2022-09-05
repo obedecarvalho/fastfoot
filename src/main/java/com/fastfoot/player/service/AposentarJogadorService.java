@@ -56,7 +56,8 @@ public class AposentarJogadorService {
 			habilidadeValorRepository.saveAll(newGrupoDesenvolvimento.getJogador().getHabilidades());*/
 
 			newGruposDesenvolvimento.add(criarNovoJogadorSubsAposentado(gdj.getJogador().getClube(),
-					gdj.getJogador().getPosicao(), gdj.getJogador().getNumero(), gdj.getCelulaDesenvolvimento()));
+					gdj.getJogador().getPosicao(), gdj.getJogador().getNumero(), gdj.getCelulaDesenvolvimento(),
+					gdj.getJogador().getForcaGeralPotencialEfetiva().intValue()));
 			
 		}
 		
@@ -84,9 +85,11 @@ public class AposentarJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero, CelulaDesenvolvimento celulaDesenvolvimento) {
+	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero, CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
 
-		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
+		//Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
+		
+		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN, forcaGeral);
 		
 		GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador = new GrupoDesenvolvimentoJogador(celulaDesenvolvimento, novoJogador, true);
 

@@ -1,5 +1,6 @@
 package com.fastfoot.transfer.model.dto;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.service.util.ElementoRoleta;
 
@@ -10,6 +11,8 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 	private Integer idClube;
 	
 	private Integer forcaGeralJogador;
+	
+	private Integer forcaGeralClube;
 	
 	private Integer idade;
 	
@@ -103,6 +106,14 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 		this.rankTransferencia = rankTransferencia;
 	}
 	
+	public Integer getForcaGeralClube() {
+		return forcaGeralClube;
+	}
+
+	public void setForcaGeralClube(Integer forcaGeralClube) {
+		this.forcaGeralClube = forcaGeralClube;
+	}
+
 	public void calcularRankTransferencia() {//TODO: melhorar calculo
 		if (rankTransferencia == null) {
 			Double rankTransferencia = valorTransferencia;
@@ -124,12 +135,15 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 
 	@Override
 	public Integer getValor() {
-		return rankTransferencia;
+		//return rankTransferencia;
+		return Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA / ((forcaGeralClube - forcaGeralJogador) + 1);
 	}
 
 	@Override
 	public Integer getValorN() {
-		return rankTransferencia;
+		//return rankTransferencia;
+		return new Double(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
+				/ (Math.pow((forcaGeralClube - forcaGeralJogador), 2) + 1)).intValue();
 	}
 
 }

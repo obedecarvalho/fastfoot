@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -37,9 +38,9 @@ public class GerarPropostaTransferenciaService {
 	
 	private static final int NUM_MIN_JOGADORES = 1;
 	
-	private static final double DIFERENCA_FORCA_PASSO = 0.02d;
+	private static final double DIFERENCA_FORCA_PASSO = 0.025d;
 	
-	private static final double DIFERENCA_FORCA_PASSO_MIN = 0.03d;
+	private static final double DIFERENCA_FORCA_PASSO_MIN = 0.025d;
 	
 	private static final double VAR_FORCA_BASE = 0.10d;
 	
@@ -90,16 +91,27 @@ public class GerarPropostaTransferenciaService {
 			
 			double diferencaForca = DIFERENCA_FORCA_PASSO_MIN;
 			int jogadoresEncontrados = 0;
+			long jogadoresDispNeg = 0;
 			double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
 			
-			while (diferencaForca < (1.0 - nc.getNivelAdequacaoMin().getPorcentagemMinima())//TODO: corrigir while 
-					&& jogadoresEncontrados < NUM_MIN_JOGADORES) {
+			while (diferencaForca < 0.05 //VAR_FORCA_BASE/2 //(forcaBase - nc.getNivelAdequacaoMin().getPorcentagemMinima()) 
+					&& jogadoresEncontrados < NUM_MIN_JOGADORES
+					&& jogadoresDispNeg < 1) {
 
 				possiveisJogadores = jogadorRepository.findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
 						nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
 				
 				jogadoresEncontrados = possiveisJogadores.size();
 				diferencaForca += DIFERENCA_FORCA_PASSO;
+				
+				//
+				jogadoresDispNeg = possiveisJogadores.stream().filter(
+						jm -> jm.get("disponivel_negociacao") != null && ((Boolean) jm.get("disponivel_negociacao")))
+						.count();
+				possiveisJogadores = possiveisJogadores.stream().filter(
+						jm -> jm.get("disponivel_negociacao") != null && ((Boolean) jm.get("disponivel_negociacao")))
+						.collect(Collectors.toList());
+				//
 
 			}
 			
@@ -114,7 +126,8 @@ public class GerarPropostaTransferenciaService {
 					
 					j.setIdJogador(((BigInteger) jogMap.get("id_jogador")).longValue());
 					j.setIdClube((int) jogMap.get("id_clube"));
-					j.setForcaGeralJogador((int) jogMap.get("forca_geral"));
+					j.setForcaGeralJogador((int) jogMap.get("forca_geral_jog"));
+					j.setForcaGeralClube((int) jogMap.get("forca_geral_clube"));
 					j.setTitular((Boolean) jogMap.get("titular"));
 					j.setDisponivelNegociacao((Boolean) jogMap.get("disponivel_negociacao"));
 					j.setPosicao(Posicao.values()[(int) jogMap.get("posicao")]);
@@ -131,6 +144,8 @@ public class GerarPropostaTransferenciaService {
 				jogadoresPossiveis.stream().forEach(JogadorAlvoDTO::calcularRankTransferencia);//TODO: favorecer jogadores na lista de transferencia (DispNego)
 				
 				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.executar(jogadoresPossiveis);
+				
+				System.err.println(jogadoresPossiveis.stream().map(jx -> jx.getValor()).collect(Collectors.toList()));
 
 				/*List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
 				PropostaTransferenciaJogador prop = null;
@@ -157,7 +172,7 @@ public class GerarPropostaTransferenciaService {
 				propostaTransferenciaJogadorRepository.save(proposta);//TODO: apenas um saveAll para todos clubes??
 				
 			} else {
-				System.err.println("\t\tNão foi encontrado jogadores para negociar");
+				System.err.println("\t\tNão foram encontrados jogadores para negociar");
 			}
 		}
 		

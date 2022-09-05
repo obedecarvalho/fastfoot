@@ -69,13 +69,13 @@ public class AnalisarPropostaTransferenciaService {
 			Optional<DisponivelNegociacao> disNegJogOpt = disponivelNegociacaoRepository
 					.findFirstByTemporadaAndJogador(temporada, j);
 			
-			System.err.println(propostasJog.stream().map(p -> p.getValor()).collect(Collectors.toList()));
+			//System.err.println(propostasJog.stream().map(p -> p.getValor()).collect(Collectors.toList()));
 			
 			if (disNegJogOpt.isPresent()) {
 				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);
 				propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executar(propostasJog);
 				
-				concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar);
+				concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar);//TODO: rejeitar propostas nao escolhidas
 			}
 			
 			

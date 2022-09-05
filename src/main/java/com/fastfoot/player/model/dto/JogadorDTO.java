@@ -11,6 +11,8 @@ import com.fastfoot.player.model.entity.Jogador;
 
 public class JogadorDTO {
 	
+	private Long idJogador;
+	
 	private String nome;
 
 	private String clubeNome;
@@ -231,12 +233,21 @@ public class JogadorDTO {
 		this.forcaGeral = forcaGeral;
 	}
 
+	public Long getIdJogador() {
+		return idJogador;
+	}
+
+	public void setIdJogador(Long idJogador) {
+		this.idJogador = idJogador;
+	}
+
 	public static List<JogadorDTO> convertToDTO(List<Jogador> jogadores) {
 		return jogadores.stream().map(s -> convertToDTO(s)).collect(Collectors.toList());
 	}
 	
 	public static JogadorDTO convertToDTO(Jogador jogador){
 		JogadorDTO dto = new JogadorDTO();
+		dto.setIdJogador(jogador.getId());
 		dto.setNome(jogador.getNome());
 		dto.setClubeNome(jogador.getClube().getNome());
 		dto.setPosicao(jogador.getPosicao().name());

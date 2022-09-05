@@ -370,6 +370,11 @@ public abstract class JogadorFactory {
 		return getInstance().gerarJogador(estrategia, clube, posicao, numero, idade);
 	}
 	
+	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade, Integer forcaGeral) {		
+		EstrategiaHabilidadePosicaoJogador estrategia = getEstrategiaPosicaoJogador(posicao);
+		return getInstance().gerarJogador(estrategia, clube, posicao, numero, idade, forcaGeral);
+	}
+	
 	public static EstrategiaHabilidadePosicaoJogador getEstrategiaPosicaoJogador(Posicao posicao) {
 		
 		if (Posicao.GOLEIRO.equals(posicao)) {
@@ -415,6 +420,21 @@ public abstract class JogadorFactory {
 		jogador.setAposentado(false);
 
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
+		
+		return jogador;
+	}
+	
+	protected Jogador gerarJogador(EstrategiaHabilidadePosicaoJogador estrategia, Clube clube, Posicao posicao, Integer numero, Integer idade, Integer forcaGeral) {
+		Jogador jogador = new Jogador();
+
+		jogador.setNumero(numero);
+		jogador.setNome(NomeUtil.sortearNome());
+		jogador.setClube(clube);
+		jogador.setPosicao(posicao);
+		jogador.setIdade(idade);
+		jogador.setAposentado(false);
+
+		sortearHabilidadeValor(jogador, estrategia, forcaGeral);
 		
 		return jogador;
 	}
