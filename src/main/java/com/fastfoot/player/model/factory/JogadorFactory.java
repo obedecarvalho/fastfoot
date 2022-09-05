@@ -19,6 +19,7 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
 import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
@@ -403,6 +404,7 @@ public abstract class JogadorFactory {
 		jogador.setPosicao(posicao);
 		jogador.setIdade(sortearIdade());
 		jogador.setAposentado(false);
+		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
 		
@@ -418,6 +420,7 @@ public abstract class JogadorFactory {
 		jogador.setPosicao(posicao);
 		jogador.setIdade(idade);
 		jogador.setAposentado(false);
+		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, clube.getForcaGeral());
 		
@@ -433,6 +436,7 @@ public abstract class JogadorFactory {
 		jogador.setPosicao(posicao);
 		jogador.setIdade(idade);
 		jogador.setAposentado(false);
+		jogador.setStatusJogador(StatusJogador.ATIVO);
 
 		sortearHabilidadeValor(jogador, estrategia, forcaGeral);
 		

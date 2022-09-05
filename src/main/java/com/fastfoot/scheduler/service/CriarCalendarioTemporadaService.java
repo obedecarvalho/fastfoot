@@ -21,6 +21,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
@@ -273,7 +274,7 @@ public class CriarCalendarioTemporadaService {
 
 	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
 
-		List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);//jogadorRepository.findByAposentado(Boolean.FALSE);
 		
 		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada, j.getClube())));
 		
@@ -472,7 +473,7 @@ public class CriarCalendarioTemporadaService {
 	private void calcularValorTransferenciaJogadores() {
 		//if (semana.getNumero() == 1) {
 			
-		List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);//jogadorRepository.findByAposentado(Boolean.FALSE);
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -513,7 +514,8 @@ public class CriarCalendarioTemporadaService {
 	private void atualizarPassoDesenvolvimentoJogador() {
 		//if (semana.getNumero() == 1) {
 			
-		List<Jogador> jogadores = jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
+								//jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -597,7 +599,8 @@ public class CriarCalendarioTemporadaService {
 		
 		//
 			
-		List<Jogador> jogadores = jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO); 
+				//jogadorRepository.findByAposentadoFetchHabilidades(Boolean.FALSE);
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		

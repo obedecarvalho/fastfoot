@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -42,6 +43,7 @@ public class AposentarJogadorService {
 
 			//aposentar
 			gdj.getJogador().setAposentado(true);
+			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
 			gdj.setAtivo(false);
 
 			//substituto

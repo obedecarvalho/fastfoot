@@ -21,6 +21,7 @@ import com.fastfoot.match.model.dto.EscalacaoJogadorDTO;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.dto.JogadorDTO;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
@@ -58,7 +59,7 @@ public class EscalarClubeService {
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository
 				.findByClubeFetchJogadorHabilidades(c);
 		
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndAposentado(c, false);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(c, false);
 		
 		EscalacaoClubeDTO escalacaoClubeDTO = new EscalacaoClubeDTO();
 		
@@ -96,7 +97,7 @@ public class EscalarClubeService {
 	public void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
 		
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClube(clube);
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndAposentado(clube, Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(clube, Boolean.FALSE);
 		
 		if (ValidatorUtil.isEmpty(escalacao)) {
 			escalacao = gerarEscalacaoInicial(clube, jogadores);

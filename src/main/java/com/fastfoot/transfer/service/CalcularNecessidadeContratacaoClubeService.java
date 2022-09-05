@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -69,7 +70,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 
 	public void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada) {
 
-		List<Jogador> jogs = jogadorRepository.findByClubeAndAposentado(clube, false);
+		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(clube, false);
 		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
 		

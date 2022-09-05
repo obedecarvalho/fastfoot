@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
@@ -24,7 +25,8 @@ public class JogadorService {
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 
 		if (clubeOpt.isPresent()) {
-			return jogadorRepository.findByClubeAndAposentado(clubeOpt.get(), false);
+			//return jogadorRepository.findByClubeAndAposentado(clubeOpt.get(), false);
+			return jogadorRepository.findByClubeAndStatusJogador(clubeOpt.get(), StatusJogador.ATIVO);
 		}
 
 		return null;

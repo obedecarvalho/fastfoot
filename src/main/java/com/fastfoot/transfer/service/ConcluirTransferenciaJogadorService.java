@@ -42,5 +42,6 @@ public class ConcluirTransferenciaJogadorService {
 
 		//TODO: gerar entradas e saidas financeiras
 		//TODO: criar novo JogadorEstatisticasTemporada com novo clube
+		//TODO: ajustar numero do jogador
 	}
 }

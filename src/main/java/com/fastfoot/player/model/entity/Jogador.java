@@ -15,7 +15,6 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -24,6 +23,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.StatusJogador;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_clube") }) //TODO: i-dex JogadorEstatisticasTemporada
@@ -67,6 +67,8 @@ public class Jogador {
 	private Double forcaGeralPotencialEfetiva;
 	
 	private Boolean aposentado;
+	
+	private StatusJogador statusJogador;
 	
 	private Double valorTransferencia;
 	
@@ -283,6 +285,18 @@ public class Jogador {
 
 	public void setValorTransferencia(Double valorTransferencia) {
 		this.valorTransferencia = valorTransferencia;
+	}
+
+	public StatusJogador getStatusJogador() {
+		return statusJogador;
+	}
+
+	public void setStatusJogador(StatusJogador statusJogador) {
+		this.statusJogador = statusJogador;
+	}
+	
+	public boolean isJogadorAtivo() {
+		return StatusJogador.ATIVO.equals(this.statusJogador);
 	}
 
 	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
