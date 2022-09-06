@@ -36,7 +36,8 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			+ " 	select j.id, avg(hv.valor) as forca_geral " + " 	from jogador j "
 			+ " 	inner join habilidade_valor hv on hv.id_jogador = j.id "
 			+ " 	where hv.habilidade_tipo = 0 " //HabilidadeTipo.ESPECIFICA 
-			+ " and not j.aposentado " + " 	group by j.id " + " ) tmp "
+			+ " 		and j.status_jogador = 0 " //StatusJogador.ATIVO
+			+ " 	group by j.id " + " ) tmp "
 			+ " where jog.id = tmp.id "
 	)
 	public void calcularForcaGeral();
@@ -65,15 +66,20 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" 	j.idade, j.valor_transferencia, c.forca_geral as forca_geral_clube " +
 			" FROM necessidade_contratacao_clube ncc " +
 			" INNER JOIN clube c ON ncc.id_clube = c.id " +
-			" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.aposentado = false) " +
+			//" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.aposentado = false) " +
+			" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.status_jogador = 0) " + //StatusJogador.ATIVO
 			" LEFT JOIN proposta_transferencia_jogador ptj " +
-			" 	ON (ptj.id_jogador = j.id AND ptj.id_clube_destino = ncc.id_clube AND ncc.id_temporada = ptj.id_temporada) " +//TODO: filtrar para permitir apenas uma tranferencia concluida por ano por jogador
+			" 	ON (ptj.id_jogador = j.id AND ptj.id_clube_destino = ncc.id_clube AND ncc.id_temporada = ptj.id_temporada) " +
+			" LEFT JOIN proposta_transferencia_jogador ptj2 " +
+			" 	ON (ptj2.id_jogador = j.id AND ncc.id_temporada = ptj2.id_temporada AND ptj2.proposta_aceita = true) " +//TODO: filtrar para permitir apenas uma tranferencia concluida por ano por jogador
 			" LEFT JOIN escalacao_jogador_posicao ejp ON ejp.id_jogador = j.id " +
 			" LEFT JOIN disponivel_negociacao dn ON (dn.id_jogador = j.id AND dn.id_temporada = ncc.id_temporada) " +
 			" WHERE ncc.id = ?1 " +
 			" 	AND j.forca_geral >= c.forca_geral * ?2 " +
 			" 	AND j.forca_geral < c.forca_geral * ?3 " +
-			" 	AND ptj.id IS NULL " //não ha propostras transferencia do clube nessa temporada
+			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * 0.95 AND c.forca_geral * 1.05 " +
+			" 	AND ptj.id IS NULL " + //não ha propostras transferencia do clube nessa temporada
+			" 	AND ptj2.id IS NULL "
 			)
 	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(Long idNecessidadeContratacao, Double forcaMin, Double forcaMax);//TODO: colocar em repository especifico
 }

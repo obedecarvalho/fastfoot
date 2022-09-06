@@ -76,5 +76,5 @@ public class Constantes {
 	public static final Integer ROLETA_N_POWER = 2;
 	
 	//###	TRANSFERENCIA	###
-	public static final Integer PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA = 100;
+	public static final Integer PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA = 1000;
 }

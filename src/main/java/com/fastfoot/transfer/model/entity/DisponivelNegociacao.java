@@ -37,17 +37,20 @@ public class DisponivelNegociacao {
 	private Temporada temporada;
 	
 	private TipoNegociacao tipoNegociacao;
+	
+	private Boolean ativo;
 
 	public DisponivelNegociacao() {
 
 	}
 
-	public DisponivelNegociacao(Temporada temporada, Clube clube, Jogador jogador, TipoNegociacao tipoNegociacao) {
+	public DisponivelNegociacao(Temporada temporada, Clube clube, Jogador jogador, TipoNegociacao tipoNegociacao, Boolean ativo) {
 		super();
 		this.temporada = temporada;
 		this.clube = clube;
 		this.jogador = jogador;
 		this.tipoNegociacao = tipoNegociacao;
+		this.ativo = ativo;
 	}
 	
 	public Long getId() {
@@ -88,6 +91,14 @@ public class DisponivelNegociacao {
 
 	public void setTipoNegociacao(TipoNegociacao tipoNegociacao) {
 		this.tipoNegociacao = tipoNegociacao;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 
 }

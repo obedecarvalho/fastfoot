@@ -40,11 +40,11 @@ public class GerarPropostaTransferenciaService {
 	
 	private static final double DIFERENCA_FORCA_PASSO = 0.025d;
 	
-	private static final double DIFERENCA_FORCA_PASSO_MIN = 0.025d;
+	private static final double DIFERENCA_FORCA_PASSO_MIN = 0.05d;
 	
-	private static final double VAR_FORCA_BASE = 0.10d;
+	//private static final double VAR_FORCA_BASE = 0.10d;
 	
-	//private static final double DIFERENCA_FORCA_PASSO_MAX = 0.20d;
+	private static final double DIFERENCA_FORCA_PASSO_MAX = 0.20d;
 	
 	//###	REPOSITORY	###
 	
@@ -82,26 +82,27 @@ public class GerarPropostaTransferenciaService {
 		List<Map<String, Object>> possiveisJogadores = null;
 
 		List<NecessidadeContratacaoClube> necessidadesContratacao = necessidadeContratacaoClubeRepository
-				.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMin(clube, temporada, NivelAdequacao.A, NivelAdequacao.A);
+				.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(clube, temporada, NivelAdequacao.A, NivelAdequacao.A, false);
 
 		necessidadesContratacao.addAll(necessidadeContratacaoClubeRepository
-				.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMin(clube, temporada, NivelAdequacao.B, NivelAdequacao.B));
+				.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(clube, temporada, NivelAdequacao.B, NivelAdequacao.B, false));
 		
 		for (NecessidadeContratacaoClube nc : necessidadesContratacao) {
 			
 			double diferencaForca = DIFERENCA_FORCA_PASSO_MIN;
-			int jogadoresEncontrados = 0;
+			//int jogadoresEncontrados = 0;
 			long jogadoresDispNeg = 0;
-			double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
+			//double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
 			
-			while (diferencaForca < 0.05 //VAR_FORCA_BASE/2 //(forcaBase - nc.getNivelAdequacaoMin().getPorcentagemMinima()) 
-					&& jogadoresEncontrados < NUM_MIN_JOGADORES
-					&& jogadoresDispNeg < 1) {
+			while (diferencaForca < DIFERENCA_FORCA_PASSO_MAX //VAR_FORCA_BASE/2 //(forcaBase - nc.getNivelAdequacaoMin().getPorcentagemMinima()) 
+					//&& jogadoresEncontrados < NUM_MIN_JOGADORES
+					&& jogadoresDispNeg < NUM_MIN_JOGADORES) {
 
 				possiveisJogadores = jogadorRepository.findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
-						nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
+						//nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
+						nc.getId(), nc.getNivelAdequacaoMin().getPorcentagemMinima(), nc.getNivelAdequacaoMin().getPorcentagemMinima() + diferencaForca);
 				
-				jogadoresEncontrados = possiveisJogadores.size();
+				//jogadoresEncontrados = possiveisJogadores.size();
 				diferencaForca += DIFERENCA_FORCA_PASSO;
 				
 				//
@@ -112,6 +113,8 @@ public class GerarPropostaTransferenciaService {
 						jm -> jm.get("disponivel_negociacao") != null && ((Boolean) jm.get("disponivel_negociacao")))
 						.collect(Collectors.toList());
 				//
+				
+				//System.err.println("\t" + (nc.getNivelAdequacaoMin().getPorcentagemMinima()) + ":" + (nc.getNivelAdequacaoMin().getPorcentagemMinima() + diferencaForca));
 
 			}
 			
@@ -143,9 +146,9 @@ public class GerarPropostaTransferenciaService {
 				
 				jogadoresPossiveis.stream().forEach(JogadorAlvoDTO::calcularRankTransferencia);//TODO: favorecer jogadores na lista de transferencia (DispNego)
 				
-				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.executar(jogadoresPossiveis);
+				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.executarN(jogadoresPossiveis);
 				
-				System.err.println(jogadoresPossiveis.stream().map(jx -> jx.getValor()).collect(Collectors.toList()));
+				//System.err.println(jogadoresPossiveis.stream().map(jx -> jx.getValorN()).collect(Collectors.toList()));
 
 				/*List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
 				PropostaTransferenciaJogador prop = null;
@@ -172,7 +175,7 @@ public class GerarPropostaTransferenciaService {
 				propostaTransferenciaJogadorRepository.save(proposta);//TODO: apenas um saveAll para todos clubes??
 				
 			} else {
-				System.err.println("\t\tNão foram encontrados jogadores para negociar");
+				//System.err.println("\t\tNão foram encontrados jogadores para negociar");
 			}
 		}
 		

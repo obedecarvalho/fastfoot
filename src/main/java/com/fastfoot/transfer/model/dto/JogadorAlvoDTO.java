@@ -136,7 +136,7 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 	@Override
 	public Integer getValor() {
 		//return rankTransferencia;
-		return Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA / ((forcaGeralClube - forcaGeralJogador) + 1);
+		return Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA / (Math.abs(forcaGeralClube - forcaGeralJogador) + 1);
 	}
 
 	@Override

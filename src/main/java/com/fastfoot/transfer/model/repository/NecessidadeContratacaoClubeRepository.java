@@ -13,11 +13,15 @@ import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 @Repository
 public interface NecessidadeContratacaoClubeRepository extends JpaRepository<NecessidadeContratacaoClube, Long> {
 
-	public List<NecessidadeContratacaoClube> findByClubeAndTemporada(Clube clube, Temporada temporada);
+	public List<NecessidadeContratacaoClube> findByClubeAndTemporadaAndNecessidadeSatisfeita(Clube clube,
+			Temporada temporada, Boolean necessidadeSatisfeita);
 	
-	public List<NecessidadeContratacaoClube> findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMin(Clube clube, Temporada temporada, NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin);
+	public List<NecessidadeContratacaoClube> findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(
+			Clube clube, Temporada temporada, NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin,
+			Boolean necessidadeSatisfeita);
 
-	public List<NecessidadeContratacaoClube> findByTemporada(Temporada temporada);
+	public List<NecessidadeContratacaoClube> findByTemporadaAndNecessidadeSatisfeita(Temporada temporada,
+			Boolean necessidadeSatisfeita);
 	
 	//public List<NecessidadeContratacaoClube> findByClube(Clube clube);
 

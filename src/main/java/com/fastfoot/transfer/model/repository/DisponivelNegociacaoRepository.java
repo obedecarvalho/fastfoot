@@ -14,15 +14,15 @@ import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 @Repository
 public interface DisponivelNegociacaoRepository extends JpaRepository<DisponivelNegociacao, Long> {
 
-	public List<DisponivelNegociacao> findByClubeAndTemporada(Clube clube, Temporada temporada);
+	public List<DisponivelNegociacao> findByClubeAndTemporadaAndAtivo(Clube clube, Temporada temporada, Boolean ativo);
 	
 	//public List<DisponivelNegociacao> findByClube(Clube clube);
 	
-	public List<DisponivelNegociacao> findByTemporada(Temporada temporada);
+	public List<DisponivelNegociacao> findByTemporadaAndAtivo(Temporada temporada, Boolean ativo);
 	
-	public List<DisponivelNegociacao> findByTemporadaAndJogador(Temporada temporada, Jogador jogador);
+	public List<DisponivelNegociacao> findByTemporadaAndJogadorAndAtivo(Temporada temporada, Jogador jogador, Boolean ativo);
 	
-	public Optional<DisponivelNegociacao> findFirstByTemporadaAndJogador(Temporada temporada, Jogador jogador);
+	public Optional<DisponivelNegociacao> findFirstByTemporadaAndJogadorAndAtivo(Temporada temporada, Jogador jogador, Boolean ativo);
 	
 	//public List<DisponivelNegociacao> findByJogador(Jogador jogador);
 

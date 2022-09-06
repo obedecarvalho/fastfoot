@@ -91,7 +91,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		}
 	}
 	
-	public void ajustarPassoDesenvolvimento(Jogador j) {
+	public void ajustarPassoDesenvolvimento(Jogador j) {//TODO: transformar em UPDATE
 
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
 		Double passoProx = null;

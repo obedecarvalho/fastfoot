@@ -38,18 +38,35 @@ public class NecessidadeContratacaoClube {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 	
+	private Boolean necessidadeSatisfeita;
+	
+	private Integer idadeMaxima;
+	
 	public NecessidadeContratacaoClube() {
 
 	}
 
 	public NecessidadeContratacaoClube(Temporada temporada, Clube clube, Posicao posicao,
-			NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin) {
+			NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin, Boolean necessidadeSatisfeita) {
 		super();
 		this.temporada = temporada;
 		this.clube = clube;
 		this.posicao = posicao;
 		this.nivelAdequacaoMin = nivelAdequacaoMin;
 		this.nivelAdequacaoMax = nivelAdequacaoMax;
+		this.necessidadeSatisfeita = necessidadeSatisfeita;
+	}
+	
+	public NecessidadeContratacaoClube(Temporada temporada, Clube clube, Posicao posicao,
+			NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin, Boolean necessidadeSatisfeita, Integer idadeMaxima) {
+		super();
+		this.temporada = temporada;
+		this.clube = clube;
+		this.posicao = posicao;
+		this.nivelAdequacaoMin = nivelAdequacaoMin;
+		this.nivelAdequacaoMax = nivelAdequacaoMax;
+		this.necessidadeSatisfeita = necessidadeSatisfeita;
+		this.idadeMaxima = idadeMaxima;
 	}
 
 	public Long getId() {
@@ -98,6 +115,26 @@ public class NecessidadeContratacaoClube {
 
 	public void setNivelAdequacaoMax(NivelAdequacao nivelAdequacaoMax) {
 		this.nivelAdequacaoMax = nivelAdequacaoMax;
+	}
+
+	public Boolean isNecessidadeSatisfeita() {
+		return necessidadeSatisfeita;
+	}
+
+	public void setNecessidadeSatisfeita(Boolean necessidadeSatisfeita) {
+		this.necessidadeSatisfeita = necessidadeSatisfeita;
+	}
+
+	public Integer getIdadeMaxima() {
+		return idadeMaxima;
+	}
+
+	public void setIdadeMaxima(Integer idadeMaxima) {
+		this.idadeMaxima = idadeMaxima;
+	}
+
+	public Boolean getNecessidadeSatisfeita() {
+		return necessidadeSatisfeita;
 	}
 
 }
