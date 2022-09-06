@@ -92,12 +92,12 @@ public class JogadorFactoryImplDesenVariavel extends JogadorFactory {
 		for (Habilidade h : habComuns) {
 			potencialSorteado = gerarValorHabilidadeComum(potencial);
 			forca = potencialSorteado * ajusteForca;
-			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
 			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
 			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.COMUM, /*false, true,*/
-					potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
+					potencialSorteado, potencialSorteado + variacao * QTDE_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 		
 		//Especificas
@@ -105,15 +105,15 @@ public class JogadorFactoryImplDesenVariavel extends JogadorFactory {
 		for (Habilidade h : habEspecificas) {
 			potencialSorteado = gerarValorHabilidadeEspecifico(potencial);
 			forca = potencialSorteado * ajusteForca;
-			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
 			valorHabilidadesEspecificasPot.add(potencialSorteado);
 			valorHabilidadesEspecificas.add(forca);
-			valorHabilidadesEspecificasPotEfetiva.add(potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR);
+			valorHabilidadesEspecificasPotEfetiva.add(potencialSorteado + variacao * QTDE_DESENVOLVIMENTO_ANO_JOGADOR);
 			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, true, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
 			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.ESPECIFICA, /*true, false,*/
-					potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
+					potencialSorteado, potencialSorteado + variacao * QTDE_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 		jogador.setForcaGeral(
 				(new Double(valorHabilidadesEspecificas.stream().mapToDouble(v -> v).average().getAsDouble())).intValue());
@@ -128,12 +128,12 @@ public class JogadorFactoryImplDesenVariavel extends JogadorFactory {
 		for (Habilidade h : habOutros) {
 			potencialSorteado = gerarValorHabilidadeOutros(potencial);
 			forca = potencialSorteado * ajusteForca;
-			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, jogador.getIdade());
 			forcaDecimal = forca - forca.intValue();
 			//addHabilidade(jogador, h, forca.intValue(), potencialSorteado, false, passoProx + variacao, forcaDecimal, potencialSorteado + variacao);
 			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.OUTRO, /*false, false,*/
-					potencialSorteado, potencialSorteado + variacao * NUMERO_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
+					potencialSorteado, potencialSorteado + variacao * QTDE_DESENVOLVIMENTO_ANO_JOGADOR, passoProx + variacao);
 		}
 	}
 	
@@ -147,10 +147,10 @@ public class JogadorFactoryImplDesenVariavel extends JogadorFactory {
 		
 		for (HabilidadeValor hv : j.getHabilidades()) {
 			//passoProx = ((hv.getPotencialDesenvolvimento() * ajusteForcaProx) - forca) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
-			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, j.getIdade());
 			hv.setPassoDesenvolvimento(passoProx + variacao);
-			hv.setPotencialDesenvolvimentoEfetivo(hv.getPotencialDesenvolvimentoEfetivo() + variacao * JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR);
+			hv.setPotencialDesenvolvimentoEfetivo(hv.getPotencialDesenvolvimentoEfetivo() + variacao * JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR);
 			if (hv.isHabilidadeEspecifica()) {
 				valorHabilidadesEspecificasPotEfetiva.add(hv.getPotencialDesenvolvimentoEfetivo());
 			}

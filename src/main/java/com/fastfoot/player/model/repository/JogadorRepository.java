@@ -42,6 +42,15 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	)
 	public void calcularForcaGeral();
 	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update jogador " +
+			" set idade = idade + 1 " +
+			" where status_jogador = 0 "
+	)
+	public void incrementarIdade();
+	
 	/*@Query(nativeQuery = true, value =
 			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral, j.id_clube AS id_clube_jog, ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disp_neg " +
 			" FROM necessidade_contratacao_clube ncc " +

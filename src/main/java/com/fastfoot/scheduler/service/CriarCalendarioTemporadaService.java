@@ -30,6 +30,7 @@ import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
+import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
@@ -96,6 +97,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
+	
+	@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -172,7 +176,9 @@ public class CriarCalendarioTemporadaService {
 
 			stopWatch.split();
 			inicio = stopWatch.getSplitNanoTime();
-			atualizarPassoDesenvolvimentoJogador();
+			//atualizarPassoDesenvolvimentoJogador();
+			//atualizarPassoDesenvolvimentoJogador2();
+			atualizarPassoDesenvolvimentoJogador3();
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));//35%
@@ -511,6 +517,7 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 
+	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador() {
 		//if (semana.getNumero() == 1) {
 			
@@ -531,6 +538,18 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
+	}
+	
+	@SuppressWarnings("unused")
+	private void atualizarPassoDesenvolvimentoJogador3() {
+		jogadorRepository.incrementarIdade();
+		
+		for (int i = JogadorFactory.IDADE_MIN; i < JogadorFactory.IDADE_MAX; i++) {
+			
+			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
+					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
+					JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN + 1));
+		}
 	}
 	
 	public void gerarTransferencias() {

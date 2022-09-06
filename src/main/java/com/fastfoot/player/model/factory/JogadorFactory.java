@@ -97,7 +97,7 @@ public abstract class JogadorFactory {
 	protected static final Double FASE_5_POT_DES_PASSO = (FASE_5_POT_DES_PORC - FASE_4_POT_DES_PORC)
 			/ (FASE_5_IDADE_MAX - FASE_5_IDADE_MIN + 1);//Negativo
 	
-	public static final Double NUMERO_DESENVOLVIMENTO_ANO_JOGADOR = 5d;
+	public static final Double QTDE_DESENVOLVIMENTO_ANO_JOGADOR = 5d;
 
 	//17 a 38 anos
 	/*public static final List<Double> VALOR_AJUSTE = Arrays.asList(0.23d, 0.30d, 0.37d, 0.44d, 0.51d, 0.58d, 0.65d,

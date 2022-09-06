@@ -82,7 +82,7 @@ public class DesenvolverJogadorService {
 			desenvolverJogador(gdj, gdj.getJogador());
 			//gdj.setJogador(j);//
 			
-			if (gdj.getQtdeExecAno().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
+			if (gdj.getQtdeExecAno().equals(JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
 				gdj.setQtdeExecAno(0);
 			}
 
