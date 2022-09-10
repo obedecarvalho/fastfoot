@@ -12,6 +12,26 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 @EnableAsync
 public class FastfootApplication {
 	
+	/*
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		
+		--1ro
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		
+		--outros
+		inicio = stopWatch.getSplitNanoTime();
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		
+		stopWatch.stop();
+		stopWatch.getNanoTime());--Tempo total
+	 */
+	
 	public static final Integer NUM_THREAD = 8;
 
 	public static void main(String[] args) {

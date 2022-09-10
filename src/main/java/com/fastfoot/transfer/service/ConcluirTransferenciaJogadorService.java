@@ -52,6 +52,7 @@ public class ConcluirTransferenciaJogadorService {
 		
 		propostaTransferenciaJogador.getJogador().setClube(propostaTransferenciaJogador.getClubeDestino());
 		
+		//TODO: se Temporada.semana.numero = 0 e jogadorEstatisticasTemporadaAtual.isEmpty -> excluir jogadorEstatisticasTemporadaAtual
 		propostaTransferenciaJogador.getJogador()
 				.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(
 						propostaTransferenciaJogador.getJogador(), propostaTransferenciaJogador.getTemporada(),
@@ -65,9 +66,9 @@ public class ConcluirTransferenciaJogadorService {
 		
 		disponivelNegociacao.setAtivo(false);
 
-		propostaTransferenciaJogadorRepository.saveAll(propostasRejeitar);
 		jogadorEstatisticasTemporadaRepository.save(propostaTransferenciaJogador.getJogador().getJogadorEstatisticasTemporadaAtual());
 		jogadorRepository.save(propostaTransferenciaJogador.getJogador());
+		propostaTransferenciaJogadorRepository.saveAll(propostasRejeitar);
 		necessidadeContratacaoClubeRepository.save(propostaTransferenciaJogador.getNecessidadeContratacaoClube());
 		disponivelNegociacaoRepository.save(disponivelNegociacao);
 

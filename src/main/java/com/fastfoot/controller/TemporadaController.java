@@ -17,6 +17,7 @@ import com.fastfoot.scheduler.service.CriarCalendarioTemporadaService;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
+import com.fastfoot.transfer.service.GerenciarTransferenciasTemporadaService;
 
 @RestController
 @CrossOrigin("*")
@@ -30,6 +31,9 @@ public class TemporadaController {
 	
 	@Autowired
 	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;
+	
+	@Autowired
+	private GerenciarTransferenciasTemporadaService gerenciarTransferenciasTemporadaService;
 
 	@GetMapping("/novaTemporada")
 	public ResponseEntity<TemporadaDTO> criarTemporada() {
@@ -44,7 +48,7 @@ public class TemporadaController {
 	@GetMapping("/gerarTransferencias")
 	public ResponseEntity<Boolean> gerarTransferencias() {
 		try {
-			criarCalendarioTemporadaService.gerarTransferencias();
+			gerenciarTransferenciasTemporadaService.gerarTransferencias();
 			return ResponseEntity.ok(Boolean.TRUE);
 		} catch (Exception e) {
 			e.printStackTrace();

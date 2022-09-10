@@ -57,7 +57,7 @@ public class EscalarClubeService {
 	
 	public EscalacaoClubeDTO getEscalacaoClube(Clube c) {
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository
-				.findByClubeFetchJogadorHabilidades(c);
+				.findByClubeAndAtivoFetchJogadorHabilidades(c, true);
 		
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(c, false);
 		
@@ -94,16 +94,19 @@ public class EscalarClubeService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	public void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
+	private void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
 		
-		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClube(clube);
+		//List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClubeAndAtivo(clube, true);
+		//escalacaoJogadorPosicaoRepository.desativarTodas();
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(clube, Boolean.FALSE);
 		
-		if (ValidatorUtil.isEmpty(escalacao)) {
+		/*if (ValidatorUtil.isEmpty(escalacao)) {
 			escalacao = gerarEscalacaoInicial(clube, jogadores);
 		} else {
 			atualizarEscalacao(clube, escalacao, jogadores);
-		}
+		}*/
+		
+		List<EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores);
 		
 		//
 		clube.setForcaGeralAtual(new Double(escalacao.stream()
@@ -118,6 +121,7 @@ public class EscalarClubeService {
 	private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
 		//TODO: setar null quando não houver jogador pra ser escalado
 		//TODO: inverter (dir/esq) MEI e ATA
+		//TODO: em vez de UPDATE, desativar antigo e fazer INSERT do novo
 		
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> escalacaoMap = escalacao.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
@@ -242,34 +246,34 @@ public class EscalarClubeService {
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
 
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_12, jogPos.get(1)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_12, jogPos.get(1), true));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_13, jogPos.get(2)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_13, jogPos.get(2), true));
 		
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_16, jogPos.get(2)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_16, jogPos.get(2), true));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_15, jogPos.get(2)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_15, jogPos.get(2), true));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_17, jogPos.get(2)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_17, jogPos.get(2), true));
 		
 		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1)));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_19, jogPos.get(2)));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1), true));
+		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_19, jogPos.get(2), true));
 		
 		return escalacao;
 	}

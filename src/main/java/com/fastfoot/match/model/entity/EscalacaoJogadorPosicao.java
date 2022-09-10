@@ -37,6 +37,12 @@ public class EscalacaoJogadorPosicao {
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
+	
+	private Boolean ativo;
+	
+	//TODO: temporada??
+	
+	//TODO: semana??
 
 	public EscalacaoJogadorPosicao() {
 
@@ -49,11 +55,12 @@ public class EscalacaoJogadorPosicao {
 		//this.escalacao = escalacao;
 	}*/
 	
-	public EscalacaoJogadorPosicao(Clube clube, EscalacaoPosicao escalacaoPosicao, Jogador jogador) {
+	public EscalacaoJogadorPosicao(Clube clube, EscalacaoPosicao escalacaoPosicao, Jogador jogador, Boolean ativo) {
 		super();
 		this.escalacaoPosicao = escalacaoPosicao;
 		this.jogador = jogador;
 		this.clube = clube;
+		this.ativo = ativo;
 	}
 
 	public Long getId() {
@@ -94,5 +101,13 @@ public class EscalacaoJogadorPosicao {
 
 	public void setClube(Clube clube) {
 		this.clube = clube;
+	}
+
+	public Boolean getAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
 }

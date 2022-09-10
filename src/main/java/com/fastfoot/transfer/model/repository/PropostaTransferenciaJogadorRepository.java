@@ -3,6 +3,8 @@ package com.fastfoot.transfer.model.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -24,4 +26,7 @@ public interface PropostaTransferenciaJogadorRepository extends JpaRepository<Pr
 	public List<PropostaTransferenciaJogador> findByTemporadaAndClubeOrigem(Temporada temporada, Clube clubeOrigem);
 	
 	public List<PropostaTransferenciaJogador> findByTemporadaAndClubeDestino(Temporada temporada, Clube clubeDestino);
+	
+	@Query(" SELECT ptj FROM PropostaTransferenciaJogador ptj WHERE ptj.temporada = :temporada AND ptj.propostaAceita IS NULL ")
+	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceitaIsNull(@Param("temporada") Temporada temporada);
 }

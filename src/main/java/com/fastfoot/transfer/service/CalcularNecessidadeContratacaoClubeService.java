@@ -177,7 +177,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			//Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.A, NivelAdequacao.A, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.A, NivelAdequacao.A, false, true));
 		}
 		
 		//R
@@ -187,7 +187,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.B, NivelAdequacao.C, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.B, NivelAdequacao.C, false, false));
 		}
 		
 		//3
@@ -202,7 +202,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.C, NivelAdequacao.E, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.C, NivelAdequacao.E, false, false));
 		}
 		
 		while (jogsAdq.size() > i) {
@@ -229,7 +229,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			//Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.A, NivelAdequacao.A, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.A, NivelAdequacao.A, false, true));
 		}
 		
 		//T
@@ -238,7 +238,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.B, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.B, false, true));
 		}
 		
 		//R
@@ -248,7 +248,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.C, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.C, false, false));
 		}
 		
 		//4
@@ -262,7 +262,7 @@ public class CalcularNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.C, NivelAdequacao.D, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.C, NivelAdequacao.D, false, false));
 		}
 		
 		//5

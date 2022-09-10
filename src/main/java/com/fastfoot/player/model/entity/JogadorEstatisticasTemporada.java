@@ -73,6 +73,18 @@ public class JogadorEstatisticasTemporada {
 		this.clube = clube;
 	}
 	
+	public boolean isEmpty() {
+		return this.numeroJogos == 0 && 
+				//this.golsMarcados == 0 && 
+				//this.finalizacoesDefendidas == 0 && 
+				//this.finalizacoesFora == 0 && 				
+				//this.golsMarcadosAmistosos == 0 && 
+				//this.faltas == 0 && 
+				//this.assistencias == 0 && 
+				//this.assistenciasAmistosos == 0 &&
+				this.numeroJogosAmistosos == 0;
+	}
+	
 	public Long getId() {
 		return id;
 	}

@@ -125,10 +125,10 @@ public class PartidaService {
 
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		List<EscalacaoJogadorPosicao> escalacaoMandante = escalacaoJogadorPosicaoRepository
-				.findByClubeFetchJogadorHabilidades(partidaResultado.getClubeMandante());
+				.findByClubeAndAtivoFetchJogadorHabilidades(partidaResultado.getClubeMandante(), true);
 
 		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalacaoJogadorPosicaoRepository
-				.findByClubeFetchJogadorHabilidades(partidaResultado.getClubeVisitante());
+				.findByClubeAndAtivoFetchJogadorHabilidades(partidaResultado.getClubeVisitante(), true);
 
 		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
 		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());

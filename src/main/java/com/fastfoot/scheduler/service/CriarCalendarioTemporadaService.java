@@ -64,13 +64,12 @@ import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.PreCarregarParametrosService;
-import com.fastfoot.transfer.service.AnalisarPropostaTransferenciaService;
-import com.fastfoot.transfer.service.CalcularNecessidadeContratacaoClubeService;
-import com.fastfoot.transfer.service.GerarPropostaTransferenciaService;
 import com.fastfoot.service.PreCarregarClubeService;
 
 @Service
 public class CriarCalendarioTemporadaService {
+	
+	private static final Integer NUM_THREAD_ATUALIZAR_PASSO_DESEN = 7;
 	
 	//########	REPOSITORY	##########
 	
@@ -127,8 +126,8 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private CalcularValorTransferenciaService calcularValorTransferenciaService;
 	
-	@Autowired
-	private EscalarClubeService escalarClubeService;
+	/*@Autowired
+	private EscalarClubeService escalarClubeService;*/
 
 	@Autowired
 	private CriarJogadoresClubeService criarJogadoresClubeService;
@@ -139,14 +138,14 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
 	
-	@Autowired
+	/*@Autowired
 	private CalcularNecessidadeContratacaoClubeService calcularNecessidadeContratacaoClubeService;
 	
 	@Autowired
 	private GerarPropostaTransferenciaService gerarPropostaTransferenciaService;
 	
 	@Autowired
-	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;
+	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;*/
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -178,7 +177,8 @@ public class CriarCalendarioTemporadaService {
 			inicio = stopWatch.getSplitNanoTime();
 			//atualizarPassoDesenvolvimentoJogador();
 			//atualizarPassoDesenvolvimentoJogador2();
-			atualizarPassoDesenvolvimentoJogador3();
+			//atualizarPassoDesenvolvimentoJogador3();
+			atualizarPassoDesenvolvimentoJogador4();
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));//35%
@@ -226,11 +226,11 @@ public class CriarCalendarioTemporadaService {
 		}
 
 		stopWatch.split();
-		inicio = stopWatch.getSplitNanoTime();
+		/*inicio = stopWatch.getSplitNanoTime();
 		escalarClubes();
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("\t#escalarClubes:" + (fim - inicio));
+		mensagens.add("\t#escalarClubes:" + (fim - inicio));*/
 		
 		inicio = stopWatch.getSplitNanoTime();
 		calcularValorTransferenciaJogadores();
@@ -263,7 +263,7 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#gerarTransferencias:" + (fim - inicio));*/
 		
-		stopWatch.split();
+		//stopWatch.split();
 		inicio = stopWatch.getSplitNanoTime();
 		criarEstatisticasJogadorTemporada(temporada);
 		stopWatch.split();
@@ -497,7 +497,7 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 
-	private void escalarClubes() {
+	/*private void escalarClubes() {
 		//if (semana.getNumero() % 5 == 0) {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		
@@ -515,7 +515,7 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
-	}
+	}*/
 
 	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador() {
@@ -552,11 +552,40 @@ public class CriarCalendarioTemporadaService {
 		}
 	}
 	
-	public void gerarTransferencias() {
+	@SuppressWarnings("unused")
+	private void atualizarPassoDesenvolvimentoJogador4() {
+		jogadorRepository.incrementarIdade();
+		
+		int offset = 3;//(JogadorFactory.IDADE_MAX - JogadorFactory.IDADE_MIN) / FastfootApplication.NUM_THREAD;
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		//for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+		for (int i = 0; i < NUM_THREAD_ATUALIZAR_PASSO_DESEN; i++) {
+			//if ((i + 1) == FastfootApplication.NUM_THREAD) {
+			if ((i + 1) == NUM_THREAD_ATUALIZAR_PASSO_DESEN) {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento((JogadorFactory.IDADE_MIN + i * offset), JogadorFactory.IDADE_MAX));
+			} else {
+				desenvolverJogadorFuture.add(atualizarPassoDesenvolvimentoJogadorService.ajustarPassoDesenvolvimento((JogadorFactory.IDADE_MIN + i * offset), (JogadorFactory.IDADE_MIN + (i + 1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	/*public void gerarTransferencias() {
 		//if (semana.getNumero() == 0, 1, 2, 3) {
 		List<Clube> clubes = clubeRepository.findAll(); 
 
 		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		
 		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -571,7 +600,13 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#calcularNecessidadeContratacao:" + (fim - inicio));
+
 		transferenciasFuture.clear();
+		
+		inicio = stopWatch.getSplitNanoTime();
 		
 		//Fazer propostas transferencia
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
@@ -584,8 +619,13 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		
-		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
+
 		transferenciasFuture.clear();
+		
+		inicio = stopWatch.getSplitNanoTime();
 		
 		//Fazer propostas transferencia
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
@@ -597,8 +637,19 @@ public class CriarCalendarioTemporadaService {
 		}
 		
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#analisarPropostaTransferencia:" + (fim - inicio));
+		
+		stopWatch.stop();
+		
+		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
+		
+		System.err.println(mensagens);
+		
 		//}
-	}
+	}*/
 	
 	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador2() {

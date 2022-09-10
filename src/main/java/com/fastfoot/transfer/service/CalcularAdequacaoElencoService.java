@@ -31,7 +31,7 @@ public class CalcularAdequacaoElencoService {
 
 	public void calcularAdequacaoElenco(Clube clube) {
 		//List<Jogador> jogadores = jogadorRepository.findByClubeAndAposentado(clube, false);
-		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClube(clube);
+		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClubeAndAtivo(clube, true);
 		calcularAdequacaoElenco(clube, escalacao);
 	}
 	

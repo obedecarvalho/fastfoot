@@ -24,5 +24,8 @@ public interface NecessidadeContratacaoClubeRepository extends JpaRepository<Nec
 			Boolean necessidadeSatisfeita);
 	
 	//public List<NecessidadeContratacaoClube> findByClube(Clube clube);
+	
+	public List<NecessidadeContratacaoClube> findByTemporadaAndNecessidadeSatisfeitaAndNecessidadePrioritaria(
+			Temporada temporada, Boolean necessidadeSatisfeita, Boolean necessidadePrioritaria);
 
 }

@@ -1,8 +1,10 @@
 package com.fastfoot.transfer.service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -39,23 +41,37 @@ public class AnalisarPropostaTransferenciaService {
 	@Autowired
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;
 	
-	@Async("transferenciaExecutor")
-	public CompletableFuture<Boolean> analisarPropostaTransferencia(List<Clube> clubes){
-		
-		Temporada temporada = temporadaService.getTemporadaAtual();
+	//@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes, Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao){
 		
 		for (Clube c : clubes) {
-			analisarPropostaTransferenciaClube(c, temporada);
+			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
 		}
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada) {//TODO: melhorar para caso em que há apenas 1 proposta transferencia
-
-		List<PropostaTransferenciaJogador> propostas = propostaTransferenciaJogadorRepository
-				.findByTemporadaAndClubeOrigem(temporada, clube);
+	@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> analisarPropostaTransferencia(List<Clube> clubes){
 		
+		Temporada temporada = temporadaService.getTemporadaAtual();
+		
+		Set<Clube> clubesRefazerEscalacao = new HashSet<Clube>();
+		
+		for (Clube c : clubes) {
+			List<PropostaTransferenciaJogador> propostas = propostaTransferenciaJogadorRepository //TODO: where propostaAceita is null?
+					.findByTemporadaAndClubeOrigem(temporada, c);
+			
+			analisarPropostaTransferenciaClube(c, temporada, propostas, clubesRefazerEscalacao);
+		}
+		
+		//System.err.println(clubesRefazerEscalacao);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada, List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
+
 		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()
 				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getJogador));
 
@@ -68,20 +84,20 @@ public class AnalisarPropostaTransferenciaService {
 			
 			Optional<DisponivelNegociacao> disNegJogOpt = disponivelNegociacaoRepository
 					.findFirstByTemporadaAndJogadorAndAtivo(temporada, j, true); 
-			
-			//System.err.println(propostasJog.stream().map(p -> p.getValor()).collect(Collectors.toList()));
-			
+
 			if (disNegJogOpt.isPresent()) {
 				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);
 				propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executarN(propostasJog);
 				
 				propostasJog.remove(propostaAceitar);
 				
+				//System.err.println(Thread.currentThread().getName() + propostaAceitar.getClubeOrigem() + propostaAceitar.getClubeDestino());
+				clubesRefazerEscalacao.add(propostaAceitar.getClubeOrigem());
+				clubesRefazerEscalacao.add(propostaAceitar.getClubeDestino());
 				concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar, propostasJog, disNegJogOpt.get());
 
 			}
-			
-			
+
 		}
 	}
 }

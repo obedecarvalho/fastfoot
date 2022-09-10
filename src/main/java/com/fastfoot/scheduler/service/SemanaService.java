@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -105,6 +106,9 @@ public class SemanaService {
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
 	
+	@Autowired
+	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+	
 	//#####	SERVICE	############
 	
 	@Autowired
@@ -136,12 +140,16 @@ public class SemanaService {
 		StopWatch stopWatch = new StopWatch();		
 		stopWatch.start();
 		//List<String> mensagens = new ArrayList<String>();
-		
+
 		//Carregar dados
-		
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
+		
+		//Escalar clubes
+		if (semana.getNumero() % 5 == 1) {
+			escalarClubes(semana);
+		}
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
@@ -203,9 +211,9 @@ public class SemanaService {
 		stopWatch2.stop();
 		
 		//Escalar clubes
-		if (semana.getNumero() % 5 == 0) {
+		/*if (semana.getNumero() % 5 == 0) {
 			escalarClubes(semana);
-		}
+		}*/
 		
 		stopWatch.stop();
 		
@@ -274,25 +282,27 @@ public class SemanaService {
 	}*/
 
 	private void escalarClubes(Semana semana) {
-		if (semana.getNumero() % 5 == 0) {
-			List<Clube> clubes = clubeRepository.findAll(); 
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-			
-			for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-				if ((i + 1) == FastfootApplication.NUM_THREAD) {
-					desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
-				} else {
-					desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
-				}
+		//if (semana.getNumero() % 5 == 0) {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		
+		escalacaoJogadorPosicaoRepository.desativarTodas();
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
+			} else {
+				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
+				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
 	}
 	
 	/*private void calcularValorTransferenciaJogadores(Semana semana) {

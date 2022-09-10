@@ -42,12 +42,14 @@ public class NecessidadeContratacaoClube {
 	
 	private Integer idadeMaxima;
 	
+	private Boolean necessidadePrioritaria;
+	
 	public NecessidadeContratacaoClube() {
 
 	}
 
 	public NecessidadeContratacaoClube(Temporada temporada, Clube clube, Posicao posicao,
-			NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin, Boolean necessidadeSatisfeita) {
+			NivelAdequacao nivelAdequacaoMax, NivelAdequacao nivelAdequacaoMin, Boolean necessidadeSatisfeita, Boolean necessidadePrioritaria) {
 		super();
 		this.temporada = temporada;
 		this.clube = clube;
@@ -55,6 +57,7 @@ public class NecessidadeContratacaoClube {
 		this.nivelAdequacaoMin = nivelAdequacaoMin;
 		this.nivelAdequacaoMax = nivelAdequacaoMax;
 		this.necessidadeSatisfeita = necessidadeSatisfeita;
+		this.necessidadePrioritaria = necessidadePrioritaria;
 	}
 	
 	public NecessidadeContratacaoClube(Temporada temporada, Clube clube, Posicao posicao,
@@ -135,6 +138,14 @@ public class NecessidadeContratacaoClube {
 
 	public Boolean getNecessidadeSatisfeita() {
 		return necessidadeSatisfeita;
+	}
+
+	public Boolean getNecessidadePrioritaria() {
+		return necessidadePrioritaria;
+	}
+
+	public void setNecessidadePrioritaria(Boolean necessidadePrioritaria) {
+		this.necessidadePrioritaria = necessidadePrioritaria;
 	}
 
 }
