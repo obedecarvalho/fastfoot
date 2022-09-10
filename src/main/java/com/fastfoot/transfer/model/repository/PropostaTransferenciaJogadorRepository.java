@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 
@@ -29,4 +28,6 @@ public interface PropostaTransferenciaJogadorRepository extends JpaRepository<Pr
 	
 	@Query(" SELECT ptj FROM PropostaTransferenciaJogador ptj WHERE ptj.temporada = :temporada AND ptj.propostaAceita IS NULL ")
 	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceitaIsNull(@Param("temporada") Temporada temporada);
+	
+	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceita(Temporada temporada, Boolean propostaAceita);
 }

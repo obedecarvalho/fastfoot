@@ -42,7 +42,8 @@ public class AnalisarPropostaTransferenciaService {
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;
 	
 	//@Async("transferenciaExecutor")
-	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes, Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao){
+	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
+			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
 		
 		for (Clube c : clubes) {
 			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
@@ -70,7 +71,8 @@ public class AnalisarPropostaTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada, List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
+	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
+			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
 
 		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()
 				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getJogador));

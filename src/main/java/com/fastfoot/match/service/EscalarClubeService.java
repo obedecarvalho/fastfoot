@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,6 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
-import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class EscalarClubeService {
@@ -118,10 +115,9 @@ public class EscalarClubeService {
 		escalacoes.addAll(escalacao);
 	}
 
-	private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
+	/*private void atualizarEscalacao(Clube clube, List<EscalacaoJogadorPosicao> escalacao, List<Jogador> jogadores) {
 		//TODO: setar null quando não houver jogador pra ser escalado
 		//TODO: inverter (dir/esq) MEI e ATA
-		//TODO: em vez de UPDATE, desativar antigo e fazer INSERT do novo
 		
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> escalacaoMap = escalacao.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
@@ -234,7 +230,7 @@ public class EscalarClubeService {
 		if (!ValidatorUtil.isEmpty(ejp) && jogPos.size() > 2) {
 			ejp.setJogador(jogPos.get(2));
 		}
-	}
+	}*/
 	
 	private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
 		
