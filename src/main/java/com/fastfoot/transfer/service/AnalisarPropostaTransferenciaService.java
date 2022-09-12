@@ -52,7 +52,7 @@ public class AnalisarPropostaTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("transferenciaExecutor")
+	/*@Async("transferenciaExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(List<Clube> clubes){
 		
 		Temporada temporada = temporadaService.getTemporadaAtual();
@@ -69,7 +69,7 @@ public class AnalisarPropostaTransferenciaService {
 		//System.err.println(clubesRefazerEscalacao);
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 	
 	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
 			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {

@@ -18,7 +18,7 @@ import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_habilidade_valor") })
-public class HabilidadeValorEstatistica {
+public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por temporada com UPDATE em campos específicos
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorEstatisticaSequence")

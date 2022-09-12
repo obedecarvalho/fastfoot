@@ -64,6 +64,7 @@ public class GerenciarTransferenciasTemporadaService {
 		gerarTransferencias(temporada, clubes);
 	}
 	
+	@Deprecated
 	public void gerarTransferencias2() {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		List<PropostaTransferenciaJogador> propostasAceitas = propostaTransferenciaJogadorRepository
@@ -179,7 +180,7 @@ public class GerenciarTransferenciasTemporadaService {
 		
 		//Analisar propostas transferencia
 		analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada, clubes, propostasClube,
-				clubesRefazerEscalacao);
+				clubesRefazerEscalacao);//TODO: retornar para versão com thread. Numero de Thread Math.min(clubes.size(), FastfootApplication.NUM_THREAD)
 		
 		//Analisar propostas transferencia
 		/*for (int i = 0; i < NUM_THREAD_ANALISAR_PROPOSTA; i++) {//for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {

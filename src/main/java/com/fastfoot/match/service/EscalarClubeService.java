@@ -3,7 +3,9 @@ package com.fastfoot.match.service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class EscalarClubeService {
@@ -91,7 +94,7 @@ public class EscalarClubeService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	private void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
+	public void escalarClube(Clube clube, List<EscalacaoJogadorPosicao> escalacoes) {
 		
 		//List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClubeAndAtivo(clube, true);
 		//escalacaoJogadorPosicaoRepository.desativarTodas();
@@ -240,36 +243,171 @@ public class EscalarClubeService {
 		
 		List<Jogador> jogPos = null;
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		List<EscalacaoPosicao> posicoesVazias = new ArrayList<EscalacaoPosicao>();
+		Map<Posicao, List<Jogador>> jogadoresSuplentes = new HashMap<Posicao, List<Jogador>>();
+		
+		//Gol
+		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
 
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_12, jogPos.get(1), true));
+		if (jogPos.size() > 0) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_1, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_1);
+		}
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_13, jogPos.get(2), true));
+		if (jogPos.size() > 1) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_12, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_12);
+		}
 		
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.GOLEIRO, jogPos.subList(2, jogPos.size()));
+		}
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_16, jogPos.get(2), true));
+		//Zag
+		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
+		if (jogPos.size() > 0) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_3, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_3);
+		}
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
+		if (jogPos.size() > 1) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_4, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_4);
+		}
+		
+		if (jogPos.size() > 2) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_13, jogPos.get(2), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_13);
+		}
+		
+		if (jogPos.size() > 3) {
+			jogadoresSuplentes.put(Posicao.ZAGUEIRO, jogPos.subList(3, jogPos.size()));
+		}
+		
+		//Lateral
+		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
+		if (jogPos.size() > 0) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_2, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_2);
+		}
+		
+		if (jogPos.size() > 1) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_6, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_6);
+		}
+		
+		if (jogPos.size() > 2) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_16, jogPos.get(2), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_16);
+		}
+
+		if (jogPos.size() > 3) {
+			jogadoresSuplentes.put(Posicao.LATERAL, jogPos.subList(3, jogPos.size()));
+		}
+		
+		//Vol
+		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
+		if (jogPos.size() > 0) {
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_5, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_5);
+		}
+		
+		if (jogPos.size() > 1) {
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_8, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_8);
+		}
+		
+		if (jogPos.size() > 2) {
 		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_15, jogPos.get(2), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_15);
+		}
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_17, jogPos.get(2), true));
+		if (jogPos.size() > 3) {
+			jogadoresSuplentes.put(Posicao.VOLANTE, jogPos.subList(3, jogPos.size()));
+		}
 		
-		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator).collect(Collectors.toList());
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1), true));
-		escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_19, jogPos.get(2), true));
+		//Meia
+		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
+		if (jogPos.size() > 0) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_7, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_7);
+		}
+		
+		if (jogPos.size() > 1) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_10, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_10);
+		}
+		
+		if (jogPos.size() > 2) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_17, jogPos.get(2), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_17);
+		}
+
+		if (jogPos.size() > 3) {
+			jogadoresSuplentes.put(Posicao.MEIA, jogPos.subList(3, jogPos.size()));
+		}
+		
+		//Ata
+		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(comparator)
+				.collect(Collectors.toList());
+		if (jogPos.size() > 0) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_9, jogPos.get(0), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_9);
+		}
+		
+		if (jogPos.size() > 1) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_11, jogPos.get(1), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_11);
+		}
+		
+		if (jogPos.size() > 2) {
+			escalacao.add(new EscalacaoJogadorPosicao(clube, EscalacaoPosicao.P_19, jogPos.get(2), true));
+		} else {
+			posicoesVazias.add(EscalacaoPosicao.P_19);
+		}
+
+		if (jogPos.size() > 3) {
+			jogadoresSuplentes.put(Posicao.ATACANTE, jogPos.subList(3, jogPos.size()));
+		}
+		
+		List<Jogador> possiveisJogadores = null;
+		for (EscalacaoPosicao ep : posicoesVazias) {
+			boolean naoPreenchido = true;
+			int i = 1;
+			
+			while (naoPreenchido && i < ep.getOrdemPosicaoParaEscalar().length) {
+				possiveisJogadores = jogadoresSuplentes.get(ep.getOrdemPosicaoParaEscalar()[i]);
+				if (!ValidatorUtil.isEmpty(possiveisJogadores)) {
+					escalacao.add(new EscalacaoJogadorPosicao(clube, ep, possiveisJogadores.get(0), true));
+					possiveisJogadores.remove(0);
+					naoPreenchido = false;
+				}
+				i++;
+			}
+			
+			if (naoPreenchido) throw new RuntimeException("Erro ao escalar clube");
+		}
 		
 		return escalacao;
 	}
