@@ -78,7 +78,7 @@ public class Constantes {
 	//###	TRANSFERENCIA	###
 	public static final Integer PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA = 1000;
 	
-	public static final Integer NUMERO_MINIMO_JOGADORES_LINHA = 15;
+	public static final Integer NUMERO_MINIMO_JOGADORES_LINHA = 15;//TODO: implementar lógica
 	
 	public static final Integer NUMERO_MINIMO_GOLEIROS = 2;
 }
