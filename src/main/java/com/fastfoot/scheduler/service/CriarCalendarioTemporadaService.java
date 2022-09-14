@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
-import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;

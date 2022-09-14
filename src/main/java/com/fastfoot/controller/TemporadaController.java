@@ -56,7 +56,7 @@ public class TemporadaController {
 		}
 	}
 	
-	@GetMapping("/gerarTransferencias2")
+	/*@GetMapping("/gerarTransferencias2")
 	@Deprecated
 	public ResponseEntity<Boolean> gerarTransferencias2() {
 		try {
@@ -66,7 +66,7 @@ public class TemporadaController {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 
 	/*@GetMapping("/classificarClubesTemporadaAtual")
 	public ResponseEntity<Boolean> classificarClubesTemporadaAtual() {

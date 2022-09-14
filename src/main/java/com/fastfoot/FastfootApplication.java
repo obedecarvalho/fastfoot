@@ -16,6 +16,7 @@ public class FastfootApplication {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
 		
 		--1ro
 		stopWatch.split();
@@ -28,8 +29,11 @@ public class FastfootApplication {
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
 		
+		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
+		
 		stopWatch.stop();
 		stopWatch.getNanoTime());--Tempo total
+		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
 	 */
 	
 	public static final Integer NUM_THREAD = 8;

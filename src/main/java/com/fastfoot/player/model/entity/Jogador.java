@@ -51,7 +51,7 @@ public class Jogador {
 	private Integer forcaGeralPotencial;
 	
 	//
-	private Double tmpForcaGeralZag;
+	/*private Double tmpForcaGeralZag;
 	private Double tmpForcaGeralLat;
 	private Double tmpForcaGeralVol;
 	private Double tmpForcaGeralMei;
@@ -61,7 +61,7 @@ public class Jogador {
 	private Double tmpForcaGeralLat2;
 	private Double tmpForcaGeralVol2;
 	private Double tmpForcaGeralMei2;
-	private Double tmpForcaGeralAta2;
+	private Double tmpForcaGeralAta2;*/
 	//
 	
 	private Double forcaGeralPotencialEfetiva;
@@ -164,7 +164,7 @@ public class Jogador {
 	}
 
 	//
-	public Double getTmpForcaGeralZag() {
+	/*public Double getTmpForcaGeralZag() {
 		return tmpForcaGeralZag;
 	}
 
@@ -242,7 +242,7 @@ public class Jogador {
 
 	public void setTmpForcaGeralAta(Double tmpForcaGeralAta) {
 		this.tmpForcaGeralAta = tmpForcaGeralAta;
-	}
+	}*/
 	//
 
 	public Integer getForcaGeralPotencial() {

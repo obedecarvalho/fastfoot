@@ -28,7 +28,7 @@ import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeReposit
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
 @Service
-public class GerarPropostaTransferenciaService {
+public class ProporTransferenciaService {
 	
 	//###	PARAMETROS	###
 	
@@ -199,61 +199,5 @@ public class GerarPropostaTransferenciaService {
 		}
 
 	}
-
-	/*public void gerarPropostaTransferenciaClube(Clube clube) {
-		List<Map<String, Object>> possiveisJogadores = null;	
-
-		List<AdequacaoElencoPosicao> adqs = adequacaoElencoPosicaoRepository.findByClubeAndAdequacaoBetween(clube, PROPOSTA_ADEQUACAO_MIN, PROPOSTA_ADEQUACAO_MAX);
-
-		for (AdequacaoElencoPosicao adq : adqs) {
-
-			double diferenca_forca = DIFERENCA_FORCA_PASSO_MIN;
-			int jogadoresEncontrados = 0;
-
-			while (diferenca_forca < DIFERENCA_FORCA_PASSO_MAX && jogadoresEncontrados < NUM_MIN_JOGADORES) {
-				possiveisJogadores = adequacaoElencoPosicaoRepository.findByClubeAndAdequacaoMinMaxAndVariacaoForcaMinMax(clube.getId(), adq.getPosicao().ordinal(), 1 - diferenca_forca, 1 + diferenca_forca);
-				jogadoresEncontrados = possiveisJogadores.size();
-				diferenca_forca += DIFERENCA_FORCA_PASSO;
-			}
-
-			if (jogadoresEncontrados > 0) {
-				
-				List<Jogador> jogadoresPossiveis = new ArrayList<Jogador>();
-				
-				Jogador j = null;
-			
-				for (Map<String, Object> jogMap : possiveisJogadores) {
-					j = new Jogador();
-					j.setClube(new Clube());
-					
-					j.setId(((BigInteger) jogMap.get("id_jogador")).longValue());
-					j.getClube().setId((int) jogMap.get("id_clube_jog"));
-					j.setForcaGeral((int) jogMap.get("forca_geral"));
-					
-					jogadoresPossiveis.add(j);
-				}
-				
-				List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
-				PropostaTransferenciaJogador prop = null;
-				
-				for (Jogador jog : jogadoresPossiveis) {
-					prop = new PropostaTransferenciaJogador();
-					
-					prop.setJogador(jog);
-					prop.setClubeDestino(clube);
-					prop.setClubeOrigem(j.getClube());
-					prop.setAdequacaoElencoPosicao(adq);
-					
-					props.add(prop);
-				}
-				
-				propostaTransferenciaJogadorRepository.saveAll(props);
-				
-			} else {
-				System.err.println("\t\tNão foi encontrado jogadores para negociar");
-			}
-		}
-
-	}*/
 
 }

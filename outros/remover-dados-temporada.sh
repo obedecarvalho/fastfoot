@@ -14,6 +14,7 @@ delete from partida_amistosa_resultado;
 delete from rodada_amistosa;
 delete from partida_resultado;
 delete from partida_eliminatoria_resultado;
+delete from partida_estatisticas;
 delete from rodada;
 delete from rodada_eliminatoria;
 delete from classificacao;

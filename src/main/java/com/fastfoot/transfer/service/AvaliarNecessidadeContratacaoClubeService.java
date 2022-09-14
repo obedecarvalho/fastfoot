@@ -28,7 +28,7 @@ import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 
 @Service
-public class CalcularNecessidadeContratacaoClubeService {
+public class AvaliarNecessidadeContratacaoClubeService {
 	
 	private static final Integer IDADE_MAX_EMPRESTAR = 22;
 	
@@ -61,16 +61,25 @@ public class CalcularNecessidadeContratacaoClubeService {
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		
+		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
+		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
+		
 		for (Clube c : clubes) {
-			calcularNecessidadeContratacaoClube(c, temporada);
+			calcularNecessidadeContratacaoClube(c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
 		}
+		
+		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubes);
+		disponivelNegociacaoRepository.saveAll(disponivelNegociacao);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	public void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada) {
+	public void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada,
+			List<DisponivelNegociacao> disponivelNegociacao,
+			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes) {
+		//TODO: fazer validação de Constantes.NUMERO_MINIMO_JOGADORES_LINHA e Constantes.NUMERO_MINIMO_GOLEIROS
 
-		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(clube, false);
+		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
 		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
 		
@@ -114,35 +123,35 @@ public class CalcularNecessidadeContratacaoClubeService {
 
 		//adequacaoJogadorRepository.saveAll(jogsAdq);
 		
-		List<NecessidadeContratacaoClube> contratacoes = new ArrayList<NecessidadeContratacaoClube>(); 
-		List<DisponivelNegociacao> negociaveis = new ArrayList<DisponivelNegociacao>();
+		/*List<NecessidadeContratacaoClube> contratacoes = new ArrayList<NecessidadeContratacaoClube>(); 
+		List<DisponivelNegociacao> negociaveis = new ArrayList<DisponivelNegociacao>();*/
 		
 		calcularNegociacaoesGoleiro(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isGoleiro()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube);
 		
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isZagueiro()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube, Posicao.ZAGUEIRO);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.ZAGUEIRO);
 		
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isLateral()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube, Posicao.LATERAL);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.LATERAL);
 		
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isVolante()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube, Posicao.VOLANTE);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.VOLANTE);
 		
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isMeia()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube, Posicao.MEIA);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.MEIA);
 		
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isAtacante()).collect(Collectors.toList()),
-				contratacoes, negociaveis, temporada, clube, Posicao.ATACANTE);
+				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.ATACANTE);
 		
-		necessidadeContratacaoClubeRepository.saveAll(contratacoes);//TODO: apenas um saveAll para todos clubes??
-		disponivelNegociacaoRepository.saveAll(negociaveis);//TODO: apenas um saveAll para todos clubes??
+		/*necessidadeContratacaoClubeRepository.saveAll(contratacoes);
+		disponivelNegociacaoRepository.saveAll(negociaveis);*/
 
 	}
 	

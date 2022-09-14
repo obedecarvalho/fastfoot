@@ -1,6 +1,5 @@
 package com.fastfoot.transfer.service;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,28 +14,26 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
-import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
 @Service
 public class AnalisarPropostaTransferenciaService {
 
 	//###	REPOSITORY	###
 
-	@Autowired
-	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
+	/*@Autowired
+	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;*/
 	
 	@Autowired
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
 	
 	//###	SERVICE	###
 	
-	@Autowired
-	private TemporadaService temporadaService;
+	/*@Autowired
+	private TemporadaService temporadaService;*/
 	
 	@Autowired
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;

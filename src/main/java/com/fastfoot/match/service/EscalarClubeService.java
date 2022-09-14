@@ -391,6 +391,8 @@ public class EscalarClubeService {
 			jogadoresSuplentes.put(Posicao.ATACANTE, jogPos.subList(3, jogPos.size()));
 		}
 		
+		Collections.sort(posicoesVazias);
+		
 		List<Jogador> possiveisJogadores = null;
 		for (EscalacaoPosicao ep : posicoesVazias) {
 			boolean naoPreenchido = true;

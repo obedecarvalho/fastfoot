@@ -139,17 +139,36 @@ public class SemanaService {
 		
 		StopWatch stopWatch = new StopWatch();		
 		stopWatch.start();
-		//List<String> mensagens = new ArrayList<String>();
+		List<String> mensagens = new ArrayList<String>();
+		long inicio = 0, fim = 0;
 
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		
 		//Carregar dados
 		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
 		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#carregar:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
+		
 		//Escalar clubes
 		if (semana.getNumero() % 5 == 1) {
 			escalarClubes(semana);
+
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("#escalarClubes:" + (fim - inicio));
+			inicio = stopWatch.getSplitNanoTime();
 		}
+		
+		/*stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#escalarClubes:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();*/
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
@@ -158,6 +177,11 @@ public class SemanaService {
 		semana.setRodadas(rodadas);
 		semana.setRodadasEliminatorias(rodadaEliminatorias);
 		semana.setRodadasAmistosas(rodadasAmistosas);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#carregar2:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
 
 		//Jogar Rodada
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
@@ -175,40 +199,80 @@ public class SemanaService {
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#executarRodada:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
 
 		//Promover
 		promover(semana);
-
 		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#promover:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
+
 		//Incrementar rodada atual
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
 		
-		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#incrementarRodadaAtualCampeonato:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
+
 		//calcular probabilidades
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
 			calcularProbabilidades(semana, temporada);
+
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
+			inicio = stopWatch.getSplitNanoTime();
 		}
 		if (semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17) {
 			calcularProbabilidades(semana, temporada);
-		}
 
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
+			inicio = stopWatch.getSplitNanoTime();
+		}
 		
+		/*stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#calcularProbabilidades:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();*/
+
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
 			temporadaService.classificarClubesTemporadaAtual();
+			
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("#classificarClubesTemporadaAtual:" + (fim - inicio));
+			inicio = stopWatch.getSplitNanoTime();
 		}
-
-		StopWatch stopWatch2 = new StopWatch();
-		stopWatch2.start();
+		
+		/*stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#classificarClubesTemporadaAtual:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();*/
 
 		//Desenvolver jogadores
 		//desenvolverJogadores(semana);
 		if (semana.getNumero() % 5 == 0) {
 			habilidadeValorRepository.desenvolverTodasHabilidades();
 			jogadorRepository.calcularForcaGeral();
+
+			stopWatch.split();
+			fim = stopWatch.getSplitNanoTime();
+			mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));
 		}
 
-		stopWatch2.stop();
+		/*stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));*/
 		
 		//Escalar clubes
 		/*if (semana.getNumero() % 5 == 0) {
@@ -216,6 +280,8 @@ public class SemanaService {
 		}*/
 		
 		stopWatch.stop();
+		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
+		//System.err.println(mensagens);
 		
 		//calcularValorTransferenciaJogadores(semana);
 		

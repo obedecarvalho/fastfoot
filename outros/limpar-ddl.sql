@@ -6,8 +6,12 @@ drop table if exists clube_probabilidade_posicao;
 drop table if exists clube_ranking_posicao_probabilidade;
 drop table if exists pontuacao_probabilidade_posicao;
 drop table if exists pontuacao_probabilidade;
+drop table if exists adequacao_elenco_posicao;
 
 --jogadores
+drop table if exists disponivel_negociacao;
+drop table if exists proposta_transferencia_jogador;
+drop table if exists necessidade_contratacao_clube;
 drop table if exists escalacao_jogador_posicao;
 drop table if exists grupo_desenvolvimento_jogador;
 drop table if exists habilidade_valor_estatistica_grupo;

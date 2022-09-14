@@ -18,10 +18,8 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.TemporadaService;
-import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
-import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
@@ -41,16 +39,16 @@ public class GerenciarTransferenciasTemporadaService {
 	@Autowired
 	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
 	
-	@Autowired
-	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
+	/*@Autowired
+	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;*/
 	
 	//###	SERVICE	###
 	
 	@Autowired
-	private CalcularNecessidadeContratacaoClubeService calcularNecessidadeContratacaoClubeService;
+	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;
 	
 	@Autowired
-	private GerarPropostaTransferenciaService gerarPropostaTransferenciaService;
+	private ProporTransferenciaService proporTransferenciaService;
 	
 	@Autowired
 	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;
@@ -64,7 +62,7 @@ public class GerenciarTransferenciasTemporadaService {
 		gerarTransferencias(temporada, clubes);
 	}
 	
-	@Deprecated
+	/*@Deprecated
 	public void gerarTransferencias2() {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		List<PropostaTransferenciaJogador> propostasAceitas = propostaTransferenciaJogadorRepository
@@ -97,7 +95,7 @@ public class GerenciarTransferenciasTemporadaService {
 		//
 
 		gerarTransferencias(temporada, new ArrayList<Clube>(clubes));
-	}
+	}*/
 	
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
 		//if (semana.getNumero() == 0, 1, 2, 3) {		
@@ -117,10 +115,10 @@ public class GerenciarTransferenciasTemporadaService {
 		//Calcular necessidade contratacao
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService
+				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
 						.calcularNecessidadeContratacao(clubes.subList(i * offset, clubes.size())));
 			} else {
-				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService
+				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
 						.calcularNecessidadeContratacao(clubes.subList(i * offset, (i + 1) * offset)));
 			}
 		}
@@ -143,15 +141,15 @@ public class GerenciarTransferenciasTemporadaService {
 		
 		clubes = new ArrayList<Clube>(necessidadeContratacaoClube.keySet());
 		offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		System.err.println("#necessidadeContratacaoClube" + clubes.size());
+		//System.err.println("#necessidadeContratacaoClube" + clubes.size());
 		
 		//Fazer propostas transferencia
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(temporada,
+				transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
 						clubes.subList(i * offset, clubes.size()), necessidadeContratacaoClube));
 			} else {
-				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(temporada,
+				transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
 						clubes.subList(i * offset, (i + 1) * offset), necessidadeContratacaoClube));
 			}
 		}
