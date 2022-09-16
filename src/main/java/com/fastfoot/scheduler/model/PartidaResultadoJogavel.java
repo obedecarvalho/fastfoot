@@ -41,5 +41,9 @@ public interface PartidaResultadoJogavel {
 
 	public boolean isAmistoso();
 	
+	public boolean isResultadoEmpatado();
+	
+	public boolean isDisputarPenalts();
+	
 	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas);
 }

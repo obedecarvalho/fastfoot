@@ -47,6 +47,9 @@ public class PartidaService {
 
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+	
+	@Autowired
+	private DisputarPenaltsService disputarPenaltsService;
 
 	private static final Double NUM_LANCES_POR_MINUTO = 1d;
 	
@@ -59,7 +62,7 @@ public class PartidaService {
 	private static final Boolean IMPRIMIR = false;
 	
 	private static final Boolean LANCE_A_LANCE = true;
-	
+
 	private PartidaLance criarPartidaLance(List<PartidaLance> lances, PartidaResultadoJogavel partida, Jogador jogador,
 			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
 		PartidaLance pl = new PartidaLance();
@@ -107,21 +110,6 @@ public class PartidaService {
 		
 		partidaJogadorEstatisticaDTO.adicionarHabilidadeValorEstatistica(estatisticas);
 	}
-	
-	/*private void salvarEstatisticas(List<Jogador> jogadores) {
-		List<HabilidadeValorEstatistica> estatisticas = new ArrayList<HabilidadeValorEstatistica>();
-		
-		for (Jogador j : jogadores) {
-			/*for (HabilidadeValor hv : j.getHabilidades()) {
-				estatisticas.add(hv.getHabilidadeValorEstatistica());
-			}* /
-			estatisticas.addAll(j.getHabilidades().stream().map(hv -> hv.getHabilidadeValorEstatistica()).collect(Collectors.toList()));
-		}
-		
-		habilidadeValorEstatisticaRepository.saveAll(estatisticas.stream().filter(hve -> hve.getQuantidadeUso() > 0).collect(Collectors.toList()));
-		
-		//habilidadeValorEstatisticaRepository.saveAll(estatisticas);
-	}*/
 
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		List<EscalacaoJogadorPosicao> escalacaoMandante = escalacaoJogadorPosicaoRepository
@@ -145,6 +133,10 @@ public class PartidaService {
 		
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
 		jogar(esquema, partidaResultado);
+		
+		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
+			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
+		}
 		
 		salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
 		salvarEstatisticas(jogadoresVisitante, partidaJogadorEstatisticaDTO);
@@ -174,10 +166,6 @@ public class PartidaService {
 		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
 				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
 	}
-	
-	/*private void salvarEstatisticasJogador(List<Jogador> jogadores) {
-		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
-	}*/
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 

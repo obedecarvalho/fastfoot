@@ -45,18 +45,6 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	private Boolean classificaAMandante;
 	
-	/*private Integer finalizacacoesForaMandante;
-	
-	private Integer finalizacacoesForaVisitante;
-	
-	private Integer finalizacacoesDefendidasMandante;
-	
-	private Integer finalizacacoesDefendidasVisitante;
-	
-	private Integer lancesMandante;
-	
-	private Integer lancesVisitante;*/
-	
 	private Boolean partidaJogada;
 	
 	@ManyToOne
@@ -66,12 +54,6 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	public PartidaEliminatoriaResultado() {
 		this.golsMandante = 0;
 		this.golsVisitante = 0;
-		/*this.finalizacacoesForaMandante = 0;
-		this.finalizacacoesForaVisitante = 0;
-		this.finalizacacoesDefendidasMandante = 0;
-		this.finalizacacoesDefendidasVisitante = 0;
-		this.lancesMandante = 0;
-		this.lancesVisitante = 0;*/
 		this.partidaJogada = false;
 	}
 
@@ -124,54 +106,6 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	public Integer getGolsVisitante() {
 		return golsVisitante;
 	}
-
-	/*public Integer getFinalizacacoesForaMandante() {
-		return finalizacacoesForaMandante;
-	}
-
-	public void setFinalizacacoesForaMandante(Integer finalizacacoesForaMandante) {
-		this.finalizacacoesForaMandante = finalizacacoesForaMandante;
-	}
-
-	public Integer getFinalizacacoesForaVisitante() {
-		return finalizacacoesForaVisitante;
-	}
-
-	public void setFinalizacacoesForaVisitante(Integer finalizacacoesForaVisitante) {
-		this.finalizacacoesForaVisitante = finalizacacoesForaVisitante;
-	}
-
-	public Integer getFinalizacacoesDefendidasMandante() {
-		return finalizacacoesDefendidasMandante;
-	}
-
-	public void setFinalizacacoesDefendidasMandante(Integer finalizacacoesDefendidasMandante) {
-		this.finalizacacoesDefendidasMandante = finalizacacoesDefendidasMandante;
-	}
-
-	public Integer getFinalizacacoesDefendidasVisitante() {
-		return finalizacacoesDefendidasVisitante;
-	}
-
-	public void setFinalizacacoesDefendidasVisitante(Integer finalizacacoesDefendidasVisitante) {
-		this.finalizacacoesDefendidasVisitante = finalizacacoesDefendidasVisitante;
-	}
-
-	public Integer getLancesMandante() {
-		return lancesMandante;
-	}
-
-	public void setLancesMandante(Integer lancesMandante) {
-		this.lancesMandante = lancesMandante;
-	}
-
-	public Integer getLancesVisitante() {
-		return lancesVisitante;
-	}
-
-	public void setLancesVisitante(Integer lancesVisitante) {
-		this.lancesVisitante = lancesVisitante;
-	}*/
 
 	@Override
 	public Boolean getPartidaJogada() {
@@ -235,33 +169,16 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		//TODO: penalts
 		return null;
 	}
-
-	/*@Override
-	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante) {
-		if (posseBolaMandante) {
-			this.finalizacacoesDefendidasMandante++;
-		} else {
-			this.finalizacacoesDefendidasVisitante++;
-		}
-	}
-
+	
 	@Override
-	public void incrementarFinalizacaoFora(boolean posseBolaMandante) {
-		if (posseBolaMandante) {
-			this.finalizacacoesForaMandante++;
-		} else {
-			this.finalizacacoesForaVisitante++;
-		}
+	public boolean isResultadoEmpatado() {
+		return partidaJogada && (golsMandante == golsVisitante);
 	}
-
+	
 	@Override
-	public void incrementarLance(boolean posseBolaMandante) {
-		if (posseBolaMandante) {
-			this.lancesMandante++;
-		} else {
-			this.lancesVisitante++;
-		}
-	}*/
+	public boolean isDisputarPenalts() {
+		return true;
+	}
 
 	@Override
 	public void incrementarGol(boolean posseBolaMandante) {

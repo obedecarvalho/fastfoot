@@ -18,6 +18,7 @@ public class EsquemaImpl implements Esquema {
 
 	private EsquemaPosicao goleiroVisitante;
 
+	@Override
 	public List<EsquemaPosicao> getPosicoes() {
 		return posicoes;
 	}
@@ -45,6 +46,7 @@ public class EsquemaImpl implements Esquema {
 		this.posseBolaMandante = posseBolaMandante;
 	}
 	
+	@Override
 	public EsquemaPosicao getGoleiroMandante() {
 		return goleiroMandante;
 	}
@@ -53,6 +55,7 @@ public class EsquemaImpl implements Esquema {
 		this.goleiroMandante = goleiroMandante;
 	}
 
+	@Override
 	public EsquemaPosicao getGoleiroVisitante() {
 		return goleiroVisitante;
 	}
