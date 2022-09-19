@@ -136,15 +136,6 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
-	
-	/*@Autowired
-	private CalcularNecessidadeContratacaoClubeService calcularNecessidadeContratacaoClubeService;
-	
-	@Autowired
-	private GerarPropostaTransferenciaService gerarPropostaTransferenciaService;
-	
-	@Autowired
-	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;*/
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -210,17 +201,7 @@ public class CriarCalendarioTemporadaService {
 				}
 				
 				CompletableFuture.allOf(criarJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-				
-				/*CompletableFuture<Boolean> cj1 = jogadorService.criarJogadoresClube(clubes.subList(0, 16));
-				CompletableFuture<Boolean> cj5 = jogadorService.criarJogadoresClube(clubes.subList(16, 32));
-				CompletableFuture<Boolean> cj2 = jogadorService.criarJogadoresClube(clubes.subList(32, 48));
-				CompletableFuture<Boolean> cj6 = jogadorService.criarJogadoresClube(clubes.subList(48, 64));
-				CompletableFuture<Boolean> cj3 = jogadorService.criarJogadoresClube(clubes.subList(64, 80));
-				CompletableFuture<Boolean> cj7 = jogadorService.criarJogadoresClube(clubes.subList(80, 96));
-				CompletableFuture<Boolean> cj4 = jogadorService.criarJogadoresClube(clubes.subList(96, 112));
-				CompletableFuture<Boolean> cj8 = jogadorService.criarJogadoresClube(clubes.subList(112, 128));
 
-				CompletableFuture.allOf(cj1, cj2, cj3, cj4, cj5, cj6, cj7, cj8).join();*/
 			}
 		}
 
@@ -571,85 +552,7 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
-	
-	/*public void gerarTransferencias() {
-		//if (semana.getNumero() == 0, 1, 2, 3) {
-		List<Clube> clubes = clubeRepository.findAll(); 
 
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		long inicio = 0, fim = 0;
-		List<String> mensagens = new ArrayList<String>();
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitNanoTime();
-		
-		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		//Calcular necessidade contratacao
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(clubes.subList(i * offset, clubes.size())));
-			} else {
-				transferenciasFuture.add(calcularNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(clubes.subList(i * offset, (i+1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#calcularNecessidadeContratacao:" + (fim - inicio));
-
-		transferenciasFuture.clear();
-		
-		inicio = stopWatch.getSplitNanoTime();
-		
-		//Fazer propostas transferencia
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(clubes.subList(i * offset, clubes.size())));
-			} else {
-				transferenciasFuture.add(gerarPropostaTransferenciaService.gerarPropostaTransferencia(clubes.subList(i * offset, (i+1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
-
-		transferenciasFuture.clear();
-		
-		inicio = stopWatch.getSplitNanoTime();
-		
-		//Fazer propostas transferencia
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(clubes.subList(i * offset, clubes.size())));
-			} else {
-				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(clubes.subList(i * offset, (i+1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#analisarPropostaTransferencia:" + (fim - inicio));
-		
-		stopWatch.stop();
-		
-		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
-		
-		System.err.println(mensagens);
-		
-		//}
-	}*/
-	
 	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador2() {
 		//if (semana.getNumero() == 1) {

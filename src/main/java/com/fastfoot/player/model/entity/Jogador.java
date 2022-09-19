@@ -347,6 +347,10 @@ public class Jogador {
 	public List<HabilidadeValor> getHabilidadeValorByHabilidade(List<Habilidade> habilidades) {
 		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
 	}
+	
+	public HabilidadeValor getHabilidadeValorByHabilidade(Habilidade habilidade) {
+		return getHabilidades().stream().filter(hv -> habilidade.equals(hv.getHabilidade())).findFirst().get();
+	}
 
 	public List<HabilidadeValor> getHabilidadesAcaoFimValor() {
 		if (habilidadesAcaoFim == null) {

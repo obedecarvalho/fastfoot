@@ -50,6 +50,10 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@ManyToOne
 	@JoinColumn(name = "id_partida_estatisticas")
 	private PartidaEstatisticas partidaEstatisticas;
+	
+	private Integer golsMandantePenalts;
+	
+	private Integer golsVisitantePenalts;
 
 	public PartidaEliminatoriaResultado() {
 		this.golsMandante = 0;
@@ -126,6 +130,22 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		this.partidaEstatisticas = partidaEstatisticas;
 	}
 
+	public Integer getGolsMandantePenalts() {
+		return golsMandantePenalts;
+	}
+
+	public void setGolsMandantePenalts(Integer golsMandantePenalts) {
+		this.golsMandantePenalts = golsMandantePenalts;
+	}
+
+	public Integer getGolsVisitantePenalts() {
+		return golsVisitantePenalts;
+	}
+
+	public void setGolsVisitantePenalts(Integer golsVisitantePenalts) {
+		this.golsVisitantePenalts = golsVisitantePenalts;
+	}
+
 	@Override
 	public void setGolsVisitante(Integer golsVisitante) {
 		this.golsVisitante = golsVisitante;
@@ -156,17 +176,23 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	@Override
 	public Clube getClubeVencedor() {
-		if (partidaJogada && golsMandante >= golsVisitante) return clubeMandante;
-		if (partidaJogada && golsVisitante > golsMandante) return clubeVisitante;
-		//TODO: penalts
+		if (partidaJogada) {
+			if (golsMandante > golsVisitante) return clubeMandante;
+			if (golsVisitante > golsMandante) return clubeVisitante;		
+			if (golsMandante == golsVisitante && golsMandantePenalts > golsVisitantePenalts) return clubeMandante;
+			if (golsVisitante == golsMandante && golsVisitantePenalts > golsMandantePenalts) return clubeVisitante;
+		}
 		return null;
 	}
 
 	@Override
 	public Clube getClubePerdedor() {
-		if (partidaJogada && golsMandante < golsVisitante) return clubeMandante;
-		if (partidaJogada && golsVisitante <= golsMandante) return clubeVisitante;
-		//TODO: penalts
+		if (partidaJogada) {
+			if (golsMandante < golsVisitante) return clubeMandante;
+			if (golsVisitante < golsMandante) return clubeVisitante;
+			if (golsMandante == golsVisitante && golsMandantePenalts < golsVisitantePenalts) return clubeMandante;
+			if (golsVisitante == golsMandante && golsVisitantePenalts < golsMandantePenalts) return clubeVisitante;
+		}
 		return null;
 	}
 	

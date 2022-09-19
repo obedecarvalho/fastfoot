@@ -321,32 +321,6 @@ public class SemanaService {
 		}
 	}*/
 	
-	/*private void aposentarJogadores(Semana semana) {
-
-		if (semana.getNumero() == 25) {
-			
-			List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			int offset = gds.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
-			
-			//System.err.println("\t\t->Total: " + gds.size());
-			
-			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
-					desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, gds.size())));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
-				} else {
-					desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, (i+1) * offset)));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
-				}
-			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		}
-	}*/
-
 	private void escalarClubes(Semana semana) {
 		//if (semana.getNumero() % 5 == 0) {
 		List<Clube> clubes = clubeRepository.findAll(); 
@@ -371,29 +345,6 @@ public class SemanaService {
 		//}
 	}
 	
-	/*private void calcularValorTransferenciaJogadores(Semana semana) {
-		if (semana.getNumero() == 1) {
-			
-			List<Jogador> jogadores = jogadorRepository.findByAposentado(Boolean.FALSE);
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			int offset = jogadores.size() / NUM_SPLITS_GRUPO_DESENVOLVIMENTO;
-			
-			for (int i = 0; i < NUM_SPLITS_GRUPO_DESENVOLVIMENTO; i++) {
-				if ((i + 1) == NUM_SPLITS_GRUPO_DESENVOLVIMENTO) {
-					desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
-				} else {
-					desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(jogadores.subList(i * offset, (i+1) * offset)));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
-				}
-			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		}
-	}*/
-
 	private void calcularProbabilidades(Semana semana, Temporada temporada) {
 		
 		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);

@@ -6,7 +6,7 @@ public class ValidatorUtil {
 
 	public static boolean isEmpty(Object obj) {
 		if (obj instanceof Collection<?>) {
-			isEmpty((Collection<?>) obj);
+			return isEmpty((Collection<?>) obj);
 		}
 		return obj == null;
 	}

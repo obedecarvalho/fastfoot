@@ -40,7 +40,6 @@ public class PartidaService {
 	 * 
 	 * Inserir FALTA (estilo HabilidadeValor(Habilidade.FORA) na roleta) e CARTOES
 	 * Inserir ERRO (estilo HabilidadeValor(Habilidade.FORA) na roleta)
-	 * Disputa penalts
 	 * Substituicoes
 	 * 
 	 */
