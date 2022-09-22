@@ -37,5 +37,5 @@ public class ParametroConstantes {
 	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO: implementar logica
 		
 	//true, false
-	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";//TODO: implementar logica
+	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";
 }

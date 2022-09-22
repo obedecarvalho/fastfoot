@@ -222,7 +222,7 @@ public class SemanaService {
 		inicio = stopWatch.getSplitNanoTime();
 
 		//calcular probabilidades
-		if (semana.getNumero() >= 22 && semana.getNumero() <= 24) {
+		if (semana.getNumero() >= 22 && semana.getNumero() <= 24 && parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
 			calcularProbabilidades(semana, temporada);
 
 			stopWatch.split();
@@ -230,7 +230,7 @@ public class SemanaService {
 			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
-		if (semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17) {
+		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17) && parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
 			calcularProbabilidades(semana, temporada);
 
 			stopWatch.split();

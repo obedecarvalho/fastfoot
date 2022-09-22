@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -56,10 +57,32 @@ public class GerenciarTransferenciasTemporadaService {
 	@Autowired
 	private TemporadaService temporadaService;
 	
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
+	
 	public void gerarTransferencias() {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		gerarTransferencias(temporada, clubes);
+		atualizarNumeroJogadores();
+	}
+	
+	private void atualizarNumeroJogadores() {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
+			} else {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(clubes.subList(i * offset, (i+1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
 	/*@Deprecated

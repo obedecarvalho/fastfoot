@@ -1,6 +1,7 @@
 package com.fastfoot.player.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -18,6 +19,7 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.service.util.RoletaUtil;
 
 @Service
 public class CriarJogadoresClubeService {
@@ -159,6 +161,25 @@ public class CriarJogadoresClubeService {
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 21);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
+		
+		//Jogadores Adicionais
+		
+		
+		Posicao p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		j = JogadorFactory.getInstance().gerarJogador(clube, p, 24);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
+		jogadores.add(j);
+		
+		p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		j = JogadorFactory.getInstance().gerarJogador(clube, p, 25);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
+		jogadores.add(j);
+		
+		p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		j = JogadorFactory.getInstance().gerarJogador(clube, p, 26);
+		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
+		jogadores.add(j);
+		//
 		
 		/*clube = clubeRepository.getById(clube.getId());
 		clube.getForcaGeralAtual();*/

@@ -6,6 +6,7 @@ import java.util.List;
 import com.fastfoot.player.model.Posicao;
 
 public enum EscalacaoPosicao {
+	NULL(false, "NULL", new Posicao[] {}),
 	P_1(true, "GOL", new Posicao[] {Posicao.GOLEIRO, Posicao.ZAGUEIRO, Posicao.VOLANTE, Posicao.LATERAL, Posicao.ATACANTE, Posicao.MEIA}),
 	P_2(true, "LD", new Posicao[] {Posicao.LATERAL, Posicao.ZAGUEIRO, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE, Posicao.GOLEIRO}),
 	P_3(true, "ZD", new Posicao[] {Posicao.ZAGUEIRO, Posicao.VOLANTE, Posicao.LATERAL, Posicao.ATACANTE, Posicao.MEIA, Posicao.GOLEIRO}),

@@ -46,6 +46,16 @@ public class ProporTransferenciaService {
 	
 	private static final double DIFERENCA_FORCA_PASSO_MAX = 0.20d;
 	
+	private static final double LIMITE_DIFERENCA_FORCA_MAX = 1.075d;
+	
+	private static final double LIMITE_DIFERENCA_FORCA_MIN = 0.925d;
+	
+	private static final double LIMITE_DIFERENCA_FORCA_MAX_ESPECIAL = 1.15d;
+	
+	private static final double LIMITE_DIFERENCA_FORCA_MIN_ESPECIAL = 0.85d;
+	
+	private static final double PROBABILIDADE_LIMITE_ESPECIAL = 0.005d;
+	
 	//###	REPOSITORY	###
 	
 	/*@Autowired
@@ -120,13 +130,18 @@ public class ProporTransferenciaService {
 			long jogadoresDispNeg = 0;
 			//double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
 			
+			boolean limiteEspecial = RoletaUtil.sortearProbabilidade(PROBABILIDADE_LIMITE_ESPECIAL);
+			
 			while (diferencaForca < DIFERENCA_FORCA_PASSO_MAX //VAR_FORCA_BASE/2 //(forcaBase - nc.getNivelAdequacaoMin().getPorcentagemMinima()) 
 					//&& jogadoresEncontrados < NUM_MIN_JOGADORES
 					&& jogadoresDispNeg < NUM_MIN_JOGADORES) {
 
 				possiveisJogadores = jogadorRepository.findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
-						//nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
-						nc.getId(), nc.getNivelAdequacaoMin().getPorcentagemMinima(), nc.getNivelAdequacaoMin().getPorcentagemMinima() + diferencaForca);
+						// nc.getId(), forcaBase - diferencaForca, forcaBase + diferencaForca);
+						nc.getId(), nc.getNivelAdequacaoMin().getPorcentagemMinima(),
+						nc.getNivelAdequacaoMin().getPorcentagemMinima() + diferencaForca,
+						limiteEspecial ? LIMITE_DIFERENCA_FORCA_MIN_ESPECIAL : LIMITE_DIFERENCA_FORCA_MIN,
+						limiteEspecial ? LIMITE_DIFERENCA_FORCA_MAX_ESPECIAL : LIMITE_DIFERENCA_FORCA_MAX);
 				
 				//jogadoresEncontrados = possiveisJogadores.size();
 				diferencaForca += DIFERENCA_FORCA_PASSO;
@@ -139,7 +154,7 @@ public class ProporTransferenciaService {
 						jm -> jm.get("disponivel_negociacao") != null && ((Boolean) jm.get("disponivel_negociacao")))
 						.collect(Collectors.toList());
 				//
-
+				//System.err.println("E:" + limiteEspecial + ", D:" + diferencaForca);
 			}
 			
 			if (possiveisJogadores.size() > 0) {

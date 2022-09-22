@@ -43,7 +43,7 @@ public class AposentarJogadorService {
 
 			//aposentar
 			//gdj.getJogador().setAposentado(true);
-			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
+			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);//TODO: transformar em UPDATE?
 			gdj.setAtivo(false);
 
 			//substituto

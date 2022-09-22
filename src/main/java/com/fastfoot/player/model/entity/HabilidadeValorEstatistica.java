@@ -10,15 +10,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_habilidade_valor") })
-public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por temporada com UPDATE em campos específicos
+public class HabilidadeValorEstatistica {//TODO: apenas habilidades uso em partidas oficiais?
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorEstatisticaSequence")
@@ -36,12 +32,8 @@ public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por t
 	private Integer quantidadeUso;
 	
 	private Integer quantidadeUsoVencedor;
-
-	//TODO: temporada
-
-	//TODO: boolean agrupado: indica se é o agrupamento de vários HabilidadeValorEstatistica
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
 	private PartidaResultado partidaResultado;
 	
@@ -51,7 +43,7 @@ public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por t
 	
 	@ManyToOne
 	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
+	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
 	
 	public HabilidadeValorEstatistica() {
 		quantidadeUso = 0;
@@ -64,19 +56,19 @@ public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por t
 		this.habilidadeValor = habilidadeValor;
 	}
 	
-	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, PartidaResultadoJogavel partidaResultado) {
+	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana/*, PartidaResultadoJogavel partidaResultado*/) {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
 		this.semana = semana;
 		
-		if (partidaResultado instanceof PartidaResultado) {
+		/*if (partidaResultado instanceof PartidaResultado) {
 			setPartidaResultado((PartidaResultado) partidaResultado);
 		} else if (partidaResultado instanceof PartidaAmistosaResultado) {
 			setPartidaAmistosaResultado((PartidaAmistosaResultado) partidaResultado);
 		} else if (partidaResultado instanceof PartidaEliminatoriaResultado) {
 			setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partidaResultado);
-		}
+		}*/
 	}
 
 	public Long getId() {
@@ -119,7 +111,7 @@ public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por t
 		this.quantidadeUsoVencedor++;
 	}
 
-	public PartidaResultado getPartidaResultado() {
+	/*public PartidaResultado getPartidaResultado() {
 		return partidaResultado;
 	}
 
@@ -141,7 +133,7 @@ public class HabilidadeValorEstatistica {//TODO: transformar em 1 entidade por t
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}
+	}*/
 
 	public Semana getSemana() {
 		return semana;

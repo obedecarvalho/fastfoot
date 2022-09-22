@@ -86,17 +86,11 @@ public class ClassificacaoController {
 		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap =
 				campeonatos.stream().collect(Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
 		
-		/*for (Liga l : Liga.getAll()) {
+		for (Liga l : Liga.getAll()) {
 			calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
 					semana, campeonatosMap.get(l).get(NivelCampeonato.NACIONAL).get(0),
 					campeonatosMap.get(l).get(NivelCampeonato.NACIONAL_II).get(0)));
-		}*/
-		
-		//
-		calculoProbabilidadesFuture.add(calcularProbabilidadeCompletoService.calcularProbabilidadesCampeonato(
-				semana, campeonatosMap.get(Liga.GENEBE).get(NivelCampeonato.NACIONAL).get(0),
-				campeonatosMap.get(Liga.GENEBE).get(NivelCampeonato.NACIONAL_II).get(0)));
-		//
+		}
 		
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 		

@@ -24,7 +24,7 @@ public class AgruparHabilidadeValorEstatisticaService {
 	@Autowired
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
 	
-	public void agrupar(Temporada temporada) {
+	public void agrupar(Temporada temporada) {//TODO: excluir HabilidadeValorEstatistica após agrupar
 		
 		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = new ArrayList<HabilidadeValorEstatisticaGrupo>();
 		
@@ -43,7 +43,9 @@ public class AgruparHabilidadeValorEstatisticaService {
 			habilidadeValorEstatisticaGrupo.setQuantidadeUso(((BigInteger) e.get("quantidade_uso")).intValue());
 			habilidadeValorEstatisticaGrupo.setQuantidadeUsoVencedor(((BigInteger) e.get("quantidade_uso_vencedor")).intValue());
 			
-			habilidadeValorEstatisticaGrupo.setPorcAcerto(new Double(habilidadeValorEstatisticaGrupo.getQuantidadeUsoVencedor())/habilidadeValorEstatisticaGrupo.getQuantidadeUso());
+			habilidadeValorEstatisticaGrupo
+					.setPorcAcerto(new Double(habilidadeValorEstatisticaGrupo.getQuantidadeUsoVencedor())
+							/ habilidadeValorEstatisticaGrupo.getQuantidadeUso());//TODO: verificar necessidade de armazenar campo
 			
 			estatisticasGrupo.add(habilidadeValorEstatisticaGrupo);
 		}

@@ -150,4 +150,8 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		
 		return elements.get(R.nextInt(elements.size()));
 	}
+	
+	public static boolean sortearProbabilidade(double probabilidade) {
+		return R.nextDouble() <= probabilidade;
+	}
 }

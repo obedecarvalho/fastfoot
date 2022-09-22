@@ -117,7 +117,7 @@ public class CalcularProbabilidadeCompletoService {
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	public Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
 		
 		Map<Clube, ClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, ClubeProbabilidade>();
 		

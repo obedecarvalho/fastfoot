@@ -1,5 +1,6 @@
 package com.fastfoot.transfer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.RoletaUtil;
+import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
@@ -68,7 +70,7 @@ public class AnalisarPropostaTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}*/
 	
-	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
+	/*public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
 			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
 
 		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()
@@ -98,5 +100,41 @@ public class AnalisarPropostaTransferenciaService {
 			}
 
 		}
+	}*/
+	
+	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
+			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
+
+		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()
+				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getJogador));
+
+		List<PropostaTransferenciaJogador> propostasJog = null;
+		PropostaTransferenciaJogador propostaAceitar = null;
+		List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
+		
+		for (Jogador j : jogadorPropostas.keySet()) {
+			
+			propostasJog = jogadorPropostas.get(j);
+			
+			Optional<DisponivelNegociacao> disNegJogOpt = disponivelNegociacaoRepository
+					.findFirstByTemporadaAndJogadorAndAtivo(temporada, j, true); 
+
+			if (disNegJogOpt.isPresent()) {
+				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);
+				propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executarN(propostasJog);
+				
+				propostasJog.remove(propostaAceitar);
+				
+				//System.err.println(Thread.currentThread().getName() + propostaAceitar.getClubeOrigem() + propostaAceitar.getClubeDestino());
+				clubesRefazerEscalacao.add(propostaAceitar.getClubeOrigem());
+				clubesRefazerEscalacao.add(propostaAceitar.getClubeDestino());
+				//concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar, propostasJog, disNegJogOpt.get());
+
+				transferenciaConcluidaDTOs.add(new TransferenciaConcluidaDTO(propostaAceitar, propostasJog, disNegJogOpt.get()));
+			}
+
+		}
+		
+		concluirTransferenciaJogadorService.concluirTransferenciaJogadorEmLote(transferenciaConcluidaDTOs);
 	}
 }

@@ -33,7 +33,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class PartidaService {
+public class PartidaService {//TODO: renomear para JogadorPartidaService
 	
 	/*
 	 * TODO:
@@ -91,7 +91,7 @@ public class PartidaService {
 	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana, PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
 			for (HabilidadeValor hv : j.getHabilidades()) {
-				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana, partidaResultado));
+				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana/*, partidaResultado*/));
 			}
 		}
 	}

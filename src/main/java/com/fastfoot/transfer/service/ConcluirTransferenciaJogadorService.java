@@ -1,16 +1,20 @@
 package com.fastfoot.transfer.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.SemanaService;
+import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
+import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
@@ -74,6 +78,63 @@ public class ConcluirTransferenciaJogadorService {
 		disponivelNegociacaoRepository.save(disponivelNegociacao);
 
 		//TODO: gerar entradas e saidas financeiras
-		//TODO: ajustar numero do jogador
+	}
+	
+	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
+	public void concluirTransferenciaJogadorEmLote(List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs) {
+
+		Semana s = semanaService.getSemanaAtual();
+
+		List<JogadorEstatisticasTemporada> estatisticasSalvar = new ArrayList<JogadorEstatisticasTemporada>();
+		List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();
+		List<PropostaTransferenciaJogador> propostasSalvar = new ArrayList<PropostaTransferenciaJogador>();
+		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
+		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
+		List<DisponivelNegociacao> disponivelSalvar = new ArrayList<DisponivelNegociacao>();
+
+		for (TransferenciaConcluidaDTO transferenciaConcluidaDTO : transferenciaConcluidaDTOs) {
+
+			if (transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasTemporadaAtual()
+					.isEmpty()) {
+				estatisticasExcluir.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador()
+						.getJogadorEstatisticasTemporadaAtual());
+			}
+
+			transferenciaConcluidaDTO.getPropostaAceita().setPropostaAceita(true);
+			transferenciaConcluidaDTO.getPropostaAceita().setSemanaTransferencia(s);
+
+			transferenciaConcluidaDTO.getPropostaAceita().getJogador()
+					.setClube(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino());
+			transferenciaConcluidaDTO.getPropostaAceita().getJogador().setJogadorEstatisticasTemporadaAtual(
+					new JogadorEstatisticasTemporada(transferenciaConcluidaDTO.getPropostaAceita().getJogador(),
+							transferenciaConcluidaDTO.getPropostaAceita().getTemporada(),
+							transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino()));
+
+			transferenciaConcluidaDTO.getPropostaAceita().getNecessidadeContratacaoClube()
+					.setNecessidadeSatisfeita(true);
+
+			transferenciaConcluidaDTO.getPropostasRejeitar().stream().forEach(p -> p.setPropostaAceita(false));
+
+			transferenciaConcluidaDTO.getDisponivelNegociacao().setAtivo(false);
+
+			propostasSalvar.add(transferenciaConcluidaDTO.getPropostaAceita());
+			propostasSalvar.addAll(transferenciaConcluidaDTO.getPropostasRejeitar());
+			jogadoresSalvar.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador());
+			estatisticasSalvar.add(
+					transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasTemporadaAtual());
+			necessidadeContratacaoSalvar
+					.add(transferenciaConcluidaDTO.getPropostaAceita().getNecessidadeContratacaoClube());
+			disponivelSalvar.add(transferenciaConcluidaDTO.getDisponivelNegociacao());
+
+		}
+
+		jogadorEstatisticasTemporadaRepository.saveAll(estatisticasSalvar);
+		jogadorRepository.saveAll(jogadoresSalvar);
+		jogadorEstatisticasTemporadaRepository.deleteAll(estatisticasExcluir);
+		propostaTransferenciaJogadorRepository.saveAll(propostasSalvar);
+		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoSalvar);
+		disponivelNegociacaoRepository.saveAll(disponivelSalvar);
+
+		// TODO: gerar entradas e saidas financeiras
 	}
 }

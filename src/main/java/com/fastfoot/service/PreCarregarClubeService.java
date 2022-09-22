@@ -28,19 +28,19 @@ import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 @Service
 public class PreCarregarClubeService {
 	
-	private static final Integer FORCA_NIVEL_1 = 85;
+	private static final Integer FORCA_NIVEL_1 = 90;
 	
-	private static final Integer FORCA_NIVEL_2 = 82;
+	private static final Integer FORCA_NIVEL_2 = 87;
 	
-	private static final Integer FORCA_NIVEL_3 = 78;
+	private static final Integer FORCA_NIVEL_3 = 84;
 	
-	private static final Integer FORCA_NIVEL_4 = 75;
+	private static final Integer FORCA_NIVEL_4 = 81;
 	
-	private static final Integer FORCA_NIVEL_5 = 71;
+	private static final Integer FORCA_NIVEL_5 = 78;
 	
-	private static final Integer FORCA_NIVEL_6 = 68;
+	private static final Integer FORCA_NIVEL_6 = 74;
 	
-	private static final Integer FORCA_NIVEL_7 = 64;
+	private static final Integer FORCA_NIVEL_7 = 70;
 	
 	@Autowired
 	private ClubeRepository clubeRepository;

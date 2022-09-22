@@ -86,9 +86,11 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" WHERE ncc.id = ?1 " +
 			" 	AND j.forca_geral >= c.forca_geral * ?2 " +
 			" 	AND j.forca_geral < c.forca_geral * ?3 " +
-			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * 0.95 AND c.forca_geral * 1.05 " +
+			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * ?4 AND c.forca_geral * ?5 " +
 			" 	AND ptj.id IS NULL " + //não ha propostras transferencia do clube nessa temporada
 			" 	AND ptj2.id IS NULL "
 			)
-	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(Long idNecessidadeContratacao, Double forcaMin, Double forcaMax);//TODO: colocar em repository especifico
+			public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
+					Long idNecessidadeContratacao, Double forcaMin, Double forcaMax, Double limDiffForcaMin,
+					Double limDiffForcaMax);//TODO: colocar em repository especifico
 }
