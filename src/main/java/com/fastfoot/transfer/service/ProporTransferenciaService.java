@@ -204,6 +204,7 @@ public class ProporTransferenciaService {
 				proposta.setClubeOrigem(new Clube(jogadorSelecionado.getIdClube()));
 				proposta.setNecessidadeContratacaoClube(nc);
 				proposta.setTemporada(temporada);
+				proposta.setValorTransferencia(jogadorSelecionado.getValorTransferencia());
 				
 				propostaTransferenciaJogadores.add(proposta);
 				//propostaTransferenciaJogadorRepository.save(proposta);

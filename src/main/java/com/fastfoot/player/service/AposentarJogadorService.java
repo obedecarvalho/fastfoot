@@ -87,13 +87,16 @@ public class AposentarJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero, CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
+	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
+			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
 
-		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN);
+		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
+				JogadorFactory.IDADE_MIN);//TODO: selecionar posicao de acordo com posições escassas no elenco
 		
 		//Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN, forcaGeral);
 		
-		GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador = new GrupoDesenvolvimentoJogador(celulaDesenvolvimento, novoJogador, true);
+		GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador = new GrupoDesenvolvimentoJogador(celulaDesenvolvimento,
+				novoJogador, true);
 
 		return grupoDesenvolvimentoJogador;
 	}

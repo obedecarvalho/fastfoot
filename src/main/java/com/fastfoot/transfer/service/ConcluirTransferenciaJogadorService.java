@@ -6,6 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraSaida;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraSaida;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraSaidaRepository;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
@@ -40,6 +46,12 @@ public class ConcluirTransferenciaJogadorService {
 	@Autowired
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
 	
+	@Autowired
+	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
+	
+	@Autowired
+	private MovimentacaoFinanceiraSaidaRepository movimentacaoFinanceiraSaidaRepository;
+	
 	//###	SERVICE	###
 
 	@Autowired
@@ -48,9 +60,8 @@ public class ConcluirTransferenciaJogadorService {
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogador(PropostaTransferenciaJogador propostaTransferenciaJogador,
 			List<PropostaTransferenciaJogador> propostasRejeitar, DisponivelNegociacao disponivelNegociacao) {
-		//TODO: fazer método concluirTransferenciaJogadorEmLote
 		
-		Semana s = semanaService.getSemanaAtual();
+		Semana s = semanaService.getProximaSemana();
 		
 		propostaTransferenciaJogador.setPropostaAceita(true);
 		propostaTransferenciaJogador.setSemanaTransferencia(s);
@@ -83,14 +94,17 @@ public class ConcluirTransferenciaJogadorService {
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogadorEmLote(List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs) {
 
-		Semana s = semanaService.getSemanaAtual();
+		Semana s = semanaService.getProximaSemana();
 
 		List<JogadorEstatisticasTemporada> estatisticasSalvar = new ArrayList<JogadorEstatisticasTemporada>();
-		List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();
+		List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();//TODO: maior parte do tempo é gasto aqui
 		List<PropostaTransferenciaJogador> propostasSalvar = new ArrayList<PropostaTransferenciaJogador>();
 		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelSalvar = new ArrayList<DisponivelNegociacao>();
+		
+		List<MovimentacaoFinanceiraSaida> movSaidaSalvar = new ArrayList<MovimentacaoFinanceiraSaida>();
+		List<MovimentacaoFinanceiraEntrada> movEntradaSalvar = new ArrayList<MovimentacaoFinanceiraEntrada>();
 
 		for (TransferenciaConcluidaDTO transferenciaConcluidaDTO : transferenciaConcluidaDTOs) {
 
@@ -116,6 +130,15 @@ public class ConcluirTransferenciaJogadorService {
 			transferenciaConcluidaDTO.getPropostasRejeitar().stream().forEach(p -> p.setPropostaAceita(false));
 
 			transferenciaConcluidaDTO.getDisponivelNegociacao().setAtivo(false);
+			
+			movSaidaSalvar.add(
+					new MovimentacaoFinanceiraSaida(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), s,
+							TipoMovimentacaoFinanceiraSaida.COMPRA_JOGADOR,
+							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia()));
+			movEntradaSalvar.add(
+					new MovimentacaoFinanceiraEntrada(transferenciaConcluidaDTO.getPropostaAceita().getClubeOrigem(), s,
+							TipoMovimentacaoFinanceiraEntrada.VENDA_JOGADOR,
+							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia()));
 
 			propostasSalvar.add(transferenciaConcluidaDTO.getPropostaAceita());
 			propostasSalvar.addAll(transferenciaConcluidaDTO.getPropostasRejeitar());
@@ -134,7 +157,9 @@ public class ConcluirTransferenciaJogadorService {
 		propostaTransferenciaJogadorRepository.saveAll(propostasSalvar);
 		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoSalvar);
 		disponivelNegociacaoRepository.saveAll(disponivelSalvar);
+		
+		movimentacaoFinanceiraEntradaRepository.saveAll(movEntradaSalvar);
+		movimentacaoFinanceiraSaidaRepository.saveAll(movSaidaSalvar);
 
-		// TODO: gerar entradas e saidas financeiras
 	}
 }

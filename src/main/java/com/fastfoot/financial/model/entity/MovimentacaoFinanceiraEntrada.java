@@ -37,6 +37,18 @@ public class MovimentacaoFinanceiraEntrada {
 	private TipoMovimentacaoFinanceiraEntrada tipoMovimentacao;
 	
 	private Double valorMovimentacao;
+	
+	public MovimentacaoFinanceiraEntrada() {
+
+	}
+
+	public MovimentacaoFinanceiraEntrada(Clube clube, Semana semana, TipoMovimentacaoFinanceiraEntrada tipoMovimentacao,
+			Double valorMovimentacao) {
+		this.clube = clube;
+		this.semana = semana;
+		this.tipoMovimentacao = tipoMovimentacao;
+		this.valorMovimentacao = valorMovimentacao;
+	}
 
 	public Long getId() {
 		return id;

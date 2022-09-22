@@ -40,10 +40,10 @@ public class AnalisarPropostaTransferenciaService {
 	@Autowired
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;
 	
-	//@Async("transferenciaExecutor")
+	@Async("transferenciaExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
-		
+
 		for (Clube c : clubes) {
 			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
 		}

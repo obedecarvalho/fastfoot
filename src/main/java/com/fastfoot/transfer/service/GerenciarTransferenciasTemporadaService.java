@@ -195,26 +195,27 @@ public class GerenciarTransferenciasTemporadaService {
 				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getClubeOrigem));
 		
 		clubes = new ArrayList<Clube>(propostasClube.keySet());
-		//offset = clubes.size() / NUM_THREAD_ANALISAR_PROPOSTA;//offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		Integer nroThread = Math.min(FastfootApplication.NUM_THREAD, clubes.size()/5);//pelo menos 5 clubes por thread
+		offset = clubes.size() / nroThread;
 		System.err.println("#propostasClube" + clubes.size());
 		Set<Clube> clubesRefazerEscalacao = Collections.synchronizedSet(new HashSet<Clube>());
 		
 		//Analisar propostas transferencia
-		analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada, clubes, propostasClube,
-				clubesRefazerEscalacao);//TODO: retornar para versão com thread. Numero de Thread Math.min(clubes.size(), FastfootApplication.NUM_THREAD)
-		
+		/*analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada, clubes, propostasClube,
+				clubesRefazerEscalacao);*/
+
 		//Analisar propostas transferencia
-		/*for (int i = 0; i < NUM_THREAD_ANALISAR_PROPOSTA; i++) {//for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == NUM_THREAD_ANALISAR_PROPOSTA) {//if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(analisarPropostaTransferenciaService
-						.analisarPropostaTransferencia(temporada, clubes.subList(i * offset, clubes.size()), propostasClube, clubesRefazerEscalacao));
+		for (int i = 0; i < nroThread; i++) {
+			if ((i + 1) == nroThread) {
+				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
+						clubes.subList(i * offset, clubes.size()), propostasClube, clubesRefazerEscalacao));
 			} else {
-				transferenciasFuture.add(analisarPropostaTransferenciaService
-						.analisarPropostaTransferencia(temporada, clubes.subList(i * offset, (i + 1) * offset), propostasClube, clubesRefazerEscalacao));
+				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
+						clubes.subList(i * offset, (i + 1) * offset), propostasClube, clubesRefazerEscalacao));
 			}
 		}
 		
-		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();*/
+		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		//
 		
 		//System.err.println(clubesRefazerEscalacao);//TODO:ajustar escalação: apenas caso de semanas nao contempladas em SemanaService

@@ -503,4 +503,9 @@ public class SemanaService {
 		Optional<Semana> s = semanaRepository.findSemanaAtual();
 		return s.isPresent() ? s.get() : null;
 	}
+	
+	public Semana getProximaSemana() {
+		Optional<Semana> s = semanaRepository.findProximaSemana();
+		return s.isPresent() ? s.get() : null;
+	}
 }

@@ -19,4 +19,7 @@ public interface SemanaRepository extends JpaRepository<Semana, Long>{
 	
 	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.temporada.semanaAtual = s.numero ")
 	public Optional<Semana> findSemanaAtual();
+	
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND (s.temporada.semanaAtual + 1) = s.numero ")
+	public Optional<Semana> findProximaSemana();
 }
