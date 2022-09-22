@@ -26,9 +26,11 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			+ " 	percentile_disc(0.25) within group (order by quantidade_uso_vencedor) as quv_q3, "
 			+ " 	percentile_disc(0.5) within group (order by quantidade_uso_vencedor) as quv_q2, "
 			+ " 	percentile_disc(0.75) within group (order by quantidade_uso_vencedor) as quv_q1, "
-			+ " 	percentile_disc(0.25) within group (order by porc_acerto) as pa_q3, "
-			+ " 	percentile_disc(0.5) within group (order by porc_acerto) as pa_q2, "
-			+ " 	percentile_disc(0.75) within group (order by porc_acerto) as pa_q1 "
-			+ " FROM habilidade_valor_estatistica_grupo " + " WHERE id_temporada = ?1 ")
+			+ " 	percentile_disc(0.25) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q3, "
+			+ " 	percentile_disc(0.5) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q2, "
+			+ " 	percentile_disc(0.75) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q1 "
+			+ " FROM habilidade_valor_estatistica_grupo " + 
+			" WHERE id_temporada = ?1 "
+	)
 	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada);
 }

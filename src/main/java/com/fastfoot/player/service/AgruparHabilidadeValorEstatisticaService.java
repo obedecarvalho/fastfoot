@@ -43,14 +43,16 @@ public class AgruparHabilidadeValorEstatisticaService {
 			habilidadeValorEstatisticaGrupo.setQuantidadeUso(((BigInteger) e.get("quantidade_uso")).intValue());
 			habilidadeValorEstatisticaGrupo.setQuantidadeUsoVencedor(((BigInteger) e.get("quantidade_uso_vencedor")).intValue());
 			
-			habilidadeValorEstatisticaGrupo
+			/*habilidadeValorEstatisticaGrupo
 					.setPorcAcerto(new Double(habilidadeValorEstatisticaGrupo.getQuantidadeUsoVencedor())
-							/ habilidadeValorEstatisticaGrupo.getQuantidadeUso());//TODO: verificar necessidade de armazenar campo
+							/ habilidadeValorEstatisticaGrupo.getQuantidadeUso());*///TODO: verificar necessidade de armazenar campo
 			
 			estatisticasGrupo.add(habilidadeValorEstatisticaGrupo);
 		}
 
 		habilidadeValorEstatisticaGrupoRepository.saveAll(estatisticasGrupo);
+		
+		habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
 	}
 
 	/*public HabilidadeEstatisticaPercentil getPercentilHabilidadeValor(Temporada temporada) {
