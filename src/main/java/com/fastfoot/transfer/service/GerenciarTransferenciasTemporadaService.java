@@ -197,7 +197,7 @@ public class GerenciarTransferenciasTemporadaService {
 		clubes = new ArrayList<Clube>(propostasClube.keySet());
 		Integer nroThread = Math.min(FastfootApplication.NUM_THREAD, clubes.size()/5);//pelo menos 5 clubes por thread
 		offset = clubes.size() / nroThread;
-		System.err.println("#propostasClube" + clubes.size());
+		System.err.println("#propostasClube" + clubes.size() + ", #th:" + nroThread);
 		Set<Clube> clubesRefazerEscalacao = Collections.synchronizedSet(new HashSet<Clube>());
 		
 		//Analisar propostas transferencia

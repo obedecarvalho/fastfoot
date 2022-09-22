@@ -32,24 +32,38 @@ for i in range(1, numTemporada+1):
 	print('Temporada: ' + str(i))
 
 	if novaTemporada:
+		start_time = time.time()
 		r = requests.get(urlNovaTemporada)
+		finish_time = time.time()
 
 		if r.status_code == 200:
 			print('Nova Temporada: ' + str(r.json()['ano']))
+			print('Tempo:' + str(finish_time - start_time))
 		else:
 			print('Error (Criando Temporada): ' + str(r.status_code))
 			exit()
+
+		start_time = time.time()
 		r = requests.get(urlTrans)
+		finish_time = time.time()
+
+		if r.status_code == 200:
+			print('Transferencias Tempo:' + str(finish_time - start_time))
+		else:
+			print('Error (Transferencias): ' + str(r.status_code))
+			exit()
 	
 	novaTemporada = True #Tratar caso de mais de uma temporada
 	numero = 0
 
 	while numero < rodadaFinal:
 		time.sleep(0.5)
+		start_time = time.time()
 		r = requests.get(url)
+		finish_time = time.time()
 		if r.status_code == 200:
 			numero = int(r.json()['numero'])
-			print(numero)
+			print(str(numero) + '\t[t:' + str(finish_time - start_time) + ']')
 		else:
 			print('Error (Executando Rodadas): ' + str(r.status_code))
 			exit()
