@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -95,6 +94,10 @@ public class AposentarJogadorService {
 			gruposDesenvolvimento =  grupoDesenvolvimentoClube.get(c);
 			quantitativoPosicaoClubeDTOs = quantitativoPosicaoPorClube.get(c);
 			//posicaoNecessidade.clear();
+			
+			if (quantitativoPosicaoClubeDTOs.size() != (Posicao.values().length - 1)) {
+				throw new RuntimeException("Quantitativo de jogadores por posição diferente do esperado");
+			}
 			
 			/*for (int i = 0; i < gruposDesenvolvimento.size(); i++) {
 				Collections.sort(quantitativoPosicaoClubeDTOs);

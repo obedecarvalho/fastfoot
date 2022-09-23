@@ -16,6 +16,9 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Entity
 @Table(indexes = { @Index(columnList = "id_temporada, id_jogador") })
 public class JogadorEstatisticasTemporada {
+
+	//TODO: estatisticas goleiro: gols tomados, defesas
+	//TODO: num jogos titular e reserva separados
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasTemporadaSequence")	
@@ -45,16 +48,6 @@ public class JogadorEstatisticasTemporada {
 	private Integer finalizacoesFora;
 	
 	private Integer faltas;//TODO: implementar lógica
-	
-	//private Integer numeroJogosAmistosos;
-	
-	//private Integer golsMarcadosAmistosos;
-
-	//private Integer assistenciasAmistosos;
-	
-	//TODO: estatisticas goleiro: gols tomados, defesas
-	
-	//TODO: num titular e reserva separados
 
 	public JogadorEstatisticasTemporada() {
 		
@@ -67,25 +60,13 @@ public class JogadorEstatisticasTemporada {
 		this.golsMarcados = 0;
 		this.finalizacoesDefendidas = 0;
 		this.finalizacoesFora = 0;
-		//this.numeroJogosAmistosos = 0;
-		//this.golsMarcadosAmistosos = 0;
 		this.faltas = 0;
 		this.assistencias = 0;
-		//this.assistenciasAmistosos = 0;
 		this.clube = clube;
 	}
 	
 	public boolean isEmpty() {
-		return this.numeroJogos == 0 //&& 
-				//this.golsMarcados == 0 && 
-				//this.finalizacoesDefendidas == 0 && 
-				//this.finalizacoesFora == 0 && 				
-				//this.golsMarcadosAmistosos == 0 && 
-				//this.faltas == 0 && 
-				//this.assistencias == 0 && 
-				//this.assistenciasAmistosos == 0 &&
-				//this.numeroJogosAmistosos == 0
-				;
+		return this.numeroJogos == 0;
 	}
 	
 	public Long getId() {
@@ -172,26 +153,6 @@ public class JogadorEstatisticasTemporada {
 		this.finalizacoesFora++;
 	}
 
-	/*public Integer getNumeroJogosAmistosos() {
-		return numeroJogosAmistosos;
-	}
-
-	public void setNumeroJogosAmistosos(Integer numeroJogosAmistosos) {
-		this.numeroJogosAmistosos = numeroJogosAmistosos;
-	}*/
-
-	/*public Integer getGolsMarcadosAmistosos() {
-		return golsMarcadosAmistosos;
-	}
-
-	public void setGolsMarcadosAmistosos(Integer golsMarcadosAmistosos) {
-		this.golsMarcadosAmistosos = golsMarcadosAmistosos;
-	}*/
-	
-	/*public void incrementarGolsMarcadosAmistosos() {
-		this.golsMarcadosAmistosos++;
-	}*/
-
 	public Integer getAssistencias() {
 		return assistencias;
 	}
@@ -199,22 +160,10 @@ public class JogadorEstatisticasTemporada {
 	public void setAssistencias(Integer assistencias) {
 		this.assistencias = assistencias;
 	}
-
-	/*public Integer getAssistenciasAmistosos() {
-		return assistenciasAmistosos;
-	}
-
-	public void setAssistenciasAmistosos(Integer assistenciasAmistosos) {
-		this.assistenciasAmistosos = assistenciasAmistosos;
-	}*/
 	
 	public void incrementarAssistencias() {
 		this.assistencias++;
 	}
-
-	/*public void incrementarAssistenciasAmistosos() {
-		this.assistenciasAmistosos++;
-	}*/
 
 	@Override
 	public String toString() {

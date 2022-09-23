@@ -34,7 +34,8 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 			" select j.id_clube, j.posicao, count(*) as total" +
 			" from jogador j" +
 			" where j.status_jogador = 0" + //StatusJogador.ATIVO
-			" group by j.id_clube, j.posicao"
+			" group by j.id_clube, j.posicao" +
+			" order by j.id_clube, total"
 	)
 	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube();
 	
@@ -43,7 +44,8 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 			" from jogador j" +
 			" where j.status_jogador = 0" + //StatusJogador.ATIVO
 			" 	and j.posicao not in (0)" + //Posicao.GOLEIRO
-			" group by j.id_clube, j.posicao"
+			" group by j.id_clube, j.posicao" +
+			" order by j.id_clube, total"
 	)
 	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClubeSemGoleiro();
 	
@@ -53,7 +55,8 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 			" where j.status_jogador = 0" + //StatusJogador.ATIVO
 			" 	and j.posicao not in (?1)" +
 			" 	and j.idade not in (?2)" +
-			" group by j.id_clube, j.posicao"
+			" group by j.id_clube, j.posicao" +
+			" order by j.id_clube, total"
 	)
 	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(Integer posicaoExcluir, Integer idadeExcluir);
 }
