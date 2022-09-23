@@ -77,6 +77,7 @@ public class ProporTransferenciaService {
 	
 	@Async("transferenciaExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes, Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
+		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
 		
 		List<PropostaTransferenciaJogador> propostaTransferenciaJogadores = new ArrayList<PropostaTransferenciaJogador>();
 		

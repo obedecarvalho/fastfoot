@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.club.model.repository.ClubeRepository;
@@ -28,19 +29,19 @@ import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 @Service
 public class PreCarregarClubeService {
 	
-	private static final Integer FORCA_NIVEL_1 = 90;
+	public static final Integer FORCA_NIVEL_1 = 90;
 	
-	private static final Integer FORCA_NIVEL_2 = 87;
+	public static final Integer FORCA_NIVEL_2 = 87;
 	
-	private static final Integer FORCA_NIVEL_3 = 84;
+	public static final Integer FORCA_NIVEL_3 = 84;
 	
-	private static final Integer FORCA_NIVEL_4 = 81;
+	public static final Integer FORCA_NIVEL_4 = 81;
 	
-	private static final Integer FORCA_NIVEL_5 = 78;
+	public static final Integer FORCA_NIVEL_5 = 78;
 	
-	private static final Integer FORCA_NIVEL_6 = 74;
+	public static final Integer FORCA_NIVEL_6 = 74;
 	
-	private static final Integer FORCA_NIVEL_7 = 70;
+	public static final Integer FORCA_NIVEL_7 = 70;
 	
 	@Autowired
 	private ClubeRepository clubeRepository;
@@ -63,7 +64,7 @@ public class PreCarregarClubeService {
 		
 			List<Clube> clubes = new ArrayList<Clube>();
 	
-			clubes.add(new Clube(101, Liga.GENEBE, FORCA_NIVEL_1, /*"Bayern München"*/ "Bayern Munich"));
+			/*clubes.add(new Clube(101, Liga.GENEBE, FORCA_NIVEL_1, /*"Bayern München"* / "Bayern Munich"));
 			clubes.add(new Clube(102, Liga.GENEBE, FORCA_NIVEL_1, "Ajax"));
 			clubes.add(new Clube(103, Liga.GENEBE, FORCA_NIVEL_2, "Borussia Dortmund"));
 			clubes.add(new Clube(104, Liga.GENEBE, FORCA_NIVEL_2, "Bayer Leverkusen"));
@@ -79,7 +80,7 @@ public class PreCarregarClubeService {
 			clubes.add(new Clube(114, Liga.GENEBE, FORCA_NIVEL_4, "AZ Alkmaar"));
 			clubes.add(new Clube(115, Liga.GENEBE, FORCA_NIVEL_5, "Union Berlin"));
 			clubes.add(new Clube(116, Liga.GENEBE, FORCA_NIVEL_5, "Mainz 05"));
-			clubes.add(new Clube(117, Liga.GENEBE, FORCA_NIVEL_5, /*"Colônia"*/ "FC Koln"));
+			clubes.add(new Clube(117, Liga.GENEBE, FORCA_NIVEL_5, /*"Colônia"* / "FC Koln"));
 			clubes.add(new Clube(118, Liga.GENEBE, FORCA_NIVEL_5, "Schalke 04"));
 			clubes.add(new Clube(119, Liga.GENEBE, FORCA_NIVEL_5, "Hertha Berlin"));
 			clubes.add(new Clube(120, Liga.GENEBE, FORCA_NIVEL_5, "VfB Stuttgart"));
@@ -127,7 +128,7 @@ public class PreCarregarClubeService {
 			clubes.add(new Clube(230, Liga.SPAPOR, FORCA_NIVEL_7, "Eibar"));
 			clubes.add(new Clube(231, Liga.SPAPOR, FORCA_NIVEL_7, "Zaragoza"));
 			clubes.add(new Clube(232, Liga.SPAPOR, FORCA_NIVEL_7, "Málaga"));
-			clubes.add(new Clube(301, Liga.ITAFRA, FORCA_NIVEL_1, "Internazionale" /*"Inter Milan"*/));
+			clubes.add(new Clube(301, Liga.ITAFRA, FORCA_NIVEL_1, "Internazionale" /*"Inter Milan"* /));
 			clubes.add(new Clube(302, Liga.ITAFRA, FORCA_NIVEL_1, "Juventus"));
 			clubes.add(new Clube(303, Liga.ITAFRA, FORCA_NIVEL_2, "Paris Saint-Germain"));
 			clubes.add(new Clube(304, Liga.ITAFRA, FORCA_NIVEL_2, "Napoli"));
@@ -169,7 +170,7 @@ public class PreCarregarClubeService {
 			clubes.add(new Clube(408, Liga.ENGLND, FORCA_NIVEL_3, "Leicester City"));
 			clubes.add(new Clube(409, Liga.ENGLND, FORCA_NIVEL_3, "Aston Villa"));
 			clubes.add(new Clube(410, Liga.ENGLND, FORCA_NIVEL_4, "Rangers"));
-			clubes.add(new Clube(411, Liga.ENGLND, FORCA_NIVEL_4, /*"Wolverhampton Wanderers"*/ "Wolves"));
+			clubes.add(new Clube(411, Liga.ENGLND, FORCA_NIVEL_4, /*"Wolverhampton Wanderers"* / "Wolves"));
 			clubes.add(new Clube(412, Liga.ENGLND, FORCA_NIVEL_4, "Crystal Palace"));
 			clubes.add(new Clube(413, Liga.ENGLND, FORCA_NIVEL_4, "Everton"));
 			clubes.add(new Clube(414, Liga.ENGLND, FORCA_NIVEL_4, "Newcastle"));
@@ -190,7 +191,136 @@ public class PreCarregarClubeService {
 			clubes.add(new Clube(429, Liga.ENGLND, FORCA_NIVEL_7, "Stoke City"));
 			clubes.add(new Clube(430, Liga.ENGLND, FORCA_NIVEL_7, "Swansea City"));
 			clubes.add(new Clube(431, Liga.ENGLND, FORCA_NIVEL_7, "West Bromwich"));
-			clubes.add(new Clube(432, Liga.ENGLND, FORCA_NIVEL_7, "Blackpool"));
+			clubes.add(new Clube(432, Liga.ENGLND, FORCA_NIVEL_7, "Blackpool"));*/
+			
+			clubes.add(new Clube(101, Liga.GENEBE, ClubeNivel.NIVEL_A, /*"Bayern München"*/ "Bayern Munich"));
+			clubes.add(new Clube(102, Liga.GENEBE, ClubeNivel.NIVEL_A, "Ajax"));
+			clubes.add(new Clube(103, Liga.GENEBE, ClubeNivel.NIVEL_B, "Borussia Dortmund"));
+			clubes.add(new Clube(104, Liga.GENEBE, ClubeNivel.NIVEL_B, "Bayer Leverkusen"));
+			clubes.add(new Clube(105, Liga.GENEBE, ClubeNivel.NIVEL_B, "PSV"));
+			clubes.add(new Clube(106, Liga.GENEBE, ClubeNivel.NIVEL_C, "RB Leipzig"));
+			clubes.add(new Clube(107, Liga.GENEBE, ClubeNivel.NIVEL_C, "Wolfsburg"));
+			clubes.add(new Clube(108, Liga.GENEBE, ClubeNivel.NIVEL_C, "Borussia Mönchengladbach"));
+			clubes.add(new Clube(109, Liga.GENEBE, ClubeNivel.NIVEL_C, "Club Brugge"));
+			clubes.add(new Clube(110, Liga.GENEBE, ClubeNivel.NIVEL_D, "Eintracht Frankfurt"));
+			clubes.add(new Clube(111, Liga.GENEBE, ClubeNivel.NIVEL_D, "Freiburg"));
+			clubes.add(new Clube(112, Liga.GENEBE, ClubeNivel.NIVEL_D, "Hoffenheim"));
+			clubes.add(new Clube(113, Liga.GENEBE, ClubeNivel.NIVEL_D, "Feyenoord"));
+			clubes.add(new Clube(114, Liga.GENEBE, ClubeNivel.NIVEL_D, "AZ Alkmaar"));
+			clubes.add(new Clube(115, Liga.GENEBE, ClubeNivel.NIVEL_E, "Union Berlin"));
+			clubes.add(new Clube(116, Liga.GENEBE, ClubeNivel.NIVEL_E, "Mainz 05"));
+			clubes.add(new Clube(117, Liga.GENEBE, ClubeNivel.NIVEL_E, /*"Colônia"*/ "FC Koln"));
+			clubes.add(new Clube(118, Liga.GENEBE, ClubeNivel.NIVEL_E, "Schalke 04"));
+			clubes.add(new Clube(119, Liga.GENEBE, ClubeNivel.NIVEL_E, "Hertha Berlin"));
+			clubes.add(new Clube(120, Liga.GENEBE, ClubeNivel.NIVEL_E, "VfB Stuttgart"));
+			clubes.add(new Clube(121, Liga.GENEBE, ClubeNivel.NIVEL_F, "Vitesse"));
+			clubes.add(new Clube(122, Liga.GENEBE, ClubeNivel.NIVEL_F, "Fortuna Düsseldorf"));
+			clubes.add(new Clube(123, Liga.GENEBE, ClubeNivel.NIVEL_F, "Hamburgo"));
+			clubes.add(new Clube(124, Liga.GENEBE, ClubeNivel.NIVEL_F, "Utrecht"));
+			clubes.add(new Clube(125, Liga.GENEBE, ClubeNivel.NIVEL_F, "Gent"));
+			clubes.add(new Clube(126, Liga.GENEBE, ClubeNivel.NIVEL_F, "Antwerp"));
+			clubes.add(new Clube(127, Liga.GENEBE, ClubeNivel.NIVEL_G, "Arminia Bielefeld"));
+			clubes.add(new Clube(128, Liga.GENEBE, ClubeNivel.NIVEL_G, "Augsburg"));
+			clubes.add(new Clube(129, Liga.GENEBE, ClubeNivel.NIVEL_G, "Anderlecht"));
+			clubes.add(new Clube(130, Liga.GENEBE, ClubeNivel.NIVEL_G, "Bochum"));
+			clubes.add(new Clube(131, Liga.GENEBE, ClubeNivel.NIVEL_G, "Racing Genk"));
+			clubes.add(new Clube(132, Liga.GENEBE, ClubeNivel.NIVEL_G, "Werder Bremen"));
+			clubes.add(new Clube(201, Liga.SPAPOR, ClubeNivel.NIVEL_A, "Real Madrid"));
+			clubes.add(new Clube(202, Liga.SPAPOR, ClubeNivel.NIVEL_A, "Barcelona"));
+			clubes.add(new Clube(203, Liga.SPAPOR, ClubeNivel.NIVEL_B, "Porto"));
+			clubes.add(new Clube(204, Liga.SPAPOR, ClubeNivel.NIVEL_B, "Atlético Madrid"));
+			clubes.add(new Clube(205, Liga.SPAPOR, ClubeNivel.NIVEL_B, "Benfica"));
+			clubes.add(new Clube(206, Liga.SPAPOR, ClubeNivel.NIVEL_C, "Sevilla"));
+			clubes.add(new Clube(207, Liga.SPAPOR, ClubeNivel.NIVEL_C, "Sporting"));
+			clubes.add(new Clube(208, Liga.SPAPOR, ClubeNivel.NIVEL_C, "Real Betis"));
+			clubes.add(new Clube(209, Liga.SPAPOR, ClubeNivel.NIVEL_C, "Valencia"));
+			clubes.add(new Clube(210, Liga.SPAPOR, ClubeNivel.NIVEL_D, "Real Sociedad"));
+			clubes.add(new Clube(211, Liga.SPAPOR, ClubeNivel.NIVEL_D, "Villarreal"));
+			clubes.add(new Clube(212, Liga.SPAPOR, ClubeNivel.NIVEL_D, "Athletic Bilbao"));
+			clubes.add(new Clube(213, Liga.SPAPOR, ClubeNivel.NIVEL_D, "Getafe"));
+			clubes.add(new Clube(214, Liga.SPAPOR, ClubeNivel.NIVEL_D, "Celta de Vigo"));
+			clubes.add(new Clube(215, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Rayo Vallecano"));
+			clubes.add(new Clube(216, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Osasuna"));
+			clubes.add(new Clube(217, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Real Valladolid"));
+			clubes.add(new Clube(218, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Granada"));
+			clubes.add(new Clube(219, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Espanyol"));
+			clubes.add(new Clube(220, Liga.SPAPOR, ClubeNivel.NIVEL_E, "Mallorca"));
+			clubes.add(new Clube(221, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Almería"));
+			clubes.add(new Clube(222, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Alaves"));
+			clubes.add(new Clube(223, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Elche"));
+			clubes.add(new Clube(224, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Braga"));
+			clubes.add(new Clube(225, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Levante"));
+			clubes.add(new Clube(226, Liga.SPAPOR, ClubeNivel.NIVEL_F, "Cádiz"));
+			clubes.add(new Clube(227, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Leganes"));
+			clubes.add(new Clube(228, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Sporting Gijón"));
+			clubes.add(new Clube(229, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Girona"));
+			clubes.add(new Clube(230, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Eibar"));
+			clubes.add(new Clube(231, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Zaragoza"));
+			clubes.add(new Clube(232, Liga.SPAPOR, ClubeNivel.NIVEL_G, "Málaga"));
+			clubes.add(new Clube(301, Liga.ITAFRA, ClubeNivel.NIVEL_A, "Internazionale" /*"Inter Milan"*/));
+			clubes.add(new Clube(302, Liga.ITAFRA, ClubeNivel.NIVEL_A, "Juventus"));
+			clubes.add(new Clube(303, Liga.ITAFRA, ClubeNivel.NIVEL_B, "Paris Saint-Germain"));
+			clubes.add(new Clube(304, Liga.ITAFRA, ClubeNivel.NIVEL_B, "Napoli"));
+			clubes.add(new Clube(305, Liga.ITAFRA, ClubeNivel.NIVEL_B, "Milan"));
+			clubes.add(new Clube(306, Liga.ITAFRA, ClubeNivel.NIVEL_C, "Atalanta"));
+			clubes.add(new Clube(307, Liga.ITAFRA, ClubeNivel.NIVEL_C, "Olympique de Marseille"));
+			clubes.add(new Clube(308, Liga.ITAFRA, ClubeNivel.NIVEL_C, "Lazio"));
+			clubes.add(new Clube(309, Liga.ITAFRA, ClubeNivel.NIVEL_C, "Lyon"));
+			clubes.add(new Clube(310, Liga.ITAFRA, ClubeNivel.NIVEL_D, "Roma"));
+			clubes.add(new Clube(311, Liga.ITAFRA, ClubeNivel.NIVEL_D, "Lille"));
+			clubes.add(new Clube(312, Liga.ITAFRA, ClubeNivel.NIVEL_D, "Monaco"));
+			clubes.add(new Clube(313, Liga.ITAFRA, ClubeNivel.NIVEL_D, "Fiorentina"));
+			clubes.add(new Clube(314, Liga.ITAFRA, ClubeNivel.NIVEL_D, "Sassuolo"));
+			clubes.add(new Clube(315, Liga.ITAFRA, ClubeNivel.NIVEL_E, "Rennes"));
+			clubes.add(new Clube(316, Liga.ITAFRA, ClubeNivel.NIVEL_E, "Verona"));
+			clubes.add(new Clube(317, Liga.ITAFRA, ClubeNivel.NIVEL_E, "RC Strasbourg"));
+			clubes.add(new Clube(318, Liga.ITAFRA, ClubeNivel.NIVEL_E, "Montpellier"));
+			clubes.add(new Clube(319, Liga.ITAFRA, ClubeNivel.NIVEL_E, "Bologna"));
+			clubes.add(new Clube(320, Liga.ITAFRA, ClubeNivel.NIVEL_E, "Nice"));
+			clubes.add(new Clube(321, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Lens"));
+			clubes.add(new Clube(322, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Torino"));
+			clubes.add(new Clube(323, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Udinese"));
+			clubes.add(new Clube(324, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Empoli"));
+			clubes.add(new Clube(325, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Sampdoria"));
+			clubes.add(new Clube(326, Liga.ITAFRA, ClubeNivel.NIVEL_F, "Stade Brestois"));
+			clubes.add(new Clube(327, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Nantes"));
+			clubes.add(new Clube(328, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Saint-Étienne"));
+			clubes.add(new Clube(329, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Bordeaux"));
+			clubes.add(new Clube(330, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Reims"));
+			clubes.add(new Clube(331, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Genoa"));
+			clubes.add(new Clube(332, Liga.ITAFRA, ClubeNivel.NIVEL_G, "Venezia"));
+			clubes.add(new Clube(401, Liga.ENGLND, ClubeNivel.NIVEL_A, "Liverpool"));
+			clubes.add(new Clube(402, Liga.ENGLND, ClubeNivel.NIVEL_A, "Manchester United"));
+			clubes.add(new Clube(403, Liga.ENGLND, ClubeNivel.NIVEL_B, "Manchester City"));
+			clubes.add(new Clube(404, Liga.ENGLND, ClubeNivel.NIVEL_B, "Chelsea"));
+			clubes.add(new Clube(405, Liga.ENGLND, ClubeNivel.NIVEL_B, "Arsenal"));
+			clubes.add(new Clube(406, Liga.ENGLND, ClubeNivel.NIVEL_C, "West Ham"));
+			clubes.add(new Clube(407, Liga.ENGLND, ClubeNivel.NIVEL_C, "Tottenham"));
+			clubes.add(new Clube(408, Liga.ENGLND, ClubeNivel.NIVEL_C, "Leicester City"));
+			clubes.add(new Clube(409, Liga.ENGLND, ClubeNivel.NIVEL_C, "Aston Villa"));
+			clubes.add(new Clube(410, Liga.ENGLND, ClubeNivel.NIVEL_D, "Rangers"));
+			clubes.add(new Clube(411, Liga.ENGLND, ClubeNivel.NIVEL_D, /*"Wolverhampton Wanderers"*/ "Wolves"));
+			clubes.add(new Clube(412, Liga.ENGLND, ClubeNivel.NIVEL_D, "Crystal Palace"));
+			clubes.add(new Clube(413, Liga.ENGLND, ClubeNivel.NIVEL_D, "Everton"));
+			clubes.add(new Clube(414, Liga.ENGLND, ClubeNivel.NIVEL_D, "Newcastle"));
+			clubes.add(new Clube(415, Liga.ENGLND, ClubeNivel.NIVEL_E, "Leeds United"));
+			clubes.add(new Clube(416, Liga.ENGLND, ClubeNivel.NIVEL_E, "Brighton"));
+			clubes.add(new Clube(417, Liga.ENGLND, ClubeNivel.NIVEL_E, "Southampton"));
+			clubes.add(new Clube(418, Liga.ENGLND, ClubeNivel.NIVEL_E, "Burnley"));
+			clubes.add(new Clube(419, Liga.ENGLND, ClubeNivel.NIVEL_E, "Watford"));
+			clubes.add(new Clube(420, Liga.ENGLND, ClubeNivel.NIVEL_E, "Celtic"));
+			clubes.add(new Clube(421, Liga.ENGLND, ClubeNivel.NIVEL_F, "Norwich City"));
+			clubes.add(new Clube(422, Liga.ENGLND, ClubeNivel.NIVEL_F, "Brentford"));
+			clubes.add(new Clube(423, Liga.ENGLND, ClubeNivel.NIVEL_F, "Fulham"));
+			clubes.add(new Clube(424, Liga.ENGLND, ClubeNivel.NIVEL_F, "Bournemouth"));
+			clubes.add(new Clube(425, Liga.ENGLND, ClubeNivel.NIVEL_F, "Sheffield United"));
+			clubes.add(new Clube(426, Liga.ENGLND, ClubeNivel.NIVEL_F, "Blackburn Rovers"));
+			clubes.add(new Clube(427, Liga.ENGLND, ClubeNivel.NIVEL_G, "Nottingham Forest"));
+			clubes.add(new Clube(428, Liga.ENGLND, ClubeNivel.NIVEL_G, "Hull City"));
+			clubes.add(new Clube(429, Liga.ENGLND, ClubeNivel.NIVEL_G, "Stoke City"));
+			clubes.add(new Clube(430, Liga.ENGLND, ClubeNivel.NIVEL_G, "Swansea City"));
+			clubes.add(new Clube(431, Liga.ENGLND, ClubeNivel.NIVEL_G, "West Bromwich"));
+			clubes.add(new Clube(432, Liga.ENGLND, ClubeNivel.NIVEL_G, "Blackpool"));
 
 			/*
 			clubes.add(new Clube(501, Liga.BRASIL, FORCA_NIVEL_1, "Palmeiras"));

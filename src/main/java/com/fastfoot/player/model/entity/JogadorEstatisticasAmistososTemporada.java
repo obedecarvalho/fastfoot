@@ -15,11 +15,11 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_temporada, id_jogador") })
-public class JogadorEstatisticasTemporada {
+public class JogadorEstatisticasAmistososTemporada {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasTemporadaSequence")	
-	@SequenceGenerator(name = "jogadorEstatisticasTemporadaSequence", sequenceName = "jogador_estatisticas_temporada_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasAmistososTemporadaSequence")	
+	@SequenceGenerator(name = "jogadorEstatisticasAmistososTemporadaSequence", sequenceName = "jogador_estatisticas_amistosos_temporada_seq")
 	private Long id;
 
 	@ManyToOne
@@ -34,49 +34,47 @@ public class JogadorEstatisticasTemporada {
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
 	
-	private Integer numeroJogos;
+	private Integer numeroJogosAmistosos;
 	
-	private Integer golsMarcados;
+	private Integer golsMarcadosAmistosos;
 	
-	private Integer assistencias;
+	private Integer assistenciasAmistosos;
 	
-	private Integer finalizacoesDefendidas;
+	//private Integer numeroJogos;
 	
-	private Integer finalizacoesFora;
+	//private Integer golsMarcados;
 	
-	private Integer faltas;//TODO: implementar lógica
+	//private Integer assistencias;
 	
-	//private Integer numeroJogosAmistosos;
+	private Integer finalizacoesDefendidasAmistosos;
 	
-	//private Integer golsMarcadosAmistosos;
+	private Integer finalizacoesForaAmistosos;
+	
+	private Integer faltasAmistosos;//TODO: implementar lógica
 
-	//private Integer assistenciasAmistosos;
-	
 	//TODO: estatisticas goleiro: gols tomados, defesas
-	
-	//TODO: num titular e reserva separados
 
-	public JogadorEstatisticasTemporada() {
+	public JogadorEstatisticasAmistososTemporada() {
 		
 	}
 	
-	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada, Clube clube) {
+	public JogadorEstatisticasAmistososTemporada(Jogador jogador, Temporada temporada, Clube clube) {
 		this.jogador = jogador;
 		this.temporada = temporada;
-		this.numeroJogos = 0;
-		this.golsMarcados = 0;
-		this.finalizacoesDefendidas = 0;
-		this.finalizacoesFora = 0;
-		//this.numeroJogosAmistosos = 0;
-		//this.golsMarcadosAmistosos = 0;
-		this.faltas = 0;
-		this.assistencias = 0;
-		//this.assistenciasAmistosos = 0;
+		//this.numeroJogos = 0;
+		//this.golsMarcados = 0;
+		this.finalizacoesDefendidasAmistosos = 0;
+		this.finalizacoesForaAmistosos = 0;
+		this.numeroJogosAmistosos = 0;
+		this.golsMarcadosAmistosos = 0;
+		this.faltasAmistosos = 0;
+		//this.assistencias = 0;
+		this.assistenciasAmistosos = 0;
 		this.clube = clube;
 	}
 	
 	public boolean isEmpty() {
-		return this.numeroJogos == 0 //&& 
+		return //this.numeroJogos == 0 && 
 				//this.golsMarcados == 0 && 
 				//this.finalizacoesDefendidas == 0 && 
 				//this.finalizacoesFora == 0 && 				
@@ -84,8 +82,7 @@ public class JogadorEstatisticasTemporada {
 				//this.faltas == 0 && 
 				//this.assistencias == 0 && 
 				//this.assistenciasAmistosos == 0 &&
-				//this.numeroJogosAmistosos == 0
-				;
+				this.numeroJogosAmistosos == 0;
 	}
 	
 	public Long getId() {
@@ -120,106 +117,106 @@ public class JogadorEstatisticasTemporada {
 		this.clube = clube;
 	}
 
-	public Integer getNumeroJogos() {
+	/*public Integer getNumeroJogos() {
 		return numeroJogos;
 	}
 
 	public void setNumeroJogos(Integer numeroJogos) {
 		this.numeroJogos = numeroJogos;
-	}
+	}*/
 
-	public Integer getGolsMarcados() {
+	/*public Integer getGolsMarcados() {
 		return golsMarcados;
 	}
 
 	public void setGolsMarcados(Integer golsMarcados) {
 		this.golsMarcados = golsMarcados;
-	}
+	}*/
 	
-	public void incrementarGolsMarcados() {
+	/*public void incrementarGolsMarcados() {
 		this.golsMarcados++;
+	}*/
+
+	public Integer getFaltasAmistosos() {
+		return faltasAmistosos;
 	}
 
-	public Integer getFaltas() {
-		return faltas;
+	public void setFaltasAmistosos(Integer faltas) {
+		this.faltasAmistosos = faltas;
 	}
 
-	public void setFaltas(Integer faltas) {
-		this.faltas = faltas;
+	public Integer getFinalizacoesDefendidasAmistosos() {
+		return finalizacoesDefendidasAmistosos;
 	}
 
-	public Integer getFinalizacoesDefendidas() {
-		return finalizacoesDefendidas;
-	}
-
-	public void setFinalizacoesDefendidas(Integer finalizacoesDefendidas) {
-		this.finalizacoesDefendidas = finalizacoesDefendidas;
+	public void setFinalizacoesDefendidasAmistosos(Integer finalizacoesDefendidas) {
+		this.finalizacoesDefendidasAmistosos = finalizacoesDefendidas;
 	}
 	
-	public void incrementarFinalizacoesDefendidas() {
-		this.finalizacoesDefendidas++;
+	public void incrementarFinalizacoesDefendidasAmistosos() {
+		this.finalizacoesDefendidasAmistosos++;
 	}
 
-	public Integer getFinalizacoesFora() {
-		return finalizacoesFora;
+	public Integer getFinalizacoesForaAmistosos() {
+		return finalizacoesForaAmistosos;
 	}
 
-	public void setFinalizacoesFora(Integer finalizacoesFora) {
-		this.finalizacoesFora = finalizacoesFora;
+	public void setFinalizacoesForaAmistosos(Integer finalizacoesFora) {
+		this.finalizacoesForaAmistosos = finalizacoesFora;
 	}
 	
-	public void incrementarFinalizacoesFora() {
-		this.finalizacoesFora++;
+	public void incrementarFinalizacoesForaAmistosos() {
+		this.finalizacoesForaAmistosos++;
 	}
 
-	/*public Integer getNumeroJogosAmistosos() {
+	public Integer getNumeroJogosAmistosos() {
 		return numeroJogosAmistosos;
 	}
 
 	public void setNumeroJogosAmistosos(Integer numeroJogosAmistosos) {
 		this.numeroJogosAmistosos = numeroJogosAmistosos;
-	}*/
+	}
 
-	/*public Integer getGolsMarcadosAmistosos() {
+	public Integer getGolsMarcadosAmistosos() {
 		return golsMarcadosAmistosos;
 	}
 
 	public void setGolsMarcadosAmistosos(Integer golsMarcadosAmistosos) {
 		this.golsMarcadosAmistosos = golsMarcadosAmistosos;
-	}*/
+	}
 	
-	/*public void incrementarGolsMarcadosAmistosos() {
+	public void incrementarGolsMarcadosAmistosos() {
 		this.golsMarcadosAmistosos++;
-	}*/
+	}
 
-	public Integer getAssistencias() {
+	/*public Integer getAssistencias() {
 		return assistencias;
 	}
 
 	public void setAssistencias(Integer assistencias) {
 		this.assistencias = assistencias;
-	}
+	}*/
 
-	/*public Integer getAssistenciasAmistosos() {
+	public Integer getAssistenciasAmistosos() {
 		return assistenciasAmistosos;
 	}
 
 	public void setAssistenciasAmistosos(Integer assistenciasAmistosos) {
 		this.assistenciasAmistosos = assistenciasAmistosos;
-	}*/
-	
-	public void incrementarAssistencias() {
-		this.assistencias++;
 	}
-
-	/*public void incrementarAssistenciasAmistosos() {
-		this.assistenciasAmistosos++;
+	
+	/*public void incrementarAssistencias() {
+		this.assistencias++;
 	}*/
+
+	public void incrementarAssistenciasAmistosos() {
+		this.assistenciasAmistosos++;
+	}
 
 	@Override
 	public String toString() {
-		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos="
-				+ numeroJogos + ", golsMarcados=" + golsMarcados + ", assistencias=" + assistencias + "]";
+		return "JogadorEstatisticasAmistososTemporada [jogador=" + jogador + ", numeroJogos="
+				+ numeroJogosAmistosos + ", golsMarcados=" + golsMarcadosAmistosos + ", assistencias=" + assistenciasAmistosos + "]";
 	}
 
 }

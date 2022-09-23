@@ -74,6 +74,11 @@ public class Jogador {
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
 	/*@OneToOne(mappedBy = "jogador")*/
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
+	/*@OneToOne(mappedBy = "jogador")*/
+	private JogadorEstatisticasAmistososTemporada jogadorEstatisticasAmistososTemporadaAtual;
 
 	/*@OneToOne(mappedBy = "jogador")
 	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;*/
@@ -295,6 +300,15 @@ public class Jogador {
 
 	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporada) {
 		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
+	}
+
+	public JogadorEstatisticasAmistososTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
+		return jogadorEstatisticasAmistososTemporadaAtual;
+	}
+
+	public void setJogadorEstatisticasAmistososTemporadaAtual(
+			JogadorEstatisticasAmistososTemporada jogadorEstatisticasAmistososTemporadaAtual) {
+		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
 	}
 
 	public Double getForcaGeralPotencialEfetiva() {

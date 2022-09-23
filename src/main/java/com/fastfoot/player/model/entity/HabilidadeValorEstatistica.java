@@ -33,6 +33,8 @@ public class HabilidadeValorEstatistica {//TODO: apenas habilidades uso em parti
 	
 	private Integer quantidadeUsoVencedor;
 	
+	private Boolean amistoso;
+	
 	/*@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
 	private PartidaResultado partidaResultado;
@@ -50,17 +52,18 @@ public class HabilidadeValorEstatistica {//TODO: apenas habilidades uso em parti
 		quantidadeUsoVencedor = 0;
 	}
 
-	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor) {
+	/*public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor) {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
-	}
+	}*/
 	
-	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana/*, PartidaResultadoJogavel partidaResultado*/) {
+	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, Boolean amistoso/*, PartidaResultadoJogavel partidaResultado*/) {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
 		this.semana = semana;
+		this.amistoso = amistoso;
 		
 		/*if (partidaResultado instanceof PartidaResultado) {
 			setPartidaResultado((PartidaResultado) partidaResultado);
@@ -141,5 +144,13 @@ public class HabilidadeValorEstatistica {//TODO: apenas habilidades uso em parti
 
 	public void setSemana(Semana semana) {
 		this.semana = semana;
+	}
+
+	public Boolean getAmistoso() {
+		return amistoso;
+	}
+
+	public void setAmistoso(Boolean amistoso) {
+		this.amistoso = amistoso;
 	}
 }

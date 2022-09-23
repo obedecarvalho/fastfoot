@@ -37,6 +37,8 @@ public class HabilidadeValorEstatisticaGrupo {
 	
 	private Integer quantidadeUsoVencedor;
 	
+	private Boolean amistoso;
+	
 	//private Double porcAcerto;
 
 	public Long getId() {
@@ -89,6 +91,14 @@ public class HabilidadeValorEstatisticaGrupo {
 	
 	public Double getPorcAcerto() {
 		return new Double(quantidadeUsoVencedor)/quantidadeUso;
+	}
+
+	public Boolean getAmistoso() {
+		return amistoso;
+	}
+
+	public void setAmistoso(Boolean amistoso) {
+		this.amistoso = amistoso;
 	}
 
 	/*public Double getPorcAcerto() {

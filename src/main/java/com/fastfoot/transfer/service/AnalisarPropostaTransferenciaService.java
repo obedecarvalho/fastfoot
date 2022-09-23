@@ -43,6 +43,7 @@ public class AnalisarPropostaTransferenciaService {
 	@Async("transferenciaExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
+		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
 
 		for (Clube c : clubes) {
 			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);

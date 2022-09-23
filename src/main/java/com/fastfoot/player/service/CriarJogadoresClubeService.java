@@ -55,7 +55,6 @@ public class CriarJogadoresClubeService {
 		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
 	}
 
-	//@Async("jogadorServiceExecutor")
 	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
 
 		List<Jogador> jogadores = new ArrayList<Jogador>();

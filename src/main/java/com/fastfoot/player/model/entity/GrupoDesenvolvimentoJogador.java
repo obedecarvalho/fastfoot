@@ -15,7 +15,7 @@ import com.fastfoot.player.model.CelulaDesenvolvimento;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador"), @Index(columnList = "celula_desenvolvimento, ativo") })
-public class GrupoDesenvolvimentoJogador {
+public class GrupoDesenvolvimentoJogador {//TODO: ainda é necessario??
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grupoDesenvolvimentoJogadorSequence")

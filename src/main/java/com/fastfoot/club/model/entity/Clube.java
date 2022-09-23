@@ -8,6 +8,7 @@ import javax.persistence.Index;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.service.util.ElementoRoleta;
@@ -26,6 +27,8 @@ public class Clube implements ElementoRoleta {
 	private Liga liga;
 
 	private Integer forcaGeralAtual;
+	
+	private ClubeNivel clubeNivel;
 
 	@Transient
 	private Integer valorN;
@@ -39,11 +42,20 @@ public class Clube implements ElementoRoleta {
 		this.id = id;
 	}
 
-	public Clube(Integer id, Liga liga, Integer forcaGeral, String nome) {
+	/*public Clube(Integer id, Liga liga, Integer forcaGeral, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.forcaGeral = forcaGeral;
+		this.liga = liga;
+	}*/
+	
+	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.clubeNivel = clubeNivel;
+		this.forcaGeral = clubeNivel.getForcaGeral();
 		this.liga = liga;
 	}
 
@@ -79,17 +91,20 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}
 
+	public ClubeNivel getClubeNivel() {
+		return clubeNivel;
+	}
+
+	public void setClubeNivel(ClubeNivel clubeNivel) {
+		this.clubeNivel = clubeNivel;
+	}
+
 	public Integer getForcaGeralAtual() {
 		return forcaGeralAtual;
 	}
 
 	public void setForcaGeralAtual(Integer forcaGeralAtual) {
 		this.forcaGeralAtual = forcaGeralAtual;
-	}
-
-	@Override
-	public String toString() {
-		return "Clube [nome=" + nome + ", liga=" + liga.name() + "]";
 	}
 
 	@Override
@@ -120,6 +135,11 @@ public class Clube implements ElementoRoleta {
 			return false;
 		Clube other = (Clube) obj;
 		return Objects.equals(id, other.id);
+	}
+	
+	@Override
+	public String toString() {
+		return "Clube [nome=" + nome + ", liga=" + liga.name() + "]";
 	}
 
 }

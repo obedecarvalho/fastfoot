@@ -91,7 +91,7 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana, PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
 			for (HabilidadeValor hv : j.getHabilidades()) {
-				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana/*, partidaResultado*/));
+				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana, partidaResultado.isAmistoso()/*, partidaResultado*/));
 			}
 		}
 	}
@@ -139,8 +139,8 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 		
 		salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
 		salvarEstatisticas(jogadoresVisitante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador(jogadoresMandante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(jogadoresMandante, partidaJogadorEstatisticaDTO, partidaResultado);
+		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO, partidaResultado);
 	}
 	
 	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Temporada temporada, PartidaResultadoJogavel partidaResultado) {
@@ -156,14 +156,19 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 
 		} else {
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
-							.setNumeroJogosAmistosos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogosAmistosos() + 1));
+					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual()
+							.setNumeroJogosAmistosos(j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroJogosAmistosos() + 1));
 		}
 	}
 	
-	private void salvarEstatisticasJogador(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
-				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
+	private void salvarEstatisticasJogador(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, PartidaResultadoJogavel partidaResultado) {
+		if (!partidaResultado.isAmistoso()) {
+			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
+					jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
+		} else {
+			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasAmistososTemporada(
+					jogadores.stream().map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
+		}
 	}
 
 	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
@@ -276,18 +281,40 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 							golVisitante++;
 						}
 						partidaResultado.incrementarGol(esquema.getPosseBolaMandante());
-						if (!partidaResultado.isAmistoso()) { habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarGolsMarcados(); }
-						if (partidaResultado.isAmistoso()) { habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarGolsMarcadosAmistosos(); }
-						if (!partidaResultado.isAmistoso() && jogadorAssistencia != null) { jogadorAssistencia.getJogadorEstatisticasTemporadaAtual().incrementarAssistencias(); }
-						if (partidaResultado.isAmistoso() && jogadorAssistencia != null) { jogadorAssistencia.getJogadorEstatisticasTemporadaAtual().incrementarAssistenciasAmistosos(); }
+						if (!partidaResultado.isAmistoso()) {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
+									.incrementarGolsMarcados();
+							if (jogadorAssistencia != null) {
+								jogadorAssistencia.getJogadorEstatisticasTemporadaAtual().incrementarAssistencias();
+							}
+						} else {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
+									.incrementarGolsMarcadosAmistosos();
+							if (jogadorAssistencia != null) {
+								jogadorAssistencia.getJogadorEstatisticasAmistososTemporadaAtual()
+										.incrementarAssistenciasAmistosos();
+							}
+						}
 					} else if (goleiroVenceu) {
 						if (IMPRIMIR) System.err.println("\t\tGOLEIRO DEFENDEU");
 						partidaResultado.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
-						if (!partidaResultado.isAmistoso()) { habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarFinalizacoesDefendidas(); }
+						if (!partidaResultado.isAmistoso()) {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
+									.incrementarFinalizacoesDefendidas();
+						} else {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
+									.incrementarFinalizacoesDefendidasAmistosos();
+						}
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
 						partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
-						if (!partidaResultado.isAmistoso()) { habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual().incrementarFinalizacoesFora(); }
+						if (!partidaResultado.isAmistoso()) {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
+									.incrementarFinalizacoesFora();
+						} else {
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
+									.incrementarFinalizacoesForaAmistosos();
+						}
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 					jogadorAssistencia = null;

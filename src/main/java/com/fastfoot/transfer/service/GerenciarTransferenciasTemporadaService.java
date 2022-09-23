@@ -159,6 +159,7 @@ public class GerenciarTransferenciasTemporadaService {
 		List<NecessidadeContratacaoClube> necessidadeContratacao = necessidadeContratacaoClubeRepository
 				.findByTemporadaAndNecessidadeSatisfeitaAndNecessidadePrioritaria(temporada, false, true);
 		
+		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
 		Map<Clube, List<NecessidadeContratacaoClube>> necessidadeContratacaoClube = necessidadeContratacao
 				.stream().collect(Collectors.groupingBy(NecessidadeContratacaoClube::getClube));
 		
@@ -191,11 +192,12 @@ public class GerenciarTransferenciasTemporadaService {
 		List<PropostaTransferenciaJogador> propostas = propostaTransferenciaJogadorRepository
 				.findByTemporadaAndPropostaAceitaIsNull(temporada);
 		
+		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
 		Map<Clube, List<PropostaTransferenciaJogador>> propostasClube = propostas.stream()
 				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getClubeOrigem));
 		
 		clubes = new ArrayList<Clube>(propostasClube.keySet());
-		Integer nroThread = Math.min(FastfootApplication.NUM_THREAD, clubes.size()/5);//pelo menos 5 clubes por thread
+		Integer nroThread = Math.min(FastfootApplication.NUM_THREAD, (clubes.size()/5) + 1);//pelo menos 5 clubes por thread
 		offset = clubes.size() / nroThread;
 		System.err.println("#propostasClube" + clubes.size() + ", #th:" + nroThread);
 		Set<Clube> clubesRefazerEscalacao = Collections.synchronizedSet(new HashSet<Clube>());

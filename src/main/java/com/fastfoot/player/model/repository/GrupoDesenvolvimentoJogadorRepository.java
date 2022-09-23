@@ -1,6 +1,7 @@
 package com.fastfoot.player.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,32 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimentoAndAtivoFetchJogadorHabilidades(
 			@Param(value = "celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento,
 			@Param(value = "ativo") Boolean ativo);
+	
+	
+	@Query(nativeQuery = true, value =
+			" select j.id_clube, j.posicao, count(*) as total" +
+			" from jogador j" +
+			" where j.status_jogador = 0" + //StatusJogador.ATIVO
+			" group by j.id_clube, j.posicao"
+	)
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube();
+	
+	@Query(nativeQuery = true, value =
+			" select j.id_clube, j.posicao, count(*) as total" +
+			" from jogador j" +
+			" where j.status_jogador = 0" + //StatusJogador.ATIVO
+			" 	and j.posicao not in (0)" + //Posicao.GOLEIRO
+			" group by j.id_clube, j.posicao"
+	)
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClubeSemGoleiro();
+	
+	@Query(nativeQuery = true, value =
+			" select j.id_clube, j.posicao, count(*) as total" +
+			" from jogador j" +
+			" where j.status_jogador = 0" + //StatusJogador.ATIVO
+			" 	and j.posicao not in (?1)" +
+			" 	and j.idade not in (?2)" +
+			" group by j.id_clube, j.posicao"
+	)
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(Integer posicaoExcluir, Integer idadeExcluir);
 }

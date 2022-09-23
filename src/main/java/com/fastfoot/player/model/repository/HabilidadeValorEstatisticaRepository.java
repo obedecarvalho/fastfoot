@@ -26,9 +26,9 @@ public interface HabilidadeValorEstatisticaRepository extends JpaRepository<Habi
 	public List<HabilidadeValorEstatistica> findBySemana(Semana semana);
 	
 	@Query(nativeQuery = true, value = " SELECT hve.id_habilidade_valor, "
-			+ " SUM(hve.quantidade_uso) AS quantidade_uso, SUM(hve.quantidade_uso_vencedor) AS quantidade_uso_vencedor "
+			+ " SUM(hve.quantidade_uso) AS quantidade_uso, SUM(hve.quantidade_uso_vencedor) AS quantidade_uso_vencedor, hve.amistoso "
 			+ " FROM habilidade_valor_estatistica hve " + " INNER JOIN semana s ON hve.id_semana = s.id "
-			+ " WHERE s.id_temporada = ?1 " + " GROUP BY id_habilidade_valor ")
+			+ " WHERE s.id_temporada = ?1 " + " GROUP BY hve.id_habilidade_valor, hve.amistoso ")
 	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada);
 	
 	/*@Query(nativeQuery = true, value = " SELECT "
