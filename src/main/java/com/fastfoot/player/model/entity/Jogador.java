@@ -78,7 +78,7 @@ public class Jogador {
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
 	/*@OneToOne(mappedBy = "jogador")*/
-	private JogadorEstatisticasAmistososTemporada jogadorEstatisticasAmistososTemporadaAtual;
+	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
 
 	/*@OneToOne(mappedBy = "jogador")
 	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;*/
@@ -302,12 +302,12 @@ public class Jogador {
 		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
 	}
 
-	public JogadorEstatisticasAmistososTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
+	public JogadorEstatisticasTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
 		return jogadorEstatisticasAmistososTemporadaAtual;
 	}
 
 	public void setJogadorEstatisticasAmistososTemporadaAtual(
-			JogadorEstatisticasAmistososTemporada jogadorEstatisticasAmistososTemporadaAtual) {
+			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
 		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
 	}
 

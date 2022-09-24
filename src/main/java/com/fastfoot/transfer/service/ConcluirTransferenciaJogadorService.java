@@ -13,9 +13,7 @@ import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraSaida;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraSaidaRepository;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticasAmistososTemporada;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
-import com.fastfoot.player.model.repository.JogadorEstatisticasAmistososTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -42,8 +40,8 @@ public class ConcluirTransferenciaJogadorService {
 	@Autowired
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
-	@Autowired
-	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;
+	/*@Autowired
+	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;*/
 	
 	@Autowired
 	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
@@ -77,7 +75,7 @@ public class ConcluirTransferenciaJogadorService {
 		propostaTransferenciaJogador.getJogador()
 				.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(
 						propostaTransferenciaJogador.getJogador(), propostaTransferenciaJogador.getTemporada(),
-						propostaTransferenciaJogador.getClubeDestino()));
+						propostaTransferenciaJogador.getClubeDestino(), false));
 		
 		propostaTransferenciaJogador.getNecessidadeContratacaoClube().setNecessidadeSatisfeita(true);
 		
@@ -102,9 +100,9 @@ public class ConcluirTransferenciaJogadorService {
 		Semana s = semanaService.getProximaSemana();
 
 		List<JogadorEstatisticasTemporada> estatisticasSalvar = new ArrayList<JogadorEstatisticasTemporada>();
-		List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososSalvar = new ArrayList<JogadorEstatisticasAmistososTemporada>();
+		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososSalvar = new ArrayList<JogadorEstatisticasAmistososTemporada>();
 		List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();//TODO: maior parte do tempo é gasto aqui
-		List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososExcluir = new ArrayList<JogadorEstatisticasAmistososTemporada>();//TODO: maior parte do tempo é gasto aqui
+		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososExcluir = new ArrayList<JogadorEstatisticasAmistososTemporada>();//TODO: maior parte do tempo é gasto aqui
 		List<PropostaTransferenciaJogador> propostasSalvar = new ArrayList<PropostaTransferenciaJogador>();
 		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
@@ -123,7 +121,7 @@ public class ConcluirTransferenciaJogadorService {
 			
 			if (transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
 					.isEmpty()) {
-				estatisticasAmistososExcluir.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador()
+				estatisticasExcluir.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador()
 						.getJogadorEstatisticasAmistososTemporadaAtual());
 			}
 
@@ -135,11 +133,11 @@ public class ConcluirTransferenciaJogadorService {
 			transferenciaConcluidaDTO.getPropostaAceita().getJogador().setJogadorEstatisticasTemporadaAtual(
 					new JogadorEstatisticasTemporada(transferenciaConcluidaDTO.getPropostaAceita().getJogador(),
 							transferenciaConcluidaDTO.getPropostaAceita().getTemporada(),
-							transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino()));
+							transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), false));
 			transferenciaConcluidaDTO.getPropostaAceita().getJogador().setJogadorEstatisticasAmistososTemporadaAtual(
-					new JogadorEstatisticasAmistososTemporada(transferenciaConcluidaDTO.getPropostaAceita().getJogador(),
+					new JogadorEstatisticasTemporada(transferenciaConcluidaDTO.getPropostaAceita().getJogador(),
 							transferenciaConcluidaDTO.getPropostaAceita().getTemporada(),
-							transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino()));
+							transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), true));
 
 			transferenciaConcluidaDTO.getPropostaAceita().getNecessidadeContratacaoClube()
 					.setNecessidadeSatisfeita(true);
@@ -162,7 +160,7 @@ public class ConcluirTransferenciaJogadorService {
 			jogadoresSalvar.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador());
 			estatisticasSalvar.add(
 					transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasTemporadaAtual());
-			estatisticasAmistososSalvar.add(
+			estatisticasSalvar.add(
 					transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasAmistososTemporadaAtual());
 			necessidadeContratacaoSalvar
 					.add(transferenciaConcluidaDTO.getPropostaAceita().getNecessidadeContratacaoClube());
@@ -170,11 +168,11 @@ public class ConcluirTransferenciaJogadorService {
 
 		}
 
-		jogadorEstatisticasAmistososTemporadaRepository.saveAll(estatisticasAmistososSalvar);
+		//jogadorEstatisticasAmistososTemporadaRepository.saveAll(estatisticasAmistososSalvar);
 		jogadorEstatisticasTemporadaRepository.saveAll(estatisticasSalvar);
 		jogadorRepository.saveAll(jogadoresSalvar);
 		jogadorEstatisticasTemporadaRepository.deleteAll(estatisticasExcluir);
-		jogadorEstatisticasAmistososTemporadaRepository.deleteAll(estatisticasAmistososExcluir);
+		//jogadorEstatisticasAmistososTemporadaRepository.deleteAll(estatisticasAmistososExcluir);
 		propostaTransferenciaJogadorRepository.saveAll(propostasSalvar);
 		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoSalvar);
 		disponivelNegociacaoRepository.saveAll(disponivelSalvar);

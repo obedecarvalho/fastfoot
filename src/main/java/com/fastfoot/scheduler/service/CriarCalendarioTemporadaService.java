@@ -28,13 +28,11 @@ import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticasAmistososTemporada;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticasAmistososTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
@@ -98,8 +96,8 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
-	@Autowired
-	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;
+	/*@Autowired
+	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;*/
 	
 	@Autowired
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
@@ -268,13 +266,13 @@ public class CriarCalendarioTemporadaService {
 
 	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
 
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);//jogadorRepository.findByAposentado(Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
 		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada, j.getClube())));
+		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada, j.getClube(), false)));
 		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
 		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(new JogadorEstatisticasAmistososTemporada(j, temporada, j.getClube())));
-		jogadorEstatisticasAmistososTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
+		jogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(new JogadorEstatisticasTemporada(j, temporada, j.getClube(), true)));
+		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream().map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
 
 		jogadorRepository.saveAll(jogadores);
 	}
@@ -586,8 +584,7 @@ public class CriarCalendarioTemporadaService {
 					JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN + 1));
 		}
 	}
-	
-	@SuppressWarnings("unused")
+
 	private void atualizarPassoDesenvolvimentoJogador4() {
 		jogadorRepository.incrementarIdade();
 		

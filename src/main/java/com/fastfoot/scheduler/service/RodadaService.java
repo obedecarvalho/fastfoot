@@ -14,7 +14,6 @@ import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticasAmistososTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -58,8 +57,8 @@ public class RodadaService {
 	@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;
 	
-	@Autowired
-	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;
+	/*@Autowired
+	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;*/
 	
 	//###	SERVICE	###
 	@Autowired
@@ -224,8 +223,8 @@ public class RodadaService {
 	private void salvarPartidaJogadorEstatisticas(PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
 		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
-		jogadorEstatisticasAmistososTemporadaRepository
-				.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasAmistososTemporada());
+		/*jogadorEstatisticasAmistososTemporadaRepository
+				.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasAmistososTemporada());*/
 	}
 
 	private void carregarPartidas(RodadaAmistosa rodada) {

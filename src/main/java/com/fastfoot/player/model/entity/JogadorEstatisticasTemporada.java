@@ -48,12 +48,14 @@ public class JogadorEstatisticasTemporada {
 	private Integer finalizacoesFora;
 	
 	private Integer faltas;//TODO: implementar lógica
+	
+	private Boolean amistoso;
 
 	public JogadorEstatisticasTemporada() {
 		
 	}
 	
-	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada, Clube clube) {
+	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada, Clube clube, Boolean amistoso) {
 		this.jogador = jogador;
 		this.temporada = temporada;
 		this.numeroJogos = 0;
@@ -63,6 +65,7 @@ public class JogadorEstatisticasTemporada {
 		this.faltas = 0;
 		this.assistencias = 0;
 		this.clube = clube;
+		this.amistoso = amistoso;
 	}
 	
 	public boolean isEmpty() {
@@ -151,6 +154,14 @@ public class JogadorEstatisticasTemporada {
 	
 	public void incrementarFinalizacoesFora() {
 		this.finalizacoesFora++;
+	}
+
+	public Boolean getAmistoso() {
+		return amistoso;
+	}
+
+	public void setAmistoso(Boolean amistoso) {
+		this.amistoso = amistoso;
 	}
 
 	public Integer getAssistencias() {

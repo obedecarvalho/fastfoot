@@ -33,7 +33,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class PartidaService {//TODO: renomear para JogadorPartidaService
+public class JogarPartidaService {
 	
 	/*
 	 * TODO:
@@ -157,7 +157,7 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 		} else {
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual()
-							.setNumeroJogosAmistosos(j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroJogosAmistosos() + 1));
+							.setNumeroJogos(j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroJogos() + 1));
 		}
 	}
 	
@@ -166,7 +166,7 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
 					jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
 		} else {
-			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasAmistososTemporada(
+			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
 					jogadores.stream().map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
 		}
 	}
@@ -289,10 +289,10 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 							}
 						} else {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarGolsMarcadosAmistosos();
+									.incrementarGolsMarcados();
 							if (jogadorAssistencia != null) {
 								jogadorAssistencia.getJogadorEstatisticasAmistososTemporadaAtual()
-										.incrementarAssistenciasAmistosos();
+										.incrementarAssistencias();
 							}
 						}
 					} else if (goleiroVenceu) {
@@ -303,7 +303,7 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 									.incrementarFinalizacoesDefendidas();
 						} else {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarFinalizacoesDefendidasAmistosos();
+									.incrementarFinalizacoesDefendidas();
 						}
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
@@ -313,7 +313,7 @@ public class PartidaService {//TODO: renomear para JogadorPartidaService
 									.incrementarFinalizacoesFora();
 						} else {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarFinalizacoesForaAmistosos();
+									.incrementarFinalizacoesFora();
 						}
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
