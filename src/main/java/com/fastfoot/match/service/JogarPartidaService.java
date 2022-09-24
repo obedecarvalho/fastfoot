@@ -287,6 +287,8 @@ public class JogarPartidaService {
 							if (jogadorAssistencia != null) {
 								jogadorAssistencia.getJogadorEstatisticasTemporadaAtual().incrementarAssistencias();
 							}
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasTemporadaAtual()
+									.incrementarGolsSofridos();
 						} else {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
 									.incrementarGolsMarcados();
@@ -294,6 +296,8 @@ public class JogarPartidaService {
 								jogadorAssistencia.getJogadorEstatisticasAmistososTemporadaAtual()
 										.incrementarAssistencias();
 							}
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasAmistososTemporadaAtual()
+									.incrementarGolsSofridos();
 						}
 					} else if (goleiroVenceu) {
 						if (IMPRIMIR) System.err.println("\t\tGOLEIRO DEFENDEU");
@@ -301,9 +305,13 @@ public class JogarPartidaService {
 						if (!partidaResultado.isAmistoso()) {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
 									.incrementarFinalizacoesDefendidas();
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasTemporadaAtual()
+									.incrementarGoleiroFinalizacoesDefendidas();
 						} else {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
 									.incrementarFinalizacoesDefendidas();
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasAmistososTemporadaAtual()
+									.incrementarGoleiroFinalizacoesDefendidas();
 						}
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (IMPRIMIR) System.err.println("\t\tFORA!!!!");

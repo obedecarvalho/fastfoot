@@ -36,6 +36,7 @@ public class DisputarPenaltsService {
 
 	public void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
 		//TODO: considerar substituiçoes
+		//TODO: criar penalt para fora
 
 		List<Jogador> jogadoresMandantes = esquema.getPosicoes().stream().map(EsquemaPosicao::getMandante).filter(j -> j != null)
 				.collect(Collectors.toList());
@@ -54,35 +55,76 @@ public class DisputarPenaltsService {
 		HabilidadeValor hvJogLinha = null, hvGoleiro = null;
 		int penaltsCertosMandantes = 0, penaltsCertosVisitante = 0;
 		for (int i = 0; i < NUMERO_PENALTS_DISPUTAR; i++) {
+			
+			//Mandante
 			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
+			
+			jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosMandantes++;
+				
+				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+			} else {
+				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
 			}
 
+			//Visitante
 			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
+			
+			jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosVisitante++;
+				
+				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+			} else {
+				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
 			}
 		}
 		
 		int i = NUMERO_PENALTS_DISPUTAR;
 		while (penaltsCertosMandantes == penaltsCertosVisitante) {
+			//Mandante
 			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
+			
+			jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosMandantes++;
+				
+				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+			} else {
+				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
 			}
 
+			//Visitante
 			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
+			
+			jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosVisitante++;
+				
+				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+			} else {
+				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
 			}
 			
 			i = (i + 1) % 11;

@@ -37,7 +37,13 @@ public class JogadorEstatisticasTemporada {
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
 	
-	private Integer numeroJogos;
+	private Boolean amistoso;
+	
+	private Integer numeroJogos;//Numero total de jogos
+	
+	private Integer numeroJogosTitular;//TODO: implementar lógica
+	
+	//###	JOGADOR LINHA	###
 	
 	private Integer golsMarcados;
 	
@@ -49,7 +55,23 @@ public class JogadorEstatisticasTemporada {
 	
 	private Integer faltas;//TODO: implementar lógica
 	
-	private Boolean amistoso;
+	//###	GOLEIRO	###
+	
+	private Integer golsSofridos;
+	
+	private Integer goleiroFinalizacoesDefendidas;
+	
+	//###	DISPUTA PENALTS	###
+	
+	private Integer numeroRodadaDisputaPenalt;
+	
+	private Integer golsDisputaPenalt;
+	
+	private Integer golsPerdidosDisputaPenalt;
+	
+	private Integer defesasDisputaPenalt;
+
+	private Integer golsSofridosDisputaPenalt;
 
 	public JogadorEstatisticasTemporada() {
 		
@@ -58,14 +80,26 @@ public class JogadorEstatisticasTemporada {
 	public JogadorEstatisticasTemporada(Jogador jogador, Temporada temporada, Clube clube, Boolean amistoso) {
 		this.jogador = jogador;
 		this.temporada = temporada;
+		this.clube = clube;
+		this.amistoso = amistoso;
+		
 		this.numeroJogos = 0;
+		this.numeroJogosTitular = 0;
+		
 		this.golsMarcados = 0;
+		this.assistencias = 0;
 		this.finalizacoesDefendidas = 0;
 		this.finalizacoesFora = 0;
 		this.faltas = 0;
-		this.assistencias = 0;
-		this.clube = clube;
-		this.amistoso = amistoso;
+		
+		this.golsSofridos = 0;
+		this.goleiroFinalizacoesDefendidas = 0;
+		
+		this.numeroRodadaDisputaPenalt = 0;
+		this.golsDisputaPenalt = 0;
+		this.golsPerdidosDisputaPenalt = 0;
+		this.defesasDisputaPenalt = 0;
+		this.golsSofridosDisputaPenalt = 0;
 	}
 	
 	public boolean isEmpty() {
@@ -162,6 +196,98 @@ public class JogadorEstatisticasTemporada {
 
 	public void setAmistoso(Boolean amistoso) {
 		this.amistoso = amistoso;
+	}
+
+	public Integer getNumeroJogosTitular() {
+		return numeroJogosTitular;
+	}
+
+	public void setNumeroJogosTitular(Integer numeroJogosTitular) {
+		this.numeroJogosTitular = numeroJogosTitular;
+	}
+
+	public Integer getGolsSofridos() {
+		return golsSofridos;
+	}
+	
+	public void incrementarGolsSofridos() {
+		this.golsSofridos++;
+	}
+
+	public void setGolsSofridos(Integer golsSofridos) {
+		this.golsSofridos = golsSofridos;
+	}
+
+	public Integer getGoleiroFinalizacoesDefendidas() {
+		return goleiroFinalizacoesDefendidas;
+	}
+
+	public void setGoleiroFinalizacoesDefendidas(Integer goleiroFinalizacoesDefendidas) {
+		this.goleiroFinalizacoesDefendidas = goleiroFinalizacoesDefendidas;
+	}
+	
+	public void incrementarGoleiroFinalizacoesDefendidas() {
+		this.goleiroFinalizacoesDefendidas++;
+	}
+
+	public Integer getNumeroRodadaDisputaPenalt() {
+		return numeroRodadaDisputaPenalt;
+	}
+
+	public void setNumeroRodadaDisputaPenalt(Integer numeroRodadaDisputaPenalt) {
+		this.numeroRodadaDisputaPenalt = numeroRodadaDisputaPenalt;
+	}
+	
+	public void incrementarNumeroRodadaDisputaPenalt() {
+		this.numeroRodadaDisputaPenalt++;
+	}
+	
+	public void incrementarGolsDisputaPenalt() {
+		this.golsDisputaPenalt++;
+	}
+
+	public Integer getGolsDisputaPenalt() {
+		return golsDisputaPenalt;
+	}
+
+	public void setGolsDisputaPenalt(Integer golsDisputasPenalt) {
+		this.golsDisputaPenalt = golsDisputasPenalt;
+	}
+	
+	public void incrementarGolsPerdidosDisputaPenalt() {
+		this.golsPerdidosDisputaPenalt++;
+	}
+
+	public Integer getGolsPerdidosDisputaPenalt() {
+		return golsPerdidosDisputaPenalt;
+	}
+
+	public void setGolsPerdidosDisputaPenalt(Integer golsPerdidosDisputasPenalt) {
+		this.golsPerdidosDisputaPenalt = golsPerdidosDisputasPenalt;
+	}
+	
+	public void incrementarDefesasDisputaPenalt() {
+		this.defesasDisputaPenalt++;
+	}
+
+	public Integer getDefesasDisputaPenalt() {
+		return defesasDisputaPenalt;
+	}
+
+	public void setDefesasDisputaPenalt(Integer defesasDisputasPenalt) {
+		this.defesasDisputaPenalt = defesasDisputasPenalt;
+	}
+	
+	public void incrementarGolsSofridosDisputaPenalt() {
+		this.golsSofridosDisputaPenalt++;
+	}
+
+	public Integer getGolsSofridosDisputaPenalt() {
+		return golsSofridosDisputaPenalt;
+	}
+
+	public void setGolsSofridosDisputaPenalt(Integer golsSofridosDisputaPenalt) {
+		this.golsSofridosDisputaPenalt = golsSofridosDisputaPenalt;
 	}
 
 	public Integer getAssistencias() {
