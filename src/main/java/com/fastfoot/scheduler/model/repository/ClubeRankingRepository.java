@@ -21,6 +21,9 @@ public interface ClubeRankingRepository extends JpaRepository<ClubeRanking, Inte
 	public List<ClubeRanking> findByLigaAndAno(@Param("liga") Liga liga, @Param("ano") Integer ano); 
 
 	public List<ClubeRanking> findByTemporada(Temporada temporada);
+	
+	@Query("SELECT cr FROM ClubeRanking cr WHERE cr.clube.liga = :liga AND cr.temporada = :temporada ORDER BY cr.posicaoGeral ")
+	public List<ClubeRanking> findByLigaAndTemporada(@Param("liga") Liga liga, @Param("temporada") Temporada temporada);
 
 	@Query("SELECT DISTINCT cr.ano FROM ClubeRanking cr ORDER BY cr.ano DESC ")
 	public List<Integer> findAnosClubeRanking();
