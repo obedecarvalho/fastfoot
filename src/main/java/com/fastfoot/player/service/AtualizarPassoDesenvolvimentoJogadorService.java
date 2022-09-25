@@ -26,40 +26,10 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	/*@Autowired
-	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;*/
-
-	/*@Autowired
-	private TemporadaRepository temporadaRepository;*/
-	
-	/*@Autowired
-	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;*/
-
-	//private static final Random R = new Random();
-	
-	/*@Async("jogadorServiceExecutor")
-	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
-		
-		for (Jogador j : jogadores) {
-			j.setIdade(j.getIdade() + 1);
-			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
-				ajustarPassoDesenvolvimento(j);
-			}
-		}
-		
-		jogadorRepository.saveAll(jogadores);
-		for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());
-		}
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
-	
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax){
 
 		for (int i = idadeMin; i < idadeMax; i++) {
-			//System.err.println("\tI:" + i + " " + Thread.currentThread().getName());
 			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN + 1));
@@ -71,25 +41,10 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	@Async("jogadorServiceExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
-		//
-		//TODO: mover para CriarCalendarioTemporadaService.atualizarPassoDesenvolvimentoJogador()
-		/*Temporada temporada = null;
-		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();*/
-
-		//HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
-		/*List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
-				.findByTemporada(temporada);*/
-		
-		/*Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
-				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));*/
-		
-		//
-		
 		for (Jogador j : jogadores) {
 			j.setIdade(j.getIdade() + 1);
 			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
 				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
-				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
 			}
 		}
 		
@@ -109,24 +64,9 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 			HabilidadeEstatisticaPercentil hep,
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap) {
 		
-		//
-		//TODO: mover para CriarCalendarioTemporadaService.atualizarPassoDesenvolvimentoJogador()
-		/*Temporada temporada = null;
-		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();*/
-
-		//HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
-		/*List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
-				.findByTemporada(temporada);*/
-		
-		/*Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
-				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));*/
-		
-		//
-		
 		for (Jogador j : jogadores) {
 			j.setIdade(j.getIdade() + 1);
 			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
-				//JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
 				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j, hep, estatisticasGrupoMap);
 			}
 		}
@@ -142,47 +82,4 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	/*private void ajustarPassoDesenvolvimento(Jogador j) {//Passo desenvolvimento REGULAR
-
-		//Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
-		//Integer potencialSorteado = null;
-		//Double forca = null;
-		Double passoProx = null;
-		
-		for (HabilidadeValor hv : j.getHabilidades()) {
-			//potencialSorteado = hv.getPotencialDesenvolvimento();
-			//forca = hv.getPotencialDesenvolvimento() * ajusteForca;
-			passoProx = ((hv.getPotencialDesenvolvimento() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
-			hv.setPassoDesenvolvimento(passoProx);
-		}
-	}*/
-
-	/*private void ajustarPassoDesenvolvimento(Jogador j) {
-
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
-		Double passoProx = null;
-		
-		Double variacao = null;
-		List<Double> valorHabilidadesEspecificasPotEfetiva = new ArrayList<Double>();
-		
-		for (HabilidadeValor hv : j.getHabilidades()) {
-			//passoProx = ((hv.getPotencialDesenvolvimento() * ajusteForcaProx) - forca) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
-			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
-			variacao = gerarVariacaoPassoDesenvolvimento(passoProx, j.getIdade());
-			hv.setPassoDesenvolvimento(passoProx + variacao);
-			hv.setPotencialDesenvolvimentoEfetivo(hv.getPotencialDesenvolvimentoEfetivo() + variacao * JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR);
-			if (hv.getHabilidadeEspecifica()) {
-				valorHabilidadesEspecificasPotEfetiva.add(hv.getPotencialDesenvolvimentoEfetivo() + variacao * JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR);
-			}
-		}
-		
-		j.setForcaGeralPotencialEfetiva(
-				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
-	}*/
-	
-	/*private Double gerarVariacaoPassoDesenvolvimento(Double passo, Integer idade) {
-		Double stdev = JogadorFactory.getPercVariacaoPassoDesenvolvimento(idade) * passo;
-		return R.nextGaussian() * stdev;
-	}*/
 }

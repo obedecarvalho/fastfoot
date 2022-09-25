@@ -54,8 +54,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.COMUM, /*false, true,*/
-					potencialSorteado, potencialSorteado, passoProx);
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.COMUM, potencialSorteado,
+					potencialSorteado, passoProx);
 		}
 		
 		//Especificas
@@ -65,11 +65,12 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			forcaDecimal = forca - forca.intValue();
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.ESPECIFICA, potencialSorteado,
+					potencialSorteado, passoProx);
+			
 			valorHabilidadesEspecificasPot.add(potencialSorteado);
 			valorHabilidadesEspecificas.add(forca);
 			valorHabilidadesEspecificasPotEfetiva.add(potencialSorteado);
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.ESPECIFICA, /*true, false,*/
-					potencialSorteado, potencialSorteado, passoProx);
 		}
 		jogador.setForcaGeral(
 				(new Double(valorHabilidadesEspecificas.stream().mapToDouble(v -> v).average().getAsDouble())).intValue());
@@ -86,8 +87,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.OUTRO, /*false, false,*/
-					potencialSorteado, potencialSorteado, passoProx);
+			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.OUTRO, potencialSorteado,
+					potencialSorteado, passoProx);
 		}
 	}
 	
@@ -97,7 +98,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		Double passoProx = null;
 		
 		for (HabilidadeValor hv : j.getHabilidades()) {
-			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
+			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal())
+					/ JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			hv.setPassoDesenvolvimento(passoProx);
 		}
 	}
@@ -106,37 +108,30 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	public void ajustarPassoDesenvolvimento(Jogador j, HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil,
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticaGrupoMap) {
 
-		/*
-		 * TODO:
-		 * Limitar desenvolvimento para não passar do MAXIMO (100)
-		 * Ajustar o desen adicional (0.1) para valores especificos por idade
-		 *
-		 */
-
+		//TODO: Limitar desenvolvimento para não passar do MAXIMO (100)
 
 		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
-		Double ajusteForca = JogadorFactory.getAjusteForca(j.getIdade());
 		Double passoProx = null, passo = null, peso = null;
 		
 		Double variacao = null;
 		List<Double> valorHabilidadesEspecificasPotEfetiva = new ArrayList<Double>();
 		
 		for (HabilidadeValor hv : j.getHabilidades()) {
-			//passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal()) / JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR;
-			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - (hv.getPotencialDesenvolvimentoEfetivo() * ajusteForca)) / JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
-			//
+			passoProx = ((hv.getPotencialDesenvolvimentoEfetivo() * ajusteForcaProx) - hv.getValorTotal())
+					/ JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
+
 			peso = getPesoHabilidadeValor(habilidadeEstatisticaPercentil, estatisticaGrupoMap.get(hv));
-			//passo = getPercDesenvolvimentoFixo(j.getIdade()) * passoProx + getPercDesenvolvimentoEstatisticas(j.getIdade()) * passoProx * peso;
 			passo = passoProx + (passoProx * peso * getPercDesenvolvimentoMaximo(j.getIdade()));
 			variacao = passo - passoProx;
-			//
+
 			hv.setPassoDesenvolvimento(passo);
-			//
-			hv.setPotencialDesenvolvimentoEfetivo(hv.getPotencialDesenvolvimentoEfetivo() + variacao * JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR);
+
+			hv.setPotencialDesenvolvimentoEfetivo(hv.getPotencialDesenvolvimentoEfetivo()
+					+ variacao * JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR);
 			if (hv.isHabilidadeEspecifica()) {
 				valorHabilidadesEspecificasPotEfetiva.add(hv.getPotencialDesenvolvimentoEfetivo());
 			}
-			//
+
 		}
 		
 		j.setForcaGeralPotencialEfetiva(
@@ -221,48 +216,5 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 
 		return x;
 	}
-	
-	/*private Double getPercDesenvolvimentoFixo(Integer idade) {
-		return getPercDesenvolvimentoMaximo(idade, true) - getPercDesenvolvimentoEstatisticas(idade);
-	}
 
-	private Double getPercDesenvolvimentoMaximo(Integer idade, boolean old) {
-		Double x = 1.00d;
-		
-		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
-			x = 1.20d;
-		} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
-			x = 1.15d;
-		} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
-			x = 1.10d;
-		//} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
-		//	x = 1.00d;
-		//} else if (idade >= FASE_5_IDADE_MIN && idade <= FASE_5_IDADE_MAX) {
-		//	x = 1.00d;
-		//} else if (IDADE_MAX == idade) {
-		//	x = 1.00d;
-		}
-
-		return x;
-	}*/
-	
-	/*private Double getPercDesenvolvimentoEstatisticas(Integer idade) {
-		Double x = 0.00d;
-		
-		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
-			x = 0.30d; //90%
-		} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
-			x = 0.30d; //85%
-		} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
-			x = 0.30d; //80%
-		//} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
-		//	x = 0.00d;
-		//} else if (idade >= FASE_5_IDADE_MIN && idade <= FASE_5_IDADE_MAX) {
-		//	x = 0.00d;
-		//} else if (IDADE_MAX == idade) {
-		//	x = 0.00d;
-		}
-
-		return x;
-	}*/
 }

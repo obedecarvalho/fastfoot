@@ -56,34 +56,6 @@ public class AgruparHabilidadeValorEstatisticaService {
 		habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
 	}
 
-	/*public HabilidadeEstatisticaPercentil getPercentilHabilidadeValor(Temporada temporada) {
-
-		List<Map<String, Object>> estatisticas = habilidadeValorEstatisticaRepository.findPercentilByTemporada(temporada.getId());
-		
-		HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil = null;
-		
-		if (estatisticas.size() > 0) {
-
-			habilidadeEstatisticaPercentil = new HabilidadeEstatisticaPercentil();
-			
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoQ3(((BigInteger) estatisticas.get(0).get("qu_q3")).intValue());
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoQ2(((BigInteger) estatisticas.get(0).get("qu_q2")).intValue());
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoQ1(((BigInteger) estatisticas.get(0).get("qu_q1")).intValue());
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoVencedorQ3(((BigInteger) estatisticas.get(0).get("quv_q3")).intValue());
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoVencedorQ2(((BigInteger) estatisticas.get(0).get("quv_q2")).intValue());
-			habilidadeEstatisticaPercentil
-					.setQuantidadeUsoVencedorQ1(((BigInteger) estatisticas.get(0).get("quv_q1")).intValue());
-
-		}
-		
-		return habilidadeEstatisticaPercentil;
-	}*/
-
 	public HabilidadeEstatisticaPercentil getPercentilHabilidadeValor(Temporada temporada) {
 
 		List<Map<String, Object>> estatisticas = habilidadeValorEstatisticaGrupoRepository.findPercentilByTemporada(temporada.getId());
