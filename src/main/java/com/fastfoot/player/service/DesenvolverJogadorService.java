@@ -19,7 +19,7 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.util.JogadorCalcularForcaUtil;
 
 @Service
-public class DesenvolverJogadorService {
+public class DesenvolverJogadorService {//TODO:analisar necessidade
 
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;

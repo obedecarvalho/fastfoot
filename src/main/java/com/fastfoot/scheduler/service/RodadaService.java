@@ -56,10 +56,7 @@ public class RodadaService {
 	
 	@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;
-	
-	/*@Autowired
-	private JogadorEstatisticasAmistososTemporadaRepository jogadorEstatisticasAmistososTemporadaRepository;*/
-	
+
 	//###	SERVICE	###
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
@@ -223,8 +220,6 @@ public class RodadaService {
 	private void salvarPartidaJogadorEstatisticas(PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
 		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
-		/*jogadorEstatisticasAmistososTemporadaRepository
-				.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasAmistososTemporada());*/
 	}
 
 	private void carregarPartidas(RodadaAmistosa rodada) {

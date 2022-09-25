@@ -125,15 +125,9 @@ public class SemanaService {
 	
 	@Autowired
 	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
-	
-	/*@Autowired
-	private AposentarJogadorService aposentarJogadorService;*/
 
 	@Autowired
 	private EscalarClubeService escalarClubeService;
-
-	/*@Autowired
-	private CalcularValorTransferenciaService calcularValorTransferenciaService;*/
 
 	public SemanaDTO proximaSemana() {
 		
@@ -164,11 +158,6 @@ public class SemanaService {
 			mensagens.add("#escalarClubes:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
-		
-		/*stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#escalarClubes:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();*/
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
@@ -222,7 +211,8 @@ public class SemanaService {
 		inicio = stopWatch.getSplitNanoTime();
 
 		//calcular probabilidades
-		if (semana.getNumero() >= 22 && semana.getNumero() <= 24 && parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
+		if (semana.getNumero() >= 22 && semana.getNumero() <= 24
+				&& parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
 			calcularProbabilidades(semana, temporada);
 
 			stopWatch.split();
@@ -230,7 +220,8 @@ public class SemanaService {
 			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
-		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17) && parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
+		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17)
+				&& parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {//TODO: criar parametro ...PROBABILIDADE_COMPLETOS??
 			calcularProbabilidades(semana, temporada);
 
 			stopWatch.split();
@@ -238,11 +229,6 @@ public class SemanaService {
 			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
-		
-		/*stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#calcularProbabilidades:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();*/
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
@@ -253,11 +239,6 @@ public class SemanaService {
 			mensagens.add("#classificarClubesTemporadaAtual:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
-		
-		/*stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#classificarClubesTemporadaAtual:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();*/
 
 		//Desenvolver jogadores
 		//desenvolverJogadores(semana);
@@ -270,24 +251,9 @@ public class SemanaService {
 			mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));
 		}
 
-		/*stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));*/
-		
-		//Escalar clubes
-		/*if (semana.getNumero() % 5 == 0) {
-			escalarClubes(semana);
-		}*/
-		
 		stopWatch.stop();
 		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
 		//System.err.println(mensagens);
-		
-		//calcularValorTransferenciaJogadores(semana);
-		
-		//aposentarJogadores(semana);
-
-		//System.err.println("\t\t-> " + semana.getNumero() + "-PORC DES JOG: " + new Double(stopWatch2.getNanoTime())/stopWatch.getNanoTime());
 
 		return SemanaDTO.convertToDTO(semana);
 	}
@@ -334,10 +300,8 @@ public class SemanaService {
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
 			} else {
 				desenvolverJogadorFuture.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
-				//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
 			}
 		}
 		
@@ -393,8 +357,6 @@ public class SemanaService {
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
 
-			//String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
-
 			Set<CampeonatoMisto> campeonatosMisto = semana.getRodadas().stream()
 					.map(r -> r.getGrupoCampeonato().getCampeonato()).collect(Collectors.toSet());
 
@@ -409,7 +371,6 @@ public class SemanaService {
 						.setPartidas(partidaEliminatoriaRepository.findByRodada(c.getPrimeiraRodadaEliminatoria()));
 			}
 
-			//getPromotorContinental(estrategiaPromotorCont).promover(campeonatosMisto);
 			getPromotorContinental().promover(campeonatosMisto);
 			for (CampeonatoMisto c : campeonatosMisto) {
 				partidaEliminatoriaRepository.saveAll(c.getPrimeiraRodadaEliminatoria().getPartidas());

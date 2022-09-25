@@ -25,7 +25,6 @@ public class JogadorService {
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 
 		if (clubeOpt.isPresent()) {
-			//return jogadorRepository.findByClubeAndAposentado(clubeOpt.get(), false);
 			return jogadorRepository.findByClubeAndStatusJogador(clubeOpt.get(), StatusJogador.ATIVO);
 		}
 
