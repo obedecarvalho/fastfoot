@@ -164,7 +164,8 @@ public class GerenciarTransferenciasTemporadaService {
 						Collectors.groupingBy(NecessidadeContratacaoClube::getClube)));
 		
 		//Fazer propostas transferencia
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+		//for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+		for (Integer i : necessidadeContratacaoClubeX.keySet()) {
 			transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
 					necessidadeContratacaoClubeX.get(i)));
 		}
@@ -207,7 +208,8 @@ public class GerenciarTransferenciasTemporadaService {
 		Set<Clube> clubesRefazerEscalacaoX = Collections.synchronizedSet(new HashSet<Clube>());
 		
 		//Analisar propostas transferencia
-		for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {
+		//for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {
+		for (Integer i : propostasClubeX.keySet()) {
 			transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
 					propostasClubeX.get(i), clubesRefazerEscalacaoX));
 		}

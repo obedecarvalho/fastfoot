@@ -14,7 +14,7 @@ import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_habilidade_valor") })
-public class HabilidadeValorEstatistica {//TODO: apenas habilidades uso em partidas oficiais?
+public class HabilidadeValorEstatistica {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorEstatisticaSequence")
