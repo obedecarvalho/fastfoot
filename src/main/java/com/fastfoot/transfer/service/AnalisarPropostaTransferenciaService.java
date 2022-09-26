@@ -43,9 +43,19 @@ public class AnalisarPropostaTransferenciaService {
 	@Async("transferenciaExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
-		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
 
 		for (Clube c : clubes) {
+			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
+		}
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada,
+			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
+
+		for (Clube c : propostasClube.keySet()) {
 			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
 		}
 
@@ -103,7 +113,7 @@ public class AnalisarPropostaTransferenciaService {
 		}
 	}*/
 	
-	public void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
+	private void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
 			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
 
 		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()

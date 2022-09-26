@@ -76,13 +76,29 @@ public class ProporTransferenciaService {
 	private TemporadaService temporadaService;
 	
 	@Async("transferenciaExecutor")
-	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes, Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
-		//TODO: reduzir tamanho map (olhar exemplo CriarCalendarioTemporadaService.aposentarJogadores2)
+	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
+			Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
 		
 		List<PropostaTransferenciaJogador> propostaTransferenciaJogadores = new ArrayList<PropostaTransferenciaJogador>();
 		
 		for (Clube c : clubes) {
 			gerarPropostaTransferenciaClube(c, temporada, necessidadesContratacaoClube.get(c), propostaTransferenciaJogadores);
+		}
+		
+		propostaTransferenciaJogadorRepository.saveAll(propostaTransferenciaJogadores);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("transferenciaExecutor")
+	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada,
+			Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
+
+		List<PropostaTransferenciaJogador> propostaTransferenciaJogadores = new ArrayList<PropostaTransferenciaJogador>();
+		
+		for (Clube c : necessidadesContratacaoClube.keySet()) {
+			gerarPropostaTransferenciaClube(c, temporada, necessidadesContratacaoClube.get(c),
+					propostaTransferenciaJogadores);
 		}
 		
 		propostaTransferenciaJogadorRepository.saveAll(propostaTransferenciaJogadores);
@@ -120,7 +136,7 @@ public class ProporTransferenciaService {
 	 *  * estatisticas
 	 *  * outros...
 	 */
-	public void gerarPropostaTransferenciaClube(Clube clube, Temporada temporada, List<NecessidadeContratacaoClube> necessidadesContratacao, List<PropostaTransferenciaJogador> propostaTransferenciaJogadores) {
+	private void gerarPropostaTransferenciaClube(Clube clube, Temporada temporada, List<NecessidadeContratacaoClube> necessidadesContratacao, List<PropostaTransferenciaJogador> propostaTransferenciaJogadores) {
 
 		List<Map<String, Object>> possiveisJogadores = null;
 		

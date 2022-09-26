@@ -28,5 +28,6 @@ delete from clube_ranking where ano <> 2021;
 delete from movimentacao_financeira_entrada;
 delete from movimentacao_financeira_saida;
 delete from semana;
+delete from mudanca_clube_nivel;
 delete from temporada;
 ";

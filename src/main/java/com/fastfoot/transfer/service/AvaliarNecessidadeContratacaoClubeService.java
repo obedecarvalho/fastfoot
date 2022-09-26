@@ -74,7 +74,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	public void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada,
+	private void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada,
 			List<DisponivelNegociacao> disponivelNegociacao,
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes) {
 		//TODO: fazer validação de Constantes.NUMERO_MINIMO_JOGADORES_LINHA e Constantes.NUMERO_MINIMO_GOLEIROS
