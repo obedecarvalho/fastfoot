@@ -40,7 +40,7 @@ public class AnalisarPropostaTransferenciaService {
 	@Autowired
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;
 	
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
 
@@ -51,7 +51,7 @@ public class AnalisarPropostaTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
 
@@ -62,7 +62,7 @@ public class AnalisarPropostaTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	/*@Async("transferenciaExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(List<Clube> clubes){
 		
 		Temporada temporada = temporadaService.getTemporadaAtual();

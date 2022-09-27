@@ -75,7 +75,7 @@ public class ProporTransferenciaService {
 	@Autowired
 	private TemporadaService temporadaService;
 	
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
 		
@@ -90,7 +90,7 @@ public class ProporTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada,
 			Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
 
@@ -106,7 +106,7 @@ public class ProporTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(List<Clube> clubes) {
 		
 		Temporada temporada = temporadaService.getTemporadaAtual();

@@ -45,6 +45,8 @@ public class PreCarregarParametrosService {
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO, "true", "false, true"));
 			
 			parametros.add(new Parametro(ParametroConstantes.CALCULAR_PROBABILIDADES, "true", "false, true"));
+			
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA, "true", "false, true"));
 
 			parametroRepository.saveAll(parametros);
 		}

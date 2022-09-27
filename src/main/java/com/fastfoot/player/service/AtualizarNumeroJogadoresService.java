@@ -32,7 +32,7 @@ public class AtualizarNumeroJogadoresService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarNumeroJogadores(List<Clube> clubes) {
 		List<Jogador> jogadoresAtualizar = new ArrayList<Jogador>();
 		

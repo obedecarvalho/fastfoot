@@ -63,7 +63,7 @@ public class RodadaService {
 
 	private static final Boolean SALVAR_LANCES = false;
 
-	@Async("partidaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
@@ -160,7 +160,7 @@ public class RodadaService {
 		}
 	}
 
-	@Async("partidaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
@@ -204,7 +204,7 @@ public class RodadaService {
 		}
 	}
 
-	@Async("partidaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();

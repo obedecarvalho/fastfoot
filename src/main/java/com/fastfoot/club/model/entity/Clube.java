@@ -4,8 +4,6 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.club.model.ClubeNivel;
@@ -14,7 +12,7 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
-@Table(indexes = { @Index(columnList = "liga") })
+//@Table(indexes = { @Index(columnList = "liga") })
 public class Clube implements ElementoRoleta {
 	
 	@Id

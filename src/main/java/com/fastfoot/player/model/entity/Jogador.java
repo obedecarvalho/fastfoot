@@ -26,7 +26,7 @@ import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_clube") }) //TODO: i-dex JogadorEstatisticasTemporada
+@Table(indexes = { @Index(columnList = "id_clube, status_jogador") })
 public class Jogador {
 	
 	@Id

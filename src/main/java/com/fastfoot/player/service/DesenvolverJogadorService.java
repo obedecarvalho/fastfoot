@@ -30,7 +30,7 @@ public class DesenvolverJogadorService {//TODO:analisar necessidade
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	/*@Async("jogadorServiceExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> desenvolverJogadores(List<Jogador> jogadores) {
 		
 		//Jogador j = null;
@@ -70,7 +70,7 @@ public class DesenvolverJogadorService {//TODO:analisar necessidade
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}*/
 	
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> desenvolverGrupo(List<GrupoDesenvolvimentoJogador> grupoDesenvolvimento) {
 		
 		//Jogador j = null;

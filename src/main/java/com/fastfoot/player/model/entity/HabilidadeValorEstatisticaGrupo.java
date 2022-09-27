@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_habilidade_valor") })
+@Table(indexes = { @Index(columnList = "id_temporada, id_habilidade_valor") })
 public class HabilidadeValorEstatisticaGrupo {
 
 	@Id

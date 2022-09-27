@@ -3,9 +3,12 @@ package com.fastfoot.club.service;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -15,6 +18,7 @@ import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.scheduler.model.entity.Semana;
 
 @Service
 public class CalcularTrajetoriaForcaClubeService {
@@ -34,12 +38,28 @@ public class CalcularTrajetoriaForcaClubeService {
 	
 	@Autowired
 	private TrajetoriaForcaClubeRepository trajetoriaForcaClubeRepository;
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularTrajetoriaForcaClube(List<Clube> clubes, Semana semana){
+		
+		List<TrajetoriaForcaClube> trajetoriaForcaClubes = new ArrayList<TrajetoriaForcaClube>();
+		
+		for (Clube clube : clubes) {
+			calcularTrajetoriaForcaClube(clube, trajetoriaForcaClubes, semana);
+		}
+		
+		trajetoriaForcaClubeRepository.saveAll(trajetoriaForcaClubes);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
 
-	public void calcularTrajetoriaForcaClube(Clube clube) {
+	public void calcularTrajetoriaForcaClube(Clube clube, List<TrajetoriaForcaClube> trajetoriaForcaClubes, Semana semana) {
 		
 		TrajetoriaForcaClube trajetoriaForcaClube = new TrajetoriaForcaClube();
 		
 		trajetoriaForcaClube.setClube(clube);
+		
+		trajetoriaForcaClube.setSemana(semana);
 
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
 		
@@ -69,7 +89,7 @@ public class CalcularTrajetoriaForcaClubeService {
 						* JogadorFactory.VALOR_AJUSTE.get(j.getIdade() - JogadorFactory.IDADE_MIN));
 			}
 			
-			//TODO: verificar se há jogadores para serem escalados como titular
+			//TODO: verificar se há jogadores para serem escalados como titular (jogador da posicao faltante)
 
 			//G
 			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isGoleiro()).sorted(COMPARATOR)
@@ -110,7 +130,7 @@ public class CalcularTrajetoriaForcaClubeService {
 			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isAtacante()).sorted(COMPARATOR)
 					.collect(Collectors.toList()).get(qtdeAta - 2));
 			
-			idadeMediaTitulares.add(String.format("%.2f",
+			idadeMediaTitulares.add(String.format(Locale.US, "%.2f",
 					jogadorTitularTemporada.stream().mapToInt(Jogador::getIdade).average().getAsDouble()));
 			forcaMediaTitulares.add(String.format("%.2f", jogadorTitularTemporada.stream()
 					.mapToDouble(Jogador::getForcaGeralPotencialEfetiva).average().getAsDouble()));
@@ -120,9 +140,9 @@ public class CalcularTrajetoriaForcaClubeService {
 		trajetoriaForcaClube.setTrajetoriaForcaTitulares(forcaMediaTitulares.toString());
 		trajetoriaForcaClube.setTrajetoriaIdadeTitulares(idadeMediaTitulares.toString());
 		
-		trajetoriaForcaClubeRepository.save(trajetoriaForcaClube);
+		trajetoriaForcaClubes.add(trajetoriaForcaClube);
 		
-		System.err.println(idadeMediaTitulares);
-		System.err.println(forcaMediaTitulares);
+		//System.err.println(idadeMediaTitulares);
+		//System.err.println(forcaMediaTitulares);
 	}
 }

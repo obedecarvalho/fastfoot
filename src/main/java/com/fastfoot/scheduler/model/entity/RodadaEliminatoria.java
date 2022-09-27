@@ -6,19 +6,17 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_semana"), @Index(columnList = "id_campeonato_eliminatorio"),
-		@Index(columnList = "id_campeonato_misto") })
+/*@Table(indexes = { @Index(columnList = "id_semana"), @Index(columnList = "id_campeonato_eliminatorio"),
+		@Index(columnList = "id_campeonato_misto") })*/
 public class RodadaEliminatoria implements RodadaJogavel {
 
 	@Id

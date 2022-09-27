@@ -36,7 +36,7 @@ public class AposentarJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	/*@Async("jogadorServiceExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
 
 		List<GrupoDesenvolvimentoJogador> newGruposDesenvolvimento = new ArrayList<GrupoDesenvolvimentoJogador>();
@@ -77,7 +77,7 @@ public class AposentarJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}*/
 	
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(
 			Map<Clube, List<GrupoDesenvolvimentoJogador>> grupoDesenvolvimentoClube,
 			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?

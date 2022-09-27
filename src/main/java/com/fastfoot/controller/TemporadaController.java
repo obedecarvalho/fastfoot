@@ -17,7 +17,7 @@ import com.fastfoot.scheduler.service.CriarCalendarioTemporadaService;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
-import com.fastfoot.transfer.service.GerenciarTransferenciasTemporadaService;
+import com.fastfoot.transfer.service.GerenciarTemporadaService;
 
 @RestController
 @CrossOrigin("*")
@@ -33,7 +33,7 @@ public class TemporadaController {
 	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;
 	
 	@Autowired
-	private GerenciarTransferenciasTemporadaService gerenciarTransferenciasTemporadaService;
+	private GerenciarTemporadaService gerenciarTemporadaService;
 
 	@GetMapping("/novaTemporada")
 	public ResponseEntity<TemporadaDTO> criarTemporada() {
@@ -48,7 +48,29 @@ public class TemporadaController {
 	@GetMapping("/gerarTransferencias")
 	public ResponseEntity<Boolean> gerarTransferencias() {
 		try {
-			gerenciarTransferenciasTemporadaService.gerarTransferencias();
+			gerenciarTemporadaService.gerarTransferencias();
+			return ResponseEntity.ok(Boolean.TRUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
+	
+	@GetMapping("/gerarMudancaClubeNivel")
+	public ResponseEntity<Boolean> gerarMudancaClubeNivel() {
+		try {
+			gerenciarTemporadaService.gerarMudancaClubeNivel();
+			return ResponseEntity.ok(Boolean.TRUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
+	
+	@GetMapping("/calcularTrajetoriaForcaClube")
+	public ResponseEntity<Boolean> calcularTrajetoriaForcaClube() {
+		try {
+			gerenciarTemporadaService.calcularTrajetoriaForcaClube();
 			return ResponseEntity.ok(Boolean.TRUE);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,18 +4,16 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_rodada_eliminatoria")})
+//@Table(indexes = { @Index(columnList = "id_rodada_eliminatoria")})
 public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	
 	@Id

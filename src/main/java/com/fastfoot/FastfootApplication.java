@@ -42,7 +42,7 @@ public class FastfootApplication {
 		SpringApplication.run(FastfootApplication.class, args);
 	}
 
-	@Bean(name = "partidaExecutor")
+	/*@Bean(name = "partidaExecutor")
 	public Executor asyncPartidaExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(NUM_THREAD);
@@ -51,9 +51,9 @@ public class FastfootApplication {
 		executor.setThreadNamePrefix("partidaExecutor-");
 		executor.initialize();
 		return executor;
-    }
+    }*/
 	
-	@Bean(name = "jogadorServiceExecutor")
+	/*@Bean(name = "jogadorServiceExecutor")
 	public Executor asyncJogadorServiceExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(NUM_THREAD);
@@ -62,9 +62,9 @@ public class FastfootApplication {
 		executor.setThreadNamePrefix("jogadorServiceExecutor-");
 		executor.initialize();
 		return executor;
-    }
+    }*/
 	
-	@Bean(name = "probabilidadeExecutor")
+	/*@Bean(name = "probabilidadeExecutor")
 	public Executor asyncProbabilidadeExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(NUM_THREAD);
@@ -73,15 +73,26 @@ public class FastfootApplication {
 		executor.setThreadNamePrefix("probabilidadeExecutor-");
 		executor.initialize();
 		return executor;
-    }
+    }*/
 	
-	@Bean(name = "transferenciaExecutor")
+	/*@Bean(name = "transferenciaExecutor")
 	public Executor asyncTransferenciaExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
 		//executor.setQueueCapacity(32);
 		executor.setThreadNamePrefix("transferenciaExecutor-");
+		executor.initialize();
+		return executor;
+    }*/
+	
+	@Bean(name = "defaultExecutor")
+	public Executor asyncDefaultExecutor() {
+		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(NUM_THREAD);
+		//executor.setMaxPoolSize(8);
+		//executor.setQueueCapacity(32);
+		executor.setThreadNamePrefix("defaultExecutor-");
 		executor.initialize();
 		return executor;
     }

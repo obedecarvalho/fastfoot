@@ -83,7 +83,7 @@ public class EscalarClubeService {
 		return escalacaoClubeDTO;
 	}
 
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
 		List<EscalacaoJogadorPosicao> escalacoes = new ArrayList<EscalacaoJogadorPosicao>();
 		for (Clube c : clubes) {

@@ -52,6 +52,7 @@ import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplDezesseisClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaEDoisClubes;
+import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEDoisClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEOitoClubes;
@@ -366,6 +367,7 @@ public class CriarCalendarioTemporadaService {
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean jogarCNCompleta = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
 
@@ -376,7 +378,11 @@ public class CriarCalendarioTemporadaService {
 				campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubes();
 			} else if (nroCompeticoesContinentais == 3) {
 				if (cIIIReduzido) {
-					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaClubes();
+					if (jogarCNCompleta) {
+						campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII();
+					} else {
+						campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplTrintaClubes();
+					}
 				} else {
 					campeonatoEliminatorioFactory = new CampeonatoEliminatorioFactoryImplVinteEOitoClubes();
 				}

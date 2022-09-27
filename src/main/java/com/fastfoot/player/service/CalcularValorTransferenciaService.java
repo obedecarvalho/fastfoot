@@ -24,7 +24,7 @@ public class CalcularValorTransferenciaService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularValorTransferencia(List<Jogador> jogadores) {
 		
 		for (Jogador j : jogadores) {

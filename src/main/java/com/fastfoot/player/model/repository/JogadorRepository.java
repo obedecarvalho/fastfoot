@@ -87,6 +87,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" 	AND j.forca_geral >= c.forca_geral * ?2 " +
 			" 	AND j.forca_geral < c.forca_geral * ?3 " +
 			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * ?4 AND c.forca_geral * ?5 " +
+			" 	AND ejp.ativo " +
 			" 	AND ptj.id IS NULL " + //não ha propostras transferencia do clube nessa temporada
 			" 	AND ptj2.id IS NULL "
 	)

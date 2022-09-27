@@ -32,5 +32,5 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			+ " FROM habilidade_valor_estatistica_grupo " + 
 			" WHERE id_temporada = ?1 "
 	)
-	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada);
+	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada);//TODO: filtrar amistoso??
 }

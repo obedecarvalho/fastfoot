@@ -17,7 +17,7 @@ import com.fastfoot.match.model.EscalacaoPosicao;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_clube"), @Index(columnList = "id_jogador") })
+@Table(indexes = { @Index(columnList = "id_clube, ativo"), @Index(columnList = "id_jogador, ativo")})
 public class EscalacaoJogadorPosicao {
 	
 	@Id

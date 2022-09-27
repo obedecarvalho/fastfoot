@@ -57,7 +57,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		return (double) forcaJogador/forcaClube;
 	}
 
-	@Async("transferenciaExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		

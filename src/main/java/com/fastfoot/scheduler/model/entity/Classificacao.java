@@ -4,17 +4,15 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_campeonato"), @Index(columnList = "id_grupo_campeonato") })
+//@Table(indexes = { @Index(columnList = "id_campeonato"), @Index(columnList = "id_grupo_campeonato") })
 public class Classificacao implements Comparable<Classificacao>{
 	
 	@Id

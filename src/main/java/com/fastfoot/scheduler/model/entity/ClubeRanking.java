@@ -4,11 +4,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
@@ -23,7 +21,7 @@ import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
  *
  */
 @Entity
-@Table(indexes = { @Index(columnList = "id_temporada"), @Index(columnList = "ano") })
+//@Table(indexes = { @Index(columnList = "id_temporada"), @Index(columnList = "ano") })
 public class ClubeRanking {
 
 	@Id

@@ -93,7 +93,7 @@ public class CalcularProbabilidadeCompletoService {
 	@Autowired
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
 
-	@Async("probabilidadeExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
 
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));

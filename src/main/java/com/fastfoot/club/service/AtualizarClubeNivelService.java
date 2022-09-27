@@ -6,9 +6,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.ClubeNivel;
@@ -64,7 +66,8 @@ public class AtualizarClubeNivelService {
 	 * @param temporada Primeira temporada a ser analisada.
 	 * @param liga
 	 */
-	public void atualizarClubeNivelService(Temporada temporada, Liga liga) {
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> atualizarClubeNivelService(Temporada temporada, Liga liga) {
 		
 		List<ClubeRanking> rankings = clubeRankingRepository.findByLigaAndTemporada(liga, temporada);
 		
@@ -126,6 +129,8 @@ public class AtualizarClubeNivelService {
 		
 		mudancaClubeNivelRepository.saveAll(mudancaClubeNivelList);
 		clubeRepository.saveAll(clubes);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
 }

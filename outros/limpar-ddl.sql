@@ -22,6 +22,8 @@ drop table if exists jogador_estatisticas_amistosos_temporada;
 drop table if exists partida_lance;
 drop table if exists jogador;
 
+drop table if exists trajetoria_forca_clube;
+drop table if exists mudanca_clube_nivel;
 drop table if exists movimentacao_financeira_saida;
 drop table if exists movimentacao_financeira_entrada;
 drop table if exists clube_probabilidade;

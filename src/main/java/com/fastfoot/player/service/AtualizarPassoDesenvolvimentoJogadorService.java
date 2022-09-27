@@ -26,7 +26,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax){
 
 		for (int i = idadeMin; i < idadeMax; i++) {
@@ -38,7 +38,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
 		for (Jogador j : jogadores) {
@@ -59,7 +59,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("jogadorServiceExecutor")
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores,
 			HabilidadeEstatisticaPercentil hep,
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap) {

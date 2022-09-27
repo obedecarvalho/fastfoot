@@ -16,8 +16,13 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.club.service.AtualizarClubeNivelService;
+import com.fastfoot.club.service.CalcularTrajetoriaForcaClubeService;
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
+import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
@@ -25,7 +30,7 @@ import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeReposit
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
 @Service
-public class GerenciarTransferenciasTemporadaService {
+public class GerenciarTemporadaService {
 	
 	//private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 2;
 	
@@ -60,11 +65,52 @@ public class GerenciarTransferenciasTemporadaService {
 	@Autowired
 	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
 	
+	@Autowired
+	private AtualizarClubeNivelService atualizarClubeNivelService;
+	
+	@Autowired
+	private CalcularTrajetoriaForcaClubeService calcularTrajetoriaForcaClubeService;
+	
+	@Autowired
+	private SemanaService semanaService;
+	
 	public void gerarTransferencias() {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		gerarTransferencias(temporada, clubes);
 		atualizarNumeroJogadores();
+	}
+	
+	public void gerarMudancaClubeNivel() {
+		Temporada temporada = temporadaService.getTemporadaAtual();
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga l : Liga.values()) {
+			desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelService(temporada, l));
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	public void calcularTrajetoriaForcaClube() {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		Semana s = semanaService.getProximaSemana();
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService.calcularTrajetoriaForcaClube(clubes.subList(i * offset, clubes.size()), s));
+			} else {
+				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService.calcularTrajetoriaForcaClube(clubes.subList(i * offset, (i+1) * offset), s));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+
 	}
 	
 	private void atualizarNumeroJogadores() {

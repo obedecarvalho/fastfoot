@@ -32,6 +32,10 @@ public class ParametroConstantes {
 	
 	//true, false
 	public static final String JOGAR_CONTINENTAL_III_REDUZIDO = "JOGAR_CONTINENTAL_III_REDUZIDO";
+	
+	//true, false
+	//Para o caso de haver CIII Reduzido, 32 clubes jogar a copa nacional (ao invés de 30)
+	public static final String JOGAR_COPA_NACIONAL_COMPLETA = "JOGAR_CONTINENTAL_III_REDUZIDO";
 
 	//true, false
 	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO: implementar logica

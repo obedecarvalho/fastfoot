@@ -15,5 +15,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 	public List<JogadorEstatisticasTemporada> findByJogador(Jogador jogador);
 	
 	public List<JogadorEstatisticasTemporada> findByTemporada(Temporada temporada);
+	
+	public List<JogadorEstatisticasTemporada> findByTemporadaAndJogador(Temporada temporada, Jogador jogador);
 
 }
