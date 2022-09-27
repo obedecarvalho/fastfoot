@@ -9,9 +9,9 @@ import java.util.stream.Collectors;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
-import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoContinental;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.OrdemClassificacaoGeral;
 import com.fastfoot.service.util.ValidatorUtil;
@@ -45,31 +45,31 @@ public class ClubeRankingProbabilidadeCompletoUtil {
 		clube = clubesCampeoes.get(CAMP_CONT);
 		
 		if (clube != null && clubeRankings.get(clube) != null) {
-			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL));
+			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinental.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL));
 		}
 		
 		clube = clubesCampeoes.get(CAMP_CONT_II);
 		
 		if (clube != null && clubeRankings.get(clube) != null) {
-			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL_II));
+			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinental.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL_II));
 		}
 		
 		clube = clubesCampeoes.get(CAMP_CONT_III);
 		
 		if (clube != null && clubeRankings.get(clube) != null) {
-			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL_III));
+			clubeRankings.get(clube).setClassificacaoContinental(ClassificacaoContinental.getClassificacaoCampeao(NivelCampeonato.CONTINENTAL_III));
 		}
 		
 		clube = clubesCampeoes.get(CAMP_COPA_NAC);
 		
 		if (clube != null) {
-			clubeRankings.get(clube).setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.getClassificacaoCampeao(NivelCampeonato.COPA_NACIONAL));
+			clubeRankings.get(clube).setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacaoCampeao(NivelCampeonato.COPA_NACIONAL));
 		}
 		
 		clube = clubesCampeoes.get(CAMP_COPA_NAC_II);
 		
 		if (clube != null) {
-			clubeRankings.get(clube).setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.getClassificacaoCampeao(NivelCampeonato.COPA_NACIONAL_II));
+			clubeRankings.get(clube).setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacaoCampeao(NivelCampeonato.COPA_NACIONAL_II));
 		}
 
 		gerarPosicaoGeralLiga(rankings);
@@ -79,11 +79,11 @@ public class ClubeRankingProbabilidadeCompletoUtil {
 
 	private static void gerarPosicaoGeralLiga(List<ClubeRankingProbabilidade> rankingsLiga) {
 		
-		Map<ClassificacaoContinentalFinal, List<ClubeRankingProbabilidade>> rkContinental = rankingsLiga.stream()
+		Map<ClassificacaoContinental, List<ClubeRankingProbabilidade>> rkContinental = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRankingProbabilidade::getClassificacaoContinental));
-		Map<ClassificacaoCopaNacionalFinal, List<ClubeRankingProbabilidade>> rkCopaNacional = rankingsLiga.stream()
+		Map<ClassificacaoCopaNacional, List<ClubeRankingProbabilidade>> rkCopaNacional = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRankingProbabilidade::getClassificacaoCopaNacional));
-		Map<ClassificacaoNacionalFinal, List<ClubeRankingProbabilidade>> rkNacional = rankingsLiga.stream()
+		Map<ClassificacaoNacional, List<ClubeRankingProbabilidade>> rkNacional = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRankingProbabilidade::getClassificacaoNacional));
 		
 		List<ClubeRankingProbabilidade> tmps = null;
@@ -119,9 +119,9 @@ public class ClubeRankingProbabilidadeCompletoUtil {
 		for (Clube c : clubes) {
 			clubeRanking = new ClubeRankingProbabilidade();
 			clubeRanking.setClube(c);
-			clubeRanking.setClassificacaoNacional(ClassificacaoNacionalFinal.NULL);
-			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU);
-			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.NAO_PARTICIPOU);
+			clubeRanking.setClassificacaoNacional(ClassificacaoNacional.NULL);
+			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.NAO_PARTICIPOU);
+			clubeRanking.setClassificacaoContinental(ClassificacaoContinental.NAO_PARTICIPOU);
 			clubeRanking.setPosicaoGeral(-1);
 			rankings.add(clubeRanking);
 		}
@@ -135,7 +135,7 @@ public class ClubeRankingProbabilidadeCompletoUtil {
 		for (ClassificacaoProbabilidade cl : classificacao) {
 			clubeRanking = rankings.get(cl.getClube());
 			clubeRanking.setClassificacaoNacional(
-					ClassificacaoNacionalFinal.getClassificacao(nivelCampeonato, cl.getPosicao()));
+					ClassificacaoNacional.getClassificacao(nivelCampeonato, cl.getPosicao()));
 		}
 	}
 

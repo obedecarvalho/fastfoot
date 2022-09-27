@@ -105,6 +105,7 @@ public class TemporadaController {
 		try {
 			return ResponseEntity.ok(semanaService.proximaSemana());
 		} catch (Exception e) {
+			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
 	}

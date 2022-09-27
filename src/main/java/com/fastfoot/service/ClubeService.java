@@ -14,9 +14,9 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoContinental;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
 import com.fastfoot.scheduler.model.dto.ClubeRankingDTO;
@@ -144,29 +144,29 @@ public class ClubeService {
 		List<ClubeRanking> rankings = clubeRankingRepository.findByTemporada(t);
 
 		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream()
-				.filter(r -> ClassificacaoContinentalFinal.C_CAMPEAO.equals(r.getClassificacaoContinental()))
+				.filter(r -> ClassificacaoContinental.C_CAMPEAO.equals(r.getClassificacaoContinental()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.CONTINENTAL, t.getAno()));
 		
 		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream()
-				.filter(r -> ClassificacaoContinentalFinal.CII_CAMPEAO.equals(r.getClassificacaoContinental()))
+				.filter(r -> ClassificacaoContinental.CII_CAMPEAO.equals(r.getClassificacaoContinental()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.CONTINENTAL_II, t.getAno()));
 		
 		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream()
-				.filter(r -> ClassificacaoContinentalFinal.CIII_CAMPEAO.equals(r.getClassificacaoContinental()))
+				.filter(r -> ClassificacaoContinental.CIII_CAMPEAO.equals(r.getClassificacaoContinental()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.CONTINENTAL_III, t.getAno()));
 		
-		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream().filter(r -> ClassificacaoNacionalFinal.N_1.equals(r.getClassificacaoNacional()))
+		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream().filter(r -> ClassificacaoNacional.N_1.equals(r.getClassificacaoNacional()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.NACIONAL, t.getAno()));
 		
-		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream().filter(r -> ClassificacaoNacionalFinal.NII_1.equals(r.getClassificacaoNacional()))
+		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream().filter(r -> ClassificacaoNacional.NII_1.equals(r.getClassificacaoNacional()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.NACIONAL_II, t.getAno()));
 		
 		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream()
-				.filter(r -> ClassificacaoCopaNacionalFinal.CN_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
+				.filter(r -> ClassificacaoCopaNacional.CN_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.COPA_NACIONAL, t.getAno()));
 		
 		clubeTituloAnosList.addAll(ClubeTituloAnoDTO.convertToDTO(rankings.stream()
-				.filter(r -> ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
+				.filter(r -> ClassificacaoCopaNacional.CNII_CAMPEAO.equals(r.getClassificacaoCopaNacional()))
 				.map(r -> r.getClube()).collect(Collectors.toList()), NivelCampeonato.COPA_NACIONAL_II, t.getAno()));
 
 		return clubeTituloAnosList;

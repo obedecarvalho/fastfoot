@@ -4,20 +4,20 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
-public enum ClassificacaoCopaNacionalFinal {
-	NAO_PARTICIPOU,//99
-	CN_OITAVAS_FINAL,//16
-	CN_QUARTAS_FINAL,//8
-	CN_SEMI_FINAL,//4
-	CN_VICE_CAMPEAO,//2
-	CN_CAMPEAO,//1
-	CNII_OITAVAS_FINAL,//16
-	CNII_QUARTAS_FINAL,//8
-	CNII_SEMI_FINAL,//4
-	CNII_VICE_CAMPEAO,//2
-	CNII_CAMPEAO;//1
+public enum ClassificacaoCopaNacional {
+	NAO_PARTICIPOU,//-1
+	CN_OITAVAS_FINAL,//116
+	CN_QUARTAS_FINAL,//108
+	CN_SEMI_FINAL,//104
+	CN_VICE_CAMPEAO,//102
+	CN_CAMPEAO,//101
+	CNII_OITAVAS_FINAL,//216
+	CNII_QUARTAS_FINAL,//208
+	CNII_SEMI_FINAL,//204
+	CNII_VICE_CAMPEAO,//202
+	CNII_CAMPEAO;//201
 
-	public static ClassificacaoCopaNacionalFinal getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
+	public static ClassificacaoCopaNacional getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
 		if (NivelCampeonato.COPA_NACIONAL.equals(nivel)) {
 			if (rodada.getNumero() == 6) {
 				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
@@ -62,7 +62,7 @@ public enum ClassificacaoCopaNacionalFinal {
 		return NAO_PARTICIPOU;
 	}
 
-	public static ClassificacaoCopaNacionalFinal getClassificacaoCampeao(NivelCampeonato nivel) {
+	public static ClassificacaoCopaNacional getClassificacaoCampeao(NivelCampeonato nivel) {
 		if (NivelCampeonato.COPA_NACIONAL.equals(nivel)) {
 			return CN_CAMPEAO;
 		} else if (NivelCampeonato.COPA_NACIONAL_II.equals(nivel)) {

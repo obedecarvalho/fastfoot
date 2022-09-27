@@ -39,7 +39,7 @@ import com.fastfoot.player.service.AposentarJogadorService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -286,8 +286,8 @@ public class CriarCalendarioTemporadaService {
 			for (int i = 0; i < Constantes.NRO_DIVISOES; i++) {
 				
 				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
-						(i == 0 ? ClassificacaoNacionalFinal.getAllNacionalNovoCampeonato()
-								: ClassificacaoNacionalFinal.getAllNacionalIINovoCampeonato()));
+						(i == 0 ? ClassificacaoNacional.getAllNacionalNovoCampeonato()
+								: ClassificacaoNacional.getAllNacionalIINovoCampeonato()));
 				
 				campeonatoNacional = CampeonatoFactory.criarCampeonato(temporada, liga, clubes,
 						(i == 0 ? NivelCampeonato.NACIONAL : NivelCampeonato.NACIONAL_II));

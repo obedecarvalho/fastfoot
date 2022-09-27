@@ -1,19 +1,19 @@
 package com.fastfoot.probability.model;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoContinental;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 
 public class ClubeRankingProbabilidade {
 
 	private Clube clube;
 	
-	private ClassificacaoNacionalFinal classificacaoNacional;
+	private ClassificacaoNacional classificacaoNacional;
 	
-	private ClassificacaoCopaNacionalFinal classificacaoCopaNacional;
+	private ClassificacaoCopaNacional classificacaoCopaNacional;
 	
-	private ClassificacaoContinentalFinal classificacaoContinental;
+	private ClassificacaoContinental classificacaoContinental;
 
 	private Integer posicaoGeral;
 
@@ -25,27 +25,27 @@ public class ClubeRankingProbabilidade {
 		this.clube = clube;
 	}
 
-	public ClassificacaoNacionalFinal getClassificacaoNacional() {
+	public ClassificacaoNacional getClassificacaoNacional() {
 		return classificacaoNacional;
 	}
 
-	public void setClassificacaoNacional(ClassificacaoNacionalFinal classificacaoNacional) {
+	public void setClassificacaoNacional(ClassificacaoNacional classificacaoNacional) {
 		this.classificacaoNacional = classificacaoNacional;
 	}
 
-	public ClassificacaoCopaNacionalFinal getClassificacaoCopaNacional() {
+	public ClassificacaoCopaNacional getClassificacaoCopaNacional() {
 		return classificacaoCopaNacional;
 	}
 
-	public void setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal classificacaoCopaNacional) {
+	public void setClassificacaoCopaNacional(ClassificacaoCopaNacional classificacaoCopaNacional) {
 		this.classificacaoCopaNacional = classificacaoCopaNacional;
 	}
 
-	public ClassificacaoContinentalFinal getClassificacaoContinental() {
+	public ClassificacaoContinental getClassificacaoContinental() {
 		return classificacaoContinental;
 	}
 
-	public void setClassificacaoContinental(ClassificacaoContinentalFinal classificacaoContinental) {
+	public void setClassificacaoContinental(ClassificacaoContinental classificacaoContinental) {
 		this.classificacaoContinental = classificacaoContinental;
 	}
 

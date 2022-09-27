@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.service.util;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,9 @@ import java.util.stream.Collectors;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Liga;
-import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoContinental;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.OrdemClassificacaoGeral;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
@@ -58,11 +59,11 @@ public class ClubeRankingUtil {
 	
 	protected static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
 		
-		Map<ClassificacaoContinentalFinal, List<ClubeRanking>> rkContinental = rankingsLiga.stream()
+		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
-		Map<ClassificacaoCopaNacionalFinal, List<ClubeRanking>> rkCopaNacional = rankingsLiga.stream()
+		Map<ClassificacaoCopaNacional, List<ClubeRanking>> rkCopaNacional = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
-		Map<ClassificacaoNacionalFinal, List<ClubeRanking>> rkNacional = rankingsLiga.stream()
+		Map<ClassificacaoNacional, List<ClubeRanking>> rkNacional = rankingsLiga.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
 		
 		List<ClubeRanking> tmps = null;
@@ -96,11 +97,11 @@ public class ClubeRankingUtil {
 	
 	protected static void gerarPosicaoGlobal(List<ClubeRanking> rankings) {
 		
-		Map<ClassificacaoContinentalFinal, List<ClubeRanking>> rkContinental = rankings.stream()
+		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankings.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
-		Map<ClassificacaoCopaNacionalFinal, List<ClubeRanking>> rkCopaNacional = rankings.stream()
+		Map<ClassificacaoCopaNacional, List<ClubeRanking>> rkCopaNacional = rankings.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
-		Map<ClassificacaoNacionalFinal, List<ClubeRanking>> rkNacional = rankings.stream()
+		Map<ClassificacaoNacional, List<ClubeRanking>> rkNacional = rankings.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
 		
 		List<ClubeRanking> tmps = null;
@@ -122,17 +123,98 @@ public class ClubeRankingUtil {
 			}
 			
 			if (!ValidatorUtil.isEmpty(tmps)) {
-				qtdeAtualizada = 0;
+				
+				if (tmps.size() > 1) {
+					desempatar(tmps, i + 1, posFinal);
+					posFinal += tmps.size();
+				} else {
+					if (tmps.get(0).getPosicaoGlobal() == -1) {
+						tmps.get(0).setPosicaoGlobal(posFinal++);
+					}
+				}
+				
+				/*qtdeAtualizada = 0;
 				for (ClubeRanking cr : tmps) {
 					if (cr.getPosicaoGlobal() == -1) {
 						cr.setPosicaoGlobal(posFinal);
 						qtdeAtualizada++;
 					}
 				}
-				posFinal += qtdeAtualizada;
+				posFinal += qtdeAtualizada;*/
 			}
 
 		}
+
+		
+	}
+	
+	public static void desempatar(List<ClubeRanking> rankings, int posOrdem, int posFinal) {
+		
+		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
+		Map<ClassificacaoCopaNacional, List<ClubeRanking>> rkCopaNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
+		Map<ClassificacaoNacional, List<ClubeRanking>> rkNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
+		
+		List<ClubeRanking> tmps = null;
+		OrdemClassificacaoGeral ocg = null;
+		
+		for (int i = posOrdem; i < OrdemClassificacaoGeral.ORDEM_GLOBAL.length; i++) {
+			ocg = OrdemClassificacaoGeral.ORDEM_GLOBAL[i];
+			
+			tmps = null;
+			
+			if (ocg.isContinental()) {
+				tmps = rkContinental.get(ocg.getClassificacaoContinental());
+			} else if (ocg.isNacional()) {
+				tmps = rkNacional.get(ocg.getClassificacaoNacional());
+			} else if (ocg.isCopaNacional()) {
+				tmps = rkCopaNacional.get(ocg.getClassificacaoCopaNacional());
+			}
+			
+			if (!ValidatorUtil.isEmpty(tmps)) {
+				
+				//Filtrar apenas os que não foram setados
+				tmps = tmps.stream().filter(cr -> cr.getPosicaoGlobal() == -1).collect(Collectors.toList());
+				
+				if (tmps.size() > 1) {
+					desempatar(tmps, i + 1, posFinal);
+					posFinal += tmps.size();
+					
+					//ordenar
+					/*Collections.sort(tmps, new Comparator<ClubeRanking>() {
+
+						@Override
+						public int compare(ClubeRanking o1, ClubeRanking o2) {
+							return o1.getPosicaoGlobal().compareTo(o2.getPosicaoGlobal());
+						}
+					});*/
+					
+					//setar posicao
+					/*for (ClubeRanking clubeRanking : tmps) {
+						clubeRanking.setPosicaoGlobal(posFinal++);
+					}*/
+				} else if (tmps.size() == 1) {
+					if (tmps.get(0).getPosicaoGlobal() == -1) {
+						tmps.get(0).setPosicaoGlobal(posFinal++);
+					}
+				}
+				
+				/*qtdeAtualizada = 0;
+				for (ClubeRanking cr : tmps) {
+					if (cr.getPosicaoGlobal() == -1) {
+						cr.setPosicaoGlobal(posFinal);
+						qtdeAtualizada++;
+					}
+				}
+				posFinal += qtdeAtualizada;*/
+			}
+		}
+		
+		final Integer posFinalX = posFinal;
+		
+		rankings.stream().filter(cr -> cr.getPosicaoGlobal() == -1).forEach(cr -> cr.setPosicaoGlobal(posFinalX));
 		
 	}
 
@@ -298,9 +380,9 @@ public class ClubeRankingUtil {
 			clubeRanking.setClube(c);
 			clubeRanking.setAno(temporada.getAno());
 			clubeRanking.setTemporada(temporada);
-			clubeRanking.setClassificacaoNacional(ClassificacaoNacionalFinal.NULL);
-			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU);
-			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.NAO_PARTICIPOU);
+			clubeRanking.setClassificacaoNacional(ClassificacaoNacional.NULL);
+			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.NAO_PARTICIPOU);
+			clubeRanking.setClassificacaoContinental(ClassificacaoContinental.NAO_PARTICIPOU);
 			clubeRanking.setPosicaoGeral(-1);
 			clubeRanking.setPosicaoGlobal(-1);
 			rankings.add(clubeRanking);
@@ -313,7 +395,7 @@ public class ClubeRankingUtil {
 		for (Campeonato c : campeonatos) {
 			for (Classificacao cl : c.getClassificacao()) {
 				clubeRanking = rankings.get(cl.getClube());
-				clubeRanking.setClassificacaoNacional(ClassificacaoNacionalFinal.getClassificacao(c.getNivelCampeonato(), cl.getPosicao()));
+				clubeRanking.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(c.getNivelCampeonato(), cl.getPosicao()));
 			}
 		}
 	}
@@ -334,11 +416,11 @@ public class ClubeRankingUtil {
 
 			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
 				clubeRanking = rankings.get(x.getKey());
-				clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
+				clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
 			}
 
 			clubeRanking = rankings.get(campeao);
-			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.getClassificacaoCampeao(c.getNivelCampeonato()));
+			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacaoCampeao(c.getNivelCampeonato()));
 		}
 	}
 
@@ -360,13 +442,13 @@ public class ClubeRankingUtil {
 			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
 			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
 				clubeRanking = rankings.get(x.getKey());
-				clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
+				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
 			}
 			
 			RodadaEliminatoria rodadaFinal = c.getRodadasEliminatorias().stream().max(Comparator.comparing(RodadaEliminatoria::getNumero)).get();
 			campeao = rodadaFinal.getPartidas().get(0).getClubeVencedor();			
 			clubeRanking = rankings.get(campeao);
-			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacaoCampeao(c.getNivelCampeonato()));
+			clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacaoCampeao(c.getNivelCampeonato()));
 			
 			//Fase Grupos
 			clubesFaseGrupos.removeAll(clubeRodada.keySet());
@@ -374,7 +456,7 @@ public class ClubeRankingUtil {
 			
 			for (Clube cl : clubesFaseGrupos) {
 				clubeRanking = rankings.get(cl);
-				clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.getClassificacaoFaseGrupo(c.getNivelCampeonato()));
+				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacaoFaseGrupo(c.getNivelCampeonato()));
 			}
 		}
 	}

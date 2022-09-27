@@ -1,5 +1,6 @@
 package com.fastfoot.scheduler.model.entity;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,9 +10,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.scheduler.model.ClassificacaoContinentalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalFinal;
-import com.fastfoot.scheduler.model.ClassificacaoNacionalFinal;
+import com.fastfoot.scheduler.model.ClassificacaoContinental;
+import com.fastfoot.scheduler.model.ClassificacaoContinentalAttributeConverter;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
+import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalAttributeConverter;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 
 /**
  * Ranking do Clube ao fim do Campeonato Nacional
@@ -39,11 +42,13 @@ public class ClubeRanking {
 	
 	private Integer ano;//TODO: remover?? pode ser recuperado pela temporada
 	
-	private ClassificacaoNacionalFinal classificacaoNacional;
+	private ClassificacaoNacional classificacaoNacional;
 	
-	private ClassificacaoCopaNacionalFinal classificacaoCopaNacional;
+	@Convert(converter = ClassificacaoCopaNacionalAttributeConverter.class)
+	private ClassificacaoCopaNacional classificacaoCopaNacional;
 	
-	private ClassificacaoContinentalFinal classificacaoContinental;
+	@Convert(converter = ClassificacaoContinentalAttributeConverter.class)
+	private ClassificacaoContinental classificacaoContinental;
 
 	private Integer posicaoGeral;
 	
@@ -54,8 +59,8 @@ public class ClubeRanking {
 	}
 
 	public ClubeRanking(Integer id, Clube clube, Integer ano, Integer posicaoGeral,
-			ClassificacaoNacionalFinal classificacaoNacional, ClassificacaoCopaNacionalFinal classificacaoCopaNacional,
-			ClassificacaoContinentalFinal classificacaoContinental) {
+			ClassificacaoNacional classificacaoNacional, ClassificacaoCopaNacional classificacaoCopaNacional,
+			ClassificacaoContinental classificacaoContinental) {
 		super();
 		this.id = id;
 		this.clube = clube;
@@ -90,27 +95,27 @@ public class ClubeRanking {
 		this.ano = ano;
 	}
 
-	public ClassificacaoNacionalFinal getClassificacaoNacional() {
+	public ClassificacaoNacional getClassificacaoNacional() {
 		return classificacaoNacional;
 	}
 
-	public void setClassificacaoNacional(ClassificacaoNacionalFinal classificacaoNacional) {
+	public void setClassificacaoNacional(ClassificacaoNacional classificacaoNacional) {
 		this.classificacaoNacional = classificacaoNacional;
 	}
 
-	public ClassificacaoCopaNacionalFinal getClassificacaoCopaNacional() {
+	public ClassificacaoCopaNacional getClassificacaoCopaNacional() {
 		return classificacaoCopaNacional;
 	}
 
-	public void setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal classificacaoCopaNacional) {
+	public void setClassificacaoCopaNacional(ClassificacaoCopaNacional classificacaoCopaNacional) {
 		this.classificacaoCopaNacional = classificacaoCopaNacional;
 	}
 
-	public ClassificacaoContinentalFinal getClassificacaoContinental() {
+	public ClassificacaoContinental getClassificacaoContinental() {
 		return classificacaoContinental;
 	}
 
-	public void setClassificacaoContinental(ClassificacaoContinentalFinal classificacaoContinental) {
+	public void setClassificacaoContinental(ClassificacaoContinental classificacaoContinental) {
 		this.classificacaoContinental = classificacaoContinental;
 	}
 
@@ -123,31 +128,31 @@ public class ClubeRanking {
 	}
 
 	public boolean isCampeaoContinental() {
-		return ClassificacaoContinentalFinal.C_CAMPEAO.equals(classificacaoContinental);
+		return ClassificacaoContinental.C_CAMPEAO.equals(classificacaoContinental);
 	}
 
 	public boolean isCampeaoContinentalII() {
-		return ClassificacaoContinentalFinal.CII_CAMPEAO.equals(classificacaoContinental);
+		return ClassificacaoContinental.CII_CAMPEAO.equals(classificacaoContinental);
 	}
 	
 	public boolean isCampeaoContinentalIII() {
-		return ClassificacaoContinentalFinal.CIII_CAMPEAO.equals(classificacaoContinental);
+		return ClassificacaoContinental.CIII_CAMPEAO.equals(classificacaoContinental);
 	}
 
 	public boolean isCampeaoCopaNacional() {
-		return ClassificacaoCopaNacionalFinal.CN_CAMPEAO.equals(classificacaoCopaNacional);
+		return ClassificacaoCopaNacional.CN_CAMPEAO.equals(classificacaoCopaNacional);
 	}
 
 	public boolean isCampeaoCopaNacionalII() {
-		return ClassificacaoCopaNacionalFinal.CNII_CAMPEAO.equals(classificacaoCopaNacional);
+		return ClassificacaoCopaNacional.CNII_CAMPEAO.equals(classificacaoCopaNacional);
 	}
 
 	public boolean isCampeaoNacional() {
-		return ClassificacaoNacionalFinal.N_1.equals(classificacaoNacional);
+		return ClassificacaoNacional.N_1.equals(classificacaoNacional);
 	}
 
 	public boolean isCampeaoNacionalII() {
-		return ClassificacaoNacionalFinal.NII_1.equals(classificacaoNacional);
+		return ClassificacaoNacional.NII_1.equals(classificacaoNacional);
 	}
 
 	public Temporada getTemporada() {

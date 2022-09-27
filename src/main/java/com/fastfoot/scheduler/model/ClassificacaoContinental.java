@@ -4,28 +4,28 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
-public enum ClassificacaoContinentalFinal {
-	NAO_PARTICIPOU,//99
+public enum ClassificacaoContinental {
+	NAO_PARTICIPOU,//-1
 	//###	Continental	###
-	C_FASE_GRUPOS,//16
-	C_QUARTAS_FINAL,//8
-	C_SEMI_FINAL,//4
-	C_VICE_CAMPEAO,//2
-	C_CAMPEAO,//1
+	C_FASE_GRUPOS,//116
+	C_QUARTAS_FINAL,//108
+	C_SEMI_FINAL,//104
+	C_VICE_CAMPEAO,//102
+	C_CAMPEAO,//101
 	//###	Continental II	###
-	CII_FASE_GRUPOS,//16
-	CII_QUARTAS_FINAL,//8
-	CII_SEMI_FINAL,//4
-	CII_VICE_CAMPEAO,//2
-	CII_CAMPEAO,//1
+	CII_FASE_GRUPOS,//216
+	CII_QUARTAS_FINAL,//208
+	CII_SEMI_FINAL,//204
+	CII_VICE_CAMPEAO,//202
+	CII_CAMPEAO,//201
 	//###	Continental III	###
-	CIII_FASE_GRUPOS,//16
-	CIII_QUARTAS_FINAL,//8
-	CIII_SEMI_FINAL,//4
-	CIII_VICE_CAMPEAO,//2
-	CIII_CAMPEAO;//1
+	CIII_FASE_GRUPOS,//316
+	CIII_QUARTAS_FINAL,//308
+	CIII_SEMI_FINAL,//304
+	CIII_VICE_CAMPEAO,//302
+	CIII_CAMPEAO;//301
 
-	public static ClassificacaoContinentalFinal getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
+	public static ClassificacaoContinental getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
 		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {
 			if (rodada.getNumero() == 6) {
 				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
@@ -80,7 +80,7 @@ public enum ClassificacaoContinentalFinal {
 		return NAO_PARTICIPOU;
 	}
 
-	public static ClassificacaoContinentalFinal getClassificacaoCampeao(NivelCampeonato nivel) {
+	public static ClassificacaoContinental getClassificacaoCampeao(NivelCampeonato nivel) {
 		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {
 			return C_CAMPEAO;
 		} else if (NivelCampeonato.CONTINENTAL_II.equals(nivel)) {
@@ -91,7 +91,7 @@ public enum ClassificacaoContinentalFinal {
 		return NAO_PARTICIPOU;
 	}
 
-	public static ClassificacaoContinentalFinal getClassificacaoFaseGrupo(NivelCampeonato nivel) {
+	public static ClassificacaoContinental getClassificacaoFaseGrupo(NivelCampeonato nivel) {
 		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {
 			return C_FASE_GRUPOS;
 		} else if (NivelCampeonato.CONTINENTAL_II.equals(nivel)) {
