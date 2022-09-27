@@ -10,21 +10,21 @@ import org.springframework.stereotype.Repository;
 
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
-import com.fastfoot.player.model.entity.Jogador;
 
 @Repository
 public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<GrupoDesenvolvimentoJogador, Long>{
 
-	public List<GrupoDesenvolvimentoJogador> findByJogador(Jogador jogador);
+	//public List<GrupoDesenvolvimentoJogador> findByJogador(Jogador jogador);
 
-	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimento(CelulaDesenvolvimento celulaDesenvolvimento);
+	//public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimento(CelulaDesenvolvimento celulaDesenvolvimento);
 	
 	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimentoAndAtivo(CelulaDesenvolvimento celulaDesenvolvimento, Boolean ativo);
 
 	@Query(" SELECT gdj FROM GrupoDesenvolvimentoJogador gdj WHERE gdj.jogador.idade = :idadeJogador AND gdj.ativo = :ativo ")
 	public List<GrupoDesenvolvimentoJogador> findByAtivoAndIdadeJogador(@Param(value = "ativo") Boolean ativo, @Param(value = "idadeJogador") Integer idadeJogador);
 	
-	@Query(" SELECT DISTINCT gdj FROM GrupoDesenvolvimentoJogador gdj INNER JOIN FETCH gdj.jogador j INNER JOIN FETCH j.habilidades WHERE gdj.celulaDesenvolvimento = :celulaDesenvolvimento AND gdj.ativo = :ativo ")
+	@Query(" SELECT DISTINCT gdj FROM GrupoDesenvolvimentoJogador gdj INNER JOIN FETCH gdj.jogador j INNER JOIN FETCH j.habilidades "
+			+ " WHERE gdj.celulaDesenvolvimento = :celulaDesenvolvimento AND gdj.ativo = :ativo ")
 	public List<GrupoDesenvolvimentoJogador> findByCelulaDesenvolvimentoAndAtivoFetchJogadorHabilidades(
 			@Param(value = "celulaDesenvolvimento") CelulaDesenvolvimento celulaDesenvolvimento,
 			@Param(value = "ativo") Boolean ativo);
@@ -38,17 +38,7 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 			" order by j.id_clube, total"
 	)
 	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube();
-	
-	@Query(nativeQuery = true, value =
-			" select j.id_clube, j.posicao, count(*) as total" +
-			" from jogador j" +
-			" where j.status_jogador = 0" + //StatusJogador.ATIVO
-			" 	and j.posicao not in (0)" + //Posicao.GOLEIRO
-			" group by j.id_clube, j.posicao" +
-			" order by j.id_clube, total"
-	)
-	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClubeSemGoleiro();
-	
+
 	@Query(nativeQuery = true, value =
 			" select j.id_clube, j.posicao, count(*) as total" +
 			" from jogador j" +

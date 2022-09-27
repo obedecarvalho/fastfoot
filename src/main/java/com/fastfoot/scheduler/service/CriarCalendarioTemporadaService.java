@@ -368,6 +368,7 @@ public class CriarCalendarioTemporadaService {
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		Boolean jogarCNCompleta = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
+		//TODO: parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
 
@@ -567,7 +568,7 @@ public class CriarCalendarioTemporadaService {
 
 		HabilidadeEstatisticaPercentil hep = agruparHabilidadeValorEstatisticaService.getPercentilHabilidadeValor(temporada);
 		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = habilidadeValorEstatisticaGrupoRepository
-				.findByTemporada(temporada);
+				.findByTemporadaAndAmistoso(temporada, false);
 		
 		Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticasGrupoMap = estatisticasGrupo.stream()
 				.collect(Collectors.toMap(HabilidadeValorEstatisticaGrupo::getHabilidadeValor, Function.identity()));

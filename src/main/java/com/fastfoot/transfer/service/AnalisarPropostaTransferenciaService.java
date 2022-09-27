@@ -54,6 +54,8 @@ public class AnalisarPropostaTransferenciaService {
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
+		
+		System.err.println("\t#c:" + propostasClube.keySet().size());
 
 		for (Clube c : propostasClube.keySet()) {
 			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);

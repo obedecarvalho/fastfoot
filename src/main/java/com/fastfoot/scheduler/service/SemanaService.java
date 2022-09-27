@@ -291,7 +291,7 @@ public class SemanaService {
 		//if (semana.getNumero() % 5 == 0) {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		
-		escalacaoJogadorPosicaoRepository.desativarTodas();
+		escalacaoJogadorPosicaoRepository.desativarTodas();//TODO: transformar em delete
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -433,6 +433,7 @@ public class SemanaService {
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		Boolean jogarCNCompleta = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
+		//TODO: parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 		
 		PromotorEliminatoria promotorEliminatoria = null;
 		

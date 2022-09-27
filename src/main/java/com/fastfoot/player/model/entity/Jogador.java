@@ -26,7 +26,7 @@ import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 
 @Entity
-@Table(indexes = { @Index(columnList = "id_clube, status_jogador") })
+@Table(indexes = { @Index(columnList = "id_clube, statusJogador") })
 public class Jogador {
 	
 	@Id
@@ -72,21 +72,12 @@ public class Jogador {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
-	/*@OneToOne(mappedBy = "jogador")*/
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
-	/*@OneToOne(mappedBy = "jogador")*/
 	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
 
-	/*@OneToOne(mappedBy = "jogador")
-	private GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador;*/
-	
-	/*@OneToOne(mappedBy = "jogador")
-	private EscalacaoJogadorPosicao escalacaoJogadorPosicao;*/
-	
-	//@Transient
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeValor> habilidades;
 	
@@ -257,22 +248,6 @@ public class Jogador {
 	public void setForcaGeralPotencial(Integer forcaGeralPotencial) {
 		this.forcaGeralPotencial = forcaGeralPotencial;
 	}
-
-	/*public GrupoDesenvolvimentoJogador getGrupoDesenvolvimentoJogador() {
-		return grupoDesenvolvimentoJogador;
-	}
-
-	public void setGrupoDesenvolvimentoJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador) {
-		this.grupoDesenvolvimentoJogador = grupoDesenvolvimentoJogador;
-	}*/
-	
-	/*public EscalacaoJogadorPosicao getEscalacaoJogadorPosicao() {
-		return escalacaoJogadorPosicao;
-	}
-
-	public void setEscalacaoJogadorPosicao(EscalacaoJogadorPosicao escalacaoJogadorPosicao) {
-		this.escalacaoJogadorPosicao = escalacaoJogadorPosicao;
-	}*/
 
 	public Double getValorTransferencia() {
 		return valorTransferencia;

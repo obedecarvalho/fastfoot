@@ -12,10 +12,10 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Repository
 public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<JogadorEstatisticasTemporada, Long>{
 
-	public List<JogadorEstatisticasTemporada> findByJogador(Jogador jogador);
+	public List<JogadorEstatisticasTemporada> findByJogadorAndAmistoso(Jogador jogador, Boolean amistoso);
 	
-	public List<JogadorEstatisticasTemporada> findByTemporada(Temporada temporada);
+	public List<JogadorEstatisticasTemporada> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
 	
-	public List<JogadorEstatisticasTemporada> findByTemporadaAndJogador(Temporada temporada, Jogador jogador);
+	public List<JogadorEstatisticasTemporada> findByTemporadaAndJogadorAndAmistoso(Temporada temporada, Jogador jogador, Boolean amistoso);
 
 }

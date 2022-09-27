@@ -49,7 +49,6 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" 			- floor(hv.valor + hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
-			//" 	where j.aposentado = false " +
 			" 	where j.status_jogador = 0 " + //StatusJogador.ATIVO
 			" ) as tmp " +
 			" where tmp.id = hvx.id; "

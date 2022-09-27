@@ -15,9 +15,9 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Repository
 public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository<HabilidadeValorEstatisticaGrupo, Long> {
 
-	public List<HabilidadeValorEstatistica> findByHabilidadeValor(HabilidadeValor habilidadeValor);
+	//public List<HabilidadeValorEstatistica> findByHabilidadeValor(HabilidadeValor habilidadeValor);
 
-	public List<HabilidadeValorEstatisticaGrupo> findByTemporada(Temporada temporada);
+	public List<HabilidadeValorEstatisticaGrupo> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
 
 	@Query(nativeQuery = true, value = " SELECT "
 			+ " 	percentile_disc(0.25) within group (order by quantidade_uso) as qu_q3, "
@@ -29,8 +29,9 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			+ " 	percentile_disc(0.25) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q3, "
 			+ " 	percentile_disc(0.5) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q2, "
 			+ " 	percentile_disc(0.75) within group (order by quantidade_uso_vencedor::float/quantidade_uso) as pa_q1 "
-			+ " FROM habilidade_valor_estatistica_grupo " + 
-			" WHERE id_temporada = ?1 "
+			+ " FROM habilidade_valor_estatistica_grupo " 
+			+ " WHERE id_temporada = ?1 "
+			+ " 	AND amistoso = ?2 "
 	)
-	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada);//TODO: filtrar amistoso??
+	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada, Boolean amistoso);
 }

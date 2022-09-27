@@ -24,11 +24,7 @@ public class HabilidadeValorEstatisticaGrupo {
 	@ManyToOne
 	@JoinColumn(name = "id_habilidade_valor")
 	private HabilidadeValor habilidadeValor;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_semana")
-	private Semana semana;*/
-	
+
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
@@ -56,14 +52,6 @@ public class HabilidadeValorEstatisticaGrupo {
 	public void setHabilidadeValor(HabilidadeValor habilidadeValor) {
 		this.habilidadeValor = habilidadeValor;
 	}
-
-	/*public Semana getSemana() {
-		return semana;
-	}
-
-	public void setSemana(Semana semana) {
-		this.semana = semana;
-	}*/
 
 	public Integer getQuantidadeUso() {
 		return quantidadeUso;

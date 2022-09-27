@@ -43,6 +43,7 @@ public class ClubeRankingUtil {
 		rankearContinental(clubeRankings, temporada.getCampeonatosContinentais());
 		
 		gerarPosicaoGeral(rankings);
+		gerarPosicaoGlobal(rankings);
 		
 		return rankings;
 	}
@@ -83,6 +84,48 @@ public class ClubeRankingUtil {
 				for (ClubeRanking cr : tmps) {
 					if (cr.getPosicaoGeral() == -1) {
 						cr.setPosicaoGeral(posFinal);
+						qtdeAtualizada++;
+					}
+				}
+				posFinal += qtdeAtualizada;
+			}
+
+		}
+		
+	}
+	
+	protected static void gerarPosicaoGlobal(List<ClubeRanking> rankings) {
+		
+		Map<ClassificacaoContinentalFinal, List<ClubeRanking>> rkContinental = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
+		Map<ClassificacaoCopaNacionalFinal, List<ClubeRanking>> rkCopaNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
+		Map<ClassificacaoNacionalFinal, List<ClubeRanking>> rkNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
+		
+		List<ClubeRanking> tmps = null;
+		int posFinal = 1, qtdeAtualizada = 0;
+		OrdemClassificacaoGeral ocg = null;
+		
+		//for (OrdemClassificacaoGeral ocg: OrdemClassificacaoGeral.ORDEM_GLOBAL) {
+		for (int i = 0; i < OrdemClassificacaoGeral.ORDEM_GLOBAL.length; i++) {
+			ocg = OrdemClassificacaoGeral.ORDEM_GLOBAL[i];
+		
+			tmps = null;
+			
+			if (ocg.isContinental()) {
+				tmps = rkContinental.get(ocg.getClassificacaoContinental());
+			} else if (ocg.isNacional()) {
+				tmps = rkNacional.get(ocg.getClassificacaoNacional());
+			} else if (ocg.isCopaNacional()) {
+				tmps = rkCopaNacional.get(ocg.getClassificacaoCopaNacional());
+			}
+			
+			if (!ValidatorUtil.isEmpty(tmps)) {
+				qtdeAtualizada = 0;
+				for (ClubeRanking cr : tmps) {
+					if (cr.getPosicaoGlobal() == -1) {
+						cr.setPosicaoGlobal(posFinal);
 						qtdeAtualizada++;
 					}
 				}
@@ -259,6 +302,7 @@ public class ClubeRankingUtil {
 			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacionalFinal.NAO_PARTICIPOU);
 			clubeRanking.setClassificacaoContinental(ClassificacaoContinentalFinal.NAO_PARTICIPOU);
 			clubeRanking.setPosicaoGeral(-1);
+			clubeRanking.setPosicaoGlobal(-1);
 			rankings.add(clubeRanking);
 		}
 		return rankings;

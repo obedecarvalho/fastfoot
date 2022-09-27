@@ -50,25 +50,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" where status_jogador = 0 "
 	)
 	public void incrementarIdade();
-	
-	/*@Query(nativeQuery = true, value =
-			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral, j.id_clube AS id_clube_jog, ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disp_neg " +
-			" FROM necessidade_contratacao_clube ncc " +
-			" INNER JOIN clube c ON ncc.id_clube = c.id " +
-			" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.aposentado = false) " +
-			" LEFT JOIN proposta_transferencia_jogador ptj " +
-			"	ON (ptj.id_jogador = j.id AND ptj.id_clube_destino = ncc.id_clube AND ncc.id_temporada = ptj.id_temporada) " +
-			" LEFT JOIN escalacao_jogador_posicao ejp ON ejp.id_jogador = j.id " +
-			" LEFT JOIN disponivel_negociacao dn ON (dn.id_jogador = j.id AND dn.id_temporada = ncc.id_temporada) " +
-			" WHERE ncc.id_clube = ?2 " +
-			" 	AND ncc.posicao = ?3 " +
-			" 	AND j.forca_geral >= c.forca_geral * ?4 " +
-			" 	AND j.forca_geral < c.forca_geral * ?5 " +
-			" 	AND ptj.id IS NULL " + //não ha propostras transferencia nessa temporada
-			" 	AND ncc.id_temporada = ?1 "
-			)
-	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(Long idTemporada, Integer idClube, Integer posicao, Double forcaMin, Double forcaMax);*/
-	
+
 	@Query(nativeQuery = true, value =
 			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral as forca_geral_jog, j.id_clube AS id_clube, " +
 			" 	ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disponivel_negociacao, " +

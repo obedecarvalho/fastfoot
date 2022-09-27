@@ -46,6 +46,8 @@ public class ClubeRanking {
 	private ClassificacaoContinentalFinal classificacaoContinental;
 
 	private Integer posicaoGeral;
+	
+	private Integer posicaoGlobal;
 
 	public ClubeRanking() {
 		super();
@@ -154,6 +156,14 @@ public class ClubeRanking {
 
 	public void setTemporada(Temporada temporada) {
 		this.temporada = temporada;
+	}
+
+	public Integer getPosicaoGlobal() {
+		return posicaoGlobal;
+	}
+
+	public void setPosicaoGlobal(Integer posicaoGlobal) {
+		this.posicaoGlobal = posicaoGlobal;
 	}
 
 	@Override

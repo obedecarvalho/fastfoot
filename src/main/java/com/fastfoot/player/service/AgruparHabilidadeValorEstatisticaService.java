@@ -58,7 +58,7 @@ public class AgruparHabilidadeValorEstatisticaService {
 
 	public HabilidadeEstatisticaPercentil getPercentilHabilidadeValor(Temporada temporada) {
 
-		List<Map<String, Object>> estatisticas = habilidadeValorEstatisticaGrupoRepository.findPercentilByTemporada(temporada.getId());
+		List<Map<String, Object>> estatisticas = habilidadeValorEstatisticaGrupoRepository.findPercentilByTemporada(temporada.getId(), false);
 		
 		HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil = null;
 		

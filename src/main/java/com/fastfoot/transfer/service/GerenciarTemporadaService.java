@@ -32,7 +32,7 @@ import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorReposi
 @Service
 public class GerenciarTemporadaService {
 	
-	//private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 2;
+	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
 	
 	//###	REPOSITORY	###
 	
@@ -248,7 +248,7 @@ public class GerenciarTemporadaService {
 				.findByTemporadaAndPropostaAceitaIsNull(temporada);
 
 		Map<Integer, Map<Clube, List<PropostaTransferenciaJogador>>> propostasClubeX = propostas.stream()
-				.collect(Collectors.groupingBy(p -> p.getClubeOrigem().getId() % (FastfootApplication.NUM_THREAD / 2),
+				.collect(Collectors.groupingBy(p -> p.getClubeOrigem().getId() % NUM_THREAD_ANALISAR_PROPOSTA,
 						Collectors.groupingBy(PropostaTransferenciaJogador::getClubeOrigem)));
 		
 		Set<Clube> clubesRefazerEscalacaoX = Collections.synchronizedSet(new HashSet<Clube>());

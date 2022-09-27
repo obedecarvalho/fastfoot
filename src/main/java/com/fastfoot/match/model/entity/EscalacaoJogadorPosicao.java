@@ -25,11 +25,6 @@ public class EscalacaoJogadorPosicao {
 	@SequenceGenerator(name = "escalacaoJogadorPosicaoSequence", sequenceName = "escalacao_jogador_posicao_seq")
 	private Long id;
 
-	/*@ManyToOne
-	@JoinColumn(name = "id_escalacao")
-	private Escalacao escalacao;*/
-	
-	//@OneToOne
 	@ManyToOne
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
@@ -50,13 +45,6 @@ public class EscalacaoJogadorPosicao {
 
 	}
 
-	/*public EscalacaoJogadorPosicao(Escalacao escalacao, EscalacaoPosicao escalacaoPosicao, Jogador jogador) {
-		super();
-		this.escalacaoPosicao = escalacaoPosicao;
-		this.jogador = jogador;
-		//this.escalacao = escalacao;
-	}*/
-	
 	public EscalacaoJogadorPosicao(Clube clube, EscalacaoPosicao escalacaoPosicao, Jogador jogador, Boolean ativo) {
 		super();
 		this.escalacaoPosicao = escalacaoPosicao;
@@ -88,14 +76,6 @@ public class EscalacaoJogadorPosicao {
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
-
-	/*public Escalacao getEscalacao() {
-		return escalacao;
-	}
-
-	public void setEscalacao(Escalacao escalacao) {
-		this.escalacao = escalacao;
-	}*/
 
 	public Clube getClube() {
 		return clube;

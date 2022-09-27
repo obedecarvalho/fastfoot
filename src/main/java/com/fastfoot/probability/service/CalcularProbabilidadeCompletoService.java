@@ -509,6 +509,7 @@ public class CalcularProbabilidadeCompletoService {
 		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		//TODO: parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 
 		if (nroCompeticoesContinentais != 3) {
 			return -1;

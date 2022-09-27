@@ -59,7 +59,7 @@ public class EscalarClubeService {
 		List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository
 				.findByClubeAndAtivoFetchJogadorHabilidades(c, true);
 		
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(c, false);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
 		
 		EscalacaoClubeDTO escalacaoClubeDTO = new EscalacaoClubeDTO();
 		
@@ -98,7 +98,7 @@ public class EscalarClubeService {
 		
 		//List<EscalacaoJogadorPosicao> escalacao = escalacaoJogadorPosicaoRepository.findByClubeAndAtivo(clube, true);
 		//escalacaoJogadorPosicaoRepository.desativarTodas();
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//jogadorRepository.findByClubeAndAposentado(clube, Boolean.FALSE);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
 		
 		/*if (ValidatorUtil.isEmpty(escalacao)) {
 			escalacao = gerarEscalacaoInicial(clube, jogadores);
