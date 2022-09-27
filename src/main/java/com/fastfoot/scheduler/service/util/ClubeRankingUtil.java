@@ -105,64 +105,12 @@ public class ClubeRankingUtil {
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
 		
 		List<ClubeRanking> tmps = null;
-		int posFinal = 1, qtdeAtualizada = 0;
+		int posFinal = 1;
 		OrdemClassificacaoGeral ocg = null;
 		
-		//for (OrdemClassificacaoGeral ocg: OrdemClassificacaoGeral.ORDEM_GLOBAL) {
 		for (int i = 0; i < OrdemClassificacaoGeral.ORDEM_GLOBAL.length; i++) {
 			ocg = OrdemClassificacaoGeral.ORDEM_GLOBAL[i];
-		
-			tmps = null;
-			
-			if (ocg.isContinental()) {
-				tmps = rkContinental.get(ocg.getClassificacaoContinental());
-			} else if (ocg.isNacional()) {
-				tmps = rkNacional.get(ocg.getClassificacaoNacional());
-			} else if (ocg.isCopaNacional()) {
-				tmps = rkCopaNacional.get(ocg.getClassificacaoCopaNacional());
-			}
-			
-			if (!ValidatorUtil.isEmpty(tmps)) {
-				
-				if (tmps.size() > 1) {
-					desempatar(tmps, i + 1, posFinal);
-					posFinal += tmps.size();
-				} else {
-					if (tmps.get(0).getPosicaoGlobal() == -1) {
-						tmps.get(0).setPosicaoGlobal(posFinal++);
-					}
-				}
-				
-				/*qtdeAtualizada = 0;
-				for (ClubeRanking cr : tmps) {
-					if (cr.getPosicaoGlobal() == -1) {
-						cr.setPosicaoGlobal(posFinal);
-						qtdeAtualizada++;
-					}
-				}
-				posFinal += qtdeAtualizada;*/
-			}
 
-		}
-
-		
-	}
-	
-	public static void desempatar(List<ClubeRanking> rankings, int posOrdem, int posFinal) {
-		
-		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankings.stream()
-				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
-		Map<ClassificacaoCopaNacional, List<ClubeRanking>> rkCopaNacional = rankings.stream()
-				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
-		Map<ClassificacaoNacional, List<ClubeRanking>> rkNacional = rankings.stream()
-				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
-		
-		List<ClubeRanking> tmps = null;
-		OrdemClassificacaoGeral ocg = null;
-		
-		for (int i = posOrdem; i < OrdemClassificacaoGeral.ORDEM_GLOBAL.length; i++) {
-			ocg = OrdemClassificacaoGeral.ORDEM_GLOBAL[i];
-			
 			tmps = null;
 			
 			if (ocg.isContinental()) {
@@ -181,20 +129,57 @@ public class ClubeRankingUtil {
 				if (tmps.size() > 1) {
 					desempatar(tmps, i + 1, posFinal);
 					posFinal += tmps.size();
-					
-					//ordenar
-					/*Collections.sort(tmps, new Comparator<ClubeRanking>() {
+				} else if (tmps.size() == 1) {
+					if (tmps.get(0).getPosicaoGlobal() == -1) {
+						tmps.get(0).setPosicaoGlobal(posFinal++);
+					}
+				}
+				
+				/*qtdeAtualizada = 0;
+				for (ClubeRanking cr : tmps) {
+					if (cr.getPosicaoGlobal() == -1) {
+						cr.setPosicaoGlobal(posFinal);
+						qtdeAtualizada++;
+					}
+				}
+				posFinal += qtdeAtualizada;*/
+			}
+		}
+	}
+	
+	public static void desempatar(List<ClubeRanking> rankings, int posOrdem, int posFinal) {
+		
+		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
+		Map<ClassificacaoCopaNacional, List<ClubeRanking>> rkCopaNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoCopaNacional));
+		Map<ClassificacaoNacional, List<ClubeRanking>> rkNacional = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoNacional));
+		
+		List<ClubeRanking> tmps = null;
+		OrdemClassificacaoGeral ocg = null;
+		
+		for (int i = posOrdem; i < OrdemClassificacaoGeral.ORDEM_GLOBAL.length; i++) {
+			ocg = OrdemClassificacaoGeral.ORDEM_GLOBAL[i];
 
-						@Override
-						public int compare(ClubeRanking o1, ClubeRanking o2) {
-							return o1.getPosicaoGlobal().compareTo(o2.getPosicaoGlobal());
-						}
-					});*/
-					
-					//setar posicao
-					/*for (ClubeRanking clubeRanking : tmps) {
-						clubeRanking.setPosicaoGlobal(posFinal++);
-					}*/
+			tmps = null;
+			
+			if (ocg.isContinental()) {
+				tmps = rkContinental.get(ocg.getClassificacaoContinental());
+			} else if (ocg.isNacional()) {
+				tmps = rkNacional.get(ocg.getClassificacaoNacional());
+			} else if (ocg.isCopaNacional()) {
+				tmps = rkCopaNacional.get(ocg.getClassificacaoCopaNacional());
+			}
+			
+			if (!ValidatorUtil.isEmpty(tmps)) {
+				
+				//Filtrar apenas os que não foram setados
+				tmps = tmps.stream().filter(cr -> cr.getPosicaoGlobal() == -1).collect(Collectors.toList());
+				
+				if (tmps.size() > 1) {
+					desempatar(tmps, i + 1, posFinal);
+					posFinal += tmps.size();
 				} else if (tmps.size() == 1) {
 					if (tmps.get(0).getPosicaoGlobal() == -1) {
 						tmps.get(0).setPosicaoGlobal(posFinal++);
