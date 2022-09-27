@@ -20,6 +20,10 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
  *
  */
 public class CampeonatoEliminatorioFactoryImplTrintaEDoisClubes extends CampeonatoEliminatorioFactory {//CampeonatoEliminatorio
+	
+	/*
+	 * CN: 16 -> (8' + 8) -> (8' + 8) -> 8 -> 4 -> 2 [6 RODADAS]
+	 */
 
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
