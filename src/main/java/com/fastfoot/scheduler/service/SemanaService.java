@@ -150,14 +150,14 @@ public class SemanaService {
 		inicio = stopWatch.getSplitNanoTime();
 		
 		//Escalar clubes
-		if (semana.getNumero() % 5 == 1) {
+		/*if (semana.getNumero() % 5 == 1) {
 			escalarClubes(semana);
 
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
 			mensagens.add("#escalarClubes:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
-		}
+		}*/
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);

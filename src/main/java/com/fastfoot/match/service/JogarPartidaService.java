@@ -15,20 +15,24 @@ import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.factory.EsquemaFactory;
-import com.fastfoot.match.model.factory.EsquemaFactoryDoisDoisDoisDoisDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryDoisTresTresDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryDoisUmQuatroUmDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroDoisDoisDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryImplDoisTresTresDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroUmDoisUmDois;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
+import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -48,7 +52,16 @@ public class JogarPartidaService {
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 	
 	@Autowired
+	private JogadorRepository jogadorRepository;
+	
+	@Autowired
 	private DisputarPenaltsService disputarPenaltsService;
+	
+	@Autowired
+	private ParametroService parametroService;
+	
+	@Autowired
+	private EscalarClubeService escalarClubeService;
 
 	private static final Double NUM_LANCES_POR_MINUTO = 1d;
 	
@@ -110,7 +123,7 @@ public class JogarPartidaService {
 		partidaJogadorEstatisticaDTO.adicionarHabilidadeValorEstatistica(estatisticas);
 	}
 
-	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	/*public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		List<EscalacaoJogadorPosicao> escalacaoMandante = escalacaoJogadorPosicaoRepository
 				.findByClubeAndAtivoFetchJogadorHabilidades(partidaResultado.getClubeMandante(), true);
 
@@ -126,9 +139,56 @@ public class JogarPartidaService {
 		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
 
-		//Esquema esquema = EsquemaFactoryDoisTresTresDois.gerarEsquema(jogadoresMandante, jogadoresVisitante);
-		EsquemaFactory factory = new EsquemaFactoryDoisDoisDoisDoisDois();
-		Esquema esquema = factory.gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
+		Esquema esquema = getEsquemaFactory().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
+		
+		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
+		jogar(esquema, partidaResultado);
+		
+		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
+			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
+		}
+		
+		salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
+		salvarEstatisticas(jogadoresVisitante, partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(jogadoresMandante, partidaJogadorEstatisticaDTO, partidaResultado);
+		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO, partidaResultado);
+	}*/
+	
+	private EsquemaFactory getEsquemaFactory() {
+
+		EsquemaFactory factory = null;
+		String formacao = parametroService.getParametroString(ParametroConstantes.ESCALACAO_PADRAO);
+
+		if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212.equals(formacao)) {
+			factory = new EsquemaFactoryImplQuatroUmDoisUmDois();
+		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4222.equals(formacao)) {
+			factory = new EsquemaFactoryImplQuatroDoisDoisDois();
+		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132.equals(formacao)) {
+			factory = new EsquemaFactoryImplDoisTresTresDois();
+		}
+
+		return factory;
+	}
+	
+	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		
+		List<Jogador> jogadoresMandante = jogadorRepository
+				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeMandante(), StatusJogador.ATIVO);
+		List<Jogador> jogadoresVisitante = jogadorRepository
+				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
+
+		List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante);
+		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante);
+
+		inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
+		inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
+		
+		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
+
+		Esquema esquema = getEsquemaFactory().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
 		
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
 		jogar(esquema, partidaResultado);

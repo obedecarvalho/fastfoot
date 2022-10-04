@@ -47,6 +47,12 @@ public class PreCarregarParametrosService {
 			parametros.add(new Parametro(ParametroConstantes.CALCULAR_PROBABILIDADES, "true", "false, true"));
 			
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA, "true", "false, true"));
+			
+			parametros.add(
+					new Parametro(ParametroConstantes.ESCALACAO_PADRAO, ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132,
+							ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132 + ", "
+									+ ParametroConstantes.ESCALACAO_PADRAO_PARAM_4222 + ", "
+									+ ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212));
 
 			parametroRepository.saveAll(parametros);
 		}

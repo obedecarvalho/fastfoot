@@ -31,6 +31,8 @@ public class MudancaClubeNivel {
 	private ClubeNivel clubeNivelAntigo;
 	
 	private ClubeNivel clubeNivelNovo;
+	
+	private Boolean internacional;
 
 	public Long getId() {
 		return id;
@@ -70,6 +72,14 @@ public class MudancaClubeNivel {
 
 	public void setTemporada(Temporada temporada) {
 		this.temporada = temporada;
+	}
+
+	public Boolean getInternacional() {
+		return internacional;
+	}
+
+	public void setInternacional(Boolean internacional) {
+		this.internacional = internacional;
 	}
 
 	@Override

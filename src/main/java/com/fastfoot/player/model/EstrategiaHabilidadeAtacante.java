@@ -14,10 +14,16 @@ public class EstrategiaHabilidadeAtacante implements EstrategiaHabilidadePosicao
 	protected static final List<Habilidade> HABILIDADES_COMUNS_ELETIVAS;
 	
 	protected static final List<Habilidade> HABILIDADES_OUTROS;
+	
+	protected static final List<Habilidade> HABILIDADES_CORINGA;
 
-	protected static final Integer NUM_HAB_ESP_ELETIVAS = 4;
+	protected static final Integer NUM_HAB_ESP_ELETIVAS = 2;//4;
 	
 	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 0;
+	
+	protected static final Integer NUM_HAB_CORINGA_SELECIONADO_ESPECIFICA = 1;//0;
+	
+	protected static final Integer NUM_HAB_CORINGA_SELECIONADO_COMUM = 2;//0;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();
@@ -25,21 +31,22 @@ public class EstrategiaHabilidadeAtacante implements EstrategiaHabilidadePosicao
 		HABILIDADES_COMUM = new ArrayList<Habilidade>();
 		HABILIDADES_COMUNS_ELETIVAS = new ArrayList<Habilidade>();
 		HABILIDADES_OUTROS = new ArrayList<Habilidade>();
+		HABILIDADES_CORINGA = new ArrayList<Habilidade>();
 		
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.PASSE);
 		
 		HABILIDADES_ESPECIFICAS.add(Habilidade.FINALIZACAO);
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.CRUZAMENTO);
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.ARMACAO);
+		HABILIDADES_CORINGA.add(Habilidade.CRUZAMENTO);
+		HABILIDADES_CORINGA.add(Habilidade.ARMACAO);
 		
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.CABECEIO);
+		HABILIDADES_CORINGA.add(Habilidade.CABECEIO);
 		
 		HABILIDADES_OUTROS.add(Habilidade.MARCACAO);
 		HABILIDADES_OUTROS.add(Habilidade.DESARME);
 		HABILIDADES_OUTROS.add(Habilidade.INTERCEPTACAO);
 		
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.VELOCIDADE);
-		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.DRIBLE);
+		HABILIDADES_CORINGA.add(Habilidade.VELOCIDADE);
+		HABILIDADES_CORINGA.add(Habilidade.DRIBLE);
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.FORCA);
 		
 		HABILIDADES_ESPECIFICAS_ELETIVAS.add(Habilidade.POSICIONAMENTO);
@@ -73,6 +80,11 @@ public class EstrategiaHabilidadeAtacante implements EstrategiaHabilidadePosicao
 	public List<Habilidade> getHabilidadesOutros() {
 		return HABILIDADES_OUTROS;
 	}
+	
+	@Override
+	public List<Habilidade> getHabilidadesCoringa() {
+		return HABILIDADES_CORINGA;
+	}
 
 	@Override
 	public Integer getNumHabEspEletivas() {
@@ -82,6 +94,16 @@ public class EstrategiaHabilidadeAtacante implements EstrategiaHabilidadePosicao
 	@Override
 	public Integer getNumHabComunsEletivas() {
 		return NUM_HAB_COMUNS_ELETIVAS;
+	}
+	
+	@Override
+	public Integer getNumHabCoringaSelecionadoEspecifica() {
+		return NUM_HAB_CORINGA_SELECIONADO_ESPECIFICA;
+	}
+
+	@Override
+	public Integer getNumHabCoringaSelecionadoComum() {
+		return NUM_HAB_CORINGA_SELECIONADO_COMUM;
 	}
 	
 	private static EstrategiaHabilidadeAtacante INSTANCE;

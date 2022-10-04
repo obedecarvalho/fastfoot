@@ -187,7 +187,6 @@ public class ProporTransferenciaService {
 					j.setIdClube((int) jogMap.get("id_clube"));
 					j.setForcaGeralJogador((int) jogMap.get("forca_geral_jog"));
 					j.setForcaGeralClube((int) jogMap.get("forca_geral_clube"));
-					j.setTitular((Boolean) jogMap.get("titular"));
 					j.setDisponivelNegociacao((Boolean) jogMap.get("disponivel_negociacao"));
 					j.setPosicao(Posicao.values()[(int) jogMap.get("posicao")]);
 					j.setIdade((int) jogMap.get("idade"));

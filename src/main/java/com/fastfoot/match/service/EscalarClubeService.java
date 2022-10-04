@@ -235,7 +235,7 @@ public class EscalarClubeService {
 		}
 	}*/
 	
-	private List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
+	public List<EscalacaoJogadorPosicao> gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores) {
 		
 		Comparator<Jogador> comparator = JogadorFactory.getComparator();
 		

@@ -53,24 +53,23 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	@Query(nativeQuery = true, value =
 			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral as forca_geral_jog, j.id_clube AS id_clube, " +
-			" 	ejp.escalacao_posicao < 10 AS titular, dn.id is not null as disponivel_negociacao, " +
+			" 	dn.id is not null as disponivel_negociacao, " +
 			" 	j.idade, j.valor_transferencia, c.forca_geral as forca_geral_clube " +
 			" FROM necessidade_contratacao_clube ncc " +
 			" INNER JOIN clube c ON ncc.id_clube = c.id " +
-			//" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.aposentado = false) " +
 			" INNER JOIN jogador j ON (j.posicao = ncc.posicao AND j.id_clube <> ncc.id_clube AND j.status_jogador = 0) " + //StatusJogador.ATIVO
+			//não pode haver outras propostas do clube na mesma temporada para o jogador
 			" LEFT JOIN proposta_transferencia_jogador ptj " +
 			" 	ON (ptj.id_jogador = j.id AND ptj.id_clube_destino = ncc.id_clube AND ncc.id_temporada = ptj.id_temporada) " +
+			//filtrar para permitir apenas uma tranferencia concluida por ano por jogador
 			" LEFT JOIN proposta_transferencia_jogador ptj2 " +
-			" 	ON (ptj2.id_jogador = j.id AND ncc.id_temporada = ptj2.id_temporada AND ptj2.proposta_aceita = true) " +//TODO: filtrar para permitir apenas uma tranferencia concluida por ano por jogador
-			" LEFT JOIN escalacao_jogador_posicao ejp ON ejp.id_jogador = j.id " +
+			" 	ON (ptj2.id_jogador = j.id AND ncc.id_temporada = ptj2.id_temporada AND ptj2.proposta_aceita = true) " +
 			" LEFT JOIN disponivel_negociacao dn ON (dn.id_jogador = j.id AND dn.id_temporada = ncc.id_temporada) " +
 			" WHERE ncc.id = ?1 " +
 			" 	AND j.forca_geral >= c.forca_geral * ?2 " +
 			" 	AND j.forca_geral < c.forca_geral * ?3 " +
 			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * ?4 AND c.forca_geral * ?5 " +
-			" 	AND ejp.ativo " +
-			" 	AND ptj.id IS NULL " + //não ha propostras transferencia do clube nessa temporada
+			" 	AND ptj.id IS NULL " +
 			" 	AND ptj2.id IS NULL "
 	)
 	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(

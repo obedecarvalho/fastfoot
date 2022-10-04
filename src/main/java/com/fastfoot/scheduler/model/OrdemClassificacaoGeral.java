@@ -72,13 +72,13 @@ public class OrdemClassificacaoGeral {
 			new OrdemClassificacaoGeral(25, ClassificacaoNacional.N_12),
 			new OrdemClassificacaoGeral(26, ClassificacaoNacional.N_13),
 			new OrdemClassificacaoGeral(27, ClassificacaoContinental.CIII_SEMI_FINAL),//304
-			//new OrdemClassificacaoGeral(27, ClassificacaoCopaNacionalFinal.CNII_SEMI_FINAL),//204
 			new OrdemClassificacaoGeral(28, ClassificacaoNacional.NII_1),
 			new OrdemClassificacaoGeral(29, ClassificacaoNacional.NII_2),
 			new OrdemClassificacaoGeral(30, ClassificacaoNacional.NII_3),
 			new OrdemClassificacaoGeral(31, ClassificacaoNacional.N_14),
 			new OrdemClassificacaoGeral(32, ClassificacaoNacional.N_15),
 			new OrdemClassificacaoGeral(33, ClassificacaoNacional.N_16),
+			new OrdemClassificacaoGeral(27, ClassificacaoCopaNacional.CNII_SEMI_FINAL),//204
 			new OrdemClassificacaoGeral(34, ClassificacaoNacional.NII_4),
 			new OrdemClassificacaoGeral(35, ClassificacaoNacional.NII_5),
 			new OrdemClassificacaoGeral(36, ClassificacaoNacional.NII_6),
@@ -91,7 +91,17 @@ public class OrdemClassificacaoGeral {
 			new OrdemClassificacaoGeral(43, ClassificacaoNacional.NII_13),
 			new OrdemClassificacaoGeral(44, ClassificacaoNacional.NII_14),
 			new OrdemClassificacaoGeral(45, ClassificacaoNacional.NII_15),
-			new OrdemClassificacaoGeral(46, ClassificacaoNacional.NII_16)
+			new OrdemClassificacaoGeral(46, ClassificacaoNacional.NII_16),
+			new OrdemClassificacaoGeral(47, ClassificacaoContinental.C_QUARTAS_FINAL),//108
+			new OrdemClassificacaoGeral(48, ClassificacaoContinental.CII_QUARTAS_FINAL),//208
+			new OrdemClassificacaoGeral(49, ClassificacaoCopaNacional.CN_QUARTAS_FINAL),//108
+			new OrdemClassificacaoGeral(50, ClassificacaoContinental.CIII_QUARTAS_FINAL),//308
+			new OrdemClassificacaoGeral(51, ClassificacaoCopaNacional.CNII_QUARTAS_FINAL),//208
+			new OrdemClassificacaoGeral(52, ClassificacaoContinental.C_FASE_GRUPOS),//116
+			new OrdemClassificacaoGeral(53, ClassificacaoContinental.CII_FASE_GRUPOS),//216
+			new OrdemClassificacaoGeral(54, ClassificacaoCopaNacional.CN_OITAVAS_FINAL),//116
+			new OrdemClassificacaoGeral(55, ClassificacaoContinental.CIII_FASE_GRUPOS),//316
+			new OrdemClassificacaoGeral(56, ClassificacaoCopaNacional.CNII_OITAVAS_FINAL)//216
 	};
 
 	private Integer ordem;

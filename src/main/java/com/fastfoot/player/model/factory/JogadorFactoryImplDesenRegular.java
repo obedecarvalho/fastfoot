@@ -39,6 +39,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		
 		sortearEletivas(estrategia, habEspecificas, habComuns);
 		sortearHabComunsEletivas(estrategia, habComuns, habOutros);
+		sortearHabCoringa(estrategia, habEspecificas, habComuns, habOutros);
 		
 		Double ajusteForca = getAjusteForca(jogador.getIdade());
 		Double ajusteForcaProx = getAjusteForca(jogador.getIdade() + 1);

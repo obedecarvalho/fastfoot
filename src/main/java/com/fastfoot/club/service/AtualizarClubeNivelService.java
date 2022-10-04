@@ -32,6 +32,8 @@ public class AtualizarClubeNivelService {
 	
 	private static final Comparator<ClubeRankingHistoricoDTO> COMPARATOR;
 	
+	private static final Comparator<ClubeRankingHistoricoDTO> COMPARATOR_INTERNACIONAL;
+	
 	//###	REPOSITORY	###
 	
 	@Autowired
@@ -59,6 +61,14 @@ public class AtualizarClubeNivelService {
 				return o1.getPosicaoGeralMedia().compareTo(o2.getPosicaoGeralMedia());
 			}
 		};
+		
+		COMPARATOR_INTERNACIONAL = new Comparator<ClubeRankingHistoricoDTO>() {
+			
+			@Override
+			public int compare(ClubeRankingHistoricoDTO o1, ClubeRankingHistoricoDTO o2) {
+				return o1.getPosicaoInternacionalMedia().compareTo(o2.getPosicaoInternacionalMedia());
+			}
+		};
 	}
 	
 	/**
@@ -67,7 +77,7 @@ public class AtualizarClubeNivelService {
 	 * @param liga
 	 */
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> atualizarClubeNivelService(Temporada temporada, Liga liga) {
+	public CompletableFuture<Boolean> atualizarClubeNivel(Temporada temporada, Liga liga) {
 		
 		List<ClubeRanking> rankings = clubeRankingRepository.findByLigaAndTemporada(liga, temporada);
 		
@@ -97,6 +107,8 @@ public class AtualizarClubeNivelService {
 			rankingHistoricoDTO.setClubeRankings(clubeRankings);
 			rankingHistoricoDTO.setPosicaoGeralMedia(
 					clubeRankings.stream().mapToInt(ClubeRanking::getPosicaoGeral).average().getAsDouble());
+			rankingHistoricoDTO.setPosicaoInternacionalMedia(
+					clubeRankings.stream().mapToInt(ClubeRanking::getPosicaoInternacional).average().getAsDouble());
 			rankingHistoricoDTO.setPosicaoNacionalMedia(
 					clubeRankings.stream().mapToInt(cr -> cr.getClassificacaoNacional().ordinal()).average().getAsDouble());
 			
@@ -118,10 +130,81 @@ public class AtualizarClubeNivelService {
 					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivel());
 					mudancaClubeNivel.setClubeNivelNovo(clubeNivel);
 					mudancaClubeNivel.setTemporada(temporada);
+					mudancaClubeNivel.setInternacional(false);
 					mudancaClubeNivelList.add(mudancaClubeNivel);
 					
 					rankingHistoricoDTOs.get(i - 1).getClube().setClubeNivel(clubeNivel);
 					rankingHistoricoDTOs.get(i - 1).getClube().setForcaGeral(clubeNivel.getForcaGeral());
+					clubes.add(rankingHistoricoDTOs.get(i - 1).getClube());
+				}
+			}		
+		}
+
+		mudancaClubeNivelRepository.saveAll(mudancaClubeNivelList);
+		clubeRepository.saveAll(clubes);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> atualizarClubeNivelInternacional(Temporada temporada) {
+		
+		List<ClubeRanking> rankings = clubeRankingRepository.findByTemporada(temporada);
+		
+		Optional<Temporada> t = null;
+		for (int i = 1; i < NUM_TEMPORADAS_ANALISAR; i++) {
+			t = temporadaRepository.findFirstByAno(temporada.getAno() - i);
+			if (t.isPresent()) {
+				rankings.addAll(clubeRankingRepository.findByTemporada(t.get()));
+			} else {
+				throw new RuntimeException("Não há temporadas suficientes.");
+			}
+		}
+		
+		Map<Clube, List<ClubeRanking>> rankingClubeMap = rankings.stream()
+				.collect(Collectors.groupingBy(ClubeRanking::getClube));
+		
+		List<ClubeRankingHistoricoDTO> rankingHistoricoDTOs = new ArrayList<ClubeRankingHistoricoDTO>();
+		ClubeRankingHistoricoDTO rankingHistoricoDTO = null;
+		List<ClubeRanking> clubeRankings = null;
+		
+		for (Clube c : rankingClubeMap.keySet()) {
+			rankingHistoricoDTO = new ClubeRankingHistoricoDTO();
+			
+			clubeRankings = rankingClubeMap.get(c);
+			
+			rankingHistoricoDTO.setClube(c);
+			rankingHistoricoDTO.setClubeRankings(clubeRankings);
+			rankingHistoricoDTO.setPosicaoGeralMedia(
+					clubeRankings.stream().mapToInt(ClubeRanking::getPosicaoGeral).average().getAsDouble());
+			rankingHistoricoDTO.setPosicaoInternacionalMedia(
+					clubeRankings.stream().mapToInt(ClubeRanking::getPosicaoInternacional).average().getAsDouble());
+			rankingHistoricoDTO.setPosicaoNacionalMedia(
+					clubeRankings.stream().mapToInt(cr -> cr.getClassificacaoNacional().ordinal()).average().getAsDouble());
+			
+			rankingHistoricoDTOs.add(rankingHistoricoDTO);
+			
+		}
+		
+		Collections.sort(rankingHistoricoDTOs, COMPARATOR_INTERNACIONAL);
+		
+		List<MudancaClubeNivel> mudancaClubeNivelList = new ArrayList<MudancaClubeNivel>();
+		List<Clube> clubes = new ArrayList<Clube>();
+		MudancaClubeNivel mudancaClubeNivel = null;
+
+		for (ClubeNivel clubeNivel : ClubeNivel.values()) {
+			for (int i = ((clubeNivel.getClubeRankingMin() -1) * 4 + 1); i <= clubeNivel.getClubeRankingMax() * 4; i++) {
+				if (!rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivelInternacional().equals(clubeNivel)) {
+					mudancaClubeNivel = new MudancaClubeNivel();
+					mudancaClubeNivel.setClube(rankingHistoricoDTOs.get(i - 1).getClube());
+					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivelInternacional());
+					mudancaClubeNivel.setClubeNivelNovo(clubeNivel);
+					mudancaClubeNivel.setTemporada(temporada);
+					mudancaClubeNivel.setInternacional(true);
+					mudancaClubeNivelList.add(mudancaClubeNivel);
+					
+					rankingHistoricoDTOs.get(i - 1).getClube().setClubeNivelInternacional(clubeNivel);
+					/*rankingHistoricoDTOs.get(i - 1).getClube().setForcaGeral(clubeNivel.getForcaGeral());*/
 					clubes.add(rankingHistoricoDTOs.get(i - 1).getClube());
 				}
 			}		

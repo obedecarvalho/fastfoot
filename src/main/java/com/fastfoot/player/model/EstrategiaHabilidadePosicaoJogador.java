@@ -13,9 +13,15 @@ public interface EstrategiaHabilidadePosicaoJogador {
 	public List<Habilidade> getHabilidadesComunsEletivas();
 
 	public List<Habilidade> getHabilidadesOutros();
+	
+	public List<Habilidade> getHabilidadesCoringa();
 
 	public Integer getNumHabEspEletivas();
 
 	public Integer getNumHabComunsEletivas();
+	
+	public Integer getNumHabCoringaSelecionadoEspecifica();
+	
+	public Integer getNumHabCoringaSelecionadoComum();
 
 }

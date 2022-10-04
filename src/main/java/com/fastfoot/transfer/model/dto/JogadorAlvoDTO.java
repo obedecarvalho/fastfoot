@@ -20,7 +20,7 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 	
 	private Posicao posicao;
 	
-	private Boolean titular;
+	//private Boolean titular;
 	
 	private Boolean disponivelNegociacao;
 	
@@ -50,13 +50,13 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 		this.forcaGeralJogador = forcaGeralJogador;
 	}
 
-	public Boolean isTitular() {
+	/*public Boolean isTitular() {
 		return titular;
 	}
 
 	public void setTitular(Boolean titular) {
 		this.titular = titular;
-	}
+	}*/
 
 	public Boolean isDisponivelNegociacao() {
 		return disponivelNegociacao;
@@ -90,9 +90,9 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 		this.valorTransferencia = valorTransferencia;
 	}
 
-	public Boolean getTitular() {
+	/*public Boolean getTitular() {
 		return titular;
-	}
+	}*/
 
 	public Boolean getDisponivelNegociacao() {
 		return disponivelNegociacao;
@@ -118,14 +118,14 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 		if (rankTransferencia == null) {
 			Double rankTransferencia = valorTransferencia;
 
-			if (titular == null) titular = false;
+			//if (titular == null) titular = false;
 			if (disponivelNegociacao == null) disponivelNegociacao = false;
 
-			if (titular && disponivelNegociacao) {
+			/*if (titular && disponivelNegociacao) {
 				//Nada
 			} else if (titular) {
 				rankTransferencia = rankTransferencia / 1.1;
-			} else if (disponivelNegociacao) {
+			} else*/ if (disponivelNegociacao) {
 				rankTransferencia = rankTransferencia / 0.9;
 			}
 			

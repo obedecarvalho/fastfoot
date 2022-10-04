@@ -52,7 +52,7 @@ public class ClubeRanking {
 
 	private Integer posicaoGeral;
 	
-	private Integer posicaoGlobal;
+	private Integer posicaoInternacional;
 
 	public ClubeRanking() {
 		super();
@@ -163,17 +163,17 @@ public class ClubeRanking {
 		this.temporada = temporada;
 	}
 
-	public Integer getPosicaoGlobal() {
-		return posicaoGlobal;
+	public Integer getPosicaoInternacional() {
+		return posicaoInternacional;
 	}
 
-	public void setPosicaoGlobal(Integer posicaoGlobal) {
-		this.posicaoGlobal = posicaoGlobal;
+	public void setPosicaoInternacional(Integer posicaoGlobal) {
+		this.posicaoInternacional = posicaoGlobal;
 	}
 
 	@Override
 	public String toString() {
-		return "ClubeRanking [" + clube.getNome() + ", pos=" + posicaoGeral + (getTemporada() != null ? (", ano=" + ano) : "") + ", rkNac="
+		return "ClubeRanking [" + clube.getNome() + ", pos=" + posicaoGeral + ", posInt=" + posicaoInternacional + (getTemporada() != null ? (", ano=" + ano) : "") + ", rkNac="
 				+ (classificacaoNacional != null ? classificacaoNacional.name() : "") + ", rkCN="
 				+ (classificacaoCopaNacional != null ? classificacaoCopaNacional.name() : "") + ", rkCont="
 				+ (classificacaoContinental != null ? classificacaoContinental.name() : "") + "]";

@@ -13,6 +13,8 @@ public class ClubeRankingHistoricoDTO {
 	
 	private Double posicaoGeralMedia;
 	
+	private Double posicaoInternacionalMedia;
+	
 	private Double posicaoNacionalMedia;
 
 	public Clube getClube() {
@@ -45,6 +47,14 @@ public class ClubeRankingHistoricoDTO {
 
 	public void setPosicaoNacionalMedia(Double posicaoNacionalMedia) {
 		this.posicaoNacionalMedia = posicaoNacionalMedia;
+	}
+
+	public Double getPosicaoInternacionalMedia() {
+		return posicaoInternacionalMedia;
+	}
+
+	public void setPosicaoInternacionalMedia(Double posicaoInternacionalMedia) {
+		this.posicaoInternacionalMedia = posicaoInternacionalMedia;
 	}
 
 	@Override

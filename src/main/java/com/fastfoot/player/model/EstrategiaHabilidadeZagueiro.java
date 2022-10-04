@@ -14,10 +14,16 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	protected static final List<Habilidade> HABILIDADES_COMUNS_ELETIVAS;
 	
 	protected static final List<Habilidade> HABILIDADES_OUTROS;
+	
+	protected static final List<Habilidade> HABILIDADES_CORINGA;
 
 	protected static final Integer NUM_HAB_ESP_ELETIVAS = 2;
 	
 	protected static final Integer NUM_HAB_COMUNS_ELETIVAS = 0;
+	
+	protected static final Integer NUM_HAB_CORINGA_SELECIONADO_ESPECIFICA = 0;
+	
+	protected static final Integer NUM_HAB_CORINGA_SELECIONADO_COMUM = 0;
 	
 	static {
 		HABILIDADES_ESPECIFICAS = new ArrayList<Habilidade>();
@@ -25,6 +31,7 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 		HABILIDADES_COMUM = new ArrayList<Habilidade>();
 		HABILIDADES_COMUNS_ELETIVAS = new ArrayList<Habilidade>();
 		HABILIDADES_OUTROS = new ArrayList<Habilidade>();
+		HABILIDADES_CORINGA = new ArrayList<Habilidade>();
 		
 		HABILIDADES_COMUM.add(Habilidade.PASSE);
 		
@@ -73,6 +80,11 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	public List<Habilidade> getHabilidadesOutros() {
 		return HABILIDADES_OUTROS;
 	}
+	
+	@Override
+	public List<Habilidade> getHabilidadesCoringa() {
+		return HABILIDADES_CORINGA;
+	}
 
 	@Override
 	public Integer getNumHabEspEletivas() {
@@ -82,6 +94,16 @@ public class EstrategiaHabilidadeZagueiro implements EstrategiaHabilidadePosicao
 	@Override
 	public Integer getNumHabComunsEletivas() {
 		return NUM_HAB_COMUNS_ELETIVAS;
+	}
+	
+	@Override
+	public Integer getNumHabCoringaSelecionadoEspecifica() {
+		return NUM_HAB_CORINGA_SELECIONADO_ESPECIFICA;
+	}
+
+	@Override
+	public Integer getNumHabCoringaSelecionadoComum() {
+		return NUM_HAB_CORINGA_SELECIONADO_COMUM;
 	}
 	
 	private static EstrategiaHabilidadeZagueiro INSTANCE;

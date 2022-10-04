@@ -35,11 +35,11 @@ public abstract class JogadorFactory {
 	
 	protected static final Double STDEV = 3.5; 
 	
-	protected static final Double PESO_HABILIDADE_COMUM = 0.75;
+	protected static final Double PESO_HABILIDADE_COMUM = 0.66666;
 	
 	protected static final Double PESO_HABILIDADE_ESPECIFICO = 1.0;
 	
-	protected static final Double PESO_HABILIDADE_OUTROS = 0.3;
+	protected static final Double PESO_HABILIDADE_OUTROS = 0.33333;
 	
 	protected static final Double VALOR_HABILIDADE_MAX = 100d;
 	
@@ -168,6 +168,22 @@ public abstract class JogadorFactory {
 		}
 	}
 	
+	protected void sortearHabCoringa(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habEspecificas, List<Habilidade> habComuns, List<Habilidade> habOutros) {
+		List<Integer> posicoesEspecificas = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoEspecifica());
+		List<Integer> posicoesComuns = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoComum(), posicoesEspecificas);
+		
+		for (int i = 0; i < estrategia.getHabilidadesCoringa().size(); i++) {
+			if (posicoesEspecificas.contains(i)) {
+				habEspecificas.add(estrategia.getHabilidadesCoringa().get(i));
+			} else if (posicoesComuns.contains(i)) {
+				habComuns.add(estrategia.getHabilidadesCoringa().get(i));
+			} else {
+				habOutros.add(estrategia.getHabilidadesCoringa().get(i));
+			}
+		}
+
+	}
+	
 	protected void sortearHabComunsEletivas(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habComuns, List<Habilidade> habOutros) {
 		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesComunsEletivas().size(), estrategia.getNumHabComunsEletivas());
 		
@@ -193,6 +209,28 @@ public abstract class JogadorFactory {
 			sorteado = R.nextInt(qtdeHabTotal);
 			
 			if (!posicoes.contains(sorteado)) {
+				posicoes.add(sorteado);
+				qtde++;
+			}
+
+		}
+		
+		return posicoes;
+	}
+	
+	protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear, List<Integer> outrosJaSorteados) {
+
+		List<Integer> posicoes = new ArrayList<Integer>();
+		
+		int qtde = 0;
+		
+		Integer sorteado = null; 
+
+		while (qtde < qtdeHabSortear) {
+			
+			sorteado = R.nextInt(qtdeHabTotal);
+			
+			if (!posicoes.contains(sorteado) && !outrosJaSorteados.contains(sorteado)) {
 				posicoes.add(sorteado);
 				qtde++;
 			}

@@ -124,14 +124,14 @@ public class ClubeRankingUtil {
 			if (!ValidatorUtil.isEmpty(tmps)) {
 				
 				//Filtrar apenas os que não foram setados
-				tmps = tmps.stream().filter(cr -> cr.getPosicaoGlobal() == -1).collect(Collectors.toList());
+				tmps = tmps.stream().filter(cr -> cr.getPosicaoInternacional() == -1).collect(Collectors.toList());
 				
 				if (tmps.size() > 1) {
-					desempatar(tmps, i + 1, posFinal);
+					desempatar(tmps, i + 1, posFinal, true);
 					posFinal += tmps.size();
 				} else if (tmps.size() == 1) {
-					if (tmps.get(0).getPosicaoGlobal() == -1) {
-						tmps.get(0).setPosicaoGlobal(posFinal++);
+					if (tmps.get(0).getPosicaoInternacional() == -1) {
+						tmps.get(0).setPosicaoInternacional(posFinal++);
 					}
 				}
 				
@@ -147,7 +147,7 @@ public class ClubeRankingUtil {
 		}
 	}
 	
-	public static void desempatar(List<ClubeRanking> rankings, int posOrdem, int posFinal) {
+	public static void desempatar(List<ClubeRanking> rankings, int posOrdem, int posFinal, boolean unique) {
 		
 		Map<ClassificacaoContinental, List<ClubeRanking>> rkContinental = rankings.stream()
 				.collect(Collectors.groupingBy(ClubeRanking::getClassificacaoContinental));
@@ -175,14 +175,14 @@ public class ClubeRankingUtil {
 			if (!ValidatorUtil.isEmpty(tmps)) {
 				
 				//Filtrar apenas os que não foram setados
-				tmps = tmps.stream().filter(cr -> cr.getPosicaoGlobal() == -1).collect(Collectors.toList());
+				tmps = tmps.stream().filter(cr -> cr.getPosicaoInternacional() == -1).collect(Collectors.toList());
 				
 				if (tmps.size() > 1) {
-					desempatar(tmps, i + 1, posFinal);
+					desempatar(tmps, i + 1, posFinal, unique);
 					posFinal += tmps.size();
 				} else if (tmps.size() == 1) {
-					if (tmps.get(0).getPosicaoGlobal() == -1) {
-						tmps.get(0).setPosicaoGlobal(posFinal++);
+					if (tmps.get(0).getPosicaoInternacional() == -1) {
+						tmps.get(0).setPosicaoInternacional(posFinal++);
 					}
 				}
 				
@@ -197,10 +197,18 @@ public class ClubeRankingUtil {
 			}
 		}
 		
-		final Integer posFinalX = posFinal;
-		
-		rankings.stream().filter(cr -> cr.getPosicaoGlobal() == -1).forEach(cr -> cr.setPosicaoGlobal(posFinalX));
-		
+		if (unique) {
+			Collections.shuffle(rankings);
+			for (ClubeRanking cr : rankings) {
+				if (cr.getPosicaoInternacional() == -1) {
+					cr.setPosicaoInternacional(posFinal++);
+				}
+			}
+		} else {
+			final Integer posFinalX = posFinal;
+			rankings.stream().filter(cr -> cr.getPosicaoInternacional() == -1).forEach(cr -> cr.setPosicaoInternacional(posFinalX));
+		}
+
 	}
 
 	/*public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
@@ -369,7 +377,7 @@ public class ClubeRankingUtil {
 			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.NAO_PARTICIPOU);
 			clubeRanking.setClassificacaoContinental(ClassificacaoContinental.NAO_PARTICIPOU);
 			clubeRanking.setPosicaoGeral(-1);
-			clubeRanking.setPosicaoGlobal(-1);
+			clubeRanking.setPosicaoInternacional(-1);
 			rankings.add(clubeRanking);
 		}
 		return rankings;
@@ -397,7 +405,8 @@ public class ClubeRankingUtil {
 				}
 			}
 
-			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
+			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors
+					.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
 
 			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
 				clubeRanking = rankings.get(x.getKey());
@@ -424,7 +433,8 @@ public class ClubeRankingUtil {
 				partidas.addAll(r.getPartidas());
 			}
 			
-			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
+			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors
+					.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
 			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
 				clubeRanking = rankings.get(x.getKey());
 				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));

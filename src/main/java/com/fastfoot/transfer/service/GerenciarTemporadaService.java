@@ -86,10 +86,14 @@ public class GerenciarTemporadaService {
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
-		for (Liga l : Liga.values()) {
-			desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelService(temporada, l));
+		for (Liga l : Liga.getAll()) {
+			desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivel(temporada, l));
 		}
 		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		desenvolverJogadorFuture.clear();
+		desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelInternacional(temporada));
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	

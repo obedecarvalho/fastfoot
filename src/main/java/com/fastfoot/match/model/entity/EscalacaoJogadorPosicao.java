@@ -20,6 +20,10 @@ import com.fastfoot.player.model.entity.Jogador;
 @Table(indexes = { @Index(columnList = "id_clube, ativo"), @Index(columnList = "id_jogador, ativo")})
 public class EscalacaoJogadorPosicao {
 	
+	/*
+	 * Fazer escalacao apenas para clube gerenciado
+	 */
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "escalacaoJogadorPosicaoSequence")
 	@SequenceGenerator(name = "escalacaoJogadorPosicaoSequence", sequenceName = "escalacao_jogador_posicao_seq")

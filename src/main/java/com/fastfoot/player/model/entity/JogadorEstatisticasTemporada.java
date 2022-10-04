@@ -17,8 +17,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Table(indexes = { @Index(columnList = "id_temporada, id_jogador") })
 public class JogadorEstatisticasTemporada {
 
-	//TODO: estatisticas goleiro: gols tomados, defesas
-	//TODO: num jogos titular e reserva separados
+	//TODO: roubadas de bola
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasTemporadaSequence")	

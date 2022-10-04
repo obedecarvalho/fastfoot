@@ -27,6 +27,8 @@ public class Clube implements ElementoRoleta {
 	private Integer forcaGeralAtual;
 	
 	private ClubeNivel clubeNivel;
+	
+	private ClubeNivel clubeNivelInternacional;
 
 	@Transient
 	private Integer valorN;
@@ -48,13 +50,14 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}*/
 	
-	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, String nome) {
+	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, ClubeNivel clubeNivelInternacional, String nome) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.clubeNivel = clubeNivel;
-		this.forcaGeral = clubeNivel.getForcaGeral();
+		this.forcaGeral = clubeNivel.getForcaGeral();//TODO
 		this.liga = liga;
+		this.clubeNivelInternacional = clubeNivelInternacional;
 	}
 
 	public Integer getId() {
@@ -103,6 +106,14 @@ public class Clube implements ElementoRoleta {
 
 	public void setForcaGeralAtual(Integer forcaGeralAtual) {
 		this.forcaGeralAtual = forcaGeralAtual;
+	}
+
+	public ClubeNivel getClubeNivelInternacional() {
+		return clubeNivelInternacional;
+	}
+
+	public void setClubeNivelInternacional(ClubeNivel clubeNivelInternacional) {
+		this.clubeNivelInternacional = clubeNivelInternacional;
 	}
 
 	@Override

@@ -132,7 +132,7 @@ public class CalcularTrajetoriaForcaClubeService {
 			
 			idadeMediaTitulares.add(String.format(Locale.US, "%.2f",
 					jogadorTitularTemporada.stream().mapToInt(Jogador::getIdade).average().getAsDouble()));
-			forcaMediaTitulares.add(String.format("%.2f", jogadorTitularTemporada.stream()
+			forcaMediaTitulares.add(String.format(Locale.US, "%.2f", jogadorTitularTemporada.stream()
 					.mapToDouble(Jogador::getForcaGeralPotencialEfetiva).average().getAsDouble()));
 			
 		}
