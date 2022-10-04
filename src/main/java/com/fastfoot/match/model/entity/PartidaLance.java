@@ -45,6 +45,18 @@ public class PartidaLance {
 	@ManyToOne
 	@JoinColumn(name = "id_partida_eliminatoria_resultado")
 	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
+	
+	public PartidaLance() {
+
+	}
+
+	public PartidaLance(Jogador jogador, Habilidade habilidadeUsada, Boolean vencedor, Integer ordem, Boolean acao) {
+		this.jogador = jogador;
+		this.habilidadeUsada = habilidadeUsada;
+		this.vencedor = vencedor;
+		this.ordem = ordem;
+		this.acao = acao;
+	}
 
 	public Long getId() {
 		return id;
