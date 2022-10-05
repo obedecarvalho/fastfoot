@@ -52,11 +52,11 @@ public class HabilidadeValorEstatistica {
 		quantidadeUsoVencedor = 0;
 	}
 
-	/*public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor) {
-		quantidadeUso = 0;
-		quantidadeUsoVencedor = 0;
+	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor) {
+		this.quantidadeUso = 0;
+		this.quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
-	}*/
+	}
 	
 	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, Boolean amistoso/*, PartidaResultadoJogavel partidaResultado*/) {
 		quantidadeUso = 0;
@@ -153,4 +153,11 @@ public class HabilidadeValorEstatistica {
 	public void setAmistoso(Boolean amistoso) {
 		this.amistoso = amistoso;
 	}
+
+	@Override
+	public String toString() {
+		return "HabilidadeValorEstatistica [habilidadeValor=" + habilidadeValor + ", qtdeUso=" + quantidadeUso
+				+ ", qtdeUsoVencedor=" + quantidadeUsoVencedor + "]";
+	}
+
 }

@@ -130,4 +130,10 @@ public class PartidaLance {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
 	}
 
+	@Override
+	public String toString() {
+		return "PartidaLance [jogador=" + jogador + ", habilidadeUsada=" + habilidadeUsada + ", vencedor=" + vencedor
+				+ ", ordem=" + ordem + ", acao=" + acao + "]";
+	}
+
 }

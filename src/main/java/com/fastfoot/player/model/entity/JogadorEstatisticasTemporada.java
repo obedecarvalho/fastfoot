@@ -101,6 +101,28 @@ public class JogadorEstatisticasTemporada {
 		this.golsSofridosDisputaPenalt = 0;
 	}
 	
+	public JogadorEstatisticasTemporada(Jogador jogador) {
+		this.jogador = jogador;
+		
+		this.numeroJogos = 0;
+		this.numeroJogosTitular = 0;
+		
+		this.golsMarcados = 0;
+		this.assistencias = 0;
+		this.finalizacoesDefendidas = 0;
+		this.finalizacoesFora = 0;
+		this.faltas = 0;
+		
+		this.golsSofridos = 0;
+		this.goleiroFinalizacoesDefendidas = 0;
+		
+		this.numeroRodadaDisputaPenalt = 0;
+		this.golsDisputaPenalt = 0;
+		this.golsPerdidosDisputaPenalt = 0;
+		this.defesasDisputaPenalt = 0;
+		this.golsSofridosDisputaPenalt = 0;
+	}
+	
 	public boolean isEmpty() {
 		return this.numeroJogos == 0;
 	}
@@ -303,8 +325,21 @@ public class JogadorEstatisticasTemporada {
 
 	@Override
 	public String toString() {
-		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos="
-				+ numeroJogos + ", golsMarcados=" + golsMarcados + ", assistencias=" + assistencias + "]";
+		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos=" + numeroJogos +
+
+				(!jogador.getPosicao().isGoleiro() ?
+
+						(", golsMarcados=" + golsMarcados + ", assistencias=" + assistencias
+								+ ", finalizacoesDefendidas=" + finalizacoesDefendidas + ", finalizacoesFora="
+								+ finalizacoesFora)
+						: "")
+				+
+
+				(jogador.getPosicao().isGoleiro()
+						? (", golsSofridos=" + golsSofridos + ", goleiroFinalizacoesDefendidas="
+								+ goleiroFinalizacoesDefendidas)
+						: "")
+				+ ", amistoso=" + amistoso + "]";
 	}
 
 }
