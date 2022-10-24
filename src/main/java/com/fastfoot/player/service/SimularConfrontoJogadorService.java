@@ -19,7 +19,7 @@ import com.fastfoot.service.util.RoletaUtil;
 @Service
 public class SimularConfrontoJogadorService {
 	
-	private static final Integer NUM_SIMULACOES = 100;
+	private static final Integer NUM_SIMULACOES = 10000;
 	
 	private static final float MIN_FORA = 0.2f;
 	
@@ -182,6 +182,8 @@ public class SimularConfrontoJogadorService {
 		
 		//System.err.println("\tLances");
 		//System.err.println(lances);
+		
+		System.err.println("\t---------------------------------");
 		
 	}
 }

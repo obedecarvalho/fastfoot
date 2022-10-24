@@ -107,9 +107,11 @@ public class GerenciarTemporadaService {
 		
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService.calcularTrajetoriaForcaClube(clubes.subList(i * offset, clubes.size()), s));
+				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
+						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, clubes.size()), s));
 			} else {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService.calcularTrajetoriaForcaClube(clubes.subList(i * offset, (i+1) * offset), s));
+				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
+						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, (i + 1) * offset), s));
 			}
 		}
 		
@@ -126,9 +128,11 @@ public class GerenciarTemporadaService {
 		
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
 			} else {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(clubes.subList(i * offset, (i+1) * offset)));
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
 			}
 		}
 		

@@ -23,8 +23,8 @@ import com.fastfoot.service.util.ElementoRoleta;
 public class PropostaTransferenciaJogador implements ElementoRoleta {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transferenciaJogadorSequence")
-	@SequenceGenerator(name = "transferenciaJogadorSequence", sequenceName = "transferencia_jogador_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "propostaTransferenciaJogadorSequence")
+	@SequenceGenerator(name = "propostaTransferenciaJogadorSequence", sequenceName = "proposta_transferencia_jogador_seq")
 	private Long id;
 
 	@ManyToOne
