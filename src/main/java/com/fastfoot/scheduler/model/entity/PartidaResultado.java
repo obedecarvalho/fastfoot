@@ -105,6 +105,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 		this.partidaJogada = partidaJogada;
 	}
 
+	@Override
 	public PartidaEstatisticas getPartidaEstatisticas() {
 		return partidaEstatisticas;
 	}

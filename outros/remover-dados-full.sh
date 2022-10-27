@@ -14,6 +14,7 @@ delete from escalacao_jogador_posicao;
 delete from grupo_desenvolvimento_jogador;
 delete from jogador;
 delete from clube_probabilidade;
+delete from partida_probabilidade_resultado;
 delete from partida_amistosa_resultado;
 delete from rodada_amistosa;
 delete from partida_resultado;

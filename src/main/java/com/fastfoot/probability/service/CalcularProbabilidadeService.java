@@ -25,7 +25,7 @@ import com.fastfoot.probability.model.ClubeRankingProbabilidade;
 import com.fastfoot.probability.model.entity.ClubeProbabilidade;
 import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;
 import com.fastfoot.probability.service.util.ClassificacaoProbabilidadeUtil;
-import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeCompletoUtil;
+import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeUtil;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -45,7 +45,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.ParametroService;
 
 @Service
-public class CalcularProbabilidadeCompletoService {
+public class CalcularProbabilidadeService {
 	
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
 	
@@ -176,7 +176,7 @@ public class CalcularProbabilidadeCompletoService {
 			agruparClubeProbabilidade(clubeProbabilidades, classificacaoProbabilidadesListII);
 			
 			//Rankear
-			List<ClubeRankingProbabilidade> ranking = ClubeRankingProbabilidadeCompletoUtil.rankearClubesTemporada(
+			List<ClubeRankingProbabilidade> ranking = ClubeRankingProbabilidadeUtil.rankearClubesTemporada(
 					clubesLiga, classificacaoProbabilidadesListI, classificacaoProbabilidadesListII, clubesCampeoes);
 			
 			agruparClubeRankingProbabilidade(clubeProbabilidades, ranking);
@@ -384,11 +384,11 @@ public class CalcularProbabilidadeCompletoService {
 			r = rodadaEliminatoriaRepository.findFirstByCampeonatoMistoAndNumero(c, 6).get();
 			p = partidaEliminatoriaResultadoRepository.findByRodada(r);
 			if (c.getNivelCampeonato().isContinental()) {
-				clubesCampeoes.put(ClubeRankingProbabilidadeCompletoUtil.CAMP_CONT, p.get(0).getClubeVencedor());
+				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT, p.get(0).getClubeVencedor());
 			} else if (c.getNivelCampeonato().isContinentalII()) {
-				clubesCampeoes.put(ClubeRankingProbabilidadeCompletoUtil.CAMP_CONT_II, p.get(0).getClubeVencedor());
+				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT_II, p.get(0).getClubeVencedor());
 			} else if (c.getNivelCampeonato().isContinentalIII()) {
-				clubesCampeoes.put(ClubeRankingProbabilidadeCompletoUtil.CAMP_CONT_III, p.get(0).getClubeVencedor());
+				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT_III, p.get(0).getClubeVencedor());
 			}
 		}
 	}
@@ -408,9 +408,9 @@ public class CalcularProbabilidadeCompletoService {
 					c.getNivelCampeonato().isCopaNacional() ? numeroRodadas : 4).get();
 			p = partidaEliminatoriaResultadoRepository.findByRodada(r);
 			if (c.getNivelCampeonato().isCopaNacional()) {
-				clubesCampeoes.put(ClubeRankingProbabilidadeCompletoUtil.CAMP_COPA_NAC, p.get(0).getClubeVencedor());
+				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_COPA_NAC, p.get(0).getClubeVencedor());
 			} else if (c.getNivelCampeonato().isCopaNacionalII()) {
-				clubesCampeoes.put(ClubeRankingProbabilidadeCompletoUtil.CAMP_COPA_NAC_II, p.get(0).getClubeVencedor());
+				clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_COPA_NAC_II, p.get(0).getClubeVencedor());
 			}
 		}
 	}

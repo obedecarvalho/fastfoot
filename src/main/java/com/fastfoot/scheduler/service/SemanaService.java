@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
@@ -23,7 +24,7 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
-import com.fastfoot.probability.service.CalcularProbabilidadeCompletoService;
+import com.fastfoot.probability.service.CalcularProbabilidadeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
@@ -124,10 +125,13 @@ public class SemanaService {
 	private DesenvolverJogadorService desenvolverJogadorService;*/
 	
 	@Autowired
-	private CalcularProbabilidadeCompletoService calcularProbabilidadeCompletoService;
+	private CalcularProbabilidadeService calcularProbabilidadeCompletoService;
 
 	@Autowired
 	private EscalarClubeService escalarClubeService;
+	
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
 
 	public SemanaDTO proximaSemana() {
 		
@@ -250,12 +254,51 @@ public class SemanaService {
 			fim = stopWatch.getSplitNanoTime();
 			mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));
 		}
+		
+		//Bets
+		calcularPartidaProbabilidadeResultado(temporada);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
+		inicio = stopWatch.getSplitNanoTime();
 
 		stopWatch.stop();
 		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
 		//System.err.println(mensagens);
 
 		return SemanaDTO.convertToDTO(semana);
+	}
+	
+	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
+		
+		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)) {
+		
+			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
+			
+			if (!semanaOpt.isPresent()) return;
+			
+			Semana semana = semanaOpt.get();
+			
+			List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
+			List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
+			
+			semana.setRodadas(rodadas);
+			semana.setRodadasEliminatorias(rodadaEliminatorias);
+			
+			List<CompletableFuture<Boolean>> simularPartidasFuture = new ArrayList<CompletableFuture<Boolean>>();
+	
+			for (Rodada r : semana.getRodadas()) {
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+			}
+	
+			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+			}
+			
+			CompletableFuture.allOf(simularPartidasFuture.toArray(new CompletableFuture<?>[0])).join();
+
+		}
 	}
 
 	//private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = FastfootApplication.NUM_THREAD; 

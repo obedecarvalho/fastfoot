@@ -115,4 +115,12 @@ public class PartidaEstatisticas {
 		}
 	}
 
+	@Override
+	public String toString() {
+		return "PartidaEstatisticas [lancesMandante=" + lancesMandante + ", lancesVisitante=" + lancesVisitante
+				+ ", finalizacacoesForaMandante=" + finalizacacoesForaMandante + ", finalizacacoesForaVisitante="
+				+ finalizacacoesForaVisitante + ", finalizacacoesDefendidasMandante=" + finalizacacoesDefendidasMandante
+				+ ", finalizacacoesDefendidasVisitante=" + finalizacacoesDefendidasVisitante + "]";
+	}
+
 }

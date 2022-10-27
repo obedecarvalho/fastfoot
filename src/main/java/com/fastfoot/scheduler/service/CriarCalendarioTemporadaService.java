@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.model.Constantes;
@@ -46,7 +47,10 @@ import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
+import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
+import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
+import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplDezesseisClubes;
@@ -62,6 +66,8 @@ import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactory;
 import com.fastfoot.scheduler.model.factory.RodadaAmistosaFactory;
 import com.fastfoot.scheduler.model.factory.TemporadaFactory;
 import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
+import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
+import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.ParametroService;
@@ -99,6 +105,12 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
 	
+	@Autowired
+	private RodadaRepository rodadaRepository;
+	
+	@Autowired
+	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
+	
 	//#######	SERVICE	#############
 	
 	@Autowired
@@ -110,11 +122,11 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private ParametroService parametroService;
 	
-	@Autowired
+	/*@Autowired
 	private CampeonatoService campeonatoService;
 	
 	@Autowired
-	private RodadaAmistosaService rodadaAmistosaService;
+	private RodadaAmistosaService rodadaAmistosaService;*/
 
 	@Autowired
 	private AposentarJogadorService aposentarJogadorService;
@@ -130,6 +142,12 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private AgruparHabilidadeValorEstatisticaService agruparHabilidadeValorEstatisticaService;
+
+	@Autowired
+	private SalvarCampeonatosService salvarCampeonatosService;
+	
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -231,6 +249,12 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#criarEstatisticasJogadorTemporada:" + (fim - inicio));
 		
+		inicio = stopWatch.getSplitNanoTime();
+		calcularPartidaProbabilidadeResultado(temporada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
+		
 		stopWatch.stop();
 		mensagens.add("\tTempo total:" + stopWatch.getNanoTime());
 		
@@ -255,6 +279,28 @@ public class CriarCalendarioTemporadaService {
 
 		jogadorRepository.saveAll(jogadores);
 	}
+	
+	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
+
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
+
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+
+		List<CompletableFuture<Boolean>> criarEstatisticasJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				criarEstatisticasJogadorFuture.add(salvarCampeonatosService
+						.criarEstatisticasJogadorTemporada(jogadores.subList(i * offset, jogadores.size()), temporada));
+			} else {
+				criarEstatisticasJogadorFuture.add(salvarCampeonatosService
+						.criarEstatisticasJogadorTemporada(jogadores.subList(i * offset, (i + 1) * offset), temporada));
+			}
+		}
+
+		CompletableFuture.allOf(criarEstatisticasJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+
+	}*/
 	
 	private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
@@ -403,7 +449,7 @@ public class CriarCalendarioTemporadaService {
 		return campeonatoEliminatorioFactory;
 	}
 
-	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
+	/*private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
@@ -417,11 +463,50 @@ public class CriarCalendarioTemporadaService {
 
 		rodadaAmistosaService.salvarRodadasAmistosas(rodadaAmistosaAutomaticas);
 
-	}
+	}*/
 	
 	private void salvarTemporada(Temporada temporada) {
 		temporadaRepository.save(temporada);
 		semanaRepository.saveAll(temporada.getSemanas());
+	}
+	
+	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
+			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
+			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
+
+		salvarTemporada(temporada);
+
+		List<CompletableFuture<Boolean>> salvarCampeonatoFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		int offset = campeonatosNacionais.size() / 4;
+
+		for (int i = 0; i < 4; i++) {
+			if ((i + 1) == 4) {
+				salvarCampeonatoFuture.add(salvarCampeonatosService
+						.salvarCampeonato(campeonatosNacionais.subList(i * offset, campeonatosNacionais.size())));
+			} else {
+				salvarCampeonatoFuture.add(salvarCampeonatosService
+						.salvarCampeonato(campeonatosNacionais.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+
+		offset = copasNacionais.size() / 2;
+
+		for (int i = 0; i < 2; i++) {
+			if ((i + 1) == 2) {
+				salvarCampeonatoFuture.add(salvarCampeonatosService
+						.salvarCampeonatoEliminatorio(copasNacionais.subList(i * offset, copasNacionais.size())));
+			} else {
+				salvarCampeonatoFuture.add(salvarCampeonatosService
+						.salvarCampeonatoEliminatorio(copasNacionais.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+
+		salvarCampeonatoFuture.add(salvarCampeonatosService.salvarCampeonatoMisto(campeonatosContinentais));
+
+		salvarCampeonatoFuture.add(salvarCampeonatosService.salvarRodadasAmistosas(rodadaAmistosaAutomaticas));
+
+		CompletableFuture.allOf(salvarCampeonatoFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
 	/*private void aposentarJogadores() {
@@ -591,5 +676,36 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
+	}
+	
+	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
+		
+		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)) {
+		
+			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
+			
+			if (!semanaOpt.isPresent()) return;
+			
+			Semana semana = semanaOpt.get();
+			
+			List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
+			List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
+			
+			semana.setRodadas(rodadas);
+			semana.setRodadasEliminatorias(rodadaEliminatorias);
+			
+			List<CompletableFuture<Boolean>> simularPartidasFuture = new ArrayList<CompletableFuture<Boolean>>();
+	
+			for (Rodada r : semana.getRodadas()) {
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+			}
+	
+			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+			}
+			
+			CompletableFuture.allOf(simularPartidasFuture.toArray(new CompletableFuture<?>[0])).join();
+
+		}
 	}
 }

@@ -11,6 +11,7 @@ delete from disponivel_negociacao;
 delete from proposta_transferencia_jogador;
 delete from necessidade_contratacao_clube;
 delete from clube_probabilidade;
+delete from partida_probabilidade_resultado;
 delete from partida_amistosa_resultado;
 delete from rodada_amistosa;
 delete from partida_resultado;

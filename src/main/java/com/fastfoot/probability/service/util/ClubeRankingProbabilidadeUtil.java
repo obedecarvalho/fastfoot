@@ -16,7 +16,7 @@ import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.OrdemClassificacaoGeral;
 import com.fastfoot.service.util.ValidatorUtil;
 
-public class ClubeRankingProbabilidadeCompletoUtil {
+public class ClubeRankingProbabilidadeUtil {
 	
 	public static final Integer CAMP_CONT = 1;
 	

@@ -103,7 +103,8 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	public void setRodada(RodadaAmistosa rodada) {
 		this.rodada = rodada;
 	}
-	
+
+	@Override
 	public PartidaEstatisticas getPartidaEstatisticas() {
 		return partidaEstatisticas;
 	}
