@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 
 public class PartidaResultadoDTO {
@@ -33,6 +34,10 @@ public class PartidaResultadoDTO {
 	private Integer numeroGrupoCampeonato;
 	
 	private Boolean partidaJogada;
+	
+	private Integer golsMandantePenalts;
+	
+	private Integer golsVisitantePenalts;
 		
 	public Integer getNumeroRodada() {
 		return numeroRodada;
@@ -138,6 +143,22 @@ public class PartidaResultadoDTO {
 		this.partidaJogada = partidaJogada;
 	}
 
+	public Integer getGolsMandantePenalts() {
+		return golsMandantePenalts;
+	}
+
+	public void setGolsMandantePenalts(Integer golsMandantePenalts) {
+		this.golsMandantePenalts = golsMandantePenalts;
+	}
+
+	public Integer getGolsVisitantePenalts() {
+		return golsVisitantePenalts;
+	}
+
+	public void setGolsVisitantePenalts(Integer golsVisitantePenalts) {
+		this.golsVisitantePenalts = golsVisitantePenalts;
+	}
+
 	public static List<PartidaResultadoDTO> convertToDTO(List<? extends PartidaResultadoJogavel> partidas) {
 		return partidas.stream().map(p -> convertToDTO(p)).collect(Collectors.toList());
 	}
@@ -154,6 +175,11 @@ public class PartidaResultadoDTO {
 		}
 		dto.setGolsMandante(pr.getGolsMandante());
 		dto.setGolsVisitante(pr.getGolsVisitante());
+		
+		if (pr instanceof PartidaEliminatoriaResultado) {
+			dto.setGolsMandantePenalts(((PartidaEliminatoriaResultado) pr).getGolsMandantePenalts());
+			dto.setGolsVisitantePenalts(((PartidaEliminatoriaResultado) pr).getGolsVisitantePenalts());
+		}
 
 		dto.setNumeroRodada(pr.getRodada().getNumero());
 

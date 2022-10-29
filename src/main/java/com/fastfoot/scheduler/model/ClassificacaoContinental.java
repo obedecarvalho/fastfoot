@@ -24,7 +24,55 @@ public enum ClassificacaoContinental {
 	CIII_SEMI_FINAL,//304
 	CIII_VICE_CAMPEAO,//302
 	CIII_CAMPEAO;//301
+	
+	public static ClassificacaoContinental getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Boolean vencedor) {
+		
+		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {
+			if (rodada.getNumero() == 6) {
+				if (vencedor) {
+					return C_CAMPEAO;
+				} else {
+					return C_VICE_CAMPEAO;
+				}
+			} else if (rodada.getNumero() == 5) {
+				return C_SEMI_FINAL;
+			} else if (rodada.getNumero() == 4) {
+				return C_QUARTAS_FINAL;
+			}
+		}
+		
+		if (NivelCampeonato.CONTINENTAL_II.equals(nivel)) {
+			if (rodada.getNumero() == 6) {
+				if (vencedor) {
+					return CII_CAMPEAO;
+				} else {
+					return CII_VICE_CAMPEAO;
+				}
+			} else if (rodada.getNumero() == 5) {
+				return CII_SEMI_FINAL;
+			} else if (rodada.getNumero() == 4) {
+				return CII_QUARTAS_FINAL;
+			}
+		}
+		
+		if (NivelCampeonato.CONTINENTAL_III.equals(nivel)) {
+			if (rodada.getNumero() == 6) {
+				if (vencedor) {
+					return CIII_CAMPEAO;
+				} else {
+					return CIII_VICE_CAMPEAO;
+				}
+			} else if (rodada.getNumero() == 5) {
+				return CIII_SEMI_FINAL;
+			} else if (rodada.getNumero() == 4) {
+				return CIII_QUARTAS_FINAL;
+			}
+		}
+		
+		return NAO_PARTICIPOU;
+	}
 
+	@Deprecated
 	public static ClassificacaoContinental getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {
 		if (NivelCampeonato.CONTINENTAL.equals(nivel)) {
 			if (rodada.getNumero() == 6) {

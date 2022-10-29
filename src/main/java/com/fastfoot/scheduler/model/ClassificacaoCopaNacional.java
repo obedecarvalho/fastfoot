@@ -58,7 +58,7 @@ public enum ClassificacaoCopaNacional {//TODO: Fase Preliminar I e II
 			}
 		}
 		
-		return null;
+		return NAO_PARTICIPOU;
 	}
 
 	@Deprecated

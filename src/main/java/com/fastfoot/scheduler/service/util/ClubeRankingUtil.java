@@ -37,11 +37,19 @@ public class ClubeRankingUtil {
 				.filter(c -> c.getNivelCampeonato().isCopaNacional()).collect(Collectors.toList());
 		List<CampeonatoEliminatorio> copasNacionaisII = temporada.getCampeonatosCopasNacionais().stream()
 				.filter(c -> c.getNivelCampeonato().isCopaNacionalII()).collect(Collectors.toList());
+		
+		Collections.sort(temporada.getCampeonatosContinentais(), new Comparator<CampeonatoMisto>() {
+
+			@Override
+			public int compare(CampeonatoMisto o1, CampeonatoMisto o2) {
+				return o1.getNivelCampeonato().compareTo(o2.getNivelCampeonato());
+			}
+		});
 
 		rankearCampeonatoNacional(clubeRankings, temporada.getCampeonatosNacionais());
 		rankearCopaNacional(clubeRankings, copasNacionais);
-		rankearCopaNacional(clubeRankings, copasNacionaisII);
-		rankearContinental(clubeRankings, temporada.getCampeonatosContinentais());
+		rankearCopaNacional(clubeRankings, copasNacionaisII);//Esperado que CNII subscreva CNI
+		rankearContinental(clubeRankings, temporada.getCampeonatosContinentais());//Esperado que CIII subscreva CII e CII subscreva CI
 		
 		gerarPosicaoGeral(rankings);
 		gerarPosicaoGlobal(rankings);
@@ -440,8 +448,50 @@ public class ClubeRankingUtil {
 			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacaoCampeao(c.getNivelCampeonato()));
 		}
 	}
-
+	
 	protected static void rankearContinental(Map<Clube, ClubeRanking> rankings, List<CampeonatoMisto> campeonatos) {
+		
+		ClubeRanking clubeRanking = null;
+		List<Clube> clubesFaseEliminatoria = new ArrayList<Clube>();
+		List<Clube> clubesFaseGrupos = new ArrayList<Clube>();
+		
+		for (CampeonatoMisto c : campeonatos) {
+			
+			clubesFaseEliminatoria.clear();
+			clubesFaseGrupos.clear();
+			
+			for (RodadaEliminatoria re : c.getRodadasEliminatorias()) {
+				for (PartidaEliminatoriaResultado p : re.getPartidas()) {
+					clubeRanking = rankings.get(p.getClubePerdedor());
+					clubeRanking.setClassificacaoContinental(ClassificacaoContinental
+							.getClassificacao(c.getNivelCampeonato(), re, false));
+					clubesFaseEliminatoria.add(p.getClubePerdedor());
+
+					if (re.getNumero() == 6) {
+						clubeRanking = rankings.get(p.getClubeVencedor());
+						clubeRanking.setClassificacaoContinental(
+								ClassificacaoContinental.getClassificacaoCampeao(c.getNivelCampeonato()));
+						clubesFaseEliminatoria.add(p.getClubeVencedor());
+					}
+				}
+			}
+			
+			for (GrupoCampeonato gc : c.getGrupos()) {
+				clubesFaseGrupos.addAll(gc.getClassificacao().stream().map(Classificacao::getClube).collect(Collectors.toList()));
+			}
+			
+			clubesFaseGrupos.removeAll(clubesFaseEliminatoria);
+			
+			for (Clube cl : clubesFaseGrupos) {
+				clubeRanking = rankings.get(cl);
+				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacaoFaseGrupo(c.getNivelCampeonato()));
+			}
+		}
+		
+	}
+
+	@Deprecated
+	protected static void rankearContinental(Map<Clube, ClubeRanking> rankings, List<CampeonatoMisto> campeonatos, boolean old) {
 		ClubeRanking clubeRanking = null;
 		for (CampeonatoMisto c : campeonatos) {
 			List<Clube> clubesFaseGrupos = new ArrayList<Clube>();
