@@ -35,7 +35,7 @@ public class ParametroConstantes {
 	
 	//true, false
 	//Para o caso de haver CIII Reduzido, 32 clubes jogar a copa nacional (ao invés de 30)
-	public static final String JOGAR_COPA_NACIONAL_COMPLETA = "JOGAR_CONTINENTAL_III_REDUZIDO";
+	public static final String JOGAR_COPA_NACIONAL_COMPLETA = "JOGAR_COPA_NACIONAL_COMPLETA";
 
 	//true, false
 	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO: implementar logica
@@ -52,4 +52,6 @@ public class ParametroConstantes {
 	public static final String ESCALACAO_PADRAO_PARAM_4222 = "4-2-2-2";
 	
 	public static final String USAR_APOSTAS_ESPORTIVAS = "USAR_APOSTAS_ESPORTIVAS";
+	
+	public static final String DISPUTAR_TERCEIRO_LUGAR = "DISPUTAR_TERCEIRO_LUGAR";//TODO: implementar logica (conferir ClubeRankingUtil)
 }

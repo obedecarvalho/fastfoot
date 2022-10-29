@@ -392,8 +392,31 @@ public class ClubeRankingUtil {
 			}
 		}
 	}
+	
+	protected static void rankearCopaNacional(Map<Clube, ClubeRanking> rankings,
+			List<CampeonatoEliminatorio> campeonatos) {
 
-	protected static void rankearCopaNacional(Map<Clube, ClubeRanking> rankings, List<CampeonatoEliminatorio> campeonatos) {
+		ClubeRanking clubeRanking = null;
+
+		for (CampeonatoEliminatorio c : campeonatos) {
+			for (RodadaEliminatoria re : c.getRodadas()) {
+				for (PartidaEliminatoriaResultado p : re.getPartidas()) {
+					clubeRanking = rankings.get(p.getClubePerdedor());
+					clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional
+							.getClassificacao(c.getNivelCampeonato(), re, c.getRodadas().size(), false));
+
+					if (re.getNumero() == c.getRodadas().size()) {
+						clubeRanking = rankings.get(p.getClubeVencedor());
+						clubeRanking.setClassificacaoCopaNacional(
+								ClassificacaoCopaNacional.getClassificacaoCampeao(c.getNivelCampeonato()));
+					}
+				}
+			}
+		}
+	}
+
+	@Deprecated
+	protected static void rankearCopaNacional(Map<Clube, ClubeRanking> rankings, List<CampeonatoEliminatorio> campeonatos, boolean old) {
 		ClubeRanking clubeRanking = null;
 		for (CampeonatoEliminatorio c : campeonatos) {
 			List<PartidaEliminatoriaResultado> partidas = new ArrayList<PartidaEliminatoriaResultado>();

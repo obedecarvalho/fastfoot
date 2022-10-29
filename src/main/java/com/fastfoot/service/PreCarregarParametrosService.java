@@ -27,7 +27,10 @@ public class PreCarregarParametrosService {
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
 			//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
-			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL, "MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR", "SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR"));
+			parametros.add(new Parametro(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL,
+					ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI,
+					ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI + ", "
+							+ ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_SEG));
 
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_II, "true", "true, false"));
 

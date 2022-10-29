@@ -13,6 +13,10 @@ public class ClassificacaoCopaNacionalAttributeConverter implements AttributeCon
 		switch (attribute) {
 		case NAO_PARTICIPOU:
 			return -1;
+		case CN_FASE_PRELIMINAR_I:
+			return 164;
+		case CN_FASE_PRELIMINAR_II:
+			return 132;
 		case CN_OITAVAS_FINAL:
 			return 116;
 		case CN_QUARTAS_FINAL:
@@ -48,6 +52,10 @@ public class ClassificacaoCopaNacionalAttributeConverter implements AttributeCon
 		switch (dbData) {
 		case -1:
 			return ClassificacaoCopaNacional.NAO_PARTICIPOU;
+		case 164:
+			return ClassificacaoCopaNacional.CN_FASE_PRELIMINAR_I;
+		case 132:
+			return ClassificacaoCopaNacional.CN_FASE_PRELIMINAR_II;
 		case 116:
 			return ClassificacaoCopaNacional.CN_OITAVAS_FINAL;
 		case 108:
