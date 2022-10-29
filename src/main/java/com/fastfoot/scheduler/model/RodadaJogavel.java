@@ -11,4 +11,6 @@ public interface RodadaJogavel {
 	public CampeonatoJogavel getCampeonatoJogavel();
 
 	public boolean isUltimaRodadaPontosCorridos();
+	
+	public NivelCampeonato getNivelCampeonato();
 }

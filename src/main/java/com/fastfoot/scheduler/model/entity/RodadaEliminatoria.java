@@ -12,6 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 
 @Entity
@@ -109,10 +110,16 @@ public class RodadaEliminatoria implements RodadaJogavel {
 		if (campeonatoMisto != null) return campeonatoMisto;
 		return null;
 	}
+	
+	@Override
+	public NivelCampeonato getNivelCampeonato() {
+		return getCampeonatoJogavel() != null ? getCampeonatoJogavel().getNivelCampeonato() : null;
+	}
 
 	@Override
 	public String toString() {
-		return "RodadaEliminatoria [" + numero + ", sem=" + semana.getNumero() + (campeonatoEliminatorio != null ? ", (CN)" : ", (CONT)" ) + "]";
+		return "RodadaEliminatoria [" + numero + ", sem=" + semana.getNumero()
+				+ (campeonatoEliminatorio != null ? ", (CN)" : ", (CONT)") + "]";
 	}
 
 	@Override

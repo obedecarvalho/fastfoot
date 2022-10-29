@@ -74,19 +74,33 @@ public class ParametroService {
 	public Integer getNumeroTimesParticipantesCopaNacional() {
 		Integer numRodadas = getNumeroRodadasCopaNacional();
 		Integer nroCompeticoesContinentais = getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Boolean jogarCNCompleta = getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
+		Boolean cIIIReduzido = getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		
 		if (numRodadas == 4) {
 			return 16;
 		} else if (numRodadas == 5) {
-			if (nroCompeticoesContinentais == 3) {//20
-				return 20;
-			} else if (nroCompeticoesContinentais == 2) {//24
+			if (nroCompeticoesContinentais == 3) {
+				if (cIIIReduzido) {
+					return 22;
+				} else {
+					return 20;
+				}
+			} else if (nroCompeticoesContinentais == 2) {
 				return 24;
 			}
 		} else if (numRodadas == 6) {
-			if (nroCompeticoesContinentais == 3) {//28
-				return 28;
-			} else if (nroCompeticoesContinentais == 2) {//32
+			if (nroCompeticoesContinentais == 3) {
+				if (cIIIReduzido) {
+					if (jogarCNCompleta) {
+						return 32;
+					} else {
+						return 30;
+					}
+				} else {
+					return 28;
+				}
+			} else if (nroCompeticoesContinentais == 2) {
 				return 32;
 			}
 		}

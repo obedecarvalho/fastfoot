@@ -10,6 +10,7 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
 @Entity
@@ -227,6 +228,11 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@Override
 	public void incrementarLance(boolean posseBolaMandante) {
 		partidaEstatisticas.incrementarLance(posseBolaMandante);
+	}
+	
+	@Override
+	public NivelCampeonato getNivelCampeonato() {
+		return rodada.getNivelCampeonato();
 	}
 
 	@Override

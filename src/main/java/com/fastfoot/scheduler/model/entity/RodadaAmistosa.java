@@ -13,6 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 
 @Entity
@@ -122,6 +123,11 @@ public class RodadaAmistosa implements RodadaJogavel {
 		/*if (campeonato != null) return campeonato;
 		if (grupoCampeonato != null) return grupoCampeonato.getCampeonato();*/
 		return null;
+	}
+	
+	@Override
+	public NivelCampeonato getNivelCampeonato() {
+		return getCampeonatoJogavel() != null ? getCampeonatoJogavel().getNivelCampeonato() : null;
 	}
 
 	@Override

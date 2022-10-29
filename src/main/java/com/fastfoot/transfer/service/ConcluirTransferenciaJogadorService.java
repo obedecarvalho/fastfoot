@@ -149,11 +149,11 @@ public class ConcluirTransferenciaJogadorService {
 			movSaidaSalvar.add(
 					new MovimentacaoFinanceiraSaida(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), s,
 							TipoMovimentacaoFinanceiraSaida.COMPRA_JOGADOR,
-							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia()));
+							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), ""));//TODO: Venda do jogador ....
 			movEntradaSalvar.add(
 					new MovimentacaoFinanceiraEntrada(transferenciaConcluidaDTO.getPropostaAceita().getClubeOrigem(), s,
 							TipoMovimentacaoFinanceiraEntrada.VENDA_JOGADOR,
-							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia()));
+							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), ""));//TODO: Venda do jogador ....
 
 			propostasSalvar.add(transferenciaConcluidaDTO.getPropostaAceita());
 			propostasSalvar.addAll(transferenciaConcluidaDTO.getPropostasRejeitar());

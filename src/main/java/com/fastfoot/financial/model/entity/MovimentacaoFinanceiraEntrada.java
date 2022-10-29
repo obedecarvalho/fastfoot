@@ -38,16 +38,19 @@ public class MovimentacaoFinanceiraEntrada {
 	
 	private Double valorMovimentacao;
 	
+	private String descricao;
+	
 	public MovimentacaoFinanceiraEntrada() {
 
 	}
 
 	public MovimentacaoFinanceiraEntrada(Clube clube, Semana semana, TipoMovimentacaoFinanceiraEntrada tipoMovimentacao,
-			Double valorMovimentacao) {
+			Double valorMovimentacao, String descricao) {
 		this.clube = clube;
 		this.semana = semana;
 		this.tipoMovimentacao = tipoMovimentacao;
 		this.valorMovimentacao = valorMovimentacao;
+		this.descricao = descricao;
 	}
 
 	public Long getId() {
@@ -96,6 +99,14 @@ public class MovimentacaoFinanceiraEntrada {
 
 	public void setTipoMovimentacao(TipoMovimentacaoFinanceiraEntrada tipoMovimentacao) {
 		this.tipoMovimentacao = tipoMovimentacao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override

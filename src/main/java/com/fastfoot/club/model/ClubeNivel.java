@@ -4,13 +4,13 @@ import com.fastfoot.service.PreCarregarClubeService;
 
 public enum ClubeNivel {
 	
-	NIVEL_A(PreCarregarClubeService.FORCA_NIVEL_1, 1, 2, 0),
-	NIVEL_B(PreCarregarClubeService.FORCA_NIVEL_2, 3, 5, 0),
-	NIVEL_C(PreCarregarClubeService.FORCA_NIVEL_3, 6, 9, 0),
-	NIVEL_D(PreCarregarClubeService.FORCA_NIVEL_4, 10, 14, 0),
-	NIVEL_E(PreCarregarClubeService.FORCA_NIVEL_5, 15, 20, 0),
-	NIVEL_F(PreCarregarClubeService.FORCA_NIVEL_6, 21, 26, 0),
-	NIVEL_G(PreCarregarClubeService.FORCA_NIVEL_7, 27, 32, 0);
+	NIVEL_A(PreCarregarClubeService.FORCA_NIVEL_1, 1, 2, 0, 0.0d),
+	NIVEL_B(PreCarregarClubeService.FORCA_NIVEL_2, 3, 5, 0, 0.0d),
+	NIVEL_C(PreCarregarClubeService.FORCA_NIVEL_3, 6, 9, 0, 0.0d),
+	NIVEL_D(PreCarregarClubeService.FORCA_NIVEL_4, 10, 14, 0, 0.0d),
+	NIVEL_E(PreCarregarClubeService.FORCA_NIVEL_5, 15, 20, 0, 0.0d),
+	NIVEL_F(PreCarregarClubeService.FORCA_NIVEL_6, 21, 26, 0, 0.0d),
+	NIVEL_G(PreCarregarClubeService.FORCA_NIVEL_7, 27, 32, 0, 0.0d);
 	
 	private Integer forcaGeral;
 	
@@ -19,6 +19,8 @@ public enum ClubeNivel {
 	private Integer clubeRankingMax;
 	
 	private Integer tamanhoTorcida;
+	
+	private Double caixaInicial;
 	
 	/*
 	 * Consulta Util:
@@ -30,11 +32,13 @@ public enum ClubeNivel {
 		group by c.forca_geral
 	 */
 	
-	private ClubeNivel(Integer forcaGeral, Integer clubeRankingMin, Integer clubeRankingMax, Integer tamanhoTorcida) {
+	private ClubeNivel(Integer forcaGeral, Integer clubeRankingMin, Integer clubeRankingMax, Integer tamanhoTorcida,
+			Double caixaInicial) {
 		this.forcaGeral = forcaGeral;
 		this.clubeRankingMin = clubeRankingMin;
 		this.clubeRankingMax = clubeRankingMax;
 		this.tamanhoTorcida = tamanhoTorcida;
+		this.caixaInicial = caixaInicial;
 	}
 
 	public Integer getForcaGeral() {
@@ -51,5 +55,9 @@ public enum ClubeNivel {
 
 	public Integer getTamanhoTorcida() {
 		return tamanhoTorcida;
+	}
+
+	public Double getCaixaInicial() {
+		return caixaInicial;
 	}
 }

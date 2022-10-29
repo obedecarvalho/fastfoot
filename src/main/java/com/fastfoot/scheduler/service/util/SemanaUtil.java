@@ -1,10 +1,12 @@
 package com.fastfoot.scheduler.service.util;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import org.apache.commons.collections4.BidiMap;
+import org.apache.commons.collections4.bidimap.DualHashBidiMap;
 
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
@@ -18,12 +20,19 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class SemanaUtil {
 	
-	private static final Map<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new HashMap<Integer, Integer>();
+	/*private static final Map<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_6_RODADAS = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_4_RODADAS = new HashMap<Integer, Integer>();
 	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_5_RODADAS = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new HashMap<Integer, Integer>();
+	private static final Map<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new HashMap<Integer, Integer>();*/
+	
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new DualHashBidiMap<Integer, Integer>();
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_6_RODADAS = new DualHashBidiMap<Integer, Integer>();
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new DualHashBidiMap<Integer, Integer>();
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_4_RODADAS = new DualHashBidiMap<Integer, Integer>();
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_5_RODADAS = new DualHashBidiMap<Integer, Integer>();
+	private static final BidiMap<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new DualHashBidiMap<Integer, Integer>();
 	
 	static {
 		RODADA_SEMANA_CAMPEONATO_NACIONAL.put(1, 1);
@@ -157,4 +166,53 @@ public class SemanaUtil {
 		}
 	}
 
+	public static boolean isSemanaCampeonatoNacional(Integer numSemana) {
+		return RODADA_SEMANA_CAMPEONATO_NACIONAL.values().contains(numSemana);
+	}
+	
+	public static boolean isSemanaCopaNacional(Integer numeroRodada, Integer numSemana) {
+		
+		if (numeroRodada == 4) {
+			return RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.values().contains(numSemana);
+		}
+		
+		if (numeroRodada == 5) {
+			return RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.values().contains(numSemana);
+		}
+		
+		if (numeroRodada == 6) {
+			return RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.values().contains(numSemana);
+		}
+		
+		return false;
+	}
+	
+	public static boolean isSemanaContinental(Integer numSemana) {
+		return RODADA_SEMANA_CONTINENTAL.values().contains(numSemana);
+	}
+	
+	public static Integer getRodadaContinental(Integer numSemana) {
+		return RODADA_SEMANA_CONTINENTAL.inverseBidiMap().get(numSemana);
+	}
+	
+	public static Integer getRodadaCampeonatoNacional(Integer numSemana) {
+		return RODADA_SEMANA_CAMPEONATO_NACIONAL.inverseBidiMap().get(numSemana);
+	}
+	
+	public static Integer getRodadaCopaNacional(Integer numeroRodada, Integer numSemana) {
+
+		if (numeroRodada == 4) {
+			return RODADA_SEMANA_COPA_NACIONAL_4_RODADAS.inverseBidiMap().get(numSemana);
+		}
+
+		if (numeroRodada == 5) {
+			return RODADA_SEMANA_COPA_NACIONAL_5_RODADAS.inverseBidiMap().get(numSemana);
+		}
+
+		if (numeroRodada == 6) {
+			return RODADA_SEMANA_COPA_NACIONAL_6_RODADAS.inverseBidiMap().get(numSemana);
+		}
+
+		return -1;
+	}
 }

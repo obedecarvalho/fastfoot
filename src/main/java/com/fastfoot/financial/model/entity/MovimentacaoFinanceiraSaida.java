@@ -15,7 +15,7 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraSaida;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
-public class MovimentacaoFinanceiraSaida {
+public class MovimentacaoFinanceiraSaida {//TODO: avaliar possibilidade de juntar com MovimentacaoFinanceiraEntrada
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimentacaoFinanceiraSaidaSequence")
@@ -38,16 +38,19 @@ public class MovimentacaoFinanceiraSaida {
 	
 	private Double valorMovimentacao;
 	
+	private String descricao;
+	
 	public MovimentacaoFinanceiraSaida() {
 
 	}
 
 	public MovimentacaoFinanceiraSaida(Clube clube, Semana semana, TipoMovimentacaoFinanceiraSaida tipoMovimentacao,
-			Double valorMovimentacao) {
+			Double valorMovimentacao, String descricao) {
 		this.clube = clube;
 		this.semana = semana;
 		this.tipoMovimentacao = tipoMovimentacao;
 		this.valorMovimentacao = valorMovimentacao;
+		this.descricao = descricao;
 	}
 
 	public Long getId() {
@@ -96,6 +99,14 @@ public class MovimentacaoFinanceiraSaida {
 
 	public void setValorMovimentacao(Double valorMovimentacao) {
 		this.valorMovimentacao = valorMovimentacao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	@Override

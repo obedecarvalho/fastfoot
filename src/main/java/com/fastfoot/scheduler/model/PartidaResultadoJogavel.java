@@ -48,4 +48,6 @@ public interface PartidaResultadoJogavel {
 	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas);
 	
 	public PartidaEstatisticas getPartidaEstatisticas();
+	
+	public NivelCampeonato getNivelCampeonato();
 }
