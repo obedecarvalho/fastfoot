@@ -18,6 +18,7 @@ import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
+import com.fastfoot.match.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -132,6 +133,9 @@ public class SemanaService {
 	
 	@Autowired
 	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+	
+	@Autowired
+	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
 
 	public SemanaDTO proximaSemana() {
 		
@@ -262,6 +266,8 @@ public class SemanaService {
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
 		inicio = stopWatch.getSplitNanoTime();
+		
+		distribuirPremiacaoCompeticoesService.distribuirPremiacaoCompeticoes(semana);
 
 		stopWatch.stop();
 		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());

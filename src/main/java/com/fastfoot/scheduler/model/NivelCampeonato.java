@@ -25,9 +25,9 @@ public enum NivelCampeonato {
 		return NACIONAL_II.equals(this);
 	}
 
-	/*public boolean isCopaNacionalCopaNacionalII() {//CampeonatoEliminatorio
+	public boolean isCNIOuCNII() {//CampeonatoEliminatorio
 		return isCopaNacional() || isCopaNacionalII();
-	}*/
+	}
 	
 	public boolean isCopaNacional() {//CampeonatoEliminatorio
 		return COPA_NACIONAL.equals(this);
@@ -53,9 +53,9 @@ public enum NivelCampeonato {
 		return isContinental() || isContinentalII();
 	}*/
 	
-	/*public boolean isContinentalContinentalIIContinentalIII() {//CampeonatoMisto
+	public boolean isCIOuCIIOuCIII() {//CampeonatoMisto
 		return isContinental() || isContinentalII() || isContinentalIII();
-	}*/
+	}
 
 	public static NivelCampeonato getContinentalPorOrdem(int posicao) {
 		NivelCampeonato[] continentaisOrdenado = new NivelCampeonato[]{CONTINENTAL, CONTINENTAL_II, CONTINENTAL_III, CONTINENTAL_OUTROS};
