@@ -14,9 +14,14 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
 import com.fastfoot.match.model.PremiacaoClassificacao;
+import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.entity.Classificacao;
+import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 import com.fastfoot.service.ParametroService;
@@ -42,6 +47,9 @@ public class DistribuirPremiacaoCompeticoesService {
 	@Autowired
 	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
 	
+	@Autowired
+	private ClassificacaoRepository classificacaoRepository;
+
 	//#######	SERVICE	#############
 	
 	@Autowired
@@ -65,7 +73,24 @@ public class DistribuirPremiacaoCompeticoesService {
 				.collect(Collectors.groupingBy(PartidaEliminatoriaResultado::getNivelCampeonato));
 		
 		if (SemanaUtil.isSemanaContinental(semana.getNumero())) {
-			distribuirPremiacaoCompeticoesContinental(semana, partidasNivel, entradas);
+			// r: 0, 3, 4, 5, 6
+			int rodada = SemanaUtil.getRodadaContinental(semana.getNumero());
+			if (rodada >= 4) {
+				distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(semana, rodada, partidasNivel, entradas);
+			} else if (rodada == 3) {
+				List<Classificacao> classificacao = classificacaoRepository
+						.findByTemporadaGrupoCampeonato(semana.getTemporada());
+				
+				for (Classificacao c : classificacao) {
+					Double premiacao = getPremiacao(c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(), c.getPosicao());
+					if (premiacao != null) {
+						entradas.add(criarMovimentacaoFinanceira(c.getClube(), semana, premiacao,
+								String.format("Classificação à Quartas Final (%s)",
+										c.getGrupoCampeonato().getCampeonato().getNivelCampeonato().name())));//TODO: corrigir NivelCampeonato na descricao
+					}
+				}
+				
+			}
 		}
 		
 		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
@@ -83,6 +108,10 @@ public class DistribuirPremiacaoCompeticoesService {
 		movimentacaoFinanceiraEntradaRepository.saveAll(entradas);
 	}
 	
+	public void distribuirPremiacaoCompeticoes(Temporada temporada) {//Distribuir premiação inicial (CLASSIFICACAO_FASE_GRUPOS)
+
+	}
+
 	private void distribuirPremiacaoCompeticoesCopaNacional(Semana semana, Integer numRodadasCN,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
 			List<MovimentacaoFinanceiraEntrada> entradas) {
@@ -158,7 +187,7 @@ public class DistribuirPremiacaoCompeticoesService {
 		}
 	}
 	
-	private void distribuirPremiacaoCompeticoesContinental(Semana semana,
+	private void distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(Semana semana, int rodada,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
 			List<MovimentacaoFinanceiraEntrada> entradas) {
 
@@ -166,9 +195,6 @@ public class DistribuirPremiacaoCompeticoesService {
 
 		for (NivelCampeonato nc : Arrays.asList(NivelCampeonato.CONTINENTAL, NivelCampeonato.CONTINENTAL_II,
 				NivelCampeonato.CONTINENTAL_III)) {
-
-			// r: 0, 3, 4, 5, 6
-			int rodada = SemanaUtil.getRodadaContinental(semana.getNumero());
 
 			partidaEliminatorias = partidasNivel.get(nc);
 
@@ -201,11 +227,55 @@ public class DistribuirPremiacaoCompeticoesService {
 
 				}
 			}
-
+		}
+	}
+	
+	private Double getPremiacao(NivelCampeonato nivelCampeonato, int posicao) {
+		Boolean melhorEliminado = parametroService.isEstrategiaPromotorContinentalMelhorEliminado();
+		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean jogarCIII = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+		
+		if (!melhorEliminado && (posicao == 1 || posicao == 2)) {
+			return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
+					PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
 		}
 
-		// TODO classificado a quartas de final
-		// TODO classificado a quartas de final CII
+		if (melhorEliminado) {
+			if (nivelCampeonato.isContinental() && (posicao == 1 || posicao == 2)) {
+				return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
+						PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+			}
+			
+			if (nivelCampeonato.isContinental() && posicao == 3) {
+				return PremiacaoClassificacao.getPremiacao(NivelCampeonato.CONTINENTAL_II,
+						PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+			}
+			
+			if (nivelCampeonato.isContinentalII() && posicao == 1) {
+				return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
+						PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+			}
+			
+			if (jogarCIII) {
+				
+				if (nivelCampeonato.isContinentalII() && posicao == 2) {
+					return PremiacaoClassificacao.getPremiacao(NivelCampeonato.CONTINENTAL_III,
+							PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+				}
+				
+				if (nivelCampeonato.isContinentalIII() && posicao == 1) {
+					return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
+							PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+				}
+				
+				if (cIIIReduzido && nivelCampeonato.isContinentalIII() && posicao == 2) {
+					return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
+							PremiacaoClassificacao.CLASSIFICACAO_QUARTAS_FINAL);
+				}
+			}
+		}
+		
+		return null;
 	}
 	
 	private MovimentacaoFinanceiraEntrada criarMovimentacaoFinanceira(Clube clube, Semana semana,
