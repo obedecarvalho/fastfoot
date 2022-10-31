@@ -71,6 +71,7 @@ public class RodadaEliminatoria implements RodadaJogavel {
 		this.campeonatoEliminatorio = campeonatoEliminatorio;
 	}
 
+	@Override
 	public List<PartidaEliminatoriaResultado> getPartidas() {
 		return partidas;
 	}

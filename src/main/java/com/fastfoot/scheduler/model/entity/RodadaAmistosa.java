@@ -67,6 +67,7 @@ public class RodadaAmistosa implements RodadaJogavel {
 		this.numero = numero;
 	}
 
+	@Override
 	public List<PartidaAmistosaResultado> getPartidas() {
 		return partidas;
 	}

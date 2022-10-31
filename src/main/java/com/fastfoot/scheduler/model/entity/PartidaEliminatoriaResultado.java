@@ -50,7 +50,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@JoinColumn(name = "id_partida_estatisticas")
 	private PartidaEstatisticas partidaEstatisticas;
 	
-	private Integer golsMandantePenalts;
+	private Integer golsMandantePenalts;//TODO: criar entidade PartidaDisputaPenalts com total de penalts disputados
 	
 	private Integer golsVisitantePenalts;
 

@@ -8,10 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
+import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
+import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
@@ -57,9 +62,18 @@ public class RodadaService {
 	@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;
 
+	@Autowired
+	private PartidaTorcidaRepository partidaTorcidaRepository;
+
+	@Autowired
+	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
+
 	//###	SERVICE	###
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
+	
+	@Autowired
+	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
 
 	private static final Boolean SALVAR_LANCES = false;
 
@@ -67,8 +81,10 @@ public class RodadaService {
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
+		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
+		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
 
@@ -79,8 +95,13 @@ public class RodadaService {
 		}
 		
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
 
 		return CompletableFuture.completedFuture(rodada);
+	}
+	
+	private void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 	}
 
 	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
@@ -164,12 +185,15 @@ public class RodadaService {
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
+		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
+		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
 		
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -208,11 +232,15 @@ public class RodadaService {
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
+		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
+		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
+
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
 
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -238,5 +266,10 @@ public class RodadaService {
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		
 		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
+	}
+	
+	private void salvarPartidaTorcida(PartidaTorcidaSalvarDTO dto) {
+		partidaTorcidaRepository.saveAll(dto.getPartidaTorcidaList());
+		movimentacaoFinanceiraEntradaRepository.saveAll(dto.getMovimentacaoFinanceiraEntradas());
 	}
 }

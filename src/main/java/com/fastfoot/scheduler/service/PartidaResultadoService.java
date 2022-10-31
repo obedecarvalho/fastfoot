@@ -87,11 +87,11 @@ public class PartidaResultadoService {
 	@Autowired
 	private TemporadaRepository temporadaRepository;
 
-	@Autowired
-	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
+	/*@Autowired
+	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;*/
 
 	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		calcularTorcidaPartidaService.calcularTorcidaPartida(partida);
+		//calcularTorcidaPartidaService.calcularTorcidaPartida(partida);
 		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
 	}
 

@@ -60,6 +60,7 @@ public class Rodada implements RodadaJogavel {
 		this.numero = numero;
 	}
 
+	@Override
 	public List<PartidaResultado> getPartidas() {
 		return partidas;
 	}

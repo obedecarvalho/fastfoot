@@ -1,13 +1,21 @@
 package com.fastfoot.match.service;
 
-import java.util.List;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
 import com.fastfoot.match.model.PartidaTorcidaPorcentagem;
+import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
+import com.fastfoot.match.model.entity.PartidaTorcida;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
+import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.service.ParametroService;
 
 @Service
@@ -24,29 +32,82 @@ public class CalcularTorcidaPartidaService {
 	@Autowired
 	private ParametroService parametroService;
 
-	public void calcularTorcidaPartida(List<PartidaResultadoJogavel> partida) {
-		for (PartidaResultadoJogavel p : partida) {
-			calcularTorcidaPartida(p);
+	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+
+		if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
+				|| rodada.getNivelCampeonato().isCNIOuCNII()) {
+			for (PartidaResultadoJogavel p : rodada.getPartidas()) {
+				calcularTorcidaPartida(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+			}
+		}
+
+		if (rodada.getNivelCampeonato().isNIOuNII()) {
+			//TODO
 		}
 	}
 
-	public void calcularTorcidaPartida(PartidaResultadoJogavel partida) {
+	public void calcularTorcidaPartida(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+		
+		double renda = 0.0d;
+		
+		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
 
 		int tamanhoEstadio = partida.getClubeMandante().getClubeNivel().getTamanhoTorcida();
 
 		Double porcPublicoAlvo = getPorcentagemPublicoAlvo(partida);
 
-		if (porcPublicoAlvo == null) return;//TODO
+		//if (porcPublicoAlvo == null) return;
 
-		Long publicoMandante = sortearTorcida(tamanhoEstadio,
-				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE, porcPublicoAlvo);
+		Integer publicoMandante = sortearTorcida(tamanhoEstadio,
+				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE, porcPublicoAlvo).intValue();
 
-		Long publicoVisitante = sortearTorcida(tamanhoEstadio,
+		Integer publicoVisitante = sortearTorcida(tamanhoEstadio,
 				partida.getClubeVisitante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_VISITANTE,
-				porcPublicoAlvo);
+				porcPublicoAlvo).intValue();
 
-		System.err.println(String.format("%d, %d, %f, %s, %d", tamanhoEstadio, /*publicoMandante, publicoVisitante,*/
-				publicoMandante + publicoVisitante, porcPublicoAlvo, partida.getNivelCampeonato(), partida.getRodada().getNumero()));
+		/*System.err.println(String.format("%d, %d, %f, %s, %d", tamanhoEstadio, /*publicoMandante, publicoVisitante,* /
+				publicoMandante + publicoVisitante, porcPublicoAlvo, partida.getNivelCampeonato(), partida.getRodada().getNumero()));*/
+		
+		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoMandante,
+				partida.getRodada().getNumero(), numRodadasCN);
+
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+				semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)", partida.getNivelCampeonato().name(),
+						partida.getRodada().getNumero(), tamanhoEstadio)));
+
+		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoVisitante,
+				partida.getRodada().getNumero(), numRodadasCN);
+
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(
+				partida.getClubeVisitante(), semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)",
+						partida.getNivelCampeonato().name(), partida.getRodada().getNumero(), tamanhoEstadio)));
+		
+		PartidaTorcida partidaTorcida = new PartidaTorcida();
+		partidaTorcida.setPublico(publicoMandante + publicoVisitante);
+		
+		if (partida instanceof PartidaEliminatoriaResultado) {
+			partidaTorcida.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partida);
+		} else if (partida instanceof PartidaResultado) {
+			partidaTorcida.setPartidaResultado((PartidaResultado) partida);
+		} else {
+			throw new RuntimeException("Erro inesperado");//TODO: amistosos
+		}
+		
+		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
+	}
+	
+	private MovimentacaoFinanceiraEntrada criarMovimentacaoFinanceira(Clube clube, Semana semana,
+			Double valorMovimentacao, String descricao) {
+		
+		MovimentacaoFinanceiraEntrada entrada = new MovimentacaoFinanceiraEntrada();
+		
+		entrada.setClube(clube);
+		entrada.setSemana(semana);
+		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceiraEntrada.INGRESSOS);
+		entrada.setValorMovimentacao(valorMovimentacao);
+		entrada.setDescricao(descricao);
+
+		return entrada;
 	}
 	
 	private Double getPorcentagemPublicoAlvo(PartidaResultadoJogavel partida) {
@@ -56,22 +117,22 @@ public class CalcularTorcidaPartidaService {
 			Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
 
 			if (partida.getRodada().getNumero() == numRodadasCN) {// Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FINAL);
 			} else if (partida.getRodada().getNumero() == (numRodadasCN - 1)) {// Semi Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_SEMI_FINAL);
 			} else if (partida.getRodada().getNumero() == (numRodadasCN - 2)) {// Quartas Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_QUARTAS_FINAL);
 			} else if (partida.getRodada().getNumero() == (numRodadasCN - 3)) {// Oitavas Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_OITAVAS_FINAL);
 			} else if (partida.getRodada().getNumero() == (numRodadasCN - 4)) {// Preliminar II
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FASE_PRELIMINAR);
 			} else if (partida.getRodada().getNumero() == (numRodadasCN - 5)) {// Preliminar I
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FASE_PRELIMINAR);
 			}
 		}
@@ -79,16 +140,16 @@ public class CalcularTorcidaPartidaService {
 		if (partida.getNivelCampeonato().isCopaNacionalII()) {
 
 			if (partida.getRodada().getNumero() == 4) {// Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FINAL);
 			} else if (partida.getRodada().getNumero() == 3) {// Semi Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_SEMI_FINAL);
 			} else if (partida.getRodada().getNumero() == 2) {// Quartas Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_QUARTAS_FINAL);
 			} else if (partida.getRodada().getNumero() == 1) {// Oitavas Final
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_OITAVAS_FINAL);
 			}
 		}
@@ -96,22 +157,22 @@ public class CalcularTorcidaPartidaService {
 		if (partida.getNivelCampeonato().isCIOuCIIOuCIII()) {
 
 			if (partida.getRodada().getNumero() == 1) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FASE_GRUPOS);
 			} else if (partida.getRodada().getNumero() == 2) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FASE_GRUPOS);
 			} else if (partida.getRodada().getNumero() == 3) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FASE_GRUPOS);
 			} else if (partida.getRodada().getNumero() == 4) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_QUARTAS_FINAL);
 			} else if (partida.getRodada().getNumero() == 5) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_SEMI_FINAL);
 			} else if (partida.getRodada().getNumero() == 6) {
-				return PartidaTorcidaPorcentagem.get(partida.getNivelCampeonato(),
+				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
 						PartidaTorcidaPorcentagem.PORC_PUBLICO_FINAL);
 			}
 

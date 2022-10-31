@@ -13,9 +13,9 @@ public enum NivelCampeonato {
 	CONTINENTAL_OUTROS
 	;
 	
-	/*public boolean isNacionalNacionalII() {//Campeonato
+	public boolean isNIOuNII() {//Campeonato
 		return isNacional() || isNacionalII();
-	}*/
+	}
 	
 	public boolean isNacional() {//Campeonato
 		return NACIONAL.equals(this);
