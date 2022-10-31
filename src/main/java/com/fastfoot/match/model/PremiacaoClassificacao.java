@@ -25,6 +25,14 @@ public enum PremiacaoClassificacao {
 
 	private static final Map<PremiacaoClassificacao, Double> PREMIACAO_COPA_NACIONAL_II;
 	
+	private static final Double PREMIACAO_CAMPEAO_NACIONAL = 24000d;
+
+	private static final Double PERC_DIFF_CAMPEAO_VICE_NACIONAL = 0.1d;
+
+	private static final Double PERC_DIFF_POSICAO_NACIONAL = 0.03d;
+
+	private static final Double DIVISOR_NACIONAL_II = 3d;
+
 	static {
 		PREMIACAO_CONTINENTAL = new HashMap<PremiacaoClassificacao, Double>();
 		PREMIACAO_CONTINENTAL_II = new HashMap<PremiacaoClassificacao, Double>();
@@ -96,5 +104,21 @@ public enum PremiacaoClassificacao {
 		return null;
 	}
 	
+	public static double getPremiacaoClassificacaoNacional(NivelCampeonato nivelCampeonato, int posicao) {
 
+		double premiacao = 0d;
+
+		if (posicao == 1) {
+			premiacao = PREMIACAO_CAMPEAO_NACIONAL;
+		} else {
+			premiacao = PREMIACAO_CAMPEAO_NACIONAL - (PREMIACAO_CAMPEAO_NACIONAL * PERC_DIFF_CAMPEAO_VICE_NACIONAL)
+					- (PREMIACAO_CAMPEAO_NACIONAL * PERC_DIFF_POSICAO_NACIONAL * (posicao - 2));
+		}
+
+		if (nivelCampeonato.isNacionalII()) {
+			premiacao = premiacao / DIVISOR_NACIONAL_II;
+		}
+
+		return premiacao;
+	}
 }

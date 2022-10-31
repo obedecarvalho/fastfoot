@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -86,7 +87,11 @@ public class PartidaResultadoService {
 	@Autowired
 	private TemporadaRepository temporadaRepository;
 
+	@Autowired
+	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
+
 	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		calcularTorcidaPartidaService.calcularTorcidaPartida(partida);
 		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
 	}
 

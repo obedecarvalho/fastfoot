@@ -101,15 +101,40 @@ public class DistribuirPremiacaoCompeticoesService {
 		
 		if (SemanaUtil.isSemanaCampeonatoNacional(semana.getNumero())) {
 			//r: 15
+			int rodada = SemanaUtil.getRodadaCampeonatoNacional(semana.getNumero());
+
+			if (rodada == 15) {
+				List<Classificacao> classificacao = classificacaoRepository
+						.findByTemporadaCampeonato(semana.getTemporada());
+
+				entradas.addAll(classificacao.stream().map(c -> criarMovimentacaoFinanceira(c.getClube(), semana,
+						PremiacaoClassificacao.getPremiacaoClassificacaoNacional(c.getCampeonato().getNivelCampeonato(),
+								c.getPosicao()),
+						String.format("Classificação Final (%s)", c.getCampeonato().getNivelCampeonato().name())))
+						.collect(Collectors.toList()));
+			}
 			
-			//int rodada = SemanaUtil.getRodadaCampeonatoNacional(semana.getNumero());
 		}
 		
 		movimentacaoFinanceiraEntradaRepository.saveAll(entradas);
 	}
 	
-	public void distribuirPremiacaoCompeticoes(Temporada temporada) {//Distribuir premiação inicial (CLASSIFICACAO_FASE_GRUPOS)
+	public void distribuirPremiacaoCompeticoes(Temporada temporada) {
 
+		List<MovimentacaoFinanceiraEntrada> entradas = new ArrayList<MovimentacaoFinanceiraEntrada>();
+
+		List<Classificacao> classificacao = classificacaoRepository.findByTemporadaGrupoCampeonato(temporada);
+
+		entradas.addAll(classificacao.stream()
+				.map(c -> criarMovimentacaoFinanceira(c.getClube(),
+						temporada.getSemanas().stream().filter(s -> s.getNumero() == 1).findFirst().get(),
+						PremiacaoClassificacao.getPremiacao(c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(),
+								PremiacaoClassificacao.CLASSIFICACAO_FASE_GRUPOS),
+						String.format("Classificação à Fase de Grupos (%s)",
+								c.getGrupoCampeonato().getCampeonato().getNivelCampeonato().name())))
+				.collect(Collectors.toList()));
+
+		movimentacaoFinanceiraEntradaRepository.saveAll(entradas);
 	}
 
 	private void distribuirPremiacaoCompeticoesCopaNacional(Semana semana, Integer numRodadasCN,
