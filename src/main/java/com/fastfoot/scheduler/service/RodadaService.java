@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;

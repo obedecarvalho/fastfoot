@@ -18,6 +18,8 @@ public enum PartidaTorcidaPorcentagem {
 	
 	private static final Map<PartidaTorcidaPorcentagem, Double> PORC_PUBLICO_COPA_NACIONAL;
 	
+	private static final Map<Integer, Double> PORC_PUBLICO_NACIONAL;
+	
 	private static final Double TICKET_MEDIO_CONTINENTAL = 120.0d;
 
 	private static final Double TICKET_MEDIO_COPA_NACIONAL = 80.0d;
@@ -41,6 +43,8 @@ public enum PartidaTorcidaPorcentagem {
 		
 		PORC_PUBLICO_COPA_NACIONAL = new HashMap<PartidaTorcidaPorcentagem, Double>();
 		
+		PORC_PUBLICO_NACIONAL = new HashMap<Integer, Double>();
+		
 		PORC_PUBLICO_COPA_NACIONAL.put(PORC_PUBLICO_FASE_PRELIMINAR, 0.6);
 		//PORC_PUBLICO_COPA_NACIONAL.put(PORC_PUBLICO_FASE_GRUPOS, 0.6);
 		PORC_PUBLICO_COPA_NACIONAL.put(PORC_PUBLICO_OITAVAS_FINAL, 0.7);
@@ -54,6 +58,23 @@ public enum PartidaTorcidaPorcentagem {
 		PORC_PUBLICO_CONTINENTAL.put(PORC_PUBLICO_QUARTAS_FINAL, 0.9);
 		PORC_PUBLICO_CONTINENTAL.put(PORC_PUBLICO_SEMI_FINAL, 1.0);
 		PORC_PUBLICO_CONTINENTAL.put(PORC_PUBLICO_FINAL, 1.0);
+		
+		PORC_PUBLICO_NACIONAL.put(1, 1.0);
+		PORC_PUBLICO_NACIONAL.put(2, 1.0);
+		PORC_PUBLICO_NACIONAL.put(3, 0.9);
+		PORC_PUBLICO_NACIONAL.put(4, 0.9);
+		PORC_PUBLICO_NACIONAL.put(5, 0.9);
+		PORC_PUBLICO_NACIONAL.put(6, 0.8);
+		PORC_PUBLICO_NACIONAL.put(7, 0.8);
+		PORC_PUBLICO_NACIONAL.put(8, 0.8);
+		PORC_PUBLICO_NACIONAL.put(9, 0.6);
+		PORC_PUBLICO_NACIONAL.put(10, 0.6);
+		PORC_PUBLICO_NACIONAL.put(11, 0.6);
+		PORC_PUBLICO_NACIONAL.put(12, 0.5);
+		PORC_PUBLICO_NACIONAL.put(13, 0.5);
+		PORC_PUBLICO_NACIONAL.put(14, 0.5);
+		PORC_PUBLICO_NACIONAL.put(15, 0.4);
+		PORC_PUBLICO_NACIONAL.put(16, 0.4);
 	}
 	
 	public static Double getPorcentagem(NivelCampeonato nivelCampeonato, PartidaTorcidaPorcentagem partidaTorcidaPorcentagem) {
@@ -64,6 +85,15 @@ public enum PartidaTorcidaPorcentagem {
 		
 		if (nivelCampeonato.isCIOuCIIOuCIII()) {
 			return PORC_PUBLICO_CONTINENTAL.get(partidaTorcidaPorcentagem);
+		}
+		
+		return null;
+	}
+	
+	public static Double getPorcentagem(NivelCampeonato nivelCampeonato, Integer posicao) {
+		
+		if (nivelCampeonato.isNIOuNII()) {
+			return PORC_PUBLICO_NACIONAL.get(posicao);
 		}
 		
 		return null;

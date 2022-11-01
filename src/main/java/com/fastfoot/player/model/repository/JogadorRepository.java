@@ -75,4 +75,12 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	public List<Map<String, Object>> findByTemporadaAndClubeAndPosicaoAndVariacaoForcaMinMax(
 			Long idNecessidadeContratacao, Double forcaMin, Double forcaMax, Double limDiffForcaMin,
 			Double limDiffForcaMax);// TODO: colocar em repository especifico
+
+	@Query(nativeQuery = true, value =
+			" select id_clube, sum(valor_transferencia) as valor_transferencia" +
+			" from jogador j" +
+			" where status_jogador = 0" +
+			" group by id_clube"
+	)
+	public List<Map<String, Object>> findValorTransferenciaPorClube();
 }

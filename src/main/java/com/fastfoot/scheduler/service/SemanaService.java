@@ -25,6 +25,7 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.PagarSalarioJogadoresService;
 import com.fastfoot.probability.service.CalcularProbabilidadeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -136,6 +137,9 @@ public class SemanaService {
 	
 	@Autowired
 	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
+	
+	@Autowired
+	private PagarSalarioJogadoresService pagarSalarioJogadoresService;
 
 	public SemanaDTO proximaSemana() {
 		
@@ -154,7 +158,8 @@ public class SemanaService {
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#carregar:" + (fim - inicio));
+		mensagens.add("\t#carregar:" + (fim - inicio));
+
 		inicio = stopWatch.getSplitNanoTime();
 		
 		//Escalar clubes
@@ -177,7 +182,8 @@ public class SemanaService {
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#carregar2:" + (fim - inicio));
+		mensagens.add("\t#carregar2:" + (fim - inicio));
+
 		inicio = stopWatch.getSplitNanoTime();
 
 		//Jogar Rodada
@@ -199,23 +205,22 @@ public class SemanaService {
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#executarRodada:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#executarRodada:" + (fim - inicio));
 
+		inicio = stopWatch.getSplitNanoTime();
 		//Promover
 		promover(semana);
-		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#promover:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#promover:" + (fim - inicio));
 
+		inicio = stopWatch.getSplitNanoTime();
 		//Incrementar rodada atual
 		incrementarRodadaAtualCampeonato(rodadas, rodadaEliminatorias);
-		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#incrementarRodadaAtualCampeonato:" + (fim - inicio));
+		mensagens.add("\t#incrementarRodadaAtualCampeonato:" + (fim - inicio));
+
 		inicio = stopWatch.getSplitNanoTime();
 
 		//calcular probabilidades
@@ -225,7 +230,7 @@ public class SemanaService {
 
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
-			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
+			mensagens.add("\t#calcularProbabilidades:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
 		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17)
@@ -234,7 +239,7 @@ public class SemanaService {
 
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
-			mensagens.add("#calcularProbabilidades:" + (fim - inicio));
+			mensagens.add("\t#calcularProbabilidades:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
 
@@ -244,7 +249,7 @@ public class SemanaService {
 			
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
-			mensagens.add("#classificarClubesTemporadaAtual:" + (fim - inicio));
+			mensagens.add("\t#classificarClubesTemporadaAtual:" + (fim - inicio));
 			inicio = stopWatch.getSplitNanoTime();
 		}
 
@@ -256,22 +261,33 @@ public class SemanaService {
 
 			stopWatch.split();
 			fim = stopWatch.getSplitNanoTime();
-			mensagens.add("#desenvolverTodasHabilidades:" + (fim - inicio));
+			mensagens.add("\t#desenvolverTodasHabilidades:" + (fim - inicio));
+			inicio = stopWatch.getSplitNanoTime();
 		}
 		
 		//Bets
 		calcularPartidaProbabilidadeResultado(temporada);
-		
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
-		inicio = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
 		
+		inicio = stopWatch.getSplitNanoTime();
 		distribuirPremiacaoCompeticoesService.distribuirPremiacaoCompeticoes(semana);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitNanoTime();
+		pagarSalarioJogadoresService.pagarSalarioJogadores(semana);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#pagarSalarioJogadores:" + (fim - inicio));
+
+		//inicio = stopWatch.getSplitNanoTime();
 
 		stopWatch.stop();
-		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
-		//System.err.println(mensagens);
+		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());
+		System.err.println(mensagens);
 
 		return SemanaDTO.convertToDTO(semana);
 	}
@@ -336,6 +352,7 @@ public class SemanaService {
 		}
 	}*/
 	
+	@SuppressWarnings("unused")
 	private void escalarClubes(Semana semana) {
 		//if (semana.getNumero() % 5 == 0) {
 		List<Clube> clubes = clubeRepository.findAll(); 

@@ -21,6 +21,8 @@ public class CalcularValorTransferenciaService {
 	 */
 	private static final Double TAXA_DESCONTO = 0.33;//0.25, 0.30
 	
+	private static final Integer FORCA_N_POWER = 2;
+	
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
@@ -44,6 +46,27 @@ public class CalcularValorTransferenciaService {
 			
 			double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
 			
+			double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
+					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
+			
+			valor += valorAj;
+		}
+		
+		//Tem que multiplicar o valor por 1000
+		//Aproveitando para arredondar também
+		jogador.setValorTransferencia(Math.round(valor * 100000) / 100d);
+
+	}
+
+	/*
+	public void calcularValorTransferencia(Jogador jogador) {
+
+		Double valor = 0d;
+		
+		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
+			
+			double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
+			
 			double valorAj = (ajuste * jogador.getForcaGeralPotencialEfetiva()) /  Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
 			
 			valor += valorAj;
@@ -52,6 +75,7 @@ public class CalcularValorTransferenciaService {
 		jogador.setValorTransferencia(valor);
 
 	}
+	*/
 	
 	/*private static final Double TAXA_DESCONTO_I = 0.33;
 	private static final Double TAXA_DESCONTO_II = 0.25;
