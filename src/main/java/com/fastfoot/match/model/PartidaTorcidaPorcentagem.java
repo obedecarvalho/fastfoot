@@ -24,13 +24,13 @@ public enum PartidaTorcidaPorcentagem {
 
 	private static final Double TICKET_MEDIO_COPA_NACIONAL = 80.0d;
 
-	private static final Double TICKET_MEDIO_NACIONAL = 50.0d;
+	private static final Double TICKET_MEDIO_NACIONAL = 60.0d;
 	
 	private static final Double MULTIPLICADOR_INGRESSOS_FINAL = 1.5d;
 	
 	private static final Double MULTIPLICADOR_INGRESSOS_SEMI_FINAL = 1.25d;
 	
-	private static final Double DIVISOR_NACIONAL_II = 4d;
+	private static final Double DIVISOR_NACIONAL_II = 3d;
 	
 	private static final Double DIVISOR_COPA_NACIONAL_II = 4d;
 	

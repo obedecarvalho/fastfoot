@@ -19,9 +19,9 @@ public class CalcularValorTransferenciaService {
 	 * Taxa desconto: 30%, Max/Inicial: 94%
 	 * Taxa desconto: 25%, Max/Inicial: 77%
 	 */
-	private static final Double TAXA_DESCONTO = 0.33;//0.25, 0.30
+	private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
 	
-	private static final Integer FORCA_N_POWER = 2;
+	private static final Integer FORCA_N_POWER = 3;
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -52,9 +52,11 @@ public class CalcularValorTransferenciaService {
 			valor += valorAj;
 		}
 		
-		//Tem que multiplicar o valor por 1000
+		//Tem que multiplicar o valor por
+		//	FORCA_N_POWER == 2: 1000
+		//	FORCA_N_POWER == 3: 10
 		//Aproveitando para arredondar também
-		jogador.setValorTransferencia(Math.round(valor * 100000) / 100d);
+		jogador.setValorTransferencia(Math.round(valor * 1000) / 100d);
 
 	}
 

@@ -1,9 +1,11 @@
 package com.fastfoot.scheduler.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -81,11 +83,39 @@ public class RodadaService {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
+		
+		List<String> mensagens = new ArrayList<String>();
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio, fim;
 
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		carregarPartidas(rodada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#carregarPartidas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#calcularTorcidaPartida:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#jogarPartidas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		salvarPartidas(rodada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidas:" + (fim - inicio));
 
 		if (rodada.isUltimaRodadaPontosCorridos()){
 			carregarClassificacao(rodada);
@@ -93,8 +123,23 @@ public class RodadaService {
 			salvarClassificacao(rodada);
 		}
 		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidaJogadorEstatisticas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidaTorcida:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());
+		//System.err.println(mensagens);
 
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -105,13 +150,15 @@ public class RodadaService {
 
 	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		if(rodada.getCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO, rodada.getCampeonato().getClassificacao());
+			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+					rodada.getCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getCampeonato().getClassificacao(), false);
 			}
 		} else if (rodada.getGrupoCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO, rodada.getGrupoCampeonato().getClassificacao());
+			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+					rodada.getGrupoCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getGrupoCampeonato().getClassificacao(), false);
@@ -125,7 +172,8 @@ public class RodadaService {
 		if(rodada.getCampeonato() != null) {
 			rodada.getCampeonato().setClassificacao(classificacaoRepository.findByCampeonato(rodada.getCampeonato()));
 		} else if (rodada.getGrupoCampeonato() != null) {
-			rodada.getGrupoCampeonato().setClassificacao(classificacaoRepository.findByGrupoCampeonato(rodada.getGrupoCampeonato()));
+			rodada.getGrupoCampeonato()
+					.setClassificacao(classificacaoRepository.findByGrupoCampeonato(rodada.getGrupoCampeonato()));
 		}
 	}
 
@@ -149,7 +197,8 @@ public class RodadaService {
 		if(r.getCampeonato() != null) {
 			r.getCampeonato().setClassificacao(classificacaoRepository.findByCampeonato(r.getCampeonato()));
 		} else if (r.getGrupoCampeonato() != null) {
-			r.getGrupoCampeonato().setClassificacao(classificacaoRepository.findByGrupoCampeonato(r.getGrupoCampeonato()));
+			r.getGrupoCampeonato()
+					.setClassificacao(classificacaoRepository.findByGrupoCampeonato(r.getGrupoCampeonato()));
 		}
 	}
 
@@ -185,14 +234,57 @@ public class RodadaService {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
-
-		carregarPartidas(rodada);
-		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
-		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
-		salvarPartidas(rodada);
 		
+		List<String> mensagens = new ArrayList<String>();
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio, fim;
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		carregarPartidas(rodada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#carregarPartidas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#calcularTorcidaPartida:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#jogarPartidas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		salvarPartidas(rodada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidaJogadorEstatisticas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#salvarPartidaTorcida:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal(RE):" + stopWatch.getNanoTime());
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -207,12 +299,13 @@ public class RodadaService {
 
 	private void salvarPartidas(RodadaEliminatoria r) {
 		
-		partidaEstatisticasRepository.saveAll(
-				r.getPartidas().stream().map(PartidaEliminatoriaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
+		partidaEstatisticasRepository.saveAll(r.getPartidas().stream()
+				.map(PartidaEliminatoriaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
 		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
-			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());//TODO: agrupar proximas partidas e fazer apenas um saveAll??
+			//TODO: agrupar proximas partidas e fazer apenas um saveAll??
+			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());
 		}
 
 		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
@@ -245,8 +338,30 @@ public class RodadaService {
 	}
 	
 	private void salvarPartidaJogadorEstatisticas(PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		
+		List<String> mensagens = new ArrayList<String>();
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio, fim;
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
 		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#habilidadeValorEstatisticaRepository:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitNanoTime();
+		//TODO:melhorar aqui
 		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#jogadorEstatisticasTemporadaRepository:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());
+		//System.err.println(mensagens);
 	}
 
 	private void carregarPartidas(RodadaAmistosa rodada) {
@@ -259,8 +374,8 @@ public class RodadaService {
 
 	private void salvarPartidas(RodadaAmistosa r) {
 		
-		partidaEstatisticasRepository.saveAll(
-				r.getPartidas().stream().map(PartidaAmistosaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
+		partidaEstatisticasRepository.saveAll(r.getPartidas().stream()
+				.map(PartidaAmistosaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		
