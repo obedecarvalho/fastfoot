@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Parametro;
 import com.fastfoot.model.repository.ParametroRepository;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 
 @Service
 public class ParametroService {
@@ -116,5 +118,28 @@ public class ParametroService {
 	public boolean isEstrategiaPromotorContinentalMelhorEliminado() {
 		String estrategiaPromotorCont = getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 		return ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategiaPromotorCont);
+	}
+	
+	public ClassificacaoNacional[] getClassificacaoNacionalNovoCampeonato(NivelCampeonato nivelCampeonato) {
+		
+		ClassificacaoNacional[] classificacao = new ClassificacaoNacional[16];
+		
+		Integer nroClubesRebaixados = getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
+		
+		if (nivelCampeonato.isNacional()) {
+			System.arraycopy(ClassificacaoNacional.NACIONAL, 0, classificacao, 0, 16 - nroClubesRebaixados);
+			System.arraycopy(ClassificacaoNacional.NACIONAL_II, 0, classificacao,
+					16 - nroClubesRebaixados, nroClubesRebaixados);
+		}
+		
+		if (nivelCampeonato.isNacionalII()) {
+			System.arraycopy(ClassificacaoNacional.NACIONAL, 16 - nroClubesRebaixados, classificacao, 0,
+					nroClubesRebaixados);
+			
+			System.arraycopy(ClassificacaoNacional.NACIONAL_II, nroClubesRebaixados, classificacao,
+					nroClubesRebaixados, 16 - nroClubesRebaixados);
+		}
+		
+		return classificacao;
 	}
 }

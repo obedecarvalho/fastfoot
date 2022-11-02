@@ -352,9 +352,13 @@ public class CriarCalendarioTemporadaService {
 			//Nacional I e II
 			for (int i = 0; i < Constantes.NRO_DIVISOES; i++) {
 				
-				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
+				/*clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
 						(i == 0 ? ClassificacaoNacional.getAllNacionalNovoCampeonato()
-								: ClassificacaoNacional.getAllNacionalIINovoCampeonato()));
+								: ClassificacaoNacional.getAllNacionalIINovoCampeonato()));*/
+				
+				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1, (i == 0
+						? parametroService.getClassificacaoNacionalNovoCampeonato(NivelCampeonato.NACIONAL)
+						: parametroService.getClassificacaoNacionalNovoCampeonato(NivelCampeonato.NACIONAL_II)));
 				
 				campeonatoNacional = CampeonatoFactory.criarCampeonato(temporada, liga, clubes,
 						(i == 0 ? NivelCampeonato.NACIONAL : NivelCampeonato.NACIONAL_II));

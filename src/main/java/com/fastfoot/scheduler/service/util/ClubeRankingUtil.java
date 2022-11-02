@@ -396,7 +396,8 @@ public class ClubeRankingUtil {
 		for (Campeonato c : campeonatos) {
 			for (Classificacao cl : c.getClassificacao()) {
 				clubeRanking = rankings.get(cl.getClube());
-				clubeRanking.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(c.getNivelCampeonato(), cl.getPosicao()));
+				clubeRanking.setClassificacaoNacional(
+						ClassificacaoNacional.getClassificacao(c.getNivelCampeonato(), cl.getPosicao()));
 			}
 		}
 	}
