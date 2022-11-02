@@ -79,10 +79,10 @@ public class PreCarregarClubeService {
 
 	private List<Clube> inserirClubes() {
 		
-		if (clubeRepository.findAll().size() == 0) {
+		List<Clube> clubes = new ArrayList<Clube>();
 		
-			List<Clube> clubes = new ArrayList<Clube>();
-	
+		if (clubeRepository.findAll().size() == 0) {
+
 			/*clubes.add(new Clube(101, Liga.GENEBE, FORCA_NIVEL_1, /*"Bayern München"* / "Bayern Munich"));
 			clubes.add(new Clube(102, Liga.GENEBE, FORCA_NIVEL_1, "Ajax"));
 			clubes.add(new Clube(103, Liga.GENEBE, FORCA_NIVEL_2, "Borussia Dortmund"));
@@ -377,11 +377,10 @@ public class PreCarregarClubeService {
 			*/
 
 			clubeRepository.saveAll(clubes);
-			
-			return clubes;
+
 		}
 		
-		return null;
+		return clubes;
 	}
 
 	private void inserirClubeTituloRanking() {

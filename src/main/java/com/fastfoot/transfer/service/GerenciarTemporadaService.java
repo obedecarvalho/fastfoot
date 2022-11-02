@@ -2,6 +2,7 @@ package com.fastfoot.transfer.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -18,12 +19,14 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.AtualizarClubeNivelService;
 import com.fastfoot.club.service.CalcularTrajetoriaForcaClubeService;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Liga;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
@@ -47,6 +50,9 @@ public class GerenciarTemporadaService {
 	
 	/*@Autowired
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;*/
+
+	@Autowired
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 	
 	//###	SERVICE	###
 	
@@ -261,11 +267,24 @@ public class GerenciarTemporadaService {
 		
 		Set<Clube> clubesRefazerEscalacaoX = Collections.synchronizedSet(new HashSet<Clube>());
 		
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoPorClube();
+		
+		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();//Collections.synchronizedList(new ArrayList<ClubeSaldo>());
+		
+		ClubeSaldo clubeSaldo = null;
+		
+		for (Map<String, Object> sc : saldoClubes) {
+			clubeSaldo = new ClubeSaldo();
+			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
+			clubeSaldo.setSaldo((Double) sc.get("saldo"));
+			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
+		}
+		
 		//Analisar propostas transferencia
 		//for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {
 		for (Integer i : propostasClubeX.keySet()) {
 			transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
-					propostasClubeX.get(i), clubesRefazerEscalacaoX));
+					propostasClubeX.get(i), clubesSaldo, clubesRefazerEscalacaoX));
 		}
 
 		/*Map<Clube, List<PropostaTransferenciaJogador>> propostasClube = propostas.stream()

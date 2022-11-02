@@ -1,6 +1,7 @@
 package com.fastfoot.financial.model.repository;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +26,12 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.semana.temporada = :temporada AND mov.clube = :clube ")
 	public List<MovimentacaoFinanceira> findByTemporadaAndClube(@Param("temporada") Temporada temporada,
 			@Param("clube") Clube clube);
+	
+	@Query(nativeQuery = true, value =
+			" select id_clube, sum(valor_movimentacao) as saldo" +
+			" from movimentacao_financeira mf" +
+			" group by id_clube"
+	)
+	public List<Map<String, Object>> findSaldoPorClube();
 
 }

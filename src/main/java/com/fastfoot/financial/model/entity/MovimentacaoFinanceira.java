@@ -6,16 +6,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
-public class MovimentacaoFinanceira {//TODO: criar INDEX
+@Table(indexes = { @Index(columnList = "id_clube")})
+public class MovimentacaoFinanceira {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimentacaoFinanceiraSequence")

@@ -16,6 +16,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.RoletaUtil;
+import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
@@ -40,7 +41,7 @@ public class AnalisarPropostaTransferenciaService {
 	@Autowired
 	private ConcluirTransferenciaJogadorService concluirTransferenciaJogadorService;
 	
-	@Async("defaultExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
 
@@ -49,17 +50,23 @@ public class AnalisarPropostaTransferenciaService {
 		}
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> analisarPropostaTransferencia(Temporada temporada,
-			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Set<Clube> clubesRefazerEscalacao) {
+			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Map<Clube, ClubeSaldo> clubesSaldo,
+			Set<Clube> clubesRefazerEscalacao) {
 		
 		System.err.println("\t#c:" + propostasClube.keySet().size());
+		
+		List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
 
 		for (Clube c : propostasClube.keySet()) {
-			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), clubesRefazerEscalacao);
+			analisarPropostaTransferenciaClube(c, temporada, propostasClube.get(c), transferenciaConcluidaDTOs,
+					clubesSaldo, clubesRefazerEscalacao);
 		}
+		
+		concluirTransferenciaJogadorService.concluirTransferenciaJogadorEmLote(transferenciaConcluidaDTOs);
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
@@ -116,38 +123,58 @@ public class AnalisarPropostaTransferenciaService {
 	}*/
 	
 	private void analisarPropostaTransferenciaClube(Clube clube, Temporada temporada,
-			List<PropostaTransferenciaJogador> propostas, Set<Clube> clubesRefazerEscalacao) {
+			List<PropostaTransferenciaJogador> propostas, List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs,
+			Map<Clube, ClubeSaldo> clubesSaldo, Set<Clube> clubesRefazerEscalacao) {
 
 		Map<Jogador, List<PropostaTransferenciaJogador>> jogadorPropostas = propostas.stream()
 				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getJogador));
 
 		List<PropostaTransferenciaJogador> propostasJog = null;
+		List<PropostaTransferenciaJogador> propostasJogTmp = null;
 		PropostaTransferenciaJogador propostaAceitar = null;
-		List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
+		ClubeSaldo clubeSaldo = null;
+		Boolean haSaldo = null;
+		//List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
 		
 		for (Jogador j : jogadorPropostas.keySet()) {
 			
 			propostasJog = jogadorPropostas.get(j);
+			
+			propostasJogTmp = new ArrayList<PropostaTransferenciaJogador>(propostasJog);
 			
 			Optional<DisponivelNegociacao> disNegJogOpt = disponivelNegociacaoRepository
 					.findFirstByTemporadaAndJogadorAndAtivo(temporada, j, true); 
 
 			if (disNegJogOpt.isPresent()) {
 				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);
-				propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executarN(propostasJog);
 				
-				propostasJog.remove(propostaAceitar);
-				
-				//System.err.println(Thread.currentThread().getName() + propostaAceitar.getClubeOrigem() + propostaAceitar.getClubeDestino());
-				clubesRefazerEscalacao.add(propostaAceitar.getClubeOrigem());
-				clubesRefazerEscalacao.add(propostaAceitar.getClubeDestino());
-				//concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar, propostasJog, disNegJogOpt.get());
+				do {
+					propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executarN(propostasJogTmp);
 
-				transferenciaConcluidaDTOs.add(new TransferenciaConcluidaDTO(propostaAceitar, propostasJog, disNegJogOpt.get()));
+					propostasJogTmp.remove(propostaAceitar);
+					clubeSaldo = clubesSaldo.get(propostaAceitar.getClubeDestino());
+					
+					haSaldo = clubeSaldo.atualizarSaldo(propostaAceitar.getValorTransferencia());
+
+				} while (propostasJogTmp.size() > 0 && !haSaldo);
+				
+				if (propostaAceitar != null && haSaldo) {
+					propostasJog.remove(propostaAceitar);
+					
+					//System.err.println(Thread.currentThread().getName() + propostaAceitar.getClubeOrigem() + propostaAceitar.getClubeDestino());
+					clubesRefazerEscalacao.add(propostaAceitar.getClubeOrigem());
+					clubesRefazerEscalacao.add(propostaAceitar.getClubeDestino());
+					//concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar, propostasJog, disNegJogOpt.get());
+	
+					transferenciaConcluidaDTOs
+							.add(new TransferenciaConcluidaDTO(propostaAceitar, propostasJog, disNegJogOpt.get()));
+				} else {
+					//transferenciaConcluidaDTOs.add(new TransferenciaConcluidaDTO(null, propostasJog, null));//TODO: descartar outras propostas
+				}
 			}
 
 		}
 		
-		concluirTransferenciaJogadorService.concluirTransferenciaJogadorEmLote(transferenciaConcluidaDTOs);
+		//concluirTransferenciaJogadorService.concluirTransferenciaJogadorEmLote(transferenciaConcluidaDTOs);
 	}
 }
