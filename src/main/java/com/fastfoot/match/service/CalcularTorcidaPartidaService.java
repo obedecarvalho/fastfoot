@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.match.model.PartidaTorcidaPorcentagem;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
 import com.fastfoot.match.model.entity.PartidaTorcida;
@@ -86,14 +86,14 @@ public class CalcularTorcidaPartidaService {
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoMandante,
 				partida.getRodada().getNumero(), null);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
 				semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)", partida.getNivelCampeonato().name(),
 						partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoVisitante,
 				partida.getRodada().getNumero(), null);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
 				partida.getClubeVisitante(), semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)",
 						partida.getNivelCampeonato().name(), partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -138,14 +138,14 @@ public class CalcularTorcidaPartidaService {
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoMandante,
 				partida.getRodada().getNumero(), numRodadasCN);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
 				semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)", partida.getNivelCampeonato().name(),
 						partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoVisitante,
 				partida.getRodada().getNumero(), numRodadasCN);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceiraEntrada(criarMovimentacaoFinanceira(
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
 				partida.getClubeVisitante(), semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)",
 						partida.getNivelCampeonato().name(), partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -163,14 +163,14 @@ public class CalcularTorcidaPartidaService {
 		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
 	
-	private MovimentacaoFinanceiraEntrada criarMovimentacaoFinanceira(Clube clube, Semana semana,
+	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,
 			Double valorMovimentacao, String descricao) {
 		
-		MovimentacaoFinanceiraEntrada entrada = new MovimentacaoFinanceiraEntrada();
+		MovimentacaoFinanceira entrada = new MovimentacaoFinanceira();
 		
 		entrada.setClube(clube);
 		entrada.setSemana(semana);
-		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceiraEntrada.INGRESSOS);
+		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceira.ENTRADA_INGRESSOS);
 		entrada.setValorMovimentacao(valorMovimentacao);
 		entrada.setDescricao(descricao);
 

@@ -175,7 +175,9 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		return COMPARATOR;
 	}
 	
-	private void calcularNegociacaoesGoleiro(List<AdequacaoJogadorDTO> jogsAdq, List<NecessidadeContratacaoClube> contratacoes, List<DisponivelNegociacao> negociaveis, Temporada temporada, Clube clube) {
+	private void calcularNegociacaoesGoleiro(List<AdequacaoJogadorDTO> jogsAdq,
+			List<NecessidadeContratacaoClube> contratacoes, List<DisponivelNegociacao> negociaveis, Temporada temporada,
+			Clube clube) {
 		
 		Collections.sort(jogsAdq, getComparator());
 		
@@ -186,7 +188,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			//Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.A, NivelAdequacao.A, false, true));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.A,
+					NivelAdequacao.A, false, true));
 		}
 		
 		//R
@@ -196,7 +199,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.B, NivelAdequacao.C, false, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.B,
+					NivelAdequacao.C, false, false));
 		}
 		
 		//3
@@ -207,27 +211,32 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else if (jogsAdq.size() > i && NivelAdequacao.A.equals(jogsAdq.get(i).getNivelAdequacao())) {
 			// Vender
-			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.COMPRA_VENDA, true));
+			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+					TipoNegociacao.COMPRA_VENDA, true));
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.C, NivelAdequacao.E, false, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, Posicao.GOLEIRO, NivelAdequacao.C,
+					NivelAdequacao.E, false, false));
 		}
 		
 		while (jogsAdq.size() > i) {
 			if (NivelAdequacao.E.equals(jogsAdq.get(i).getNivelAdequacao())
 					&& jogsAdq.get(i).getJogador().getIdade() <= IDADE_MAX_EMPRESTAR) {
 				//Emprestar
-				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.EMPRESTIMO, true));
+				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+						TipoNegociacao.EMPRESTIMO, true));
 			} else {
 				//Vender
-				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.COMPRA_VENDA, true));
+				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+						TipoNegociacao.COMPRA_VENDA, true));
 			}
 			i++;
 		}
 	}
 	
-	private void calcularNegociacaoes(List<AdequacaoJogadorDTO> jogsAdq, List<NecessidadeContratacaoClube> contratacoes, List<DisponivelNegociacao> negociaveis, Temporada temporada, Clube clube, Posicao posicao) {
+	private void calcularNegociacaoes(List<AdequacaoJogadorDTO> jogsAdq, List<NecessidadeContratacaoClube> contratacoes,
+			List<DisponivelNegociacao> negociaveis, Temporada temporada, Clube clube, Posicao posicao) {
 		
 		Collections.sort(jogsAdq, getComparator());
 		
@@ -238,7 +247,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			//Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.A, NivelAdequacao.A, false, true));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.A,
+					NivelAdequacao.A, false, true));
 		}
 		
 		//T
@@ -247,7 +257,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.B, false, true));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B,
+					NivelAdequacao.B, false, true));
 		}
 		
 		//R
@@ -257,7 +268,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B, NivelAdequacao.C, false, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.B,
+					NivelAdequacao.C, false, false));
 		}
 		
 		//4
@@ -267,11 +279,13 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			i++;
 		} else if (jogsAdq.size() > i && NivelAdequacao.A.equals(jogsAdq.get(i).getNivelAdequacao())) {
 			// Vender
-			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.COMPRA_VENDA, true));
+			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+					TipoNegociacao.COMPRA_VENDA, true));
 			i++;
 		} else {
 			// Contratar
-			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.C, NivelAdequacao.D, false, false));
+			contratacoes.add(new NecessidadeContratacaoClube(temporada, clube, posicao, NivelAdequacao.C,
+					NivelAdequacao.D, false, false));
 		}
 		
 		//5
@@ -283,7 +297,8 @@ public class AvaliarNecessidadeContratacaoClubeService {
 				|| NivelAdequacao.C.equals(jogsAdq.get(i).getNivelAdequacao())
 				)) {
 			// Vender
-			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.COMPRA_VENDA, true));
+			negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+					TipoNegociacao.COMPRA_VENDA, true));
 			i++;
 		}
 		
@@ -291,10 +306,12 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			if (NivelAdequacao.E.equals(jogsAdq.get(i).getNivelAdequacao())
 					&& jogsAdq.get(i).getJogador().getIdade() <= IDADE_MAX_EMPRESTAR) {
 				//Emprestar
-				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.EMPRESTIMO, true));
+				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+						TipoNegociacao.EMPRESTIMO, true));
 			} else {
 				//Vender
-				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(), TipoNegociacao.COMPRA_VENDA, true));
+				negociaveis.add(new DisponivelNegociacao(temporada, clube, jogsAdq.get(i).getJogador(),
+						TipoNegociacao.COMPRA_VENDA, true));
 			}
 			i++;
 		}

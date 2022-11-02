@@ -11,6 +11,9 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
@@ -52,13 +55,29 @@ public class PreCarregarClubeService {
 	@Autowired
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
+	@Autowired
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+
 	public void preCarregarClubes () {
-		inserirClubes();
+		List<Clube> clubes = inserirClubes();
 		inserirClubesRanking();
 		inserirClubeTituloRanking();
+		inserirCaixaInicial(clubes);
+	}
+	
+	private void inserirCaixaInicial(List<Clube> clubes) {
+
+		List<MovimentacaoFinanceira> movimentacoesFinanceiras = new ArrayList<MovimentacaoFinanceira>();
+
+		for (Clube c : clubes) {
+			movimentacoesFinanceiras.add(new MovimentacaoFinanceira(c, null, TipoMovimentacaoFinanceira.CAIXA_INICIAL,
+					c.getClubeNivel().getCaixaInicial(), "Caixa Inicial"));
+		}
+
+		movimentacaoFinanceiraRepository.saveAll(movimentacoesFinanceiras);
 	}
 
-	private void inserirClubes() {
+	private List<Clube> inserirClubes() {
 		
 		if (clubeRepository.findAll().size() == 0) {
 		
@@ -358,7 +377,11 @@ public class PreCarregarClubeService {
 			*/
 
 			clubeRepository.saveAll(clubes);
+			
+			return clubes;
 		}
+		
+		return null;
 	}
 
 	private void inserirClubeTituloRanking() {

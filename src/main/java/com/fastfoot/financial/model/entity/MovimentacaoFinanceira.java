@@ -11,40 +11,36 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
-public class MovimentacaoFinanceiraEntrada {
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimentacaoFinanceiraEntradaSequence")
-	@SequenceGenerator(name = "movimentacaoFinanceiraEntradaSequence", sequenceName = "movimentacao_financeira_entrada_seq")
-	private Long id;
+public class MovimentacaoFinanceira {//TODO: criar INDEX
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimentacaoFinanceiraSequence")
+	@SequenceGenerator(name = "movimentacaoFinanceiraSequence", sequenceName = "movimentacao_financeira_seq")
+	private Long id;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_temporada")
-	private Temporada temporada;*/
 	
 	@ManyToOne
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
 	
-	private TipoMovimentacaoFinanceiraEntrada tipoMovimentacao;
+	private TipoMovimentacaoFinanceira tipoMovimentacao;
 	
 	private Double valorMovimentacao;
 	
 	private String descricao;
 	
-	public MovimentacaoFinanceiraEntrada() {
+	public MovimentacaoFinanceira() {
 
 	}
 
-	public MovimentacaoFinanceiraEntrada(Clube clube, Semana semana, TipoMovimentacaoFinanceiraEntrada tipoMovimentacao,
+	public MovimentacaoFinanceira(Clube clube, Semana semana, TipoMovimentacaoFinanceira tipoMovimentacao,
 			Double valorMovimentacao, String descricao) {
 		this.clube = clube;
 		this.semana = semana;
@@ -69,6 +65,14 @@ public class MovimentacaoFinanceiraEntrada {
 		this.clube = clube;
 	}
 
+	public TipoMovimentacaoFinanceira getTipoMovimentacao() {
+		return tipoMovimentacao;
+	}
+
+	public void setTipoMovimentacao(TipoMovimentacaoFinanceira tipoMovimentacao) {
+		this.tipoMovimentacao = tipoMovimentacao;
+	}
+
 	public Semana getSemana() {
 		return semana;
 	}
@@ -83,22 +87,6 @@ public class MovimentacaoFinanceiraEntrada {
 
 	public void setValorMovimentacao(Double valorMovimentacao) {
 		this.valorMovimentacao = valorMovimentacao;
-	}
-
-	/*public Temporada getTemporada() {
-		return temporada;
-	}
-
-	public void setTemporada(Temporada temporada) {
-		this.temporada = temporada;
-	}*/
-
-	public TipoMovimentacaoFinanceiraEntrada getTipoMovimentacao() {
-		return tipoMovimentacao;
-	}
-
-	public void setTipoMovimentacao(TipoMovimentacaoFinanceiraEntrada tipoMovimentacao) {
-		this.tipoMovimentacao = tipoMovimentacao;
 	}
 
 	public String getDescricao() {
@@ -122,13 +110,13 @@ public class MovimentacaoFinanceiraEntrada {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		MovimentacaoFinanceiraEntrada other = (MovimentacaoFinanceiraEntrada) obj;
+		MovimentacaoFinanceira other = (MovimentacaoFinanceira) obj;
 		return Objects.equals(id, other.id);
 	}
 
 	@Override
 	public String toString() {
-		return "MovimentacaoFinanceiraEntrada [clube=" + clube + ", semana=" + semana + ", tipoMovimentacao="
+		return "MovimentacaoFinanceira [clube=" + clube + ", semana=" + semana + ", tipoMovimentacao="
 				+ tipoMovimentacao + ", valorMovimentacao=" + valorMovimentacao + "]";
 	}
 

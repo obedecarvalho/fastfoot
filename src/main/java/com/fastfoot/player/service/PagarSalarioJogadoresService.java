@@ -3,17 +3,14 @@ package com.fastfoot.player.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraSaida;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraSaida;
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraSaidaRepository;
-import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 
@@ -26,12 +23,12 @@ public class PagarSalarioJogadoresService {
 	private JogadorRepository jogadorRepository;
 	
 	@Autowired
-	private MovimentacaoFinanceiraSaidaRepository movimentacaoFinanceiraSaidaRepository;
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
 	public void pagarSalarioJogadores(Semana semana) {
 		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
 
-		List<MovimentacaoFinanceiraSaida> saidas = new ArrayList<MovimentacaoFinanceiraSaida>();
+		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 		
 		double valorSalario, porcentagemSalario = PORC_VALOR_JOG_SALARIO_SEMANAL * 100;
 
@@ -43,10 +40,10 @@ public class PagarSalarioJogadoresService {
 					String.format("Salários (%d)", semana.getNumero())));
 		}
 
-		movimentacaoFinanceiraSaidaRepository.saveAll(saidas);
+		movimentacaoFinanceiraRepository.saveAll(saidas);
 	}
 
-	public void pagarSalarioJogadores(Semana semana, boolean old) {
+	/*public void pagarSalarioJogadores(Semana semana) {
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
 
 		List<Jogador> jogadoresClube = null;
@@ -56,7 +53,7 @@ public class PagarSalarioJogadoresService {
 		Map<Clube, List<Jogador>> jogadoresClubeMap = jogadores.stream()
 				.collect(Collectors.groupingBy(Jogador::getClube));
 
-		List<MovimentacaoFinanceiraSaida> saidas = new ArrayList<MovimentacaoFinanceiraSaida>();
+		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 
 		for (Clube c : jogadoresClubeMap.keySet()) {
 
@@ -69,17 +66,17 @@ public class PagarSalarioJogadoresService {
 		}
 
 		movimentacaoFinanceiraSaidaRepository.saveAll(saidas);
-	}
+	}*/
 	
-	private MovimentacaoFinanceiraSaida criarMovimentacaoFinanceira(Clube clube, Semana semana,
+	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,
 			Double valorMovimentacao, String descricao) {
 		
-		MovimentacaoFinanceiraSaida saida = new MovimentacaoFinanceiraSaida();
+		MovimentacaoFinanceira saida = new MovimentacaoFinanceira();
 		
 		saida.setClube(clube);
 		saida.setSemana(semana);
-		saida.setTipoMovimentacao(TipoMovimentacaoFinanceiraSaida.SALARIO_JOGADOR);
-		saida.setValorMovimentacao(valorMovimentacao);
+		saida.setTipoMovimentacao(TipoMovimentacaoFinanceira.SAIDA_SALARIO_JOGADOR);
+		saida.setValorMovimentacao(-1 * valorMovimentacao);
 		saida.setDescricao(descricao);
 
 		return saida;

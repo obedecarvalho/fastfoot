@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
 import com.fastfoot.match.model.entity.PartidaLance;
@@ -67,7 +67,7 @@ public class RodadaService {
 	private PartidaTorcidaRepository partidaTorcidaRepository;
 
 	@Autowired
-	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
 	//###	SERVICE	###
 	@Autowired
@@ -384,6 +384,6 @@ public class RodadaService {
 	
 	private void salvarPartidaTorcida(PartidaTorcidaSalvarDTO dto) {
 		partidaTorcidaRepository.saveAll(dto.getPartidaTorcidaList());
-		movimentacaoFinanceiraEntradaRepository.saveAll(dto.getMovimentacaoFinanceiraEntradas());
+		movimentacaoFinanceiraRepository.saveAll(dto.getMovimentacaoFinanceira());
 	}
 }

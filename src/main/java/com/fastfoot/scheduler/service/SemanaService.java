@@ -287,7 +287,7 @@ public class SemanaService {
 
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 
 		return SemanaDTO.convertToDTO(semana);
 	}

@@ -6,12 +6,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraSaida;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraSaida;
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraSaidaRepository;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
@@ -50,10 +47,7 @@ public class ConcluirTransferenciaJogadorService {
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
 	
 	@Autowired
-	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
-	
-	@Autowired
-	private MovimentacaoFinanceiraSaidaRepository movimentacaoFinanceiraSaidaRepository;
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 	
 	//###	SERVICE	###
 
@@ -107,9 +101,8 @@ public class ConcluirTransferenciaJogadorService {
 		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelSalvar = new ArrayList<DisponivelNegociacao>();
-		
-		List<MovimentacaoFinanceiraSaida> movSaidaSalvar = new ArrayList<MovimentacaoFinanceiraSaida>();
-		List<MovimentacaoFinanceiraEntrada> movEntradaSalvar = new ArrayList<MovimentacaoFinanceiraEntrada>();
+
+		List<MovimentacaoFinanceira> movimentacoesFinanceiras = new ArrayList<MovimentacaoFinanceira>();
 
 		for (TransferenciaConcluidaDTO transferenciaConcluidaDTO : transferenciaConcluidaDTOs) {
 
@@ -146,14 +139,14 @@ public class ConcluirTransferenciaJogadorService {
 
 			transferenciaConcluidaDTO.getDisponivelNegociacao().setAtivo(false);
 			
-			movSaidaSalvar.add(
-					new MovimentacaoFinanceiraSaida(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), s,
-							TipoMovimentacaoFinanceiraSaida.COMPRA_JOGADOR,
-							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), ""));//TODO: Venda do jogador ....
-			movEntradaSalvar.add(
-					new MovimentacaoFinanceiraEntrada(transferenciaConcluidaDTO.getPropostaAceita().getClubeOrigem(), s,
-							TipoMovimentacaoFinanceiraEntrada.VENDA_JOGADOR,
-							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), ""));//TODO: Venda do jogador ....
+			movimentacoesFinanceiras.add(
+					new MovimentacaoFinanceira(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), s,
+							TipoMovimentacaoFinanceira.SAIDA_COMPRA_JOGADOR,
+							-1 * transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), "Venda de Jogador"));
+			movimentacoesFinanceiras.add(
+					new MovimentacaoFinanceira(transferenciaConcluidaDTO.getPropostaAceita().getClubeOrigem(), s,
+							TipoMovimentacaoFinanceira.ENTRADA_VENDA_JOGADOR,
+							transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), "Venda de Jogador"));
 
 			propostasSalvar.add(transferenciaConcluidaDTO.getPropostaAceita());
 			propostasSalvar.addAll(transferenciaConcluidaDTO.getPropostasRejeitar());
@@ -176,9 +169,8 @@ public class ConcluirTransferenciaJogadorService {
 		propostaTransferenciaJogadorRepository.saveAll(propostasSalvar);
 		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoSalvar);
 		disponivelNegociacaoRepository.saveAll(disponivelSalvar);
-		
-		movimentacaoFinanceiraEntradaRepository.saveAll(movEntradaSalvar);
-		movimentacaoFinanceiraSaidaRepository.saveAll(movSaidaSalvar);
+
+		movimentacaoFinanceiraRepository.saveAll(movimentacoesFinanceiras);
 
 	}
 }

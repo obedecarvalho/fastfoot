@@ -35,7 +35,7 @@ elif opcao == 3:
 finish_time = time.time()
 
 if r.status_code == 200:
-	print('Sucesso: ' + str(r.json()))
+	print('Sucesso: ' + str(r.json()) + ' [' + str(finish_time - start_time) + ']')
 else:
 	print('Error: ' + str(r.status_code))
 	exit()

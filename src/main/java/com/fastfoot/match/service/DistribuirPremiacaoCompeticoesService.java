@@ -10,9 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraEntrada;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraEntradaRepository;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.match.model.PremiacaoClassificacao;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -43,8 +43,11 @@ public class DistribuirPremiacaoCompeticoesService {
 	/*@Autowired
 	private PartidaResultadoRepository partidaResultadoRepository;*/
 	
+	/*@Autowired
+	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;*/
+	
 	@Autowired
-	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
@@ -63,7 +66,7 @@ public class DistribuirPremiacaoCompeticoesService {
 		 * 	* Avançar fase Copa Nacional
 		 */
 		
-		List<MovimentacaoFinanceiraEntrada> entradas = new ArrayList<MovimentacaoFinanceiraEntrada>();
+		List<MovimentacaoFinanceira> entradas = new ArrayList<MovimentacaoFinanceira>();
 
 		List<PartidaEliminatoriaResultado> partidaEliminatoriasSemana = partidaEliminatoriaResultadoRepository
 				.findBySemana(semana);
@@ -115,12 +118,12 @@ public class DistribuirPremiacaoCompeticoesService {
 			
 		}
 		
-		movimentacaoFinanceiraEntradaRepository.saveAll(entradas);
+		movimentacaoFinanceiraRepository.saveAll(entradas);
 	}
 	
 	public void distribuirPremiacaoCompeticoes(Temporada temporada) {
 
-		List<MovimentacaoFinanceiraEntrada> entradas = new ArrayList<MovimentacaoFinanceiraEntrada>();
+		List<MovimentacaoFinanceira> entradas = new ArrayList<MovimentacaoFinanceira>();
 
 		List<Classificacao> classificacao = classificacaoRepository.findByTemporadaGrupoCampeonato(temporada);
 
@@ -133,12 +136,12 @@ public class DistribuirPremiacaoCompeticoesService {
 								c.getGrupoCampeonato().getCampeonato().getNivelCampeonato().name())))
 				.collect(Collectors.toList()));
 
-		movimentacaoFinanceiraEntradaRepository.saveAll(entradas);
+		movimentacaoFinanceiraRepository.saveAll(entradas);
 	}
 
 	private void distribuirPremiacaoCompeticoesCopaNacional(Semana semana, Integer numRodadasCN,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
-			List<MovimentacaoFinanceiraEntrada> entradas) {
+			List<MovimentacaoFinanceira> entradas) {
 
 		List<PartidaEliminatoriaResultado> partidaEliminatorias = null;
 
@@ -213,7 +216,7 @@ public class DistribuirPremiacaoCompeticoesService {
 	
 	private void distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(Semana semana, int rodada,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
-			List<MovimentacaoFinanceiraEntrada> entradas) {
+			List<MovimentacaoFinanceira> entradas) {
 
 		List<PartidaEliminatoriaResultado> partidaEliminatorias = null;
 
@@ -302,14 +305,14 @@ public class DistribuirPremiacaoCompeticoesService {
 		return null;
 	}
 	
-	private MovimentacaoFinanceiraEntrada criarMovimentacaoFinanceira(Clube clube, Semana semana,
+	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,
 			Double valorMovimentacao, String descricao) {
 		
-		MovimentacaoFinanceiraEntrada entrada = new MovimentacaoFinanceiraEntrada();
+		MovimentacaoFinanceira entrada = new MovimentacaoFinanceira();
 		
 		entrada.setClube(clube);
 		entrada.setSemana(semana);
-		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceiraEntrada.PREMIACAO);
+		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceira.ENTRADA_PREMIACAO);
 		entrada.setValorMovimentacao(valorMovimentacao);
 		entrada.setDescricao(descricao);
 

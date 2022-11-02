@@ -116,10 +116,12 @@ public class ProporTransferenciaService {
 		for (Clube c : clubes) {
 			
 			List<NecessidadeContratacaoClube> necessidadesContratacao = necessidadeContratacaoClubeRepository
-					.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(c, temporada, NivelAdequacao.A, NivelAdequacao.A, false);
+					.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(c,
+							temporada, NivelAdequacao.A, NivelAdequacao.A, false);
 
 			necessidadesContratacao.addAll(necessidadeContratacaoClubeRepository
-					.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(c, temporada, NivelAdequacao.B, NivelAdequacao.B, false));
+					.findByClubeAndTemporadaAndNivelAdequacaoMaxAndNivelAdequacaoMinAndNecessidadeSatisfeita(c,
+							temporada, NivelAdequacao.B, NivelAdequacao.B, false));
 			
 			gerarPropostaTransferenciaClube(c, temporada, necessidadesContratacao, propostaTransferenciaJogadores);
 		}
@@ -136,7 +138,9 @@ public class ProporTransferenciaService {
 	 *  * estatisticas
 	 *  * outros...
 	 */
-	private void gerarPropostaTransferenciaClube(Clube clube, Temporada temporada, List<NecessidadeContratacaoClube> necessidadesContratacao, List<PropostaTransferenciaJogador> propostaTransferenciaJogadores) {
+	private void gerarPropostaTransferenciaClube(Clube clube, Temporada temporada,
+			List<NecessidadeContratacaoClube> necessidadesContratacao,
+			List<PropostaTransferenciaJogador> propostaTransferenciaJogadores) {
 
 		List<Map<String, Object>> possiveisJogadores = null;
 		

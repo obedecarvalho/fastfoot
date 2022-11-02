@@ -3,26 +3,26 @@ package com.fastfoot.match.model.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceiraEntrada;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.match.model.entity.PartidaTorcida;
 
 public class PartidaTorcidaSalvarDTO {
 	
-	private List<MovimentacaoFinanceiraEntrada> movimentacaoFinanceiraEntradas;
+	private List<MovimentacaoFinanceira> movimentacaoFinanceira;
 	
 	private List<PartidaTorcida> partidaTorcidaList;
 	
 	public PartidaTorcidaSalvarDTO() {
-		this.movimentacaoFinanceiraEntradas = new ArrayList<MovimentacaoFinanceiraEntrada>();
+		this.movimentacaoFinanceira = new ArrayList<MovimentacaoFinanceira>();
 		this.partidaTorcidaList = new ArrayList<PartidaTorcida>();
 	}
 
-	public List<MovimentacaoFinanceiraEntrada> getMovimentacaoFinanceiraEntradas() {
-		return movimentacaoFinanceiraEntradas;
+	public List<MovimentacaoFinanceira> getMovimentacaoFinanceira() {
+		return movimentacaoFinanceira;
 	}
 
-	public void setMovimentacaoFinanceiraEntradas(List<MovimentacaoFinanceiraEntrada> movimentacaoFinanceiraEntradas) {
-		this.movimentacaoFinanceiraEntradas = movimentacaoFinanceiraEntradas;
+	public void setMovimentacaoFinanceira(List<MovimentacaoFinanceira> movimentacaoFinanceira) {
+		this.movimentacaoFinanceira = movimentacaoFinanceira;
 	}
 
 	public List<PartidaTorcida> getPartidaTorcidaList() {
@@ -33,8 +33,8 @@ public class PartidaTorcidaSalvarDTO {
 		this.partidaTorcidaList = partidaTorcidaList;
 	}
 	
-	public void addMovimentacaoFinanceiraEntrada(MovimentacaoFinanceiraEntrada mfe) {
-		this.movimentacaoFinanceiraEntradas.add(mfe);
+	public void addMovimentacaoFinanceira(MovimentacaoFinanceira mfe) {
+		this.movimentacaoFinanceira.add(mfe);
 	}
 
 	public void addPartidaTorcida(PartidaTorcida partidaTorcida) {
