@@ -130,6 +130,11 @@ public class RodadaAmistosa implements RodadaJogavel {
 	public NivelCampeonato getNivelCampeonato() {
 		return getCampeonatoJogavel() != null ? getCampeonatoJogavel().getNivelCampeonato() : null;
 	}
+	
+	@Override
+	public boolean isAmistoso() {
+		return true;
+	}
 
 	@Override
 	public String toString() {

@@ -30,4 +30,8 @@ public interface PartidaEliminatoriaResultadoRepository extends JpaRepository<Pa
 	@Query("SELECT pe FROM PartidaEliminatoriaResultado pe WHERE pe.rodada.semana = :semana")
 	public List<PartidaEliminatoriaResultado> findBySemana(@Param("semana") Semana semana);
 
+	public List<PartidaEliminatoriaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+
+	public List<PartidaEliminatoriaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+
 }

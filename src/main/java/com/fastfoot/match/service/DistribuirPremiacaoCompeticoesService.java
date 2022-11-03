@@ -27,7 +27,7 @@ import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
-public class DistribuirPremiacaoCompeticoesService {
+public class DistribuirPremiacaoCompeticoesService {//TODO: mover para scheduler.service
 	
 	//########	REPOSITORY	##########
 	

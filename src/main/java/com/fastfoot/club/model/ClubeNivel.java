@@ -4,6 +4,21 @@ import com.fastfoot.service.PreCarregarClubeService;
 
 public enum ClubeNivel {
 	
+	/**
+	 	create table clube_nivel_info (
+        	clube_nivel int4, tamanho_torcida int4
+		);
+		
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (0, 60000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (1, 50000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (2, 42000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (3, 36000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (4, 30000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (5, 25000);
+		INSERT INTO clube_nivel_info (clube_nivel, tamanho_torcida) VALUES (6, 20000);
+
+	 */
+	
 	NIVEL_A(PreCarregarClubeService.FORCA_NIVEL_1, 1, 2, 60000, 30000000.0d),
 	NIVEL_B(PreCarregarClubeService.FORCA_NIVEL_2, 3, 5, 50000, 25000000.0d),
 	NIVEL_C(PreCarregarClubeService.FORCA_NIVEL_3, 6, 9, 42000, 21000000.0d),

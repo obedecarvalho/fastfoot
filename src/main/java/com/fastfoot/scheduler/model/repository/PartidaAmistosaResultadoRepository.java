@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -22,4 +23,8 @@ public interface PartidaAmistosaResultadoRepository extends JpaRepository<Partid
 
 	@Query("SELECT par FROM PartidaAmistosaResultado par WHERE par.rodada.semana.temporada = :temporada")
 	public List<PartidaAmistosaResultado> findByTemporada(@Param("temporada") Temporada temporada);
+
+	public List<PartidaAmistosaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+
+	public List<PartidaAmistosaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
 }

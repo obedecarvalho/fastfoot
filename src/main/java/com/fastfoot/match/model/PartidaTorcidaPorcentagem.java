@@ -26,6 +26,10 @@ public enum PartidaTorcidaPorcentagem {
 
 	private static final Double TICKET_MEDIO_NACIONAL = 60.0d;
 	
+	private static final Double TICKET_MEDIO_AMISTOSO = 30.0d;
+	
+	private static final Double PORC_PUBLICO_AMISTOSO = 0.75d;
+	
 	private static final Double MULTIPLICADOR_INGRESSOS_FINAL = 1.5d;
 	
 	private static final Double MULTIPLICADOR_INGRESSOS_SEMI_FINAL = 1.25d;
@@ -97,6 +101,14 @@ public enum PartidaTorcidaPorcentagem {
 		}
 		
 		return null;
+	}
+	
+	public static Double getPorcentagemAmistoso() {
+		return PORC_PUBLICO_AMISTOSO;
+	}
+	
+	public static Double getRendaIngressosAmistosos(Integer qtdeTorcida) {
+		return TICKET_MEDIO_AMISTOSO * qtdeTorcida;
 	}
 
 	public static Double getRendaIngressos(NivelCampeonato nivelCampeonato, Integer qtdeTorcida, Integer numRodada, Integer numRodadasCN) {

@@ -2,6 +2,29 @@ package com.fastfoot.player.model;
 
 public enum Habilidade {
 	
+	/**
+	 	create table habilidade_descricao (
+        	id int4, dsc text
+		);
+		
+		
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (1, 'Passe');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (2, 'Finalizacao');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (3, 'Cruzamento');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (4, 'Armacao');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (5, 'Marcacao');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (6, 'Desarme');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (7, 'Interceptacao');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (8, 'Velocidade');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (9, 'Dible');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (10, 'Forca');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (11, 'Cabeceio');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (12, 'Posicionamento');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (13, 'Dominio');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (14, 'Reflexo');
+		INSERT INTO habilidade_descricao (id, dsc) VALUES (15, 'Jogo Aereo');
+	 */
+	
 	NULL("NULL", null),
 
 	PASSE("Passe", TipoHabilidadeAcao.ACAO_FIM),//1

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.RoletaUtil;
@@ -134,6 +135,7 @@ public class AnalisarPropostaTransferenciaService {
 		PropostaTransferenciaJogador propostaAceitar = null;
 		ClubeSaldo clubeSaldo = null;
 		Boolean haSaldo = null;
+		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 25;
 		//List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
 		
 		for (Jogador j : jogadorPropostas.keySet()) {
@@ -154,7 +156,8 @@ public class AnalisarPropostaTransferenciaService {
 					propostasJogTmp.remove(propostaAceitar);
 					clubeSaldo = clubesSaldo.get(propostaAceitar.getClubeDestino());
 					
-					haSaldo = clubeSaldo.atualizarSaldo(propostaAceitar.getValorTransferencia());
+					//haSaldo = clubeSaldo.deduzirSaldo(propostaAceitar.getValorTransferencia());
+					haSaldo = clubeSaldo.inserirCompra(propostaAceitar.getValorTransferencia(), propostaAceitar.getValorTransferencia() * porcSalarioAnual);
 
 				} while (propostasJogTmp.size() > 0 && !haSaldo);
 				
@@ -166,6 +169,9 @@ public class AnalisarPropostaTransferenciaService {
 					clubesRefazerEscalacao.add(propostaAceitar.getClubeDestino());
 					//concluirTransferenciaJogadorService.concluirTransferenciaJogador(propostaAceitar, propostasJog, disNegJogOpt.get());
 	
+					//clubesSaldo.get(propostaAceitar.getClubeOrigem()).incrementarSaldo(propostaAceitar.getValorTransferencia());
+					clubesSaldo.get(propostaAceitar.getClubeOrigem()).inserirVenda(propostaAceitar.getValorTransferencia(), propostaAceitar.getValorTransferencia() * porcSalarioAnual);
+					
 					transferenciaConcluidaDTOs
 							.add(new TransferenciaConcluidaDTO(propostaAceitar, propostasJog, disNegJogOpt.get()));
 				} else {

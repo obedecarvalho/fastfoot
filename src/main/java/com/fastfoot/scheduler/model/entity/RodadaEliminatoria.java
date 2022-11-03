@@ -128,4 +128,8 @@ public class RodadaEliminatoria implements RodadaJogavel {
 		return false;
 	}
 
+	@Override
+	public boolean isAmistoso() {
+		return false;
+	}
 }

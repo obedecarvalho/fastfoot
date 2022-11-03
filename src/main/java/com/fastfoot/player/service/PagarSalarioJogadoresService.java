@@ -11,14 +11,13 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Service
 public class PagarSalarioJogadoresService {
-	
-	private static final Double PORC_VALOR_JOG_SALARIO_SEMANAL = 0.004;
-	
+
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
@@ -30,7 +29,7 @@ public class PagarSalarioJogadoresService {
 
 		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 		
-		double valorSalario, porcentagemSalario = PORC_VALOR_JOG_SALARIO_SEMANAL * 100;
+		double valorSalario, porcentagemSalario = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 100;
 
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
 			

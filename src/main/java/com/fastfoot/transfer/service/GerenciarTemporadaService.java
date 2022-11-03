@@ -18,8 +18,10 @@ import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.AtualizarClubeNivelService;
+import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
 import com.fastfoot.club.service.CalcularTrajetoriaForcaClubeService;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -79,6 +81,9 @@ public class GerenciarTemporadaService {
 	
 	@Autowired
 	private SemanaService semanaService;
+	
+	@Autowired
+	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
 	
 	public void gerarTransferencias() {
 		List<Clube> clubes = clubeRepository.findAll(); 
@@ -267,7 +272,8 @@ public class GerenciarTemporadaService {
 		
 		Set<Clube> clubesRefazerEscalacaoX = Collections.synchronizedSet(new HashSet<Clube>());
 		
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoPorClube();
+		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 25;
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);//movimentacaoFinanceiraRepository.findSaldoPorClube();
 		
 		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();//Collections.synchronizedList(new ArrayList<ClubeSaldo>());
 		
@@ -277,8 +283,15 @@ public class GerenciarTemporadaService {
 			clubeSaldo = new ClubeSaldo();
 			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
 			clubeSaldo.setSaldo((Double) sc.get("saldo"));
+			clubeSaldo.setPrevisaoSaidaSalarios((Double) sc.get("salarios_projetado"));
+			clubeSaldo.setPrevisaoEntradaIngressos(
+					calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(clubeSaldo.getClube()));
+			clubeSaldo.setMovimentacoesTransferenciaCompra(0d);
+			clubeSaldo.setMovimentacoesTransferenciaVenda(0d);
 			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
 		}
+		
+		System.err.println(clubesSaldo.values());
 		
 		//Analisar propostas transferencia
 		//for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {

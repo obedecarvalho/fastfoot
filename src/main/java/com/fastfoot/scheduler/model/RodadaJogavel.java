@@ -17,4 +17,6 @@ public interface RodadaJogavel {
 	public NivelCampeonato getNivelCampeonato();
 	
 	public List<? extends PartidaResultadoJogavel> getPartidas();
+	
+	public boolean isAmistoso();
 }

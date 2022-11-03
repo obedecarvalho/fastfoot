@@ -1,5 +1,6 @@
 package com.fastfoot.match.service;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Function;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
@@ -19,6 +21,7 @@ import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
+import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -31,6 +34,10 @@ public class CalcularTorcidaPartidaService {
 	
 	private static final Double PORCENTAGEM_VISITANTE = 0.35;
 	
+	private static final Double PORCENTAGEM_MANDANTE_AMISTOSO = 0.50;
+	
+	private static final Double PORCENTAGEM_VISITANTE_AMISTOSO = 0.50;
+	
 	protected static final Random R = new Random();
 	
 	private static final Double PORC_STDEV = 0.05;
@@ -39,27 +46,37 @@ public class CalcularTorcidaPartidaService {
 	private ParametroService parametroService;
 
 	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
-
-		if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
-				|| rodada.getNivelCampeonato().isCNIOuCNII()) {
+		
+		if (rodada.isAmistoso()) {
 			for (PartidaResultadoJogavel p : rodada.getPartidas()) {
-				calcularTorcidaPartida(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+				calcularTorcidaPartidaAmistosa(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+			}
+		} else {
+
+			if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
+					|| rodada.getNivelCampeonato().isCNIOuCNII()) {
+				for (PartidaResultadoJogavel p : rodada.getPartidas()) {
+					calcularTorcidaPartida(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+				}
+			}
+	
+			if (rodada.getNivelCampeonato().isNIOuNII()) {
+				
+				Map<Clube, Classificacao> clubeClassificacao = ((Campeonato) rodada.getCampeonatoJogavel())
+						.getClassificacao().stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
+				
+				
+				for (PartidaResultadoJogavel p : rodada.getPartidas()) {
+					calcularTorcidaPartidaNacional(p, clubeClassificacao, rodada.getSemana(), partidaTorcidaSalvarDTO);
+				}
 			}
 		}
 
-		if (rodada.getNivelCampeonato().isNIOuNII()) {
-			
-			Map<Clube, Classificacao> clubeClassificacao = ((Campeonato) rodada.getCampeonatoJogavel())
-					.getClassificacao().stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
-			
-			
-			for (PartidaResultadoJogavel p : rodada.getPartidas()) {
-				calcularTorcidaPartidaNacional(p, clubeClassificacao, rodada.getSemana(), partidaTorcidaSalvarDTO);
-			}
-		}
 	}
 	
-	public void calcularTorcidaPartidaNacional(PartidaResultadoJogavel partida, Map<Clube, Classificacao> clubeClassificacao, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+	protected void calcularTorcidaPartidaNacional(PartidaResultadoJogavel partida,
+			Map<Clube, Classificacao> clubeClassificacao, Semana semana,
+			PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
 		
 		double renda = 0.0d;
 
@@ -74,11 +91,11 @@ public class CalcularTorcidaPartidaService {
 
 		Integer publicoMandante = sortearTorcida(tamanhoEstadio,
 				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE,
-				porcPublicoAlvoMandante).intValue();
+				porcPublicoAlvoMandante, true).intValue();
 
 		Integer publicoVisitante = sortearTorcida(tamanhoEstadio,
 				partida.getClubeVisitante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_VISITANTE,
-				porcPublicoAlvoVisitante).intValue();
+				porcPublicoAlvoVisitante, true).intValue();
 
 		/*System.err.println(String.format("%d, %d, %f, %s, %d", tamanhoEstadio, /*publicoMandante, publicoVisitante,* /
 				publicoMandante + publicoVisitante, porcPublicoAlvo, partida.getNivelCampeonato(), partida.getRodada().getNumero()));*/
@@ -103,7 +120,7 @@ public class CalcularTorcidaPartidaService {
 		if (partida instanceof PartidaResultado) {
 			partidaTorcida.setPartidaResultado((PartidaResultado) partida);
 		} else {
-			throw new RuntimeException("Erro inesperado");//TODO: amistosos
+			throw new RuntimeException("Erro inesperado");
 		}
 		
 		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
@@ -112,8 +129,52 @@ public class CalcularTorcidaPartidaService {
 	private Double getPorcentagemPublicoAlvoNacional(NivelCampeonato nivelCampeonato, Map<Clube, Classificacao> clubeClassificacao, Clube clube) {
 		return PartidaTorcidaPorcentagem.getPorcentagem(nivelCampeonato, clubeClassificacao.get(clube).getPosicao());
 	}
+	
+	protected void calcularTorcidaPartidaAmistosa(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+		
+		double renda = 0.0d;
 
-	public void calcularTorcidaPartida(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+		int tamanhoEstadio = partida.getClubeMandante().getClubeNivel().getTamanhoTorcida();
+
+		Double porcPublicoAlvo = PartidaTorcidaPorcentagem.getPorcentagemAmistoso();
+
+		//if (porcPublicoAlvo == null) return;
+
+		Integer publicoMandante = sortearTorcida(tamanhoEstadio,
+				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE_AMISTOSO, porcPublicoAlvo, true).intValue();
+
+		Integer publicoVisitante = sortearTorcida(tamanhoEstadio,
+				partida.getClubeVisitante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_VISITANTE_AMISTOSO,
+				porcPublicoAlvo, true).intValue();
+
+		/*System.err.println(String.format("%d, %d, %f, %s, %d", tamanhoEstadio, /*publicoMandante, publicoVisitante,* /
+				publicoMandante + publicoVisitante, porcPublicoAlvo, partida.getNivelCampeonato(), partida.getRodada().getNumero()));*/
+		
+		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoMandante);
+
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+				semana, renda,
+				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
+
+		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoVisitante);
+
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeVisitante(),
+				semana, renda,
+				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
+		
+		PartidaTorcida partidaTorcida = new PartidaTorcida();
+		partidaTorcida.setPublico(publicoMandante + publicoVisitante);
+		
+		if (partida instanceof PartidaAmistosaResultado) {
+			partidaTorcida.setPartidaAmistosaResultado((PartidaAmistosaResultado) partida);
+		} else {
+			throw new RuntimeException("Erro inesperado");
+		}
+		
+		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
+	}
+
+	protected void calcularTorcidaPartida(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
 		
 		double renda = 0.0d;
 		
@@ -126,11 +187,11 @@ public class CalcularTorcidaPartidaService {
 		//if (porcPublicoAlvo == null) return;
 
 		Integer publicoMandante = sortearTorcida(tamanhoEstadio,
-				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE, porcPublicoAlvo).intValue();
+				partida.getClubeMandante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_MANDANTE, porcPublicoAlvo, true).intValue();
 
 		Integer publicoVisitante = sortearTorcida(tamanhoEstadio,
 				partida.getClubeVisitante().getClubeNivel().getTamanhoTorcida(), PORCENTAGEM_VISITANTE,
-				porcPublicoAlvo).intValue();
+				porcPublicoAlvo, true).intValue();
 
 		/*System.err.println(String.format("%d, %d, %f, %s, %d", tamanhoEstadio, /*publicoMandante, publicoVisitante,* /
 				publicoMandante + publicoVisitante, porcPublicoAlvo, partida.getNivelCampeonato(), partida.getRodada().getNumero()));*/
@@ -157,7 +218,7 @@ public class CalcularTorcidaPartidaService {
 		} else if (partida instanceof PartidaResultado) {
 			partidaTorcida.setPartidaResultado((PartidaResultado) partida);
 		} else {
-			throw new RuntimeException("Erro inesperado");//TODO: amistosos
+			throw new RuntimeException("Erro inesperado");
 		}
 		
 		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
@@ -249,16 +310,64 @@ public class CalcularTorcidaPartidaService {
 	}
 
 	private Long sortearTorcida(Integer tamanhoEstadio, Integer tamanhoTorcidaClube, Double ajuste,
-			Double porcPublicoAlvo) {
+			Double porcPublicoAlvo, Boolean variavel) {
 
-		double porcPublicoAlvoFinal = porcPublicoAlvo + (R.nextGaussian() * PORC_STDEV);
+		double porcPublicoAlvoFinal = porcPublicoAlvo;
 		
-		if (porcPublicoAlvoFinal > 1.0) porcPublicoAlvoFinal = 1.0;
+		if (variavel) {
+			porcPublicoAlvoFinal = porcPublicoAlvo + (R.nextGaussian() * PORC_STDEV);
+		
+			if (porcPublicoAlvoFinal > 1.0) porcPublicoAlvoFinal = 1.0;
+		}
 
 		double torcidaMax = tamanhoEstadio * ajuste * porcPublicoAlvoFinal;
 		double torcidaAlvo = tamanhoTorcidaClube * porcPublicoAlvoFinal;
 
 		return Math.round(Math.min(torcidaMax, torcidaAlvo));
 
+	}
+
+	public Double calcularPrevisaoEntradaIngressos(List<? extends PartidaResultadoJogavel> partidas, boolean mandante) {
+		
+		Double porcPublicoAlvo = null, renda = 0.0d;
+		Integer publicoClube = null, tamanhoEstadio = null;
+		
+		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
+		
+		for (PartidaResultadoJogavel p : partidas) {
+			
+			if (p.getClubeMandante() != null) {
+				tamanhoEstadio = p.getClubeMandante().getClubeNivel().getTamanhoTorcida();
+			} else {
+				tamanhoEstadio = ClubeNivel.NIVEL_G.getTamanhoTorcida();
+			}
+			
+			if (p.isAmistoso()) {
+				porcPublicoAlvo = PartidaTorcidaPorcentagem.getPorcentagemAmistoso();
+			} else if (p.getNivelCampeonato().isCIOuCIIOuCIII() || p.getNivelCampeonato().isCNIOuCNII()) {
+				porcPublicoAlvo = getPorcentagemPublicoAlvo(p);
+			} else if (p.getNivelCampeonato().isNIOuNII()) {
+				porcPublicoAlvo = PartidaTorcidaPorcentagem.getPorcentagem(p.getNivelCampeonato(), 9);
+			}
+			
+			if (mandante) {
+				publicoClube = sortearTorcida(tamanhoEstadio, p.getClubeMandante().getClubeNivel().getTamanhoTorcida(),
+						p.isAmistoso() ? PORCENTAGEM_MANDANTE_AMISTOSO : PORCENTAGEM_MANDANTE, porcPublicoAlvo, false)
+						.intValue();
+			} else {
+				publicoClube = sortearTorcida(tamanhoEstadio, p.getClubeVisitante().getClubeNivel().getTamanhoTorcida(),
+						p.isAmistoso() ? PORCENTAGEM_VISITANTE_AMISTOSO : PORCENTAGEM_VISITANTE, porcPublicoAlvo, false)
+						.intValue();
+			}
+			
+			if (p.isAmistoso()) {
+				renda += PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoClube);
+			} else {
+				renda += PartidaTorcidaPorcentagem.getRendaIngressos(p.getNivelCampeonato(), publicoClube,
+						p.getRodada().getNumero(), numRodadasCN);
+			}
+		}
+
+		return renda;
 	}
 }

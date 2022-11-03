@@ -31,4 +31,8 @@ public interface PartidaResultadoRepository extends JpaRepository<PartidaResulta
 	
 	@Query("SELECT p FROM PartidaResultado p WHERE p.rodada.semana = :semana ")
 	public List<PartidaResultado> findBySemana(@Param("semana") Semana semana);
+
+	public List<PartidaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+
+	public List<PartidaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
 }

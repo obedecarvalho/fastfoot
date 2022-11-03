@@ -142,7 +142,7 @@ public class ConcluirTransferenciaJogadorService {
 			movimentacoesFinanceiras.add(
 					new MovimentacaoFinanceira(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(), s,
 							TipoMovimentacaoFinanceira.SAIDA_COMPRA_JOGADOR,
-							-1 * transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), "Venda de Jogador"));
+							-1 * transferenciaConcluidaDTO.getPropostaAceita().getValorTransferencia(), "Compra de Jogador"));
 			movimentacoesFinanceiras.add(
 					new MovimentacaoFinanceira(transferenciaConcluidaDTO.getPropostaAceita().getClubeOrigem(), s,
 							TipoMovimentacaoFinanceira.ENTRADA_VENDA_JOGADOR,

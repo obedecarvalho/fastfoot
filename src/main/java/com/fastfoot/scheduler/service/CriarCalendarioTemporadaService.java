@@ -18,6 +18,7 @@ import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.club.service.DistribuirPatrocinioService;
 import com.fastfoot.match.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -151,6 +152,9 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
+	
+	@Autowired
+	private DistribuirPatrocinioService distribuirPatrocinioService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -274,6 +278,12 @@ public class CriarCalendarioTemporadaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitNanoTime();
 		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitNanoTime();
+		distribuirPatrocinioService.distribuirPatrocinio(temporada);
+		stopWatch.split();
+		fim = stopWatch.getSplitNanoTime();
+		mensagens.add("\t#distribuirPatrocinio:" + (fim - inicio));
 
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());

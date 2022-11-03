@@ -81,4 +81,8 @@ public class Constantes {
 	public static final Integer NUMERO_MINIMO_JOGADORES_LINHA = 15;//TODO: implementar lógica
 	
 	public static final Integer NUMERO_MINIMO_GOLEIROS = 2;
+	
+	//###	SALARIO		###
+	/** Porcentagem do Valor de Transferencia que seja pago como salário semanal para o Jogador */
+	public static final Double PORC_VALOR_JOG_SALARIO_SEMANAL = 0.004;
 }
