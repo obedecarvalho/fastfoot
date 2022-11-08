@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.model.Liga;
 import com.fastfoot.probability.model.dto.ClubeProbabilidadeDTO;
-import com.fastfoot.probability.service.CalcularProbabilidadeService;
+import com.fastfoot.probability.service.CalcularProbabilidadeEstatisticasSimplesService;
 import com.fastfoot.probability.service.ClubeProbabilidadeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.ClassificacaoDTO;
@@ -66,7 +66,7 @@ public class ClassificacaoController {
 	private CampeonatoRepository campeonatoRepository;
 	
 	@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeCompletoService;
+	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeCompletoService;
 
 	@GetMapping("/calcularProbabilidades")
 	public ResponseEntity<Boolean> calcularProbabilidades(){

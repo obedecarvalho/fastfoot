@@ -1,5 +1,7 @@
 package com.fastfoot.scheduler.model.entity;
 
+import java.util.Objects;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -191,5 +193,22 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	public String toString() {
 		return "Partida [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " " + golsMandante
 				+ " x " + golsVisitante + " " + clubeVisitante.getNome() + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		PartidaResultado other = (PartidaResultado) obj;
+		return Objects.equals(id, other.id);
 	}
 }

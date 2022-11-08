@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -46,7 +48,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.ParametroService;
 
 @Service
-public class CalcularProbabilidadeService {
+public class CalcularProbabilidadeSimularPartidaService {
 	
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
 	
@@ -94,6 +96,9 @@ public class CalcularProbabilidadeService {
 	@Autowired
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
 
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
 
@@ -111,14 +116,32 @@ public class CalcularProbabilidadeService {
 			r.setPartidas(partidaRepository.findByRodada(r));
 		}
 		
-		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII);
+		//
+		Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade = new HashMap<PartidaResultado, PartidaProbabilidadeResultado>();
+
+		for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {			
+			for (PartidaResultado p : nacional.getRodadas().get(r).getPartidas()) {
+				partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.simularPartida(p));
+			}
+		}
+		
+		for (int r = nacionalII.getRodadaAtual(); r < nacionalII.getRodadas().size(); r++) {			
+			for (PartidaResultado p : nacionalII.getRodadas().get(r).getPartidas()) {
+				partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.simularPartida(p));
+			}
+		}
+		//
+		
+		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII,
+				partidaProbabilidade);
 		
 		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional,
+			Campeonato nacionalII, Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade) {
 		
 		Map<Clube, ClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, ClubeProbabilidade>();
 		
@@ -149,7 +172,7 @@ public class CalcularProbabilidadeService {
 		
 		
 			for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {
-				jogarRodada(nacional.getRodadas().get(r), classificacaoProbabilidadesI);
+				jogarRodada(nacional.getRodadas().get(r), classificacaoProbabilidadesI, partidaProbabilidade);
 			}
 			
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListI = new ArrayList<ClassificacaoProbabilidade>(
@@ -166,7 +189,7 @@ public class CalcularProbabilidadeService {
 		
 		
 			for (int r = nacionalII.getRodadaAtual(); r < nacionalII.getRodadas().size(); r++) {
-				jogarRodada(nacionalII.getRodadas().get(r), classificacaoProbabilidadesII);
+				jogarRodada(nacionalII.getRodadas().get(r), classificacaoProbabilidadesII, partidaProbabilidade);
 			}
 			
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListII = new ArrayList<ClassificacaoProbabilidade>(
@@ -364,7 +387,7 @@ public class CalcularProbabilidadeService {
 			clup.setCampeonato(campeonato);
 			clup.setSemana(semana);
 			//clup.setCompleto(true);
-			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMPLES);
+			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, ClubeProbabilidadePosicao>());
 			
@@ -439,27 +462,29 @@ public class CalcularProbabilidadeService {
 		clubeProbabilidadeRepository.saveAll(probabilidades);
 	}
 
-	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
+	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
+			Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade) {
 
 		for (PartidaResultado p : r.getPartidas()) {
-			jogarPartida(p, classificacaoProbabilidades);
+			jogarPartida(p, classificacaoProbabilidades, partidaProbabilidade.get(p));
 		}
 
 	}
 
-	private void jogarPartida(PartidaResultado p, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
+	private void jogarPartida(PartidaResultado p, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
+			PartidaProbabilidadeResultado partidaProbabilidade) {
 
 		ClassificacaoProbabilidade clasMandante = classificacaoProbabilidades.get(p.getClubeMandante());
 
 		ClassificacaoProbabilidade clasVisitante = classificacaoProbabilidades.get(p.getClubeVisitante());
 
-		double vitoriaMandante = clasMandante.getProbabilidadeVitoria() + clasVisitante.getProbabilidadeDerrota();
+		double vitoriaMandante = partidaProbabilidade.getProbabilidadeVitoriaMandante();
 
-		double empate = clasMandante.getProbabilidadeEmpate() + clasVisitante.getProbabilidadeEmpate();
+		double empate = partidaProbabilidade.getProbabilidadeEmpate();
 
 		//double vitoriaVisitante = clasMandante.getProbabilidadeDerrota() + clasVisitante.getProbabilidadeVitoria();
 
-		double resultado = R.nextDouble() * 2;
+		double resultado = R.nextDouble();
 
 		if (resultado <= vitoriaMandante) {
 			clasMandante.setPontos(clasMandante.getPontos() + Constantes.PTOS_VITORIA);
@@ -483,8 +508,8 @@ public class CalcularProbabilidadeService {
 			clasMandante.setSaldoGols(clasMandante.getSaldoGols() - 1);
 		}
 
-		clasMandante.calcularProbabilidades();
-		clasVisitante.calcularProbabilidades();
+		//clasMandante.calcularProbabilidades();
+		//clasVisitante.calcularProbabilidades();
 	}
 
 	private Integer getPosicoesClassificamCIMin() { return 1; }

@@ -26,7 +26,7 @@ import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.PagarSalarioJogadoresService;
-import com.fastfoot.probability.service.CalcularProbabilidadeService;
+import com.fastfoot.probability.service.CalcularProbabilidadeEstatisticasSimplesService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
@@ -128,7 +128,7 @@ public class SemanaService {
 	private DesenvolverJogadorService desenvolverJogadorService;*/
 	
 	@Autowired
-	private CalcularProbabilidadeService calcularProbabilidadeCompletoService;
+	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeCompletoService;
 
 	@Autowired
 	private EscalarClubeService escalarClubeService;
