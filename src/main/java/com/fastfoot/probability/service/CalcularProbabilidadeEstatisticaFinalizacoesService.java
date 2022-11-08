@@ -1,5 +1,6 @@
 package com.fastfoot.probability.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,7 +19,9 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
+import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
@@ -46,8 +49,8 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.ParametroService;
 
 @Service
-public class CalcularProbabilidadeService {
-	
+public class CalcularProbabilidadeEstatisticaFinalizacoesService {
+
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
 	
 	private static final Integer NUM_SIMULACOES_SEM_19 = 10000;
@@ -84,6 +87,9 @@ public class CalcularProbabilidadeService {
 	
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
+
+	@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
 	@Autowired
 	private ParametroService parametroService;
@@ -95,7 +101,8 @@ public class CalcularProbabilidadeService {
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional,
+			Campeonato nacionalII) {
 
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
@@ -111,14 +118,34 @@ public class CalcularProbabilidadeService {
 			r.setPartidas(partidaRepository.findByRodada(r));
 		}
 		
-		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII);
+		List<Map<String, Object>> estatisticasFinalizacoes = jogadorEstatisticasTemporadaRepository
+				.findEstatisticasFinalizacoesPorClube(semana.getTemporada().getId());
+		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = new HashMap<Clube, ClubeProbabilidadeFinalizacao>();
+		ClubeProbabilidadeFinalizacao clubeProbabilidadeFinalizacao = null;
+		
+		for (Map<String, Object> e : estatisticasFinalizacoes) {
+			clubeProbabilidadeFinalizacao = new ClubeProbabilidadeFinalizacao();
+			
+			clubeProbabilidadeFinalizacao.setClube(new Clube((Integer) e.get("id_clube")));
+			clubeProbabilidadeFinalizacao
+					.setFinalizacoesPartidas(((BigDecimal) e.get("finalizacoes_partidas")).doubleValue());
+			clubeProbabilidadeFinalizacao.setGolsPartida(((BigDecimal) e.get("gols_partida")).doubleValue());
+			clubeProbabilidadeFinalizacao
+					.setProbabilidadeGolFinalizacao(((BigDecimal) e.get("probilidade_gols")).doubleValue());
+			
+			clubeProbabilidadeFinalizacoes.put(clubeProbabilidadeFinalizacao.getClube(), clubeProbabilidadeFinalizacao);
+		}
+		
+		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII,
+				clubeProbabilidadeFinalizacoes);
 		
 		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional,
+			Campeonato nacionalII, Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes) {
 		
 		Map<Clube, ClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, ClubeProbabilidade>();
 		
@@ -149,7 +176,7 @@ public class CalcularProbabilidadeService {
 		
 		
 			for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {
-				jogarRodada(nacional.getRodadas().get(r), classificacaoProbabilidadesI);
+				jogarRodada(nacional.getRodadas().get(r), classificacaoProbabilidadesI, clubeProbabilidadeFinalizacoes);
 			}
 			
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListI = new ArrayList<ClassificacaoProbabilidade>(
@@ -166,7 +193,8 @@ public class CalcularProbabilidadeService {
 		
 		
 			for (int r = nacionalII.getRodadaAtual(); r < nacionalII.getRodadas().size(); r++) {
-				jogarRodada(nacionalII.getRodadas().get(r), classificacaoProbabilidadesII);
+				jogarRodada(nacionalII.getRodadas().get(r), classificacaoProbabilidadesII,
+						clubeProbabilidadeFinalizacoes);
 			}
 			
 			List<ClassificacaoProbabilidade> classificacaoProbabilidadesListII = new ArrayList<ClassificacaoProbabilidade>(
@@ -194,7 +222,8 @@ public class CalcularProbabilidadeService {
 
 	}
 	
-	private void calcularProbabilidadesEspecificas(Map<Clube, ClubeProbabilidade> clubeProbabilidades, Semana semana/*, NivelCampeonato nivelCampeonato*/) {
+	private void calcularProbabilidadesEspecificas(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
+			Semana semana/* , NivelCampeonato nivelCampeonato */) {
 		
 		Integer numeroRebaixados = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
 
@@ -364,7 +393,7 @@ public class CalcularProbabilidadeService {
 			clup.setCampeonato(campeonato);
 			clup.setSemana(semana);
 			//clup.setCompleto(true);
-			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMPLES);
+			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.FINALIZACAO);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, ClubeProbabilidadePosicao>());
 			
@@ -439,52 +468,70 @@ public class CalcularProbabilidadeService {
 		clubeProbabilidadeRepository.saveAll(probabilidades);
 	}
 
-	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
+	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
+			Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes) {
 
 		for (PartidaResultado p : r.getPartidas()) {
-			jogarPartida(p, classificacaoProbabilidades);
+			jogarPartida(p, classificacaoProbabilidades, clubeProbabilidadeFinalizacoes);
 		}
 
 	}
 
-	private void jogarPartida(PartidaResultado p, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
-
+	private void jogarPartida(PartidaResultado p, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
+			Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes) {
+		
 		ClassificacaoProbabilidade clasMandante = classificacaoProbabilidades.get(p.getClubeMandante());
 
 		ClassificacaoProbabilidade clasVisitante = classificacaoProbabilidades.get(p.getClubeVisitante());
-
-		double vitoriaMandante = clasMandante.getProbabilidadeVitoria() + clasVisitante.getProbabilidadeDerrota();
-
-		double empate = clasMandante.getProbabilidadeEmpate() + clasVisitante.getProbabilidadeEmpate();
-
-		//double vitoriaVisitante = clasMandante.getProbabilidadeDerrota() + clasVisitante.getProbabilidadeVitoria();
-
-		double resultado = R.nextDouble() * 2;
-
-		if (resultado <= vitoriaMandante) {
+		
+		ClubeProbabilidadeFinalizacao probFinalizacaoMandante = clubeProbabilidadeFinalizacoes
+				.get(p.getClubeMandante());
+		
+		ClubeProbabilidadeFinalizacao probFinalizacaoVisitante = clubeProbabilidadeFinalizacoes
+				.get(p.getClubeVisitante());
+		
+		int golsMandante = 0, golsVisitante = 0;
+		
+		double resultado = 0d;
+		
+		for (int i = 0; i < probFinalizacaoMandante.getFinalizacoesPartidas(); i++) {
+			resultado = R.nextDouble();
+			
+			if (resultado <= probFinalizacaoMandante.getProbabilidadeGolFinalizacao()) {
+				golsMandante++;
+			}
+		}
+		
+		for (int i = 0; i < probFinalizacaoVisitante.getFinalizacoesPartidas(); i++) {
+			resultado = R.nextDouble();
+			
+			if (resultado <= probFinalizacaoVisitante.getProbabilidadeGolFinalizacao()) {
+				golsVisitante++;
+			}
+		}
+		
+		if (golsMandante > golsVisitante) {
 			clasMandante.setPontos(clasMandante.getPontos() + Constantes.PTOS_VITORIA);
 			clasMandante.setVitorias(clasMandante.getVitorias() + 1);
-			clasMandante.setGolsPro(clasMandante.getGolsPro() + 1);
-			clasMandante.setSaldoGols(clasMandante.getSaldoGols() + 1);
+			clasMandante.setGolsPro(clasMandante.getGolsPro() + golsMandante);
+			clasMandante.setSaldoGols(clasMandante.getSaldoGols() + (golsMandante - golsVisitante));
 
-			clasVisitante.setSaldoGols(clasVisitante.getSaldoGols() - 1);
-		} else if (resultado <= empate) {
+			clasVisitante.setSaldoGols(clasVisitante.getSaldoGols() + (golsVisitante - golsMandante));
+		} else if (golsMandante == golsVisitante) {
 			clasMandante.setPontos(clasMandante.getPontos() + Constantes.PTOS_EMPATE);
-			clasMandante.setGolsPro(clasMandante.getGolsPro() + 0);
+			clasMandante.setGolsPro(clasMandante.getGolsPro() + golsMandante);
 
 			clasVisitante.setPontos(clasVisitante.getPontos() + Constantes.PTOS_EMPATE);
-			clasVisitante.setGolsPro(clasVisitante.getGolsPro() + 0);
+			clasVisitante.setGolsPro(clasVisitante.getGolsPro() + golsVisitante);
 		} else {
 			clasVisitante.setPontos(clasVisitante.getPontos() + Constantes.PTOS_VITORIA);
 			clasVisitante.setVitorias(clasVisitante.getVitorias() + 1);
-			clasVisitante.setGolsPro(clasVisitante.getGolsPro() + 1);
-			clasVisitante.setSaldoGols(clasVisitante.getSaldoGols() + 1);
+			clasVisitante.setGolsPro(clasVisitante.getGolsPro() + golsVisitante);
+			clasVisitante.setSaldoGols(clasVisitante.getSaldoGols() + (golsVisitante - golsMandante));
 
-			clasMandante.setSaldoGols(clasMandante.getSaldoGols() - 1);
+			clasMandante.setSaldoGols(clasMandante.getSaldoGols() + (golsMandante - golsVisitante));
 		}
 
-		clasMandante.calcularProbabilidades();
-		clasVisitante.calcularProbabilidades();
 	}
 
 	private Integer getPosicoesClassificamCIMin() { return 1; }
