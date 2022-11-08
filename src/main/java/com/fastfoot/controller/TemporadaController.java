@@ -56,6 +56,17 @@ public class TemporadaController {
 		}
 	}
 	
+	@GetMapping("/calcularClubeSaldoSemana")
+	public ResponseEntity<Boolean> calcularClubeSaldoSemana() {
+		try {
+			gerenciarTemporadaService.calcularClubeSaldoSemana();
+			return ResponseEntity.ok(Boolean.TRUE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+		}
+	}
+	
 	@GetMapping("/gerarMudancaClubeNivel")
 	public ResponseEntity<Boolean> gerarMudancaClubeNivel() {
 		try {

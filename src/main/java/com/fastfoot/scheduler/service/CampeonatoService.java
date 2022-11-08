@@ -143,6 +143,7 @@ public class CampeonatoService {
 		}
 	}
 
+	@Deprecated
 	public void salvarCampeonatoEliminatorio(CampeonatoEliminatorio campeonato) {
 		//tem que ordenar por causa da referencia de 'proximaRodada'
 		//
@@ -189,6 +190,7 @@ public class CampeonatoService {
 		partidaEliminatoriaRepository.saveAll(partidas);
 	}
 	
+	@Deprecated
 	public void salvarCampeonatoMisto(CampeonatoMisto campeonato) {
 		//tem que ordenar por causa da referencia de 'proximaRodada'
 		//
@@ -273,6 +275,7 @@ public class CampeonatoService {
 
 	}
 
+	@Deprecated
 	public void salvarCampeonato(Campeonato campeonato) {
 		campeonatoRepository.save(campeonato);
 		classificacaoRepository.saveAll(campeonato.getClassificacao());

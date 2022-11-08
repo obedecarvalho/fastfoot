@@ -1,10 +1,14 @@
 package com.fastfoot.scheduler.model.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -20,9 +24,20 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 
 	public List<CampeonatoEliminatorio> findByLiga(Liga liga);
 
-	public List<CampeonatoEliminatorio> findByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
+	public List<CampeonatoEliminatorio> findByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga,
+			NivelCampeonato nivelCampeonato);
 
-	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga, NivelCampeonato nivelCampeonato);
+	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada,
+			Liga liga, NivelCampeonato nivelCampeonato);
 
 	public List<CampeonatoEliminatorio> findByTemporadaAndLiga(Temporada temporada, Liga liga);
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update campeonato_eliminatorio" +
+			" set rodada_atual = rodada_atual + 1" +
+			" where id in (?1)"
+	)
+	public void incrementarRodadaAtual(Collection<Long> idsCampeonatos);
 }

@@ -303,10 +303,11 @@ public class RodadaService {
 				.map(PartidaEliminatoriaResultado::getPartidaEstatisticas).collect(Collectors.toList()));
 
 		partidaEliminatoriaRepository.saveAllAndFlush(r.getPartidas());
-		for (PartidaEliminatoriaResultado per : r.getPartidas()) {
-			//TODO: agrupar proximas partidas e fazer apenas um saveAll??
+		/*for (PartidaEliminatoriaResultado per : r.getPartidas()) {
 			if (per.getProximaPartida() != null) partidaEliminatoriaRepository.saveAndFlush(per.getProximaPartida());
-		}
+		}*/
+		partidaEliminatoriaRepository.saveAll(r.getPartidas().stream().filter(p -> p.getProximaPartida() != null)
+				.map(p -> p.getProximaPartida()).collect(Collectors.toList()));
 
 		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}

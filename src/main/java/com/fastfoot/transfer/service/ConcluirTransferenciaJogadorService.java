@@ -54,6 +54,7 @@ public class ConcluirTransferenciaJogadorService {
 	@Autowired
 	private SemanaService semanaService;
 
+	@Deprecated
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogador(PropostaTransferenciaJogador propostaTransferenciaJogador,
 			List<PropostaTransferenciaJogador> propostasRejeitar, DisponivelNegociacao disponivelNegociacao) {

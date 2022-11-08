@@ -4,16 +4,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
@@ -27,8 +28,8 @@ public class CriarJogadoresClubeService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Autowired
-	private ClubeRepository clubeRepository;
+	/*@Autowired
+	private ClubeRepository clubeRepository;*/
 
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
@@ -40,13 +41,18 @@ public class CriarJogadoresClubeService {
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
 
 		List<GrupoDesenvolvimentoJogador> gruposJogador = new ArrayList<GrupoDesenvolvimentoJogador>();
+		List<Jogador> jogadores = new ArrayList<Jogador>();
 		
 		for (Clube c : clubes) {
-			criarJogadoresClube(c, gruposJogador);
+			criarJogadoresClube(c, jogadores, gruposJogador);
 		}
 		
+		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream()).collect(Collectors.toList());
+
+		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
-		
+		habilidadeValorRepository.saveAll(habilidades);
+
 		return CompletableFuture.completedFuture(true);
 	}
 
@@ -55,9 +61,9 @@ public class CriarJogadoresClubeService {
 		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
 	}
 
-	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
+	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
 
-		List<Jogador> jogadores = new ArrayList<Jogador>();
+		//List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
 		int i = 0;
 		
@@ -188,12 +194,12 @@ public class CriarJogadoresClubeService {
 				(new Long(Math.round(jogadores.stream().mapToLong(Jogador::getForcaGeral).average().getAsDouble())))
 						.intValue());*/
 		
-		clubeRepository.save(clube);
+		//clubeRepository.save(clube);
 
-		jogadorRepository.saveAll(jogadores);
+		/*jogadorRepository.saveAll(jogadores);
 		for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());//TODO: agrupar habilidades e fazer apenas um saveAll
-		}
+			habilidadeValorRepository.saveAll(jog.getHabilidades());
+		}*/
 
 		return CompletableFuture.completedFuture(true);
 	}

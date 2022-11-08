@@ -2,6 +2,7 @@ package com.fastfoot.transfer.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -20,12 +21,15 @@ import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.AtualizarClubeNivelService;
 import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
 import com.fastfoot.club.service.CalcularTrajetoriaForcaClubeService;
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.financial.service.CalcularClubeSaldoSemanaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.service.SemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.transfer.model.ClubeSaldo;
@@ -38,6 +42,25 @@ import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorReposi
 public class GerenciarTemporadaService {
 	
 	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
+	
+	private static final Comparator<Semana> COMPARATOR;
+	
+	static {
+		COMPARATOR = new Comparator<Semana>() {
+			
+			@Override
+			public int compare(Semana o1, Semana o2) {
+				
+				int compare = o1.getTemporada().getAno().compareTo(o2.getTemporada().getAno());
+				
+				if (compare == 0) {
+					compare = o1.getNumero().compareTo(o2.getNumero());
+				}
+
+				return compare;
+			}
+		};
+	}
 	
 	//###	REPOSITORY	###
 	
@@ -55,6 +78,9 @@ public class GerenciarTemporadaService {
 
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+
+	@Autowired
+	private SemanaRepository semanaRepository;
 	
 	//###	SERVICE	###
 	
@@ -84,12 +110,37 @@ public class GerenciarTemporadaService {
 	
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
+
+	@Autowired
+	private CalcularClubeSaldoSemanaService calcularClubeSaldoSemanaService;
 	
 	public void gerarTransferencias() {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		gerarTransferencias(temporada, clubes);
 		atualizarNumeroJogadores();
+	}
+	
+	public void calcularClubeSaldoSemana() {
+		
+		List<Semana> semanas = semanaRepository.findAll();
+		
+		Collections.sort(semanas, COMPARATOR);
+		
+		List<MovimentacaoFinanceira> movimentaceosFinanceiras = movimentacaoFinanceiraRepository.findAll();
+
+		Map<Integer, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
+				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,
+						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			desenvolverJogadorFuture
+					.add(calcularClubeSaldoSemanaService.calcularClubeSaldoSemana(semanas, movimentacoesClube.get(i)));
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
 	public void gerarMudancaClubeNivel() {

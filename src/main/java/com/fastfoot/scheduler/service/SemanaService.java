@@ -34,6 +34,7 @@ import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -393,7 +394,9 @@ public class SemanaService {
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
-	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {//TODO: avaliar necessidade
+	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias, boolean old) {
+		//TODO: avaliar necessidade
+		//TODO: transformar em UPDATE
 		Set<Campeonato> camps1 = new HashSet<Campeonato>();
 		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
 		Set<CampeonatoMisto> camps3 = new HashSet<CampeonatoMisto>();
@@ -419,6 +422,26 @@ public class SemanaService {
 		campeonatoEliminatorioRepository.saveAllAndFlush(camps2);
 		campeonatoMistoRepository.saveAllAndFlush(camps3);
 	}
+	
+	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
+		//TODO: avaliar necessidade
+		Set<Long> camps1 = new HashSet<Long>();
+		Set<Long> camps2 = new HashSet<Long>();
+		Set<Long> camps3 = new HashSet<Long>();
+
+		camps1.addAll(rodadas.stream().filter(r -> r.getCampeonato() != null).map(r -> r.getCampeonato().getId())
+				.collect(Collectors.toSet()));
+		camps2.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoEliminatorio() != null)
+				.map(r -> r.getCampeonatoEliminatorio().getId()).collect(Collectors.toSet()));
+		camps3.addAll(rodadas.stream().filter(r -> r.getGrupoCampeonato() != null)
+				.map(r -> r.getGrupoCampeonato().getCampeonato().getId()).collect(Collectors.toSet()));
+		camps3.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoMisto() != null)
+				.map(r -> r.getCampeonatoMisto().getId()).collect(Collectors.toSet()));
+
+		campeonatoRepository.incrementarRodadaAtual(camps1);
+		campeonatoEliminatorioRepository.incrementarRodadaAtual(camps2);
+		campeonatoMistoRepository.incrementarRodadaAtual(camps3);
+	}
 
 	private void promover(Semana semana) {
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CONTINENTAL) {
@@ -438,9 +461,12 @@ public class SemanaService {
 			}
 
 			getPromotorContinental().promover(campeonatosMisto);
-			for (CampeonatoMisto c : campeonatosMisto) {
+			/*for (CampeonatoMisto c : campeonatosMisto) {
 				partidaEliminatoriaRepository.saveAll(c.getPrimeiraRodadaEliminatoria().getPartidas());
-			}
+			}*/
+			partidaEliminatoriaRepository.saveAll(
+					campeonatosMisto.stream().flatMap(c -> c.getPrimeiraRodadaEliminatoria().getPartidas().stream())
+							.collect(Collectors.toList()));
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
 
@@ -456,6 +482,7 @@ public class SemanaService {
 						.collect(Collectors.toList());
 				
 				RodadaEliminatoria rodadaCNII = null, rodada1Fase, rodada2Fase;
+				List<PartidaEliminatoriaResultado> partidasSalvar = new ArrayList<PartidaEliminatoriaResultado>();
 				
 				for (CampeonatoEliminatorio c : campeonatos) {
 					CampeonatoEliminatorio copaNacionalII = campeonatoEliminatorioRepository
@@ -474,8 +501,11 @@ public class SemanaService {
 					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria();
 					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
 					
-					partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
+					//partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
+					partidasSalvar.addAll(rodadaCNII.getPartidas());
 				}
+
+				partidaEliminatoriaRepository.saveAll(partidasSalvar);
 			}
 		}
 

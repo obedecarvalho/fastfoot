@@ -292,6 +292,15 @@ public class CriarCalendarioTemporadaService {
 		
 		return TemporadaDTO.convertToDTO(temporada);
 	}
+	
+	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
+
+		jogadorEstatisticasTemporadaRepository.criarJogadorEstatisticasTemporada(temporada.getId(), false);
+		jogadorEstatisticasTemporadaRepository.criarJogadorEstatisticasTemporada(temporada.getId(), true);
+		jogadorEstatisticasTemporadaRepository.associarJogadorEstatistica(temporada.getId());
+		jogadorEstatisticasTemporadaRepository.associarJogadorEstatisticaAmistosos(temporada.getId());
+
+	}*/
 
 	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
 
