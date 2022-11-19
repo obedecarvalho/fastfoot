@@ -74,6 +74,9 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	sum(gols_marcados/cast(numero_jogos as numeric)) as gols_partida," +
 			" 	sum((gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
 			" 		/cast(numero_jogos as numeric)) as finalizacoes_partidas," +
+			" sum((gols_marcados + finalizacoes_defendidas)/cast(numero_jogos as numeric))" +
+			" 	/sum((gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
+			" 	/cast(numero_jogos as numeric)) as probilidade_finalizacoes_no_gol," +
 			" 	sum(gols_marcados/cast(numero_jogos as numeric))/sum(" +
 			" 		(gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
 			" 		/cast(numero_jogos as numeric)) as probilidade_gols" +
@@ -85,4 +88,13 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findEstatisticasFinalizacoesPorClube(Long idTemporada);
+	
+	@Query(nativeQuery = true, value =
+			" select id_clube," +
+			" 	sum(cast(gols_sofridos as numeric))/sum(goleiro_finalizacoes_defendidas + gols_sofridos) as probabilidade_defesa" +
+			" from jogador_estatisticas_temporada jet" +
+			" where id_temporada = ?1" +
+			" group by id_clube"
+	)
+	public List<Map<String, Object>> findEstatisticasDefesaPorClube(Long idTemporada);
 }

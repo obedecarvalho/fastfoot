@@ -10,6 +10,8 @@ public class ClubeProbabilidadeFinalizacao {
 	
 	private Double finalizacoesPartidas;
 	
+	private Double probabilidadeFinalizacaoNoGol;
+	
 	private Double probabilidadeGolFinalizacao;
 
 	public Clube getClube() {
@@ -42,6 +44,14 @@ public class ClubeProbabilidadeFinalizacao {
 
 	public void setProbabilidadeGolFinalizacao(Double probabilidadeGolFinalizacao) {
 		this.probabilidadeGolFinalizacao = probabilidadeGolFinalizacao;
+	}
+
+	public Double getProbabilidadeFinalizacaoNoGol() {
+		return probabilidadeFinalizacaoNoGol;
+	}
+
+	public void setProbabilidadeFinalizacaoNoGol(Double probabilidadeFinalizacaoNoGol) {
+		this.probabilidadeFinalizacaoNoGol = probabilidadeFinalizacaoNoGol;
 	}
 
 }

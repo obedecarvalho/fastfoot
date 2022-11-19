@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
@@ -33,6 +34,8 @@ public class PartidaProbabilidadeResultado {
 	private Double probabilidadeVitoriaVisitante;
 	
 	private Double probabilidadeEmpate;
+	
+	private TipoProbabilidadeResultadoPartida tipoProbabilidadeResultadoPartida;
 
 	public Long getId() {
 		return id;
@@ -80,6 +83,14 @@ public class PartidaProbabilidadeResultado {
 
 	public void setProbabilidadeEmpate(Double probabilidadeEmpate) {
 		this.probabilidadeEmpate = probabilidadeEmpate;
+	}
+
+	public TipoProbabilidadeResultadoPartida getTipoProbabilidadeResultadoPartida() {
+		return tipoProbabilidadeResultadoPartida;
+	}
+
+	public void setTipoProbabilidadeResultadoPartida(TipoProbabilidadeResultadoPartida tipoProbabilidadeResultadoPartida) {
+		this.tipoProbabilidadeResultadoPartida = tipoProbabilidadeResultadoPartida;
 	}
 
 	public PartidaResultadoJogavel getPartidaResultadoJogavel() {

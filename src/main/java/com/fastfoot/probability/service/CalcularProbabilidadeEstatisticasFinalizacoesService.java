@@ -1,6 +1,5 @@
 package com.fastfoot.probability.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -19,7 +18,6 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
@@ -88,8 +86,8 @@ public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
 
-	@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
+	/*@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
 	
 	@Autowired
 	private ParametroService parametroService;
@@ -99,6 +97,9 @@ public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 	
 	@Autowired
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
+	
+	@Autowired
+	private CalcularEstatisticasFinalizacaoDefesaService calcularEstatisticasFinalizacaoDefesaService;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional,
@@ -118,7 +119,7 @@ public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 			r.setPartidas(partidaRepository.findByRodada(r));
 		}
 		
-		List<Map<String, Object>> estatisticasFinalizacoes = jogadorEstatisticasTemporadaRepository
+		/*List<Map<String, Object>> estatisticasFinalizacoes = jogadorEstatisticasTemporadaRepository
 				.findEstatisticasFinalizacoesPorClube(semana.getTemporada().getId());
 		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = new HashMap<Clube, ClubeProbabilidadeFinalizacao>();
 		ClubeProbabilidadeFinalizacao clubeProbabilidadeFinalizacao = null;
@@ -134,7 +135,10 @@ public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 					.setProbabilidadeGolFinalizacao(((BigDecimal) e.get("probilidade_gols")).doubleValue());
 			
 			clubeProbabilidadeFinalizacoes.put(clubeProbabilidadeFinalizacao.getClube(), clubeProbabilidadeFinalizacao);
-		}
+		}*/
+		
+		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
+				.getEstatisticasFinalizacaoClube(semana.getTemporada());
 		
 		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII,
 				clubeProbabilidadeFinalizacoes);

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
 import com.fastfoot.match.model.Esquema;
@@ -106,6 +107,8 @@ public class CalcularPartidaProbabilidadeResultadoService {
 		double vitoriaMandante = 0, vitoriaVisitante = 0, empate = 0;
 		
 		PartidaProbabilidadeResultado partidaProbabilidadeResultado = new PartidaProbabilidadeResultado();
+		partidaProbabilidadeResultado
+				.setTipoProbabilidadeResultadoPartida(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA);
 		
 		if (partidaResultado instanceof PartidaResultado) {
 			partidaProbabilidadeResultado.setPartidaResultado((PartidaResultado) partidaResultado);
