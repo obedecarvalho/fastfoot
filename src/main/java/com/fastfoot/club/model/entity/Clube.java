@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -31,6 +32,7 @@ public class Clube implements ElementoRoleta {
 	private ClubeNivel clubeNivelInternacional;
 
 	@Transient
+	@JsonIgnore
 	private Integer valorN;
 	
 	public Clube() {
