@@ -61,7 +61,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	//@Override
 	@GetMapping("/clubeRankings")
 	public ResponseEntity<List<ClubeRanking>> getAll(
-			@RequestParam(name = "liga") Integer liga,
+			@RequestParam(name = "liga", required = false) Integer liga,
 			@RequestParam(name = "ano", required = false) Integer ano) {
 		
 		try {
