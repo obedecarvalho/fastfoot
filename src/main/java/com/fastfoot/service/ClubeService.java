@@ -67,16 +67,19 @@ public class ClubeService {
 	@Autowired
 	private TemporadaRepository temporadaRepository;
 
+	@Deprecated
 	public List<ClubeDTO> getClubesPorLiga(String liga) {//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		List<Clube> clubes = clubeRepository.findByLiga(Liga.valueOf(liga));
 		return ClubeDTO.convertToDTO(clubes);
 	}
 	
+	@Deprecated
 	public List<ClubeRankingDTO> getClubesRankings(String liga){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		return temporada != null ? ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), temporada.getAno()-1)) : null;
 	}
 
+	@Deprecated
 	public List<ClubeRankingDTO> getClubesRankings(String liga, Integer ano){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		return ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), ano));
 	}
