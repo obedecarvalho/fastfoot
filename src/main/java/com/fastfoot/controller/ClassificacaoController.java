@@ -38,7 +38,8 @@ public class ClassificacaoController {
 	@Autowired
 	private ClubeProbabilidadeService clubeProbabilidadeService;
 	
-	@GetMapping("/classificacao/campeonato/{idCampeonato}")
+	//@GetMapping("/classificacao/campeonato/{idCampeonato}")
+	@Deprecated
 	public ResponseEntity<List<ClassificacaoDTO>> getClassificacaoCampeonato(@PathVariable(name = "idCampeonato") Long idCampeonato, @RequestParam(name = "nivel") String nivel) {
 		List<ClassificacaoDTO> classificacao = classificacaoService.getClassificacaoCampeonato(idCampeonato, nivel);
 		if (ValidatorUtil.isEmpty(classificacao)) {

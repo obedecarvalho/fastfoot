@@ -21,9 +21,9 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
 //@Table(indexes = { @Index(columnList = "id_semana")})
 public class RodadaAmistosa implements RodadaJogavel {
 
-	@Id
+	@Id //Sequence compartilhada com entidades equivalentes
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rodadaAmistosaSequence")	
-	@SequenceGenerator(name = "rodadaAmistosaSequence", sequenceName = "rodada_amistosa_seq")
+	@SequenceGenerator(name = "rodadaAmistosaSequence", sequenceName = "rodada_seq")
 	private Long id;
 	
 	private Integer numero;

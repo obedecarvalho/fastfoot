@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.Liga;
@@ -17,8 +18,9 @@ import com.fastfoot.scheduler.model.NivelCampeonato;
 @Entity
 public class CampeonatoEliminatorio implements CampeonatoJogavel {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Id //Sequence compartilhada com entidades equivalentes
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campeonatoEliminatorioSequence")
+	@SequenceGenerator(name = "campeonatoEliminatorioSequence", sequenceName = "campeonato_seq")
 	private Long id;
 	
 	private Liga liga;

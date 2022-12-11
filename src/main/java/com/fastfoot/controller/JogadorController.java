@@ -22,7 +22,7 @@ public class JogadorController {
 	private JogadorService jogadorService;
 	
 	@Deprecated
-	@GetMapping("/jogadoresPorClube/{idClube}")
+	//@GetMapping("/jogadoresPorClube/{idClube}")
 	public ResponseEntity<List<JogadorDTO>> getJogadoresPorClube(@PathVariable(name = "idClube") Integer idClube) {
 		List<JogadorDTO> partidas = JogadorDTO.convertToDTO(jogadorService.getJogadoresPorClube(idClube));
 		if (ValidatorUtil.isEmpty(partidas)) {

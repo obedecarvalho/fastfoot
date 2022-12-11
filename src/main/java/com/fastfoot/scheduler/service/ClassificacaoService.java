@@ -27,6 +27,7 @@ public class ClassificacaoService {
 	@Autowired
 	private CampeonatoMistoRepository campeonatoMistoRepository;
 
+	@Deprecated
 	public List<ClassificacaoDTO> getClassificacaoCampeonato(Long idCampeonato, String tipoCampeonato) {
 		Optional<? extends CampeonatoJogavel> campeonato = null;
 
@@ -39,6 +40,7 @@ public class ClassificacaoService {
 		return campeonato.isPresent() ? getClassificacaoCampeonato(campeonato.get()) : null;
 	}
 
+	@Deprecated
 	public List<ClassificacaoDTO> getClassificacaoCampeonato(CampeonatoJogavel campeonato) {
 		List<ClassificacaoDTO> classificacao = new ArrayList<ClassificacaoDTO>();
 		

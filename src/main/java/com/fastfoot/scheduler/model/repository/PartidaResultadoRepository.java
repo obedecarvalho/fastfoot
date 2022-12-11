@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
@@ -25,6 +26,9 @@ public interface PartidaResultadoRepository extends JpaRepository<PartidaResulta
 
 	@Query("SELECT p FROM PartidaResultado p WHERE p.rodada.grupoCampeonato = :grupoCampeonato ")
 	public List<PartidaResultado> findByGrupoCampeonato(@Param("grupoCampeonato") GrupoCampeonato grupoCampeonato);
+	
+	@Query("SELECT p FROM PartidaResultado p WHERE p.rodada.grupoCampeonato.campeonato = :campeonato ")
+	public List<PartidaResultado> findByCampeonato(@Param("campeonato") CampeonatoMisto campeonato);
 
 	@Query("SELECT p FROM PartidaResultado p WHERE p.rodada.semana.temporada = :temporada AND (p.clubeMandante = :clube OR p.clubeVisitante = :clube) ")
 	public List<PartidaResultado> findByTemporadaAndClube(@Param("temporada") Temporada temporada, @Param("clube") Clube clube);

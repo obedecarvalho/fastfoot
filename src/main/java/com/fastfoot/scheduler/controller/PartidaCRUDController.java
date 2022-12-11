@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
@@ -46,18 +47,30 @@ public class PartidaCRUDController implements CRUDController<PartidaResultado, L
 		}
 
 	}
-
+	
 	@Override
-	@GetMapping("/partidas")
 	public ResponseEntity<List<PartidaResultado>> getAll() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
+	@GetMapping("/partidas")
+	public ResponseEntity<List<PartidaResultado>> getAll(
+			@RequestParam(name = "idClube", required = false) Integer idClube,
+			@RequestParam(name = "idCampeonato", required = false) Long idCampeonato,
+			@RequestParam(name = "numeroSemana", required = false) Integer numeroSemana) {
 		try {
 			
 			List<PartidaResultado> partidas;
 			
+			if (!ValidatorUtil.isEmpty(idClube) || !ValidatorUtil.isEmpty(idCampeonato)
+					|| !ValidatorUtil.isEmpty(numeroSemana)) {
+				partidas = partidaCRUDService.getByIdClubeIdCampeonatoNumeroSemana(idClube, idCampeonato, numeroSemana);
+			} else {
+				partidas = partidaCRUDService.getAll();
+			}
 
-			partidas = partidaCRUDService.getAll();
-
-	
 			if (ValidatorUtil.isEmpty(partidas)) {
 				return ResponseEntity.noContent().build();
 			}

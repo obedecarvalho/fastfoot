@@ -24,7 +24,7 @@ public class ClubeController {
 	@Autowired
 	private ClubeService clubeService;
 	
-	@GetMapping("/clubesPorLiga/{liga}")
+	//@GetMapping("/clubesPorLiga/{liga}")
 	@Deprecated
 	public ResponseEntity<List<ClubeDTO>> getClubesPorLiga(@PathVariable(name = "liga") String liga) {//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		List<ClubeDTO> partidas = clubeService.getClubesPorLiga(liga);
@@ -34,7 +34,7 @@ public class ClubeController {
 		return ResponseEntity.ok(partidas);
 	}
 	
-	@GetMapping("/clubesRankings/{liga}")
+	//@GetMapping("/clubesRankings/{liga}")
 	@Deprecated
 	public ResponseEntity<List<ClubeRankingDTO>> getClubesRankings(@RequestParam(name = "ano", required = false) Integer ano, @PathVariable(name = "liga") String liga) {
 		List<ClubeRankingDTO> partidas = null;

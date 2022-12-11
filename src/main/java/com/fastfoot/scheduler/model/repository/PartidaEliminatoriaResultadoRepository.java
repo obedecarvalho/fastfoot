@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -33,5 +34,11 @@ public interface PartidaEliminatoriaResultadoRepository extends JpaRepository<Pa
 	public List<PartidaEliminatoriaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
 
 	public List<PartidaEliminatoriaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+	
+	@Query("SELECT pe FROM PartidaEliminatoriaResultado pe WHERE pe.rodada.campeonatoMisto = :campeonato")
+	public List<PartidaEliminatoriaResultado> findByCampeonato(@Param("campeonato") CampeonatoMisto campeonato);
+	
+	@Query("SELECT pe FROM PartidaEliminatoriaResultado pe WHERE pe.rodada.campeonatoEliminatorio = :campeonato")
+	public List<PartidaEliminatoriaResultado> findByCampeonato(@Param("campeonato") CampeonatoEliminatorio campeonato);
 
 }

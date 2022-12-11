@@ -17,30 +17,30 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.service.PartidaEliminatoriaCRUDService;
+import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
+import com.fastfoot.scheduler.service.PartidaAmistosaCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class PartidaEliminatoriaCRUDController implements CRUDController<PartidaEliminatoriaResultado, Long>{
-	
+public class PartidaAmistosaCRUDController implements CRUDController<PartidaAmistosaResultado, Long> {
+
 	@Autowired
-	private PartidaEliminatoriaCRUDService partidaEliminatoriaCRUDService;
+	private PartidaAmistosaCRUDService partidaAmistosaCRUDService;
 
 	@Override
-	@PostMapping("/partidasEliminatorias")
-	public ResponseEntity<PartidaEliminatoriaResultado> create(@RequestBody PartidaEliminatoriaResultado t) {
+	@PostMapping("/partidasAmistosas")
+	public ResponseEntity<PartidaAmistosaResultado> create(@RequestBody PartidaAmistosaResultado t) {
 		try {
 			
-			PartidaEliminatoriaResultado partida = partidaEliminatoriaCRUDService.create(t);
+			PartidaAmistosaResultado partida = partidaAmistosaCRUDService.create(t);
 			
 			if (ValidatorUtil.isEmpty(partida)) {
 				return ResponseEntity.internalServerError().build();
 			}
 	
-			return new ResponseEntity<PartidaEliminatoriaResultado>(partida, HttpStatus.CREATED);
+			return new ResponseEntity<PartidaAmistosaResultado>(partida, HttpStatus.CREATED);
 		
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -49,27 +49,25 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	}
 
 	@Override
-	public ResponseEntity<List<PartidaEliminatoriaResultado>> getAll() {
+	public ResponseEntity<List<PartidaAmistosaResultado>> getAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@GetMapping("/partidasEliminatorias")
-	public ResponseEntity<List<PartidaEliminatoriaResultado>> getAll(
+	@GetMapping("/partidasAmistosas")
+	public ResponseEntity<List<PartidaAmistosaResultado>> getAll(
 			@RequestParam(name = "idClube", required = false) Integer idClube,
-			@RequestParam(name = "idCampeonato", required = false) Long idCampeonato,
 			@RequestParam(name = "numeroSemana", required = false) Integer numeroSemana) {
 		try {
 			
-			List<PartidaEliminatoriaResultado> partidas;
+			List<PartidaAmistosaResultado> partidas;
 			
-			if (!ValidatorUtil.isEmpty(idClube) || !ValidatorUtil.isEmpty(idCampeonato)
-					|| !ValidatorUtil.isEmpty(numeroSemana)) {
-				partidas = partidaEliminatoriaCRUDService.getByIdClubeIdCampeonatoNumeroSemana(idClube, idCampeonato, numeroSemana);
+			if (!ValidatorUtil.isEmpty(idClube) || !ValidatorUtil.isEmpty(numeroSemana)) {
+				partidas = partidaAmistosaCRUDService.getByIdClubeNumeroSemana(idClube, numeroSemana);
 			} else {
-				partidas = partidaEliminatoriaCRUDService.getAll();
+				partidas = partidaAmistosaCRUDService.getAll();
 			}
-	
+
 			if (ValidatorUtil.isEmpty(partidas)) {
 				return ResponseEntity.noContent().build();
 			}
@@ -82,11 +80,11 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	}
 
 	@Override
-	@GetMapping("/partidasEliminatorias/{id}")
-	public ResponseEntity<PartidaEliminatoriaResultado> getById(@PathVariable("id") Long id) {
+	@GetMapping("/partidasAmistosas/{id}")
+	public ResponseEntity<PartidaAmistosaResultado> getById(@PathVariable("id") Long id) {
 		try {
 			
-			PartidaEliminatoriaResultado partida = partidaEliminatoriaCRUDService.getById(id);
+			PartidaAmistosaResultado partida = partidaAmistosaCRUDService.getById(id);
 	
 			if (ValidatorUtil.isEmpty(partida)) {
 				return ResponseEntity.notFound().build();
@@ -100,17 +98,17 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	}
 
 	@Override
-	@PutMapping("/partidasEliminatorias/{id}")
-	public ResponseEntity<PartidaEliminatoriaResultado> update(@PathVariable("id") Long id, @RequestBody PartidaEliminatoriaResultado t) {
+	@PutMapping("/partidasAmistosas/{id}")
+	public ResponseEntity<PartidaAmistosaResultado> update(@PathVariable("id") Long id, @RequestBody PartidaAmistosaResultado t) {
 		try {
 			
-			PartidaEliminatoriaResultado partida = partidaEliminatoriaCRUDService.getById(id);
+			PartidaAmistosaResultado partida = partidaAmistosaCRUDService.getById(id);
 			
 			if (ValidatorUtil.isEmpty(partida)) {
 				return ResponseEntity.notFound().build();
 			}
 			
-			partida = partidaEliminatoriaCRUDService.update(t);
+			partida = partidaAmistosaCRUDService.update(t);
 			
 			if (ValidatorUtil.isEmpty(partida)) {
 				return ResponseEntity.internalServerError().build();
@@ -124,10 +122,10 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	}
 
 	@Override
-	@DeleteMapping("/partidasEliminatorias/{id}")
+	@DeleteMapping("/partidasAmistosas/{id}")
 	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
-			partidaEliminatoriaCRUDService.delete(id);
+			partidaAmistosaCRUDService.delete(id);
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -135,10 +133,10 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	}
 
 	@Override
-	@DeleteMapping("/partidasEliminatorias")
+	@DeleteMapping("/partidasAmistosas")
 	public ResponseEntity<HttpStatus> deleteAll() {
 		try {
-			partidaEliminatoriaCRUDService.deleteAll();
+			partidaAmistosaCRUDService.deleteAll();
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
