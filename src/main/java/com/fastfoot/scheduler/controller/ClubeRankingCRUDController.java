@@ -1,4 +1,4 @@
-package com.fastfoot.controller;
+package com.fastfoot.scheduler.controller;
 
 import java.util.List;
 
@@ -16,10 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.controller.CRUDController;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.service.ClubeRankingCRUDService;
 import com.fastfoot.scheduler.service.TemporadaService;
-import com.fastfoot.service.ClubeRankingCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController

@@ -12,6 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -119,6 +120,7 @@ public class RodadaAmistosa implements RodadaJogavel {
 		return false;
 	}
 	
+	@JsonIgnore
 	@Override
 	public CampeonatoJogavel getCampeonatoJogavel() {
 		/*if (campeonato != null) return campeonato;

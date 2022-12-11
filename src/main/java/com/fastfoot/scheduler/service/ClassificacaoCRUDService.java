@@ -1,4 +1,4 @@
-package com.fastfoot.service;
+package com.fastfoot.scheduler.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
+import com.fastfoot.service.CRUDService;
 
 @Service
 public class ClassificacaoCRUDService implements CRUDService<Classificacao, Long> {

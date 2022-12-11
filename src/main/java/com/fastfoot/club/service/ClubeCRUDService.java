@@ -1,4 +1,4 @@
-package com.fastfoot.service;
+package com.fastfoot.club.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.model.Liga;
+import com.fastfoot.service.CRUDService;
 
 @Service
 public class ClubeCRUDService implements CRUDService<Clube, Integer> {

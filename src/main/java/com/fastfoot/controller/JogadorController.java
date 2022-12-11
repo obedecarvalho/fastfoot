@@ -13,6 +13,7 @@ import com.fastfoot.player.model.dto.JogadorDTO;
 import com.fastfoot.player.service.JogadorService;
 import com.fastfoot.service.util.ValidatorUtil;
 
+@Deprecated
 @RestController
 @CrossOrigin("*")
 public class JogadorController {

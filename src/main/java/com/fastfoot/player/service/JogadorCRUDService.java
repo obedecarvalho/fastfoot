@@ -1,4 +1,4 @@
-package com.fastfoot.service;
+package com.fastfoot.player.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +10,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.service.CRUDService;
 
 @Service
 public class JogadorCRUDService implements CRUDService<Jogador, Long> {

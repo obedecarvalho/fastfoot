@@ -1,4 +1,4 @@
-package com.fastfoot.service;
+package com.fastfoot.scheduler.service;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
+import com.fastfoot.service.CRUDService;
 
 @Service
 public class ClubeRankingCRUDService implements CRUDService<ClubeRanking, Integer> {
