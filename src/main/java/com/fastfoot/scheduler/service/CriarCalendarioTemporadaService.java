@@ -176,10 +176,10 @@ public class CriarCalendarioTemporadaService {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 
-			inicio = stopWatch.getSplitNanoTime();
+			inicio = stopWatch.getSplitTime();
 			agruparHabilidadeValorEstatisticaService.agrupar(temporada);
 			stopWatch.split();
-			fim = stopWatch.getSplitNanoTime();
+			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (fim - inicio));
 			
 			temporada.setAtual(false);
@@ -187,28 +187,28 @@ public class CriarCalendarioTemporadaService {
 			ano = temporada.getAno() + 1;
 
 			//stopWatch.split();
-			inicio = stopWatch.getSplitNanoTime();
+			inicio = stopWatch.getSplitTime();
 			atualizarPassoDesenvolvimentoJogador4();
 			stopWatch.split();
-			fim = stopWatch.getSplitNanoTime();
+			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));
 			
-			inicio = stopWatch.getSplitNanoTime();
+			inicio = stopWatch.getSplitTime();
 			aposentarJogadores();
 			stopWatch.split();
-			fim = stopWatch.getSplitNanoTime();
+			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
 
 		} else {
 
-			inicio = stopWatch.getSplitNanoTime();
+			inicio = stopWatch.getSplitTime();
 			preCarregarParametrosService.preCarregarParametros();
 			preCarregarService.preCarregarClubes();
 			stopWatch.split();
-			fim = stopWatch.getSplitNanoTime();
+			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#preCarregar:" + (fim - inicio));
 			
-			inicio = stopWatch.getSplitNanoTime();
+			inicio = stopWatch.getSplitTime();
 			if (jogadorRepository.findAll().isEmpty()) {//TODO: usado em DEV
 				List<Clube> clubes = clubeRepository.findAll();
 				
@@ -230,16 +230,16 @@ public class CriarCalendarioTemporadaService {
 
 			}
 			stopWatch.split();
-			fim = stopWatch.getSplitNanoTime();
+			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#criarJogadoresClube:" + (fim - inicio));
 		}
 
 		//stopWatch.split();
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		calcularValorTransferenciaJogadores();
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
 		temporada = TemporadaFactory.criarTempordada(ano);
@@ -249,44 +249,44 @@ public class CriarCalendarioTemporadaService {
 		List<CampeonatoEliminatorio> copasNacionais = new ArrayList<CampeonatoEliminatorio>();
 		List<RodadaAmistosa> rodadaAmistosaAutomaticas = new ArrayList<RodadaAmistosa>();
 
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#criarCampeonatos:" + (fim - inicio));
 
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
-		mensagens.add("\t#salvar:" + (fim - inicio));//40%
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#salvar:" + (fim - inicio));
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		criarEstatisticasJogadorTemporada(temporada);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#criarEstatisticasJogadorTemporada:" + (fim - inicio));
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		distribuirPremiacaoCompeticoesService.distribuirPremiacaoCompeticoes(temporada);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (fim - inicio));
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		distribuirPatrocinioService.distribuirPatrocinio(temporada);
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#distribuirPatrocinio:" + (fim - inicio));
 
 		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getNanoTime());
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
 		System.err.println(mensagens);
 		

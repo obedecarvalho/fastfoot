@@ -19,6 +19,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
@@ -70,20 +71,25 @@ public class Jogador {
 	
 	private Double valorTransferencia;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
 	
+	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeValor> habilidades;
 	
+	@JsonIgnore
 	@Transient
 	private List<HabilidadeValor> habilidadesAcaoFim;
 	
+	@JsonIgnore
 	@Transient
 	private List<HabilidadeValor> habilidadesAcaoMeioFim;
 
@@ -294,6 +300,7 @@ public class Jogador {
 		this.forcaGeralPotencialEfetiva = forcaGeralPotencialEfetiva;
 	}
 
+	@JsonIgnore
 	public Double getNivelDesenvolvimento() {
 		return getForcaGeral() / getForcaGeralPotencialEfetiva();
 	}
@@ -303,6 +310,7 @@ public class Jogador {
 		return "Jogador [posicao=" + posicao + ", numero=" + numero + "]";
 	}
 	
+	@JsonIgnore
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -322,6 +330,7 @@ public class Jogador {
 	
 	//###	METODOS AUXILIARES	###
 
+	@JsonIgnore
 	public void addHabilidade(HabilidadeValor habilidadeValor) {
 		if (getHabilidades() == null) {
 			setHabilidades(new ArrayList<HabilidadeValor>());
@@ -329,18 +338,22 @@ public class Jogador {
 		getHabilidades().add(habilidadeValor);
 	}
 
+	@JsonIgnore
 	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
 		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
 	}
 	
+	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadeValorByHabilidade(List<Habilidade> habilidades) {
 		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
 	}
 	
+	@JsonIgnore
 	public HabilidadeValor getHabilidadeValorByHabilidade(Habilidade habilidade) {
 		return getHabilidades().stream().filter(hv -> habilidade.equals(hv.getHabilidade())).findFirst().get();
 	}
 
+	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadesAcaoFimValor() {
 		if (habilidadesAcaoFim == null) {
 			habilidadesAcaoFim = getHabilidades(Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO,
@@ -349,6 +362,7 @@ public class Jogador {
 		return habilidadesAcaoFim; 
 	}
 
+	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadesAcaoMeioFimValor() {
 		if (habilidadesAcaoMeioFim == null) {
 			habilidadesAcaoMeioFim = getHabilidades(

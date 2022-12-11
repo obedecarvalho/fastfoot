@@ -20,6 +20,7 @@ public class JogadorController {
 	@Autowired
 	private JogadorService jogadorService;
 	
+	@Deprecated
 	@GetMapping("/jogadoresPorClube/{idClube}")
 	public ResponseEntity<List<JogadorDTO>> getJogadoresPorClube(@PathVariable(name = "idClube") Integer idClube) {
 		List<JogadorDTO> partidas = JogadorDTO.convertToDTO(jogadorService.getJogadoresPorClube(idClube));

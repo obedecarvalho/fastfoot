@@ -20,20 +20,20 @@ public class FastfootApplication {
 		
 		--1ro
 		stopWatch.split();
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		
 		--outros
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		
 		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
 		
 		stopWatch.stop();
-		stopWatch.getNanoTime());--Tempo total
-		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
+		stopWatch.getTime());--Tempo total
+		mensagens.add("#tempoTotal:" + stopWatch.getTime());
 	 */
 	
 	public static final Integer NUM_THREAD = 8;

@@ -21,6 +21,7 @@ public class JogadorService {
 	@Autowired
 	private ClubeRepository clubeRepository;
 
+	@Deprecated
 	public List<Jogador> getJogadoresPorClube(Integer idClube) {
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 
