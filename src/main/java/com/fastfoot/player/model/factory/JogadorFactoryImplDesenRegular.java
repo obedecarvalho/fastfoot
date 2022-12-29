@@ -41,8 +41,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		sortearHabComunsEletivas(estrategia, habComuns, habOutros);
 		sortearHabCoringa(estrategia, habEspecificas, habComuns, habOutros);
 		
-		Double ajusteForca = getAjusteForca(jogador.getIdade());
-		Double ajusteForcaProx = getAjusteForca(jogador.getIdade() + 1);
+		Double ajusteForca = getAjusteForca(jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador(), jogador.getIdade());
+		Double ajusteForcaProx = getAjusteForca(jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador(), jogador.getIdade() + 1);
 		Double potencialSorteado = null;
 		Double forca = null;
 		Double passoProx = null;
@@ -95,7 +95,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	
 	public void ajustarPassoDesenvolvimento(Jogador j) {
 
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
+		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getJogadorDetalhe().getModoDesenvolvimentoJogador(),
+				j.getIdade() + 1);
 		Double passoProx = null;
 		
 		for (HabilidadeValor hv : j.getHabilidades()) {
@@ -111,7 +112,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 
 		//TODO: Limitar desenvolvimento para não passar do MAXIMO (100)
 
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getIdade() + 1);
+		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getJogadorDetalhe().getModoDesenvolvimentoJogador(),
+				j.getIdade() + 1);
 		Double passoProx = null, passo = null, peso = null;
 		
 		Double variacao = null;
@@ -201,11 +203,11 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	private Double getPercDesenvolvimentoMaximo(Integer idade) {
 		Double x = 0.00d;
 		
-		if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
+		if (idade >= 17 && idade <= 22) {//if (idade >= FASE_1_IDADE_MIN && idade <= FASE_1_IDADE_MAX) {
 			x = 0.15d;
-		} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
+		} else if (idade >= 23 && idade <= 26) {//} else if (idade >= FASE_2_IDADE_MIN && idade <= FASE_2_IDADE_MAX) {
 			x = 0.10d;
-		} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
+		} else if (idade >= 27 && idade <= 31) {//} else if (idade >= FASE_3_IDADE_MIN && idade <= FASE_3_IDADE_MAX) {
 			x = 0.05d;
 		//} else if (idade >= FASE_4_IDADE_MIN && idade <= FASE_4_IDADE_MAX) {
 		//	x = 1.00d;

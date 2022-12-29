@@ -85,8 +85,10 @@ public class CalcularTrajetoriaForcaClubeService {
 			
 			for (Jogador j : jogadores) {
 				j.setIdade(JogadorFactory.IDADE_MIN + ((j.getIdade() + 1 - JogadorFactory.IDADE_MIN) % numTemporadas));
+				/*j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencial()
+						* JogadorFactory.VALOR_AJUSTE.get(j.getIdade() - JogadorFactory.IDADE_MIN));*/
 				j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencial()
-						* JogadorFactory.VALOR_AJUSTE.get(j.getIdade() - JogadorFactory.IDADE_MIN));
+						* j.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[j.getIdade() - JogadorFactory.IDADE_MIN]);
 			}
 			
 			//TODO: verificar se há jogadores para serem escalados como titular (jogador da posicao faltante)

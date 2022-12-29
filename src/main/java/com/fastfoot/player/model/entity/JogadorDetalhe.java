@@ -14,6 +14,7 @@ import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 
 @Entity
 //@Table(indexes = { @Index(columnList = "id_jogador") })
@@ -36,6 +37,8 @@ public class JogadorDetalhe {
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
+	
+	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 
 	public Long getId() {
 		return id;
@@ -68,6 +71,14 @@ public class JogadorDetalhe {
 	public void setJogadorEstatisticasAmistososTemporadaAtual(
 			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
 		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
+	}
+
+	public ModoDesenvolvimentoJogador getModoDesenvolvimentoJogador() {
+		return modoDesenvolvimentoJogador;
+	}
+
+	public void setModoDesenvolvimentoJogador(ModoDesenvolvimentoJogador modoDesenvolvimentoJogador) {
+		this.modoDesenvolvimentoJogador = modoDesenvolvimentoJogador;
 	}
 
 	@JsonIgnore

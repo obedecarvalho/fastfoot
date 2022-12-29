@@ -65,9 +65,11 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" 		((hv.potencial_desenvolvimento_efetivo * ?3) - (hv.valor + hv.valor_decimal))/?2 as novo_passo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
+			" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +
 			" 	where j.idade = ?1 " +
+			"		AND jd.modo_desenvolvimento_jogador = ?4 " +
 			" ) as tmp " +
 			" where hv.id = tmp.id "
 	)
-	public void atualizarPassoDesenvolvimento(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca);
+	public void atualizarPassoDesenvolvimento(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);
 }

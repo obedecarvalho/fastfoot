@@ -22,6 +22,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
+import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
@@ -35,6 +36,9 @@ public class AposentarJogadorService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
+	
+	@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;
 
 	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
@@ -132,6 +136,8 @@ public class AposentarJogadorService {
 
 		//Novos
 		jogadores = newGruposDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
+		
+		jogadorDetalheRepository.saveAll(jogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(newGruposDesenvolvimento);
 		List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();
@@ -153,7 +159,7 @@ public class AposentarJogadorService {
 			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
 
 		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
-				JogadorFactory.IDADE_MIN);
+				JogadorFactory.IDADE_MIN);//TODO: passar modo de desenvolvimento do jogador aposentado
 		
 		//Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN, forcaGeral);
 		

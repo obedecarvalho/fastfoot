@@ -151,6 +151,13 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elements.get(R.nextInt(elements.size()));
 	}
 	
+	public static <T> T sortearPesoUm(T[] elements) {
+		
+		if (elements == null || elements.length == 0) return null;
+		
+		return elements[R.nextInt(elements.length)];
+	}
+	
 	public static boolean sortearProbabilidade(double probabilidade) {
 		return R.nextDouble() <= probabilidade;
 	}

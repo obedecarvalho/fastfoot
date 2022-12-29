@@ -8,7 +8,7 @@ public enum NivelAdequacao {//TODO: adequar porcentagemMinima
 	B(0.775), 
 	C(0.675), 
 	D(0.500), 
-	E(JogadorFactory.POT_DES_PORC_INICIAL / 100),
+	E(0.240),//E(JogadorFactory.POT_DES_PORC_INICIAL / 100),
 	F(0d);
 
 	//private Double porcentagemMaxima;
