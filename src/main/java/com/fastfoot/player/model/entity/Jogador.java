@@ -15,6 +15,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -71,7 +72,7 @@ public class Jogador {
 	
 	private Double valorTransferencia;
 	
-	@JsonIgnore
+	/*@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
@@ -79,7 +80,7 @@ public class Jogador {
 	@JsonIgnore
 	@ManyToOne
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
+	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;*/
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
@@ -92,6 +93,10 @@ public class Jogador {
 	@JsonIgnore
 	@Transient
 	private List<HabilidadeValor> habilidadesAcaoMeioFim;
+	
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_jogador_detalhe")
+	private JogadorDetalhe jogadorDetalhe;
 
 	public Jogador() {
 		
@@ -275,21 +280,27 @@ public class Jogador {
 		return StatusJogador.ATIVO.equals(this.statusJogador);
 	}
 
+	@JsonIgnore
 	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
-		return jogadorEstatisticasTemporadaAtual;
+		//return jogadorEstatisticasTemporadaAtual;
+		return jogadorDetalhe.getJogadorEstatisticasTemporadaAtual();
 	}
 
 	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporada) {
-		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
+		//this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
+		jogadorDetalhe.setJogadorEstatisticasTemporadaAtual(jogadorEstatisticasTemporada);
 	}
 
+	@JsonIgnore
 	public JogadorEstatisticasTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
-		return jogadorEstatisticasAmistososTemporadaAtual;
+		//return jogadorEstatisticasAmistososTemporadaAtual;
+		return jogadorDetalhe.getJogadorEstatisticasAmistososTemporadaAtual();
 	}
 
 	public void setJogadorEstatisticasAmistososTemporadaAtual(
 			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
-		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
+		//this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
+		jogadorDetalhe.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasAmistososTemporadaAtual);
 	}
 
 	public Double getForcaGeralPotencialEfetiva() {
@@ -298,6 +309,14 @@ public class Jogador {
 
 	public void setForcaGeralPotencialEfetiva(Double forcaGeralPotencialEfetiva) {
 		this.forcaGeralPotencialEfetiva = forcaGeralPotencialEfetiva;
+	}
+
+	public JogadorDetalhe getJogadorDetalhe() {
+		return jogadorDetalhe;
+	}
+
+	public void setJogadorDetalhe(JogadorDetalhe jogadorDetalhe) {
+		this.jogadorDetalhe = jogadorDetalhe;
 	}
 
 	@JsonIgnore

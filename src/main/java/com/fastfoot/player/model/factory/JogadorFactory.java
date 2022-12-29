@@ -23,6 +23,7 @@ import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.service.util.NomeUtil;
 
 public abstract class JogadorFactory {
@@ -281,6 +282,7 @@ public abstract class JogadorFactory {
 	protected Jogador gerarJogador(EstrategiaHabilidadePosicaoJogador estrategia, Clube clube, Posicao posicao,
 			Integer numero, Integer idade, Integer forcaGeral) {
 		Jogador jogador = new Jogador();
+		jogador.setJogadorDetalhe(new JogadorDetalhe());
 
 		jogador.setNumero(numero);
 		jogador.setNome(NomeUtil.sortearNome());

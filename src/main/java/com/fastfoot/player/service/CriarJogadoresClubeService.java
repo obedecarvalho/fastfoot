@@ -19,6 +19,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
+import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -36,6 +37,9 @@ public class CriarJogadoresClubeService {
 
 	@Autowired
 	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
+	
+	@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
@@ -47,8 +51,11 @@ public class CriarJogadoresClubeService {
 			criarJogadoresClube(c, jogadores, gruposJogador);
 		}
 		
-		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream()).collect(Collectors.toList());
+		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream())
+				.collect(Collectors.toList());
 
+		jogadorDetalheRepository
+				.saveAll(jogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		habilidadeValorRepository.saveAll(habilidades);
@@ -61,7 +68,8 @@ public class CriarJogadoresClubeService {
 		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
 	}
 
-	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores, List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
+	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores,
+			List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
 
 		//List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
@@ -170,17 +178,20 @@ public class CriarJogadoresClubeService {
 		//Jogadores Adicionais
 		
 		
-		Posicao p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		Posicao p = RoletaUtil.sortearPesoUm(
+				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
 		j = JogadorFactory.getInstance().gerarJogador(clube, p, 24);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		p = RoletaUtil.sortearPesoUm(
+				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
 		j = JogadorFactory.getInstance().gerarJogador(clube, p, 25);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
-		p = RoletaUtil.sortearPesoUm(Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+		p = RoletaUtil.sortearPesoUm(
+				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
 		j = JogadorFactory.getInstance().gerarJogador(clube, p, 26);
 		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);

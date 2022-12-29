@@ -221,13 +221,15 @@ public class JogarPartidaService {
 		}
 	}
 	
-	private void salvarEstatisticasJogador(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, PartidaResultadoJogavel partidaResultado) {
+	private void salvarEstatisticasJogador(List<Jogador> jogadores,
+			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, PartidaResultadoJogavel partidaResultado) {
+		//TODO: salvar so de jogadores que jogaram?
 		if (!partidaResultado.isAmistoso()) {
 			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
 					jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
 		} else {
-			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
-					jogadores.stream().map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
+			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(jogadores.stream()
+					.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
 		}
 	}
 

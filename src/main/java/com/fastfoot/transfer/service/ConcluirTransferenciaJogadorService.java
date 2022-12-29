@@ -10,7 +10,9 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
+import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -48,6 +50,9 @@ public class ConcluirTransferenciaJogadorService {
 	
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+	
+	@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;
 	
 	//###	SERVICE	###
 
@@ -102,6 +107,7 @@ public class ConcluirTransferenciaJogadorService {
 		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelSalvar = new ArrayList<DisponivelNegociacao>();
+		List<JogadorDetalhe> detalheJogadoresSalvar = new ArrayList<JogadorDetalhe>();
 
 		List<MovimentacaoFinanceira> movimentacoesFinanceiras = new ArrayList<MovimentacaoFinanceira>();
 
@@ -156,6 +162,7 @@ public class ConcluirTransferenciaJogadorService {
 					transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasTemporadaAtual());
 			estatisticasSalvar.add(
 					transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorEstatisticasAmistososTemporadaAtual());
+			detalheJogadoresSalvar.add(transferenciaConcluidaDTO.getPropostaAceita().getJogador().getJogadorDetalhe());
 			necessidadeContratacaoSalvar
 					.add(transferenciaConcluidaDTO.getPropostaAceita().getNecessidadeContratacaoClube());
 			disponivelSalvar.add(transferenciaConcluidaDTO.getDisponivelNegociacao());
@@ -164,6 +171,7 @@ public class ConcluirTransferenciaJogadorService {
 
 		//jogadorEstatisticasAmistososTemporadaRepository.saveAll(estatisticasAmistososSalvar);
 		jogadorEstatisticasTemporadaRepository.saveAll(estatisticasSalvar);
+		jogadorDetalheRepository.saveAll(detalheJogadoresSalvar);
 		jogadorRepository.saveAll(jogadoresSalvar);
 		jogadorEstatisticasTemporadaRepository.deleteAll(estatisticasExcluir);
 		//jogadorEstatisticasAmistososTemporadaRepository.deleteAll(estatisticasAmistososExcluir);

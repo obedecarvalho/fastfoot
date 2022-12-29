@@ -31,10 +31,12 @@ import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
+import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
@@ -111,6 +113,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
+	
+	@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -302,7 +307,7 @@ public class CriarCalendarioTemporadaService {
 
 	}*/
 
-	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
+	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
 
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
 		
@@ -317,6 +322,31 @@ public class CriarCalendarioTemporadaService {
 				.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
 
 		jogadorRepository.saveAll(jogadores);
+	}*/
+	
+	private void criarEstatisticasJogadorTemporada(Temporada temporada) {
+
+		List<JogadorDetalhe> detalhejogadores = jogadorDetalheRepository.findByStatusJogador(StatusJogador.ATIVO);
+		
+		detalhejogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(
+				new JogadorEstatisticasTemporada(j.getJogador(), temporada, j.getClube(), false)));
+		/*jogadorEstatisticasTemporadaRepository.saveAll(
+				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));*/
+		
+		detalhejogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(
+				new JogadorEstatisticasTemporada(j.getJogador(), temporada, j.getClube(), true)));
+		/*jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream()
+				.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));*/
+		
+		List<JogadorEstatisticasTemporada> jet = detalhejogadores.stream()
+				.map(JogadorDetalhe::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList());
+
+		jet.addAll(detalhejogadores.stream().map(JogadorDetalhe::getJogadorEstatisticasAmistososTemporadaAtual)
+				.collect(Collectors.toList()));
+		
+		jogadorEstatisticasTemporadaRepository.saveAll(jet);
+
+		jogadorDetalheRepository.saveAll(detalhejogadores);
 	}
 	
 	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
