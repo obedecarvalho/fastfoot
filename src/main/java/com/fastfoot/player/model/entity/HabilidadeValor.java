@@ -201,6 +201,16 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	public void setPotencialDesenvolvimentoEfetivo(Double potencialDesenvolvimentoEfetivo) {
 		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
 	}
+	
+	@Override
+	public Double getValorAsDouble() {
+		return new Double(getValor());
+	}
+
+	@Override
+	public Double getValorNAsDouble() {
+		return new Double(getValorN());
+	}
 
 	@Override
 	public String toString() {

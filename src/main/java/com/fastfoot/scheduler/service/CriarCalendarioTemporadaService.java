@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPartidaService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.DistribuirPatrocinioService;
@@ -148,7 +148,7 @@ public class CriarCalendarioTemporadaService {
 	private SalvarCampeonatosService salvarCampeonatosService;
 	
 	@Autowired
-	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+	private CalcularPartidaProbabilidadeResultadoSimularPartidaService calcularPartidaProbabilidadeResultadoSimularPartidaService;//TODO: avaliar quais dos metodos implementados deve ser usado
 
 	@Autowired
 	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
@@ -740,11 +740,11 @@ public class CriarCalendarioTemporadaService {
 			List<CompletableFuture<Boolean>> simularPartidasFuture = new ArrayList<CompletableFuture<Boolean>>();
 	
 			for (Rodada r : semana.getRodadas()) {
-				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartidas(r));
 			}
 	
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoService.simularPartidas(r));
+				simularPartidasFuture.add(calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartidas(r));
 			}
 			
 			CompletableFuture.allOf(simularPartidasFuture.toArray(new CompletableFuture<?>[0])).join();

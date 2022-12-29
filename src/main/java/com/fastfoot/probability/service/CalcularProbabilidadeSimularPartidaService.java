@@ -15,8 +15,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPartidaService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -97,11 +99,19 @@ public class CalcularProbabilidadeSimularPartidaService {
 	@Autowired
 	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
 
+	//TODO: avaliar quais dos metodos implementados deve ser usado
 	@Autowired
-	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+	private CalcularPartidaProbabilidadeResultadoSimularPartidaService calcularPartidaProbabilidadeResultadoSimularPartidaService;
+	
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService;
 	
 	@Autowired
 	private CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService;
+	
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService;	
+	//
 	
 	@Autowired
 	private CalcularEstatisticasFinalizacaoDefesaService calcularEstatisticasFinalizacaoDefesaService;
@@ -128,33 +138,41 @@ public class CalcularProbabilidadeSimularPartidaService {
 
 		for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacional.getRodadas().get(r).getPartidas()) {
-				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.simularPartida(p));
+				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartida(p));
 				/*partidaProbabilidade.put(p,
 						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
 								calcularEstatisticasFinalizacaoDefesaService
 										.getEstatisticasFinalizacaoClube(semana.getTemporada())));*/
-				partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
+				/*partidaProbabilidade.put(p,
+						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService.simularPartida(p,
 								calcularEstatisticasFinalizacaoDefesaService
 										.getEstatisticasFinalizacaoClube(semana.getTemporada()),
 								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasDefesaClube(semana.getTemporada())));
+										.getEstatisticasDefesaClube(semana.getTemporada())));*/
+				partidaProbabilidade.put(p,
+						calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService.simularPartida(p,
+								calcularEstatisticasFinalizacaoDefesaService
+										.getEstatisticasFinalizacaoClube(semana.getTemporada())));
 			}
 		}
 		
 		for (int r = nacionalII.getRodadaAtual(); r < nacionalII.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacionalII.getRodadas().get(r).getPartidas()) {
-				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.simularPartida(p));
+				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartida(p));
 				/*partidaProbabilidade.put(p,
 						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
 								calcularEstatisticasFinalizacaoDefesaService
 										.getEstatisticasFinalizacaoClube(semana.getTemporada())));*/
-				partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
+				/*partidaProbabilidade.put(p,
+						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService.simularPartida(p,
 								calcularEstatisticasFinalizacaoDefesaService
 										.getEstatisticasFinalizacaoClube(semana.getTemporada()),
 								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasDefesaClube(semana.getTemporada())));
+										.getEstatisticasDefesaClube(semana.getTemporada())));*/
+				partidaProbabilidade.put(p,
+						calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService.simularPartida(p,
+								calcularEstatisticasFinalizacaoDefesaService
+										.getEstatisticasFinalizacaoClube(semana.getTemporada())));
 			}
 		}
 		//
@@ -416,7 +434,8 @@ public class CalcularProbabilidadeSimularPartidaService {
 			//clup.setCompleto(true);
 			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA);
 			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO);
-			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_DEFESA);
+			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FIN_DEFESA);
+			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO_POISSON);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, ClubeProbabilidadePosicao>());
 			

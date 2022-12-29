@@ -154,6 +154,16 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		}
 		return pesoN;
 	}
+	
+	@Override
+	public Double getValorAsDouble() {
+		return new Double(getValor());
+	}
+
+	@Override
+	public Double getValorNAsDouble() {
+		return new Double(getValorN());
+	}
 
 	@Override
 	public int hashCode() {

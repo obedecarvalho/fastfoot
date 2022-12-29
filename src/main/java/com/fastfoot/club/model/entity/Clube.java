@@ -153,4 +153,16 @@ public class Clube implements ElementoRoleta {
 		return "Clube [nome=" + nome + ", liga=" + liga.name() + "]";
 	}
 
+	@Override
+	@JsonIgnore
+	public Double getValorAsDouble() {
+		return new Double(getValor());
+	}
+
+	@Override
+	@JsonIgnore
+	public Double getValorNAsDouble() {
+		return new Double(getValorN());
+	}
+
 }

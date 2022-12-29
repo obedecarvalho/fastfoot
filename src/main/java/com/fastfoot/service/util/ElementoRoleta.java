@@ -6,4 +6,7 @@ public interface ElementoRoleta {
 	
 	public Integer getValorN();
 
+	public Double getValorAsDouble();
+	
+	public Double getValorNAsDouble();
 }

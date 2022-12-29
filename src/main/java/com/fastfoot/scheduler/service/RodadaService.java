@@ -139,7 +139,7 @@ public class RodadaService {
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -284,7 +284,7 @@ public class RodadaService {
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal(RE):" + stopWatch.getTime());
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -362,7 +362,7 @@ public class RodadaService {
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 	}
 
 	private void carregarPartidas(RodadaAmistosa rodada) {

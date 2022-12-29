@@ -154,4 +154,86 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 	public static boolean sortearProbabilidade(double probabilidade) {
 		return R.nextDouble() <= probabilidade;
 	}
+	
+	public static ElementoRoleta executarAsDouble(List<? extends ElementoRoleta> elementos) {
+		double valor = 0.0;
+		
+		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
+			ElementoRoleta elementoRoleta = (ElementoRoleta) iterator.next();
+			valor += elementoRoleta.getValorAsDouble();
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		int i = 0;
+		double x = elementos.get(0).getValorAsDouble();
+		
+		while (v > x) {
+			i++;
+			x +=  elementos.get(i).getValorAsDouble();
+		}
+
+		return elementos.get(i);
+	}
+	
+	public static ElementoRoleta executarNAsDouble(List<? extends ElementoRoleta> elementos) {
+		double valor = 0;
+		
+		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
+			ElementoRoleta elementoRoleta = (ElementoRoleta) iterator.next();
+			valor += elementoRoleta.getValorNAsDouble();
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		int i = 0;
+		double x = elementos.get(0).getValorNAsDouble();
+		
+		while (v > x) {
+			i++;
+			x +=  elementos.get(i).getValorNAsDouble();
+		}
+
+		return elementos.get(i);
+	}
+	
+	public static ElementoRoleta executarAsDouble(ElementoRoleta[] elementos) {
+		double valor = 0;
+		
+		for (ElementoRoleta er : elementos) {
+			valor += er.getValorAsDouble();
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		int i = 0;
+		double x = elementos[0].getValorAsDouble();
+		
+		while (v > x) {
+			i++;
+			x +=  elementos[i].getValorAsDouble();
+		}
+
+		return elementos[i];
+	}
+
+	public static ElementoRoleta executarNAsDouble(ElementoRoleta[] elementos) {
+		double valor = 0;
+		
+		for (ElementoRoleta er : elementos) {
+			valor += er.getValorNAsDouble();
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		int i = 0;
+		double x = elementos[0].getValorNAsDouble();
+		
+		while (v > x) {
+			i++;
+			x +=  elementos[i].getValorNAsDouble();
+		}
+
+		return elementos[i];
+	}
 }

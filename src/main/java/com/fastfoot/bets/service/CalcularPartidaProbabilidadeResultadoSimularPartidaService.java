@@ -39,7 +39,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoService {
+public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 	
 	private static final Integer NUM_SIMULACOES = 100;
 	

@@ -47,6 +47,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.ParametroService;
 
 @Service
+@Deprecated /* Substituir por TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO */
 public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;

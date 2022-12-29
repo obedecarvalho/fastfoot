@@ -14,6 +14,7 @@ import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.probability.model.ClubeProbabilidadeDefesa;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.probability.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -26,18 +27,18 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService {
+public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService {
 
 	private static final Integer NUM_SIMULACOES = 10000;
 
 	private static final Random R = new Random();
-	
+
 	@Autowired
 	private PartidaResultadoRepository partidaResultadoRepository;
-	
+
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
-	
+
 	@Autowired
 	private PartidaProbabilidadeResultadoRepository partidaProbabilidadeResultadoRepository;
 
@@ -60,8 +61,11 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
 				.getEstatisticasFinalizacaoClube(rodada.getSemana().getTemporada());
 
+		Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa = calcularEstatisticasFinalizacaoDefesaService
+				.getEstatisticasDefesaClube(rodada.getSemana().getTemporada());
+
 		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(simularPartida(p, clubeProbabilidadeFinalizacoes));
+			probabilidades.add(simularPartida(p, clubeProbabilidadeFinalizacoes, clubesProbabilidadeDefesa));
 		}
 
 		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
@@ -69,8 +73,90 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 
 	}
-
+	
 	public PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado,
+			Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes,
+			Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa) {
+		
+		ClubeProbabilidadeFinalizacao probFinalizacaoMandante = clubeProbabilidadeFinalizacoes
+				.get(partidaResultado.getClubeMandante());
+		
+		ClubeProbabilidadeFinalizacao probFinalizacaoVisitante = clubeProbabilidadeFinalizacoes
+				.get(partidaResultado.getClubeVisitante());
+		
+		ClubeProbabilidadeDefesa probDefesaMandante = clubesProbabilidadeDefesa
+				.get(partidaResultado.getClubeMandante());
+
+		ClubeProbabilidadeDefesa probDefesaVisitante = clubesProbabilidadeDefesa
+				.get(partidaResultado.getClubeVisitante());
+		
+		PartidaProbabilidadeResultado partidaProbabilidadeResultado = new PartidaProbabilidadeResultado();
+		partidaProbabilidadeResultado
+				.setTipoProbabilidadeResultadoPartida(TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO_DEFESA);
+
+		if (partidaResultado instanceof PartidaResultado) {
+			partidaProbabilidadeResultado.setPartidaResultado((PartidaResultado) partidaResultado);
+		} else if (partidaResultado instanceof PartidaEliminatoriaResultado) {
+			partidaProbabilidadeResultado.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partidaResultado);
+		}
+		
+		double vitoriaMandante = 0, vitoriaVisitante = 0, empate = 0, resultado = 0d;
+		
+		int golsMandante = 0, golsVisitante = 0;
+		
+		for (int j = 0; j < NUM_SIMULACOES; j++) {
+			
+			golsMandante = 0; golsVisitante = 0;
+
+			for (int i = 0; i < probFinalizacaoMandante.getFinalizacoesPartidas(); i++) {
+				resultado = R.nextDouble();
+				
+				if (resultado <= probFinalizacaoMandante.getProbabilidadeFinalizacaoNoGol())  {
+				
+					resultado = R.nextDouble();
+					if (resultado <= probDefesaVisitante.getProbabilidadeDefesa()) {
+						//defesa
+					} else {
+						golsMandante++;
+					}
+				}
+			}
+			
+			for (int i = 0; i < probFinalizacaoVisitante.getFinalizacoesPartidas(); i++) {
+				resultado = R.nextDouble();
+				
+				if (resultado <= probFinalizacaoVisitante.getProbabilidadeFinalizacaoNoGol()) {
+					
+					resultado = R.nextDouble();
+					if (resultado <= probDefesaMandante.getProbabilidadeDefesa()) {
+						//defesa
+					} else {
+						golsVisitante++;
+					}
+				}
+			}
+			
+			if (golsMandante > golsVisitante) {
+				vitoriaMandante++;
+			} else if (golsMandante < golsVisitante) {
+				vitoriaVisitante++;
+			} else if (golsMandante == golsVisitante) {
+				empate++;
+			}
+			
+		}
+		
+		partidaProbabilidadeResultado.setProbabilidadeVitoriaMandante(vitoriaMandante/NUM_SIMULACOES);
+
+		partidaProbabilidadeResultado.setProbabilidadeVitoriaVisitante(vitoriaVisitante/NUM_SIMULACOES);
+
+		partidaProbabilidadeResultado.setProbabilidadeEmpate(empate/NUM_SIMULACOES);
+
+		return partidaProbabilidadeResultado;
+
+	}
+
+	/*public PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado,
 			Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes) {
 		
 		ClubeProbabilidadeFinalizacao probFinalizacaoMandante = clubeProbabilidadeFinalizacoes
@@ -131,6 +217,6 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 
 		return partidaProbabilidadeResultado;
 
-	}
+	}*/
 
 }

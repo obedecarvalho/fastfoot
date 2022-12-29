@@ -146,4 +146,13 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 				/ (Math.pow((forcaGeralClube - forcaGeralJogador), 2) + 1)).intValue();
 	}
 
+	@Override
+	public Double getValorAsDouble() {
+		return new Double(getValor());
+	}
+
+	@Override
+	public Double getValorNAsDouble() {
+		return new Double(getValorN());
+	}
 }
