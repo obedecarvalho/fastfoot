@@ -42,6 +42,8 @@ public class JogadorEstatisticasTemporada {
 	
 	private Integer numeroJogosTitular;//TODO: implementar lógica
 	
+	private Integer numeroMinutosJogados;
+	
 	//###	JOGADOR LINHA	###
 	
 	private Integer golsMarcados;
@@ -84,6 +86,7 @@ public class JogadorEstatisticasTemporada {
 		
 		this.numeroJogos = 0;
 		this.numeroJogosTitular = 0;
+		this.numeroMinutosJogados = 0;
 		
 		this.golsMarcados = 0;
 		this.assistencias = 0;
@@ -106,6 +109,7 @@ public class JogadorEstatisticasTemporada {
 		
 		this.numeroJogos = 0;
 		this.numeroJogosTitular = 0;
+		this.numeroMinutosJogados = 0;
 		
 		this.golsMarcados = 0;
 		this.assistencias = 0;
@@ -321,6 +325,14 @@ public class JogadorEstatisticasTemporada {
 	
 	public void incrementarAssistencias() {
 		this.assistencias++;
+	}
+
+	public Integer getNumeroMinutosJogados() {
+		return numeroMinutosJogados;
+	}
+
+	public void setNumeroMinutosJogados(Integer numeroMinutosJogados) {
+		this.numeroMinutosJogados = numeroMinutosJogados;
 	}
 
 	@Override

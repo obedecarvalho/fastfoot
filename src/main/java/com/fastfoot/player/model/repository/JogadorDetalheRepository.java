@@ -18,4 +18,7 @@ public interface JogadorDetalheRepository extends JpaRepository<JogadorDetalhe, 
 	public List<JogadorDetalhe> findByStatusJogador(@Param("status") StatusJogador status);
 	
 	public List<JogadorDetalhe> findByJogador(Jogador jogador);
+	
+	@Query(" SELECT jd FROM JogadorDetalhe jd WHERE jd.jogador.idade BETWEEN :idadeMin AND :idadeMax ")
+	public List<JogadorDetalhe> findByIdadeBetween(@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
 }

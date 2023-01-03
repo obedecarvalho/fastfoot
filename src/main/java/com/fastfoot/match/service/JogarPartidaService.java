@@ -213,11 +213,19 @@ public class JogarPartidaService {
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
 							.setNumeroJogos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogos() + 1));
+			
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual().setNumeroMinutosJogados(
+							j.getJogadorEstatisticasTemporadaAtual().getNumeroMinutosJogados() + 90));//TODO: implementar logica substituicao
 
 		} else {
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual()
 							.setNumeroJogos(j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroJogos() + 1));
+			
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual().setNumeroMinutosJogados(
+							j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados() + 90));//TODO: implementar logica substituicao
 		}
 	}
 	

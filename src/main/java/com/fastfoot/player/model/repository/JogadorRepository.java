@@ -29,6 +29,9 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.statusJogador = :status ")
 	public List<Jogador> findByStatusJogadorFetchHabilidades(@Param("status") StatusJogador status);
+	
+	@Query(" SELECT j FROM Jogador j WHERE j.idade BETWEEN :idadeMin AND :idadeMax ")
+	public List<Jogador> findByIdadeBetween(@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
 
 	@Transactional
 	@Modifying
@@ -45,9 +48,9 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
-			" update jogador " +
-			" set idade = idade + 1 " +
-			" where status_jogador = 0 "
+			" update jogador " 
+					+ " set idade = idade + 1 " 
+					//+ " where status_jogador = 0 "
 	)
 	public void incrementarIdade();
 

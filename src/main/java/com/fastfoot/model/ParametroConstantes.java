@@ -24,7 +24,7 @@ public class ParametroConstantes {
 
 	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R = "5 (20, 22 ou 24 TIMES)";
 
-	//true, false
+	//true, false //TODO: implementar logica para marcar amistosos semana a semana
 	public static final String MARCAR_AMISTOSOS_AUTOMATICAMENTE = "MARCAR_AMISTOSOS_AUTOMATICAMENTE";
 
 	//3, 2, 4

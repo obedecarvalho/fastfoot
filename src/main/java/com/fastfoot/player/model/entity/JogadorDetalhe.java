@@ -3,6 +3,7 @@ package com.fastfoot.player.model.entity;
 import java.util.Objects;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,12 +30,12 @@ public class JogadorDetalhe {
 	private Jogador jogador;
 	
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
 	
 	@JsonIgnore
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
 	

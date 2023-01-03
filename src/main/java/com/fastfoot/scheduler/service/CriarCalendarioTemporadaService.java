@@ -39,6 +39,7 @@ import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepos
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.AdequarModoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
@@ -160,6 +161,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private DistribuirPatrocinioService distribuirPatrocinioService;
+	
+	@Autowired
+	private AdequarModoDesenvolvimentoJogadorService adequarModoDesenvolvimentoJogadorService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -190,6 +194,18 @@ public class CriarCalendarioTemporadaService {
 			temporada.setAtual(false);
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
+			
+			inicio = stopWatch.getSplitTime();
+			jogadorRepository.incrementarIdade();
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#incrementarIdade:" + (fim - inicio));
+			
+			inicio = stopWatch.getSplitTime();
+			adequarModoDesenvolvimentoJogador();
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (fim - inicio));
 
 			//stopWatch.split();
 			inicio = stopWatch.getSplitTime();
@@ -698,7 +714,7 @@ public class CriarCalendarioTemporadaService {
 	}
 
 	private void atualizarPassoDesenvolvimentoJogador4() {
-		jogadorRepository.incrementarIdade();
+		//jogadorRepository.incrementarIdade();
 		
 		int offset = 3;//(JogadorFactory.IDADE_MAX - JogadorFactory.IDADE_MIN) / FastfootApplication.NUM_THREAD;
 		
@@ -780,5 +796,26 @@ public class CriarCalendarioTemporadaService {
 			CompletableFuture.allOf(simularPartidasFuture.toArray(new CompletableFuture<?>[0])).join();
 
 		}
+	}
+	
+	private void adequarModoDesenvolvimentoJogador() {
+
+		List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
+
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(adequarModoDesenvolvimentoJogadorService
+						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, jogadores.size())));
+			} else {
+				desenvolverJogadorFuture.add(adequarModoDesenvolvimentoJogadorService
+						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 }
