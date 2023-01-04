@@ -43,6 +43,7 @@ import com.fastfoot.player.service.AdequarModoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
+import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidadeService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -165,6 +166,9 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private AdequarModoDesenvolvimentoJogadorService adequarModoDesenvolvimentoJogadorService;
 
+	@Autowired
+	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
+
 	public TemporadaDTO criarTemporada() {
 		
 		StopWatch stopWatch = new StopWatch();
@@ -257,11 +261,17 @@ public class CriarCalendarioTemporadaService {
 
 		//stopWatch.split();
 		
-		inicio = stopWatch.getSplitTime();
+		/*inicio = stopWatch.getSplitTime();
 		calcularValorTransferenciaJogadores();
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
+		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));*/
+
+		inicio = stopWatch.getSplitTime();
+		calcularValorTransferenciaJogadores2();
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularValorTransferenciaJogadores2:" + (fim - inicio));
 
 		temporada = TemporadaFactory.criarTempordada(ano);
 
@@ -664,6 +674,7 @@ public class CriarCalendarioTemporadaService {
 		return quantitativoPosicaoClubeList;
 	}
 
+	@SuppressWarnings("unused")
 	private void calcularValorTransferenciaJogadores() {
 		//if (semana.getNumero() == 1) {
 			
@@ -679,6 +690,29 @@ public class CriarCalendarioTemporadaService {
 						.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
 			} else {
 				desenvolverJogadorFuture.add(calcularValorTransferenciaService
+						.calcularValorTransferencia(jogadores.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
+	}
+	
+	private void calcularValorTransferenciaJogadores2() {
+		//if (semana.getNumero() == 1) {
+			
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaJogadorPorHabilidadeService
+						.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
+			} else {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaJogadorPorHabilidadeService
 						.calcularValorTransferencia(jogadores.subList(i * offset, (i + 1) * offset)));
 			}
 		}

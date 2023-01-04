@@ -71,16 +71,6 @@ public class Jogador {
 	private StatusJogador statusJogador;
 	
 	private Double valorTransferencia;
-	
-	/*@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
-	
-	@JsonIgnore
-	@ManyToOne
-	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;*/
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
@@ -169,88 +159,6 @@ public class Jogador {
 	public void setForcaGeral(Integer forcaGeral) {
 		this.forcaGeral = forcaGeral;
 	}
-
-	//
-	/*public Double getTmpForcaGeralZag() {
-		return tmpForcaGeralZag;
-	}
-
-	public void setTmpForcaGeralZag(Double tmpForcaGeralZag) {
-		this.tmpForcaGeralZag = tmpForcaGeralZag;
-	}
-
-	public Double getTmpForcaGeralLat() {
-		return tmpForcaGeralLat;
-	}
-
-	public void setTmpForcaGeralLat(Double tmpForcaGeralLat) {
-		this.tmpForcaGeralLat = tmpForcaGeralLat;
-	}
-
-	public Double getTmpForcaGeralVol() {
-		return tmpForcaGeralVol;
-	}
-
-	public void setTmpForcaGeralVol(Double tmpForcaGeralVol) {
-		this.tmpForcaGeralVol = tmpForcaGeralVol;
-	}
-
-	public Double getTmpForcaGeralMei() {
-		return tmpForcaGeralMei;
-	}
-
-	public void setTmpForcaGeralMei(Double tmpForcaGeralMei) {
-		this.tmpForcaGeralMei = tmpForcaGeralMei;
-	}
-
-	public Double getTmpForcaGeralZag2() {
-		return tmpForcaGeralZag2;
-	}
-
-	public void setTmpForcaGeralZag2(Double tmpForcaGeralZag2) {
-		this.tmpForcaGeralZag2 = tmpForcaGeralZag2;
-	}
-
-	public Double getTmpForcaGeralLat2() {
-		return tmpForcaGeralLat2;
-	}
-
-	public void setTmpForcaGeralLat2(Double tmpForcaGeralLat2) {
-		this.tmpForcaGeralLat2 = tmpForcaGeralLat2;
-	}
-
-	public Double getTmpForcaGeralVol2() {
-		return tmpForcaGeralVol2;
-	}
-
-	public void setTmpForcaGeralVol2(Double tmpForcaGeralVol2) {
-		this.tmpForcaGeralVol2 = tmpForcaGeralVol2;
-	}
-
-	public Double getTmpForcaGeralMei2() {
-		return tmpForcaGeralMei2;
-	}
-
-	public void setTmpForcaGeralMei2(Double tmpForcaGeralMei2) {
-		this.tmpForcaGeralMei2 = tmpForcaGeralMei2;
-	}
-
-	public Double getTmpForcaGeralAta2() {
-		return tmpForcaGeralAta2;
-	}
-
-	public void setTmpForcaGeralAta2(Double tmpForcaGeralAta2) {
-		this.tmpForcaGeralAta2 = tmpForcaGeralAta2;
-	}
-
-	public Double getTmpForcaGeralAta() {
-		return tmpForcaGeralAta;
-	}
-
-	public void setTmpForcaGeralAta(Double tmpForcaGeralAta) {
-		this.tmpForcaGeralAta = tmpForcaGeralAta;
-	}*/
-	//
 
 	public Integer getForcaGeralPotencial() {
 		return forcaGeralPotencial;

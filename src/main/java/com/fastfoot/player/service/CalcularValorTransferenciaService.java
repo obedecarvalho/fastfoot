@@ -15,6 +15,7 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 public class CalcularValorTransferenciaService {
 	
 	/*
+	 * DESATUALIZADO
 	 * Taxa desconto: 33%, Max/Inicial: 103%
 	 * Taxa desconto: 30%, Max/Inicial: 94%
 	 * Taxa desconto: 25%, Max/Inicial: 77%
@@ -22,6 +23,16 @@ public class CalcularValorTransferenciaService {
 	private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
 	
 	private static final Integer FORCA_N_POWER = 3;
+
+	/**
+	 * 
+	 * 
+	 * Calculado como: Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade())
+	 */
+	private static final Double[] TAXA_DESCONTO_TEMPO = new Double[] { 1.0, 1.25, 1.5625, 1.953125, 2.44140625,
+			3.051757813, 3.814697266, 4.768371582, 5.960464478, 7.450580597, 9.313225746, 11.64153218, 14.55191523,
+			18.18989404, 22.73736754, 28.42170943, 35.52713679, 44.40892099, 55.51115123, 69.38893904, 86.7361738,
+			108.4202172 };
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -47,8 +58,11 @@ public class CalcularValorTransferenciaService {
 			//double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
 			double ajuste = jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[i - JogadorFactory.IDADE_MIN];
 			
+			/*double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
+					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());*/
+			
 			double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
-					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
+					/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];
 			
 			valor += valorAj;
 		}

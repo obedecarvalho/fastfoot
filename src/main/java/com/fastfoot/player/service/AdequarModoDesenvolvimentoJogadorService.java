@@ -31,7 +31,8 @@ public class AdequarModoDesenvolvimentoJogadorService {
 					.getNumeroMinutosJogados()
 					+ j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados();
 			
-			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()) {
+			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()
+					&& j.getJogador().getIdade() >= 21) {
 
 				if (ModoDesenvolvimentoJogador.TARDIO.equals(j.getModoDesenvolvimentoJogador())) {
 					//Não fazer nada
