@@ -277,7 +277,7 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
-		temporada = TemporadaFactory.criarTempordada(ano);
+		temporada = TemporadaFactory.criarTemporada(ano);
 
 		List<Campeonato> campeonatosNacionais = new ArrayList<Campeonato>();
 		List<CampeonatoMisto> campeonatosContinentais = new ArrayList<CampeonatoMisto>();

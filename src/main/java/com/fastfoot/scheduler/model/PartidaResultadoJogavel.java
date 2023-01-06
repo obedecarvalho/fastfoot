@@ -43,6 +43,10 @@ public interface PartidaResultadoJogavel {
 	
 	public boolean isResultadoEmpatado();
 	
+	public boolean isMandanteVencedor();
+	
+	public boolean isVisitanteVencedor();
+	
 	public boolean isDisputarPenalts();
 	
 	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas);

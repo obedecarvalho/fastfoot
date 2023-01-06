@@ -202,6 +202,28 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	}
 	
 	@Override
+	public boolean isMandanteVencedor() {
+		return partidaJogada && (golsMandante > golsVisitante);
+	}
+	
+	@Override
+	public boolean isVisitanteVencedor() {
+		return partidaJogada && (golsMandante < golsVisitante);
+	}
+	
+	public boolean isMandanteEliminado() {
+		if (partidaJogada && golsMandante < golsVisitante) return true;
+		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts < golsVisitantePenalts) return true;
+		return false;
+	}
+	
+	public boolean isVisitanteEliminado() {
+		if (partidaJogada && golsMandante > golsVisitante) return true;
+		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts > golsVisitantePenalts) return true;
+		return false;
+	}
+	
+	@Override
 	public boolean isDisputarPenalts() {
 		return true;
 	}

@@ -9,7 +9,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class TemporadaFactory {
 	
-	public static Temporada criarTempordada(Integer ano) {
+	public static Temporada criarTemporada(Integer ano) {
 		Temporada temporada = new Temporada();
 		temporada.setAtual(true);
 		temporada.setAno(ano);

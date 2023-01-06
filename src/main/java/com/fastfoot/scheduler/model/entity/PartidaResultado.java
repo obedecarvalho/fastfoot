@@ -156,6 +156,16 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	}
 	
 	@Override
+	public boolean isMandanteVencedor() {
+		return partidaJogada && (golsMandante > golsVisitante);
+	}
+	
+	@Override
+	public boolean isVisitanteVencedor() {
+		return partidaJogada && (golsMandante < golsVisitante);
+	}
+	
+	@Override
 	public boolean isDisputarPenalts() {
 		return false;
 	}
