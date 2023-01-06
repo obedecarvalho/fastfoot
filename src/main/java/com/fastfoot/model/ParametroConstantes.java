@@ -1,6 +1,9 @@
 package com.fastfoot.model;
 
 public class ParametroConstantes {
+	
+	//true, false
+	public static final String USAR_VERSAO_SIMPLIFICADA = "USAR_VERSAO_SIMPLIFICADA";
 
 	//2, 3
 	public static final String NUMERO_CAMPEONATOS_CONTINENTAIS = "NUMERO_CAMPEONATOS_CONTINENTAIS";

@@ -75,8 +75,58 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
-
+	
 	public void calcularValorTransferencia(Jogador jogador) {
+		
+		Double pesoHabilidade = null;
+		
+		Map<HabilidadeValor, Double> habilidadeValorPeso = new HashMap<HabilidadeValor, Double>();
+		
+		for (HabilidadeValor habilidadeValor : jogador.getHabilidades()) {
+			
+			pesoHabilidade = VALOR_TRANSFERENCIA_HABILIDADE.get(habilidadeValor.getHabilidade()).getPeso();
+			
+			habilidadeValorPeso.put(habilidadeValor, pesoHabilidade * habilidadeValor.getPotencialDesenvolvimento());
+		}
+		
+
+		Double valor = 0d;
+
+		Double habilidadeComPeso = null;
+
+		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
+
+			//double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
+			double ajuste = jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[i
+					- JogadorFactory.IDADE_MIN];
+
+			for (HabilidadeValor habilidadeValor : jogador.getHabilidades()) {
+				/*double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
+					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());*/
+
+				/*pesoHabilidade = VALOR_TRANSFERENCIA_HABILIDADE.get(habilidadeValor.getHabilidade()).getPeso();
+
+				double valorAj = Math.pow(
+						(ajuste * habilidadeValor.getPotencialDesenvolvimentoEfetivo() * pesoHabilidade), FORCA_N_POWER)
+						/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];*/
+				
+				habilidadeComPeso = habilidadeValorPeso.get(habilidadeValor);
+				
+				double valorAj = Math.pow(
+						(ajuste * habilidadeComPeso), FORCA_N_POWER)
+						/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];
+
+				valor += valorAj;
+			}
+
+		}
+
+		//Aproveitando para arredondar também
+		jogador.setValorTransferencia(Math.round(valor * 100) / 100d);
+
+	}
+
+	/*public void calcularValorTransferencia(Jogador jogador) {
 
 		Double valor = 0d;
 
@@ -90,7 +140,7 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 
 			for (HabilidadeValor habilidadeValor : jogador.getHabilidades()) {
 				/*double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
-					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());*/
+					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());* /
 
 				pesoHabilidade = VALOR_TRANSFERENCIA_HABILIDADE.get(habilidadeValor.getHabilidade()).getPeso();
 
@@ -106,5 +156,5 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 		//Aproveitando para arredondar também
 		jogador.setValorTransferencia(Math.round(valor * 100) / 100d);
 
-	}
+	}*/
 }

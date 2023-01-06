@@ -268,10 +268,14 @@ public class CriarCalendarioTemporadaService {
 		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));*/
 
 		inicio = stopWatch.getSplitTime();
-		calcularValorTransferenciaJogadores2();
+		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
+			calcularValorTransferenciaJogadoresSimplificado();
+		} else {
+			calcularValorTransferenciaJogadores();
+		}
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularValorTransferenciaJogadores2:" + (fim - inicio));
+		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
 		temporada = TemporadaFactory.criarTempordada(ano);
 
@@ -674,8 +678,7 @@ public class CriarCalendarioTemporadaService {
 		return quantitativoPosicaoClubeList;
 	}
 
-	@SuppressWarnings("unused")
-	private void calcularValorTransferenciaJogadores() {
+	private void calcularValorTransferenciaJogadoresSimplificado() {
 		//if (semana.getNumero() == 1) {
 			
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
@@ -698,7 +701,7 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 	
-	private void calcularValorTransferenciaJogadores2() {
+	private void calcularValorTransferenciaJogadores() {
 		//if (semana.getNumero() == 1) {
 			
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
