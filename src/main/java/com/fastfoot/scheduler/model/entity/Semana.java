@@ -41,13 +41,13 @@ public class Semana {
 	//private Boolean emExecucao;
 	
 	@Transient
-	List<Rodada> rodadas;
+	private List<Rodada> rodadas;
 	
 	@Transient
-	List<RodadaEliminatoria> rodadasEliminatorias;
+	private List<RodadaEliminatoria> rodadasEliminatorias;
 	
 	@Transient
-	List<RodadaAmistosa> rodadasAmistosas;
+	private List<RodadaAmistosa> rodadasAmistosas;
 
 	public Long getId() {
 		return id;

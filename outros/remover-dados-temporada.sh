@@ -2,8 +2,7 @@
 
 #--sem remover jogadores e clubes
 psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "
-update jogador set id_jogador_estatisticas_temporada_atual = null;
-update jogador set id_jogador_estatisticas_amistosos_temporada_atual = null;
+update jogador_detalhe set id_jogador_estatisticas_temporada_atual = null, id_jogador_estatisticas_amistosos_temporada_atual = null;
 delete from jogador_estatisticas_temporada;
 truncate table habilidade_valor_estatistica_grupo;
 truncate table habilidade_valor_estatistica;
@@ -26,6 +25,7 @@ delete from campeonato;
 delete from campeonato_eliminatorio;
 delete from campeonato_misto;
 delete from clube_titulo_ranking;
+delete from clube_resumo_temporada;
 delete from clube_ranking where ano <> 2021;
 delete from movimentacao_financeira where tipo_movimentacao <> 12;
 delete from trajetoria_forca_clube;

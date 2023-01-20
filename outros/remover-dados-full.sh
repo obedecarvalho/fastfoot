@@ -29,6 +29,7 @@ delete from campeonato;
 delete from campeonato_eliminatorio;
 delete from campeonato_misto;
 delete from clube_titulo_ranking;
+delete from clube_resumo_temporada;
 delete from clube_ranking where ano <> 2021;
 delete from movimentacao_financeira where tipo_movimentacao <> 12;
 delete from trajetoria_forca_clube;

@@ -141,6 +141,9 @@ public class SemanaService {
 	
 	@Autowired
 	private PagarSalarioJogadoresService pagarSalarioJogadoresService;
+	
+	@Autowired
+	private MarcarAmistososSemanalmenteService marcarAmistososSemanalmenteService;
 
 	public SemanaDTO proximaSemana() {
 		
@@ -214,6 +217,13 @@ public class SemanaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#promover:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitTime();
+		//Promover
+		marcarAmistososSemanalmente(semana);
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#marcarAmistososSemanalmente:" + (fim - inicio));
 
 		inicio = stopWatch.getSplitTime();
 		//Incrementar rodada atual
@@ -570,5 +580,21 @@ public class SemanaService {
 	public Semana getProximaSemana() {
 		Optional<Semana> s = semanaRepository.findProximaSemana();
 		return s.isPresent() ? s.get() : null;
+	}
+	
+	private void marcarAmistososSemanalmente(Semana semana) {
+		
+		//Jogos amistosos aconteceram nas semanas de 10 a 22
+		//a marcação acontece duas semanas antes
+		if (semana.getNumero() >= 8 && semana.getNumero() <= 20 
+				&& semana.getNumero() % 2 == 0) {
+			
+			Optional<Semana> semanaAmistosoOpt = semanaRepository.findFirstByTemporadaAndNumero(semana.getTemporada(),
+					semana.getNumero() + 2);
+			
+			if (semanaAmistosoOpt.isPresent()) {
+				marcarAmistososSemanalmenteService.marcarAmistososSemanalmente(semanaAmistosoOpt.get());
+			}
+		}
 	}
 }

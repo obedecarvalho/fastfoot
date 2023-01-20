@@ -24,7 +24,7 @@ public class PreCarregarParametrosService {
 
 			List<Parametro> parametros = new ArrayList<Parametro>();
 			
-			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "false", "true, false"));
+			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "true", "true, false"));
 
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
