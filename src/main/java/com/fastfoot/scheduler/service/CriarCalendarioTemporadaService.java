@@ -412,7 +412,8 @@ public class CriarCalendarioTemporadaService {
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		//String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
-		Boolean marcarAmistosos = parametroService.getParametroBoolean(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		Boolean marcarAmistosos = parametroService.isMarcarAmistososAutomaticamenteInicioTemporada()
+				|| parametroService.isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana(); 
 		
 
 		//CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(numeroRodadasCopaNacional, nroCompeticoes);

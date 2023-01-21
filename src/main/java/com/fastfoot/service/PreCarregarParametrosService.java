@@ -24,7 +24,7 @@ public class PreCarregarParametrosService {
 
 			List<Parametro> parametros = new ArrayList<Parametro>();
 			
-			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "true", "true, false"));
+			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "false", "true, false"));
 
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
@@ -43,7 +43,11 @@ public class PreCarregarParametrosService {
 							+ ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R + ", "
 							+ ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R));
 
-			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE, "true", "true, false"));
+			parametros.add(new Parametro(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE,
+					ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_SEMANA_A_SEMANA_PARAM,
+					ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_E_SEMANA_A_SEMANA_PARAM + ", "
+							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_SEMANA_A_SEMANA_PARAM + ", "
+							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_PARAM));
 			
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS, "3", "1, 2, 3, 4"));
 			

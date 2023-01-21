@@ -10,6 +10,7 @@ import java.util.Set;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -35,7 +36,9 @@ public class RodadaAmistosaFactory {
 				clubesGrupo.put(l, clubes.get(l).subList(posInicial, posFinal));
 			}
 			//
-			rodadas = Arrays.asList(new RodadaAmistosa(101), new RodadaAmistosa(102), new RodadaAmistosa(103));
+			rodadas = Arrays.asList(new RodadaAmistosa(101, NivelCampeonato.AMISTOSO_INTERNACIONAL),
+					new RodadaAmistosa(102, NivelCampeonato.AMISTOSO_INTERNACIONAL),
+					new RodadaAmistosa(103, NivelCampeonato.AMISTOSO_INTERNACIONAL));
 			gerarPartidasGrupos(clubesGrupo, rodadas);
 			rodadasGeral.addAll(rodadas);
 			//

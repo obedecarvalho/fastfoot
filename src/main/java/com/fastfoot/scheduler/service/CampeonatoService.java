@@ -17,6 +17,7 @@ import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
+import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.CampeonatoEliminatorioRepository;
@@ -24,8 +25,10 @@ import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.scheduler.model.repository.CampeonatoRepository;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.GrupoCampeonatoRepository;
+import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
+import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 
@@ -59,6 +62,12 @@ public class CampeonatoService {
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
 	
+	@Autowired
+	private RodadaAmistoraRepository rodadaAmistoraRepository;
+	
+	@Autowired
+	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
+	
 	public List<? extends CampeonatoJogavel> carregarCampeonatosTemporada(Temporada temporada, String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'
 		List<? extends CampeonatoJogavel> campeonatos = null;
 		
@@ -83,6 +92,7 @@ public class CampeonatoService {
 		carregarCampeonatosNacionais(temporada);
 		carregarCopasNacionais(temporada);
 		carregarCampeonatosContinentais(temporada);
+		carregarAmistosos(temporada);
 	}
 
 	private void carregarCampeonatosNacionais(Temporada temporada) {
@@ -141,6 +151,16 @@ public class CampeonatoService {
 				}
 			}
 		}
+	}
+	
+	private void carregarAmistosos(Temporada temporada) {
+
+		temporada.setRodadasAmistosas(rodadaAmistoraRepository.findByTemporada(temporada));
+
+		for (RodadaAmistosa r : temporada.getRodadasAmistosas()) {
+			r.setPartidas(partidaAmistosaResultadoRepository.findByRodada(r));
+		}
+
 	}
 
 	@Deprecated

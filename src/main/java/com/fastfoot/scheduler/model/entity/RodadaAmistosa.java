@@ -39,6 +39,8 @@ public class RodadaAmistosa implements RodadaJogavel {
 	@ManyToOne
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
+	
+	private NivelCampeonato nivelCampeonato;
 
 	@Transient
 	private List<PartidaAmistosaResultado> partidas;
@@ -47,8 +49,9 @@ public class RodadaAmistosa implements RodadaJogavel {
 
 	}
 	
-	public RodadaAmistosa(Integer numero) {
+	public RodadaAmistosa(Integer numero, NivelCampeonato nivelCampeonato) {
 		this.numero = numero;
+		this.nivelCampeonato = nivelCampeonato;
 	}
 	
 	public Long getId() {
@@ -130,9 +133,13 @@ public class RodadaAmistosa implements RodadaJogavel {
 	
 	@Override
 	public NivelCampeonato getNivelCampeonato() {
-		return getCampeonatoJogavel() != null ? getCampeonatoJogavel().getNivelCampeonato() : null;
+		return getCampeonatoJogavel() != null ? getCampeonatoJogavel().getNivelCampeonato() : this.nivelCampeonato;
 	}
 	
+	public void setNivelCampeonato(NivelCampeonato nivelCampeonato) {
+		this.nivelCampeonato = nivelCampeonato;
+	}
+
 	@Override
 	public boolean isAmistoso() {
 		return true;

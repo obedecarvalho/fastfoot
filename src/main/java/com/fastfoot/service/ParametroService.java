@@ -142,4 +142,19 @@ public class ParametroService {
 		
 		return classificacao;
 	}
+	
+	public boolean isMarcarAmistososAutomaticamenteSemanaASemana() {
+		String opcao = getParametroString(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		return ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_SEMANA_A_SEMANA_PARAM.equals(opcao);
+	}
+	
+	public boolean isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana() {
+		String opcao = getParametroString(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		return ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_E_SEMANA_A_SEMANA_PARAM.equals(opcao);
+	}
+	
+	public boolean isMarcarAmistososAutomaticamenteInicioTemporada() {
+		String opcao = getParametroString(ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE);
+		return ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_PARAM.equals(opcao);
+	}
 }

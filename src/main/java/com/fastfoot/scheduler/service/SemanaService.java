@@ -17,6 +17,7 @@ import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPartidaService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.match.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.match.service.EscalarClubeService;
@@ -144,6 +145,12 @@ public class SemanaService {
 	
 	@Autowired
 	private MarcarAmistososSemanalmenteService marcarAmistososSemanalmenteService;
+	
+	@Autowired
+	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
+	
+	@Autowired
+	private CampeonatoService campeonatoService;
 
 	public SemanaDTO proximaSemana() {
 		
@@ -261,6 +268,12 @@ public class SemanaService {
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#classificarClubesTemporadaAtual:" + (fim - inicio));
+			inicio = stopWatch.getSplitTime();
+			
+			gerarClubeResumoTemporada(temporada);
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#gerarClubeResumoTemporada:" + (fim - inicio));
 			inicio = stopWatch.getSplitTime();
 		}
 
@@ -584,10 +597,12 @@ public class SemanaService {
 	
 	private void marcarAmistososSemanalmente(Semana semana) {
 		
+		boolean marcarAmistosos = parametroService.isMarcarAmistososAutomaticamenteSemanaASemana()
+				|| parametroService.isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana();
+		
 		//Jogos amistosos aconteceram nas semanas de 10 a 22
 		//a marcação acontece duas semanas antes
-		if (semana.getNumero() >= 8 && semana.getNumero() <= 20 
-				&& semana.getNumero() % 2 == 0) {
+		if (marcarAmistosos && semana.getNumero() >= 8 && semana.getNumero() <= 20 && semana.getNumero() % 2 == 0) {
 			
 			Optional<Semana> semanaAmistosoOpt = semanaRepository.findFirstByTemporadaAndNumero(semana.getTemporada(),
 					semana.getNumero() + 2);
@@ -596,5 +611,10 @@ public class SemanaService {
 				marcarAmistososSemanalmenteService.marcarAmistososSemanalmente(semanaAmistosoOpt.get());
 			}
 		}
+	}
+	
+	private void gerarClubeResumoTemporada(Temporada temporada) {
+		campeonatoService.carregarCampeonatosTemporada(temporada);
+		gerarClubeResumoTemporadaService.gerarClubeResumoTemporada(temporada);
 	}
 }

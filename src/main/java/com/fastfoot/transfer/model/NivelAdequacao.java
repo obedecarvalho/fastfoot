@@ -1,7 +1,5 @@
 package com.fastfoot.transfer.model;
 
-import com.fastfoot.player.model.factory.JogadorFactory;
-
 public enum NivelAdequacao {//TODO: adequar porcentagemMinima
 	
 	A(0.875), 

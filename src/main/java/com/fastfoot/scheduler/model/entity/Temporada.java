@@ -32,6 +32,9 @@ public class Temporada {
 	
 	@Transient
 	private List<CampeonatoMisto> campeonatosContinentais;
+	
+	@Transient
+	private List<RodadaAmistosa> rodadasAmistosas;
 
 	public Long getId() {
 		return id;
@@ -95,6 +98,14 @@ public class Temporada {
 
 	public void setCampeonatosContinentais(List<CampeonatoMisto> campeonatosContinentais) {
 		this.campeonatosContinentais = campeonatosContinentais;
+	}
+
+	public List<RodadaAmistosa> getRodadasAmistosas() {
+		return rodadasAmistosas;
+	}
+
+	public void setRodadasAmistosas(List<RodadaAmistosa> rodadasAmistosas) {
+		this.rodadasAmistosas = rodadasAmistosas;
 	}
 
 	@Override
