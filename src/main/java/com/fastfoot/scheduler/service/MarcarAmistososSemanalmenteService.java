@@ -1,9 +1,11 @@
 package com.fastfoot.scheduler.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,8 @@ public class MarcarAmistososSemanalmenteService {
 	
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
+	
+	private static final Random RANDOM = new Random();
 
 	public void marcarAmistososSemanalmente(Semana semanaAmistoso) {
 		
@@ -93,7 +97,7 @@ public class MarcarAmistososSemanalmenteService {
 		System.err.println("\tS:" + clubesLiga.get(Liga.SPAPOR).size());
 		System.err.println("\tI:" + clubesLiga.get(Liga.ITAFRA).size());*/
 		
-		criarPartidas(clubesLiga, rodadaAmistosa, rodadaAmistosaNacional, clubes.size());
+		criarPartidas2(clubesLiga, rodadaAmistosa, rodadaAmistosaNacional, clubes.size());
 		
 		//System.err.println(rodadaAmistosa.getPartidas());
 
@@ -117,14 +121,17 @@ public class MarcarAmistososSemanalmenteService {
 		
 		while (totalClubes > 0) {
 			
-			for (Liga l : Liga.getAll()) {
+			List<Liga> ligas = Liga.getAll();
+			Collections.shuffle(ligas);
+			
+			for (Liga l : ligas) {
 				if (clubesA == null || clubesLiga.get(l).size() > clubesA.size()) {
 					clubesA = clubesLiga.get(l);
 					ligaA = l;
 				}
 			}
 			
-			for (Liga l : Liga.getAll()) {
+			for (Liga l : ligas) {
 				if (!ligaA.equals(l) && (clubesB == null || clubesLiga.get(l).size() > clubesB.size())) {
 					clubesB = clubesLiga.get(l);
 					ligaB = l;
@@ -132,6 +139,9 @@ public class MarcarAmistososSemanalmenteService {
 			}
 			
 			if (clubesB.size() > 0) {
+				
+				Collections.shuffle(clubesA);
+				Collections.shuffle(clubesB);
 
 				criarPartidas(rodadaAmistosa, clubesA, clubesB);
 				
@@ -139,6 +149,66 @@ public class MarcarAmistososSemanalmenteService {
 				
 				clubesLiga.get(ligaA).removeAll(clubesA.subList(0, clubesB.size()));
 				clubesLiga.get(ligaB).removeAll(clubesB);
+
+			} else if (clubesA.size() > 0 && clubesB.size() == 0) {
+
+				criarAmistososNacionais(rodadaAmistosaNacional, clubesA);
+				totalClubes = 0;//encerra loop
+
+			}
+
+			clubesA = null;
+			clubesB = null;
+			ligaA = null;
+			ligaB = null;
+
+		}
+		
+	}
+	
+	private void criarPartidas2(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa,
+			RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
+		
+		List<Clube> clubesA = null;
+		List<Clube> clubesB = null;
+		Liga ligaA = null;
+		Liga ligaB = null;
+		
+		while (totalClubes > 0) {
+			
+			List<Liga> ligas = Liga.getAll();
+			Collections.shuffle(ligas);
+			
+			for (Liga l : ligas) {
+				if (clubesA == null || clubesLiga.get(l).size() > clubesA.size()) {
+					clubesA = clubesLiga.get(l);
+					ligaA = l;
+				}
+			}
+			
+			for (Liga l : ligas) {
+				if (!ligaA.equals(l) && (clubesB == null || clubesLiga.get(l).size() > clubesB.size())) {
+					clubesB = clubesLiga.get(l);
+					ligaB = l;
+				}
+			}
+			
+			if (clubesB.size() > 0) {
+				
+				Collections.shuffle(clubesA);
+				Collections.shuffle(clubesB);
+				
+				int qtdeJogos = clubesB.size() > 4 ? (clubesB.size()/2) : clubesB.size();
+
+				criarPartidas(rodadaAmistosa, clubesA, clubesB, qtdeJogos);
+				
+				//totalClubes -= (clubesB.size() * 2);
+				totalClubes -= qtdeJogos * 2;
+				
+				//clubesLiga.get(ligaA).removeAll(clubesA.subList(0, clubesB.size()));
+				//clubesLiga.get(ligaB).removeAll(clubesB);
+				clubesLiga.get(ligaA).removeAll(clubesA.subList(0, qtdeJogos));
+				clubesLiga.get(ligaB).removeAll(clubesB.subList(0, qtdeJogos));
 
 			} else if (clubesA.size() > 0 && clubesB.size() == 0) {
 
@@ -164,8 +234,34 @@ public class MarcarAmistososSemanalmenteService {
 
 		for (int i = 0; i < clubesB.size(); i++) {
 			partida = new PartidaAmistosaResultado();
-			partida.setClubeMandante(clubesA.get(i));
-			partida.setClubeVisitante(clubesB.get(i));
+			if (RANDOM.nextBoolean()) {
+				partida.setClubeMandante(clubesA.get(i));
+				partida.setClubeVisitante(clubesB.get(i));
+			} else {
+				partida.setClubeVisitante(clubesA.get(i));
+				partida.setClubeMandante(clubesB.get(i));
+			}
+			partida.setRodada(rodadaAmistosa);
+			rodadaAmistosa.getPartidas().add(partida);
+		}
+		
+	}
+	
+	private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB, int qtdeJogos) {
+
+		//if (clubesB.size() > clubesA.size()) throw new RuntimeException("Comportamento Inesperado");
+
+		PartidaAmistosaResultado partida;
+
+		for (int i = 0; i < qtdeJogos; i++) {
+			partida = new PartidaAmistosaResultado();
+			if (RANDOM.nextBoolean()) {
+				partida.setClubeMandante(clubesA.get(i));
+				partida.setClubeVisitante(clubesB.get(i));
+			} else {
+				partida.setClubeVisitante(clubesA.get(i));
+				partida.setClubeMandante(clubesB.get(i));
+			}
 			partida.setRodada(rodadaAmistosa);
 			rodadaAmistosa.getPartidas().add(partida);
 		}
@@ -180,8 +276,13 @@ public class MarcarAmistososSemanalmenteService {
 
 		for (int i = 0; i < qtdePartidas; i++) {
 			partida = new PartidaAmistosaResultado();
-			partida.setClubeMandante(clubesA.get(2 * i));
-			partida.setClubeVisitante(clubesA.get(2 * i + 1));
+			if (RANDOM.nextBoolean()) {
+				partida.setClubeMandante(clubesA.get(2 * i));
+				partida.setClubeVisitante(clubesA.get(2 * i + 1));
+			} else {
+				partida.setClubeVisitante(clubesA.get(2 * i));
+				partida.setClubeMandante(clubesA.get(2 * i + 1));
+			}
 			partida.setRodada(rodadaAmistosa);
 			rodadaAmistosa.getPartidas().add(partida);
 		}

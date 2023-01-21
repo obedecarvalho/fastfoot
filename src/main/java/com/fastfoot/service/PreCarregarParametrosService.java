@@ -16,7 +16,7 @@ public class PreCarregarParametrosService {
 	@Autowired
 	private ParametroRepository parametroRepository;
 
-	public void preCarregarParametros() {//TODO: usar ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_ELI em vez de "..."
+	public void preCarregarParametros() {
 		
 		parametroRepository.deleteAll();
 
@@ -24,7 +24,7 @@ public class PreCarregarParametrosService {
 
 			List<Parametro> parametros = new ArrayList<Parametro>();
 			
-			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "false", "true, false"));
+			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "true", "true, false"));
 
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3"));
 
@@ -47,7 +47,8 @@ public class PreCarregarParametrosService {
 					ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_SEMANA_A_SEMANA_PARAM,
 					ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_E_SEMANA_A_SEMANA_PARAM + ", "
 							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_SEMANA_A_SEMANA_PARAM + ", "
-							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_PARAM));
+							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_PARAM + ", "
+							+ ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_NAO_MARCAR_PARAM));
 			
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS, "3", "1, 2, 3, 4"));
 			
