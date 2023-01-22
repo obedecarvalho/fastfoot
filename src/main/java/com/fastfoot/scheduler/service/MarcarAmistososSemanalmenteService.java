@@ -48,17 +48,16 @@ public class MarcarAmistososSemanalmenteService {
 	private static final Random RANDOM = new Random();
 
 	public void marcarAmistososSemanalmente(Semana semanaAmistoso) {
-		
-		//TODO: sortear mando de campo
+
 		//TODO: dar um shuffle na lista OU fazer heuristica para evitar muitos amistosos entre os mesmos dois clubes 
 		
-		RodadaAmistosa rodadaAmistosa = new RodadaAmistosa(100 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_INTERNACIONAL);
+		/*RodadaAmistosa rodadaAmistosa = new RodadaAmistosa(100 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_INTERNACIONAL);
 		RodadaAmistosa rodadaAmistosaNacional = new RodadaAmistosa(200 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_NACIONAL);
 		
 		rodadaAmistosa.setPartidas(new ArrayList<PartidaAmistosaResultado>());
 		rodadaAmistosaNacional.setPartidas(new ArrayList<PartidaAmistosaResultado>());
 		rodadaAmistosa.setSemana(semanaAmistoso);
-		rodadaAmistosaNacional.setSemana(semanaAmistoso);
+		rodadaAmistosaNacional.setSemana(semanaAmistoso);*/
 
 		List<Clube> clubes = clubeRepository.findAll();
 
@@ -97,11 +96,11 @@ public class MarcarAmistososSemanalmenteService {
 		System.err.println("\tS:" + clubesLiga.get(Liga.SPAPOR).size());
 		System.err.println("\tI:" + clubesLiga.get(Liga.ITAFRA).size());*/
 		
-		criarPartidas2(clubesLiga, rodadaAmistosa, rodadaAmistosaNacional, clubes.size());
+		List<RodadaAmistosa> rodadas = criarPartidas(semanaAmistoso, clubesLiga, clubes.size());
 		
 		//System.err.println(rodadaAmistosa.getPartidas());
 
-		if (!ValidatorUtil.isEmpty(rodadaAmistosa.getPartidas())) {
+		/*if (!ValidatorUtil.isEmpty(rodadaAmistosa.getPartidas())) {
 			rodadaAmistoraRepository.save(rodadaAmistosa);
 			partidaAmistosaResultadoRepository.saveAll(rodadaAmistosa.getPartidas());
 		}
@@ -109,7 +108,13 @@ public class MarcarAmistososSemanalmenteService {
 		if (!ValidatorUtil.isEmpty(rodadaAmistosaNacional.getPartidas())) {
 			rodadaAmistoraRepository.save(rodadaAmistosaNacional);
 			partidaAmistosaResultadoRepository.saveAll(rodadaAmistosaNacional.getPartidas());
-		}
+		}*/
+		
+		rodadaAmistoraRepository
+				.saveAll(rodadas.stream().filter(r -> r.getPartidas().size() > 0).collect(Collectors.toList()));
+
+		partidaAmistosaResultadoRepository.saveAll(rodadas.stream().filter(r -> r.getPartidas().size() > 0)
+				.flatMap(r -> r.getPartidas().stream()).collect(Collectors.toList()));
 	}
 	
 	private void criarPartidas(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa, RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
@@ -166,15 +171,42 @@ public class MarcarAmistososSemanalmenteService {
 		
 	}
 	
-	private void criarPartidas2(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa,
-			RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
+	private List<RodadaAmistosa> criarPartidas(Semana semanaAmistoso, Map<Liga, List<Clube>> clubesLiga, int totalClubes) {
 		
 		List<Clube> clubesA = null;
 		List<Clube> clubesB = null;
 		Liga ligaA = null;
 		Liga ligaB = null;
 		
+		List<RodadaAmistosa> rodadas = new ArrayList<RodadaAmistosa>();
+		
+		RodadaAmistosa rodadaAmistosa = new RodadaAmistosa(200 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_INTERNACIONAL);
+		RodadaAmistosa rodadaAmistosaNacional = new RodadaAmistosa(300 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_NACIONAL);
+		
+		rodadaAmistosa.setPartidas(new ArrayList<PartidaAmistosaResultado>());
+		rodadaAmistosaNacional.setPartidas(new ArrayList<PartidaAmistosaResultado>());
+		rodadaAmistosa.setSemana(semanaAmistoso);
+		rodadaAmistosaNacional.setSemana(semanaAmistoso);
+		
+		rodadas.add(rodadaAmistosa);
+		rodadas.add(rodadaAmistosaNacional);
+		
 		while (totalClubes > 0) {
+			
+			if (rodadaAmistosa.getPartidas().size() >= 8) {
+				rodadaAmistosa = new RodadaAmistosa(200 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_INTERNACIONAL);
+				rodadaAmistosa.setPartidas(new ArrayList<PartidaAmistosaResultado>());
+				rodadaAmistosa.setSemana(semanaAmistoso);
+				rodadas.add(rodadaAmistosa);
+			}
+			
+			if (rodadaAmistosaNacional.getPartidas().size() >= 8) {
+				rodadaAmistosaNacional = new RodadaAmistosa(300 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_NACIONAL);
+				rodadaAmistosaNacional.setPartidas(new ArrayList<PartidaAmistosaResultado>());
+				rodadaAmistosaNacional.setSemana(semanaAmistoso);
+				rodadas.add(rodadaAmistosaNacional);
+			}
+			
 			
 			List<Liga> ligas = Liga.getAll();
 			Collections.shuffle(ligas);
@@ -198,7 +230,8 @@ public class MarcarAmistososSemanalmenteService {
 				Collections.shuffle(clubesA);
 				Collections.shuffle(clubesB);
 				
-				int qtdeJogos = clubesB.size() > 4 ? (clubesB.size()/2) : clubesB.size();
+				int qtdeJogos = clubesB.size() > 4 ? Math.min((clubesB.size()/2), 8) : clubesB.size();
+				
 
 				criarPartidas(rodadaAmistosa, clubesA, clubesB, qtdeJogos);
 				
@@ -223,6 +256,8 @@ public class MarcarAmistososSemanalmenteService {
 			ligaB = null;
 
 		}
+		
+		return rodadas;
 		
 	}
 	
