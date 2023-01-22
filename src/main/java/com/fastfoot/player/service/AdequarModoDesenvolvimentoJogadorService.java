@@ -70,7 +70,7 @@ public class AdequarModoDesenvolvimentoJogadorService {
 		
 		jogadorDetalheRepository.saveAll(detalheJogadoresSalvar);
 		
-		System.err.println(detalheJogadoresSalvar.size() + ":" + jogadores.size());
+		//System.err.println(detalheJogadoresSalvar.size() + ":" + jogadores.size());
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
