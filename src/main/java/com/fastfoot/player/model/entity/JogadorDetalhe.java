@@ -3,12 +3,9 @@ package com.fastfoot.player.model.entity;
 import java.util.Objects;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
@@ -29,7 +26,7 @@ public class JogadorDetalhe {
 	@OneToOne(mappedBy = "jogadorDetalhe")
 	private Jogador jogador;
 	
-	@JsonIgnore
+	/*@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
 	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
@@ -37,7 +34,13 @@ public class JogadorDetalhe {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
+	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;*/
+	
+	@Transient
+	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;
+	
+	@Transient
+	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
 	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 
@@ -57,7 +60,7 @@ public class JogadorDetalhe {
 		this.jogador = jogador;
 	}
 
-	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
+	/*public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
 		return jogadorEstatisticasTemporadaAtual;
 	}
 
@@ -72,7 +75,7 @@ public class JogadorDetalhe {
 	public void setJogadorEstatisticasAmistososTemporadaAtual(
 			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
 		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
-	}
+	}*/
 
 	public ModoDesenvolvimentoJogador getModoDesenvolvimentoJogador() {
 		return modoDesenvolvimentoJogador;
@@ -80,6 +83,22 @@ public class JogadorDetalhe {
 
 	public void setModoDesenvolvimentoJogador(ModoDesenvolvimentoJogador modoDesenvolvimentoJogador) {
 		this.modoDesenvolvimentoJogador = modoDesenvolvimentoJogador;
+	}
+
+	public JogadorEstatisticasTemporada getEstatisticasTemporadaAtual() {
+		return estatisticasTemporadaAtual;
+	}
+
+	public void setEstatisticasTemporadaAtual(JogadorEstatisticasTemporada estatisticasTemporadaAtual) {
+		this.estatisticasTemporadaAtual = estatisticasTemporadaAtual;
+	}
+
+	public JogadorEstatisticasTemporada getEstatisticasAmistososTemporadaAtual() {
+		return estatisticasAmistososTemporadaAtual;
+	}
+
+	public void setEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual) {
+		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
 	}
 
 	@JsonIgnore

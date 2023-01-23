@@ -4,44 +4,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
-import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
+import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
 
 public class PartidaJogadorEstatisticaDTO {
-	
+
 	private List<HabilidadeValorEstatistica> habilidadeValorEstatistica;
-	
-	private List<JogadorEstatisticasTemporada> jogadorEstatisticasTemporada;
-	
-	//private List<JogadorEstatisticasAmistososTemporada> jogadorEstatisticasAmistososTemporada;
+
+	private List<JogadorEstatisticaSemana> jogadorEstatisticasSemana;
 
 	public PartidaJogadorEstatisticaDTO() {
 		this.habilidadeValorEstatistica = new ArrayList<HabilidadeValorEstatistica>();
-		this.jogadorEstatisticasTemporada = new ArrayList<JogadorEstatisticasTemporada>();
-		//this.jogadorEstatisticasAmistososTemporada = new ArrayList<JogadorEstatisticasAmistososTemporada>();
+		this.jogadorEstatisticasSemana = new ArrayList<JogadorEstatisticaSemana>();
 	}
 
 	public List<HabilidadeValorEstatistica> getHabilidadeValorEstatistica() {
 		return habilidadeValorEstatistica;
 	}
-
-	public List<JogadorEstatisticasTemporada> getJogadorEstatisticasTemporada() {
-		return jogadorEstatisticasTemporada;
-	}
 	
 	public void adicionarHabilidadeValorEstatistica(List<HabilidadeValorEstatistica> habilidadeValorEstatistica) {
 		this.habilidadeValorEstatistica.addAll(habilidadeValorEstatistica);
 	}
-	
-	public void adicionarJogadorEstatisticasTemporada(List<JogadorEstatisticasTemporada> jogadorEstatisticasTemporada) {
-		this.jogadorEstatisticasTemporada.addAll(jogadorEstatisticasTemporada);
+
+	public List<JogadorEstatisticaSemana> getJogadorEstatisticasSemana() {
+		return jogadorEstatisticasSemana;
 	}
 
-	/*public List<JogadorEstatisticasAmistososTemporada> getJogadorEstatisticasAmistososTemporada() {
-		return jogadorEstatisticasAmistososTemporada;
+	public void adicionarJogadorEstatisticaSemana(List<JogadorEstatisticaSemana> jogadorEstatisticaSemana) {
+		this.jogadorEstatisticasSemana.addAll(jogadorEstatisticaSemana);
 	}
-	
-	public void adicionarJogadorEstatisticasAmistososTemporada(
-			List<JogadorEstatisticasAmistososTemporada> jogadorEstatisticasAmistososTemporada) {
-		this.jogadorEstatisticasAmistososTemporada.addAll(jogadorEstatisticasAmistososTemporada);
-	}*/
+
 }

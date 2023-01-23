@@ -24,6 +24,12 @@ public class AgruparHabilidadeValorEstatisticaService {
 	@Autowired
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
 	
+	public void agrupar2(Temporada temporada) {
+		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
+		habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
+		//habilidadeValorEstatisticaRepository.deleteAll();
+	}
+	
 	public void agrupar(Temporada temporada) {
 		
 		List<HabilidadeValorEstatisticaGrupo> estatisticasGrupo = new ArrayList<HabilidadeValorEstatisticaGrupo>();

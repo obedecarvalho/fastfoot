@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -32,4 +34,19 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			+ " 	AND amistoso = ?2 "
 	)
 	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada, Boolean amistoso);
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" INSERT INTO habilidade_valor_estatistica_grupo" +
+			" (id, id_habilidade_valor, id_temporada, quantidade_uso, quantidade_uso_vencedor, amistoso)" +
+			" SELECT NEXTVAL('habilidade_valor_estatistica_grupo_seq') AS id, id_habilidade_valor, s.id_temporada, " +
+			" 	SUM(quantidade_uso) AS quantidade_uso, " +
+			" 	SUM(quantidade_uso_vencedor) AS quantidade_uso_vencedor, amistoso" +
+			" FROM habilidade_valor_estatistica hve" +
+			" INNER JOIN semana s ON s.id = hve.id_semana" +
+			" WHERE s.id_temporada = ?1 " +
+			" GROUP BY s.id_temporada, id_habilidade_valor, amistoso;"
+	)
+	public void agruparHabilidadeValorEstatisticas(Long idTemporadaAgrupar);
 }

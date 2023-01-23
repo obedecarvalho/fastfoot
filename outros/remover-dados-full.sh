@@ -6,7 +6,7 @@ truncate table habilidade_valor_estatistica;
 delete from disponivel_negociacao;
 delete from proposta_transferencia_jogador;
 delete from necessidade_contratacao_clube;
-update jogador_detalhe set id_jogador_estatisticas_temporada_atual = null, id_jogador_estatisticas_amistosos_temporada_atual = null;
+delete from jogador_estatistica_semana;
 delete from jogador_estatisticas_temporada;
 delete from habilidade_valor;
 delete from escalacao_jogador_posicao;

@@ -18,9 +18,9 @@ public class PreCarregarParametrosService {
 
 	public void preCarregarParametros() {
 		
-		parametroRepository.deleteAll();
+		parametroRepository.deleteAll();//TODO
 
-		if (parametroRepository.findAll().isEmpty()) {
+		if (parametroRepository.count() == 0) {
 
 			List<Parametro> parametros = new ArrayList<Parametro>();
 			

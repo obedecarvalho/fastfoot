@@ -87,6 +87,9 @@ public class Jogador {
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_detalhe")
 	private JogadorDetalhe jogadorDetalhe;
+	
+	@Transient
+	private JogadorEstatisticaSemana jogadorEstatisticaSemana;
 
 	public Jogador() {
 		
@@ -188,7 +191,7 @@ public class Jogador {
 		return StatusJogador.ATIVO.equals(this.statusJogador);
 	}
 
-	@JsonIgnore
+	/*@JsonIgnore
 	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
 		//return jogadorEstatisticasTemporadaAtual;
 		return jogadorDetalhe.getJogadorEstatisticasTemporadaAtual();
@@ -209,7 +212,7 @@ public class Jogador {
 			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
 		//this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
 		jogadorDetalhe.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasAmistososTemporadaAtual);
-	}
+	}*/
 
 	public Double getForcaGeralPotencialEfetiva() {
 		return forcaGeralPotencialEfetiva;
@@ -225,6 +228,14 @@ public class Jogador {
 
 	public void setJogadorDetalhe(JogadorDetalhe jogadorDetalhe) {
 		this.jogadorDetalhe = jogadorDetalhe;
+	}
+
+	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
+		return jogadorEstatisticaSemana;
+	}
+
+	public void setJogadorEstatisticaSemana(JogadorEstatisticaSemana jogadorEstatisticaSemana) {
+		this.jogadorEstatisticaSemana = jogadorEstatisticaSemana;
 	}
 
 	@JsonIgnore

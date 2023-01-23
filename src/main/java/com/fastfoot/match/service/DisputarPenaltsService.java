@@ -60,34 +60,34 @@ public class DisputarPenaltsService {
 			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
 			
-			jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
+			goleiroVisitante.getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosMandantes++;
 				
-				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+				jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarGolsDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticaSemana().incrementarGolsSofridosDisputaPenalt();
 			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
+				jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarGolsPerdidosDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticaSemana().incrementarDefesasDisputaPenalt();
 			}
 
 			//Visitante
 			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
 			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
+			goleiroMandante.getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosVisitante++;
 				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+				jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarGolsDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticaSemana().incrementarGolsSofridosDisputaPenalt();
 			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
+				jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarGolsPerdidosDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticaSemana().incrementarDefesasDisputaPenalt();
 			}
 		}
 		
@@ -97,34 +97,34 @@ public class DisputarPenaltsService {
 			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
 			
-			jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
+			goleiroVisitante.getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosMandantes++;
 				
-				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+				jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarGolsDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticaSemana().incrementarGolsSofridosDisputaPenalt();
 			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
+				jogadoresMandantes.get(i).getJogadorEstatisticaSemana().incrementarGolsPerdidosDisputaPenalt();
+				goleiroVisitante.getJogadorEstatisticaSemana().incrementarDefesasDisputaPenalt();
 			}
 
 			//Visitante
 			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
 			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
 			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarNumeroRodadaDisputaPenalt();
+			jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
+			goleiroMandante.getJogadorEstatisticaSemana().incrementarNumeroRodadaDisputaPenalt();
 
 			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
 				penaltsCertosVisitante++;
 				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarGolsSofridosDisputaPenalt();
+				jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarGolsDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticaSemana().incrementarGolsSofridosDisputaPenalt();
 			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasTemporadaAtual().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasTemporadaAtual().incrementarDefesasDisputaPenalt();
+				jogadoresVisitantes.get(i).getJogadorEstatisticaSemana().incrementarGolsPerdidosDisputaPenalt();
+				goleiroMandante.getJogadorEstatisticaSemana().incrementarDefesasDisputaPenalt();
 			}
 			
 			i = (i + 1) % 11;

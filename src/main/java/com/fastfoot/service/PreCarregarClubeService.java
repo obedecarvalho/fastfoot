@@ -81,7 +81,7 @@ public class PreCarregarClubeService {
 		
 		List<Clube> clubes = new ArrayList<Clube>();
 		
-		if (clubeRepository.findAll().size() == 0) {
+		if (clubeRepository.count() == 0) {
 
 			/*clubes.add(new Clube(101, Liga.GENEBE, FORCA_NIVEL_1, /*"Bayern München"* / "Bayern Munich"));
 			clubes.add(new Clube(102, Liga.GENEBE, FORCA_NIVEL_1, "Ajax"));
@@ -384,7 +384,7 @@ public class PreCarregarClubeService {
 	}
 
 	private void inserirClubeTituloRanking() {
-		if (clubeTituloRankingRepository.findAll().isEmpty()) {
+		if (clubeTituloRankingRepository.count() == 0) {
 			List<ClubeTituloRanking> rankingTitulos = new ArrayList<ClubeTituloRanking>();
 			
 			rankingTitulos.add(new ClubeTituloRanking(101, new Clube(101)));
@@ -555,7 +555,7 @@ public class PreCarregarClubeService {
 	
 	private void inserirClubesRanking() {
 		
-		if (clubeRankingRepository.findAll().isEmpty()) {
+		if (clubeRankingRepository.count() == 0) {
 			List<ClubeRanking> ranking = new ArrayList<ClubeRanking>();
 			
 			int ano = Constantes.ANO_INICIAL - 1;

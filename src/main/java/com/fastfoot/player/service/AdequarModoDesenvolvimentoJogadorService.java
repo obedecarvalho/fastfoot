@@ -27,9 +27,16 @@ public class AdequarModoDesenvolvimentoJogadorService {
 		
 		for (JogadorDetalhe j : jogadores) {
 			
-			int totalMinutosJogados = j.getJogadorEstatisticasTemporadaAtual()
+			/*int totalMinutosJogados = j.getEstatisticasTemporadaAtual()
 					.getNumeroMinutosJogados()
-					+ j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados();
+					+ j.getEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados();*/
+			
+			int totalMinutosJogados = j.getEstatisticasTemporadaAtual() != null
+					? j.getEstatisticasTemporadaAtual().getNumeroMinutosJogados()
+					: 0;
+			totalMinutosJogados += j.getEstatisticasAmistososTemporadaAtual() != null
+					? j.getEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados()
+					: 0;
 			
 			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()
 					&& j.getJogador().getIdade() >= 21) {

@@ -25,7 +25,6 @@ import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepositor
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
-import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class MarcarAmistososSemanalmenteService {

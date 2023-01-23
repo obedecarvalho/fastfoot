@@ -20,7 +20,7 @@ import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
 import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
@@ -57,8 +57,11 @@ public class RodadaService {
 	@Autowired
 	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;
 
+	/*@Autowired
+	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
+	
 	@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
+	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;
 	
 	@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;
@@ -352,13 +355,20 @@ public class RodadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#habilidadeValorEstatisticaRepository:" + (fim - inicio));
 		
-		stopWatch.split();
+		/*stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 		//TODO:melhorar aqui
 		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#jogadorEstatisticasTemporadaRepository:" + (fim - inicio));
+		mensagens.add("\t#jogadorEstatisticasTemporadaRepository:" + (fim - inicio));*/
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		jogadorEstatisticaSemanaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasSemana());
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#jogadorEstatisticaSemanaRepository:" + (fim - inicio));
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
