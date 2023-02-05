@@ -84,6 +84,7 @@ public class Jogador {
 	@Transient
 	private List<HabilidadeValor> habilidadesAcaoMeioFim;
 	
+	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_detalhe")
 	private JogadorDetalhe jogadorDetalhe;

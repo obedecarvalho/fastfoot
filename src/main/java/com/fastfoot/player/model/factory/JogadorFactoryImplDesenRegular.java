@@ -46,7 +46,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		Double potencialSorteado = null;
 		Double forca = null;
 		Double passoProx = null;
-		Double forcaDecimal = null;
+		//Double forcaDecimal = null;
 		
 		//Comuns
 		habComuns.addAll(estrategia.getHabilidadesComum());
@@ -54,8 +54,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			potencialSorteado = gerarValorHabilidadeComum(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
-			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.COMUM, potencialSorteado,
+			//forcaDecimal = forca - forca.intValue();
+			addHabilidade(jogador, h, forca.intValue(), forca, HabilidadeTipo.COMUM, potencialSorteado,
 					potencialSorteado, passoProx);
 		}
 		
@@ -65,8 +65,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			potencialSorteado = gerarValorHabilidadeEspecifico(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
-			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.ESPECIFICA, potencialSorteado,
+			//forcaDecimal = forca - forca.intValue();
+			addHabilidade(jogador, h, forca.intValue(), forca, HabilidadeTipo.ESPECIFICA, potencialSorteado,
 					potencialSorteado, passoProx);
 			
 			valorHabilidadesEspecificasPot.add(potencialSorteado);
@@ -87,8 +87,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			potencialSorteado = gerarValorHabilidadeOutros(potencial);
 			forca = potencialSorteado * ajusteForca;
 			passoProx = ((potencialSorteado * ajusteForcaProx) - forca) / QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
-			forcaDecimal = forca - forca.intValue();
-			addHabilidade(jogador, h, forca.intValue(), forcaDecimal, HabilidadeTipo.OUTRO, potencialSorteado,
+			//forcaDecimal = forca - forca.intValue();
+			addHabilidade(jogador, h, forca.intValue(), forca, HabilidadeTipo.OUTRO, potencialSorteado,
 					potencialSorteado, passoProx);
 		}
 	}

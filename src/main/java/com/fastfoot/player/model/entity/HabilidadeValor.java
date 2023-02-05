@@ -183,7 +183,8 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	}
 
 	public Double getValorTotal() {
-		return getValor() + getValorDecimal();
+		//return getValor() + getValorDecimal();
+		return getValorDecimal();
 	}
 
 	public Double getProbabilidadeErro() {

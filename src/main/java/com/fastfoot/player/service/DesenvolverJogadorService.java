@@ -118,15 +118,15 @@ public class DesenvolverJogadorService {//TODO:analisar necessidade
 	private void desenvolverJogador(GrupoDesenvolvimentoJogador grupoDesenvolvimentoJogador, Jogador j) {
 		//Caso for usar so passo, pode ser substuido por sql UPDATE tab SET valor = valor + passo ....
 		Double newValorTotal = null;
-		Double newValorDecimal = null;
+		//Double newValorDecimal = null;
 		for (HabilidadeValor hv : j.getHabilidades()) {
 			//newValorTotal = hv.getValorTotal() + (hv.getPassoDesenvolvimento() * getPesoPassoDesenvolvimento());
 			newValorTotal = hv.getValorTotal() + hv.getPassoDesenvolvimento();
 			
-			newValorDecimal = newValorTotal - newValorTotal.intValue();
+			//newValorDecimal = newValorTotal - newValorTotal.intValue();
 			
 			hv.setValor(newValorTotal.intValue());
-			hv.setValorDecimal(newValorDecimal);
+			hv.setValorDecimal(newValorTotal);
 		}
 		
 		JogadorCalcularForcaUtil.calcularForcaGeral(j);

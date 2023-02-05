@@ -442,7 +442,9 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
 
 		for (PartidaResultado p : r.getPartidas()) {
-			jogarPartida(p, classificacaoProbabilidades);
+			if (!p.getPartidaJogada()) {
+				jogarPartida(p, classificacaoProbabilidades);
+			}
 		}
 
 	}

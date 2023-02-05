@@ -24,9 +24,8 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" from ( " +
 			" 	select " +
 			" 		hv.id, " +
-			" 		floor(hv.valor + hv.valor_decimal + hv.passo_desenvolvimento) as valor_novo, " +
-			" 		hv.valor + hv.valor_decimal + hv.passo_desenvolvimento  " +
-			" 			- floor(hv.valor + hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
+			" 		floor(hv.valor_decimal + hv.passo_desenvolvimento) as valor_novo, " +
+			" 		(hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
 			" 	inner join grupo_desenvolvimento_jogador gdj on gdj.id_jogador = j.id " +
@@ -44,9 +43,8 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" from ( " +
 			" 	select " +
 			" 		hv.id, " +
-			" 		floor(hv.valor + hv.valor_decimal + hv.passo_desenvolvimento) as valor_novo, " +
-			" 		hv.valor + hv.valor_decimal + hv.passo_desenvolvimento  " +
-			" 			- floor(hv.valor + hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
+			" 		floor(hv.valor_decimal + hv.passo_desenvolvimento) as valor_novo, " +
+			" 		(hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
 			" 	where j.status_jogador = 0 " + //StatusJogador.ATIVO
@@ -62,7 +60,7 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" set passo_desenvolvimento = tmp.novo_passo " +
 			" from ( " +
 			" 	select hv.id, " +
-			" 		((hv.potencial_desenvolvimento_efetivo * ?3) - (hv.valor + hv.valor_decimal))/?2 as novo_passo " +
+			" 		((hv.potencial_desenvolvimento_efetivo * ?3) - (hv.valor_decimal))/?2 as novo_passo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
 			" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +
