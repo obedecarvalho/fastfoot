@@ -11,6 +11,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.scheduler.model.CampeonatoJogavel;
+import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
+import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
@@ -31,6 +35,18 @@ public class JogadorEstatisticaSemana {
 	@ManyToOne
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_campeonato")
+	private Campeonato campeonato;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_campeonato_eliminatorio")
+	private CampeonatoEliminatorio campeonatoEliminatorio;
+
+	@ManyToOne
+	@JoinColumn(name = "id_campeonato_misto")
+	private CampeonatoMisto campeonatoMisto;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
@@ -78,10 +94,16 @@ public class JogadorEstatisticaSemana {
 		
 	}
 	
-	public JogadorEstatisticaSemana(Jogador jogador, Semana semana, Clube clube, Boolean amistoso) {
+	public JogadorEstatisticaSemana(Jogador jogador, Semana semana, Clube clube, CampeonatoJogavel campeonato, Boolean amistoso) {
 		this.jogador = jogador;
 		this.semana = semana;
 		this.clube = clube;
+		if (campeonato instanceof Campeonato)
+			this.campeonato = (Campeonato) campeonato;
+		if (campeonato instanceof CampeonatoEliminatorio)
+			this.campeonatoEliminatorio = (CampeonatoEliminatorio) campeonato;
+		if (campeonato instanceof CampeonatoMisto)
+			this.campeonatoMisto = (CampeonatoMisto) campeonato;
 		this.amistoso = amistoso;
 		
 		this.numeroJogos = 0;
@@ -333,6 +355,30 @@ public class JogadorEstatisticaSemana {
 
 	public void setNumeroMinutosJogados(Integer numeroMinutosJogados) {
 		this.numeroMinutosJogados = numeroMinutosJogados;
+	}
+
+	public Campeonato getCampeonato() {
+		return campeonato;
+	}
+
+	public void setCampeonato(Campeonato campeonato) {
+		this.campeonato = campeonato;
+	}
+
+	public CampeonatoEliminatorio getCampeonatoEliminatorio() {
+		return campeonatoEliminatorio;
+	}
+
+	public void setCampeonatoEliminatorio(CampeonatoEliminatorio campeonatoEliminatorio) {
+		this.campeonatoEliminatorio = campeonatoEliminatorio;
+	}
+
+	public CampeonatoMisto getCampeonatoMisto() {
+		return campeonatoMisto;
+	}
+
+	public void setCampeonatoMisto(CampeonatoMisto campeonatoMisto) {
+		this.campeonatoMisto = campeonatoMisto;
 	}
 
 	@Override

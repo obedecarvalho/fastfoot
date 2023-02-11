@@ -213,13 +213,13 @@ public class JogarPartidaService {
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j
-							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), false)));
+							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado.getRodada().getCampeonatoJogavel(), false)));
 
 		} else {
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j
-							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), true)));
+							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado.getRodada().getCampeonatoJogavel(), true)));
 
 		}
 
