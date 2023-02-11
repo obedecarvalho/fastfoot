@@ -64,6 +64,14 @@ public class TemporadaService {
 		}
 		return null;
 	}
+	
+	public Temporada getTemporadaAnterior() {
+		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstAnteriorAtual();
+		if (temporadaOpt.isPresent()) {
+			return temporadaOpt.get();
+		}
+		return null;
+	}
 
 	public List<TemporadaDTO> getTemporadas() {
 		return TemporadaDTO.convertToDTO(temporadaRepository.findAll());

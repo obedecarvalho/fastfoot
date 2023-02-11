@@ -35,6 +35,14 @@ public class Temporada {
 	
 	@Transient
 	private List<RodadaAmistosa> rodadasAmistosas;
+	
+	public Temporada() {
+
+	}
+
+	public Temporada(Long id) {
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;

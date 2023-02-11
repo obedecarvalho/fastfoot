@@ -247,7 +247,7 @@ public class GerenciarTemporadaService {
 		List<String> mensagens = new ArrayList<String>();
 		
 		stopWatch.split();
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		
 		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -265,12 +265,12 @@ public class GerenciarTemporadaService {
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("#calcularNecessidadeContratacao:" + (fim - inicio));
 
 		transferenciasFuture.clear();
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		
 		List<NecessidadeContratacaoClube> necessidadeContratacao = necessidadeContratacaoClubeRepository
 				.findByTemporadaAndNecessidadeSatisfeitaAndNecessidadePrioritaria(temporada, false, true);
@@ -306,12 +306,12 @@ public class GerenciarTemporadaService {
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
 
 		transferenciasFuture.clear();
 		
-		inicio = stopWatch.getSplitNanoTime();
+		inicio = stopWatch.getSplitTime();
 		
 		//
 		List<PropostaTransferenciaJogador> propostas = propostaTransferenciaJogadorRepository
@@ -381,12 +381,12 @@ public class GerenciarTemporadaService {
 		//System.err.println(clubesRefazerEscalacao);//TODO:ajustar escalação: apenas caso de semanas nao contempladas em SemanaService
 		
 		stopWatch.split();
-		fim = stopWatch.getSplitNanoTime();
+		fim = stopWatch.getSplitTime();
 		mensagens.add("#analisarPropostaTransferencia:" + (fim - inicio));
 		
 		stopWatch.stop();
 		
-		mensagens.add("#tempoTotal:" + stopWatch.getNanoTime());
+		mensagens.add("#tempoTotal:" + stopWatch.getTime());
 		
 		System.err.println(mensagens);
 		

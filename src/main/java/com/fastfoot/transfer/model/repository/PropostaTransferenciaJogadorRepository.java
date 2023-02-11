@@ -30,4 +30,6 @@ public interface PropostaTransferenciaJogadorRepository extends JpaRepository<Pr
 	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceitaIsNull(@Param("temporada") Temporada temporada);
 	
 	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceita(Temporada temporada, Boolean propostaAceita);
+	
+	public List<PropostaTransferenciaJogador> findByPropostaAceita(Boolean propostaAceita);
 }

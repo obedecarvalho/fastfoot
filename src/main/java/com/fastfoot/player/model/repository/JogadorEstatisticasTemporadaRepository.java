@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -16,11 +17,15 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Repository
 public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<JogadorEstatisticasTemporada, Long>{
 	
+	public List<JogadorEstatisticasTemporada> findByClube(Clube clube);
+	
 	public List<JogadorEstatisticasTemporada> findByTemporada(Temporada temporada);
 
 	public List<JogadorEstatisticasTemporada> findByJogadorAndAmistoso(Jogador jogador, Boolean amistoso);
 	
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
+
+	public List<JogadorEstatisticasTemporada> findByTemporadaAndClube(Temporada temporada, Clube clube);
 	
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndJogadorAndAmistoso(Temporada temporada, Jogador jogador,
 			Boolean amistoso);
@@ -132,4 +137,5 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" GROUP BY id_jogador, id_clube, s.id_temporada, amistoso"
 	)
 	public void agruparJogadorEstatisticasTemporada(Long idTemporadaAgrupar);
+
 }
