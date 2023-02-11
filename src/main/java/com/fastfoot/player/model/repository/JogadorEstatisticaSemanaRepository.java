@@ -51,9 +51,10 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			" FROM jogador_estatistica_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" WHERE s.id_temporada = ?1" +
+			" 	AND jes.amistoso = ?2" +
 			" GROUP BY id_jogador, id_clube, s.id_temporada, amistoso"
 	)
-	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada);
+	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada, Boolean amistoso);
 	
 	@Query(nativeQuery = true, value = 
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +
@@ -77,8 +78,9 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
 			" WHERE s.id_temporada = ?1" +
-			" 	AND jes.id_clube = ?2"+
+			" 	AND jes.id_clube = ?2" +
+			" 	AND jes.amistoso = ?3" +
 			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome"
 	)
-	public List<Map<String, Object>> findAgrupadoByTemporadaAndClube(Long idTemporada, Integer idClube);
+	public List<Map<String, Object>> findAgrupadoByTemporadaAndClube(Long idTemporada, Integer idClube, Boolean amistoso);
 }

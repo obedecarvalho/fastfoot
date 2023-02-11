@@ -23,6 +23,10 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 
 	public List<JogadorEstatisticasTemporada> findByJogadorAndAmistoso(Jogador jogador, Boolean amistoso);
 	
+	public List<JogadorEstatisticasTemporada> findByAmistoso(Boolean amistoso);
+	
+	public List<JogadorEstatisticasTemporada> findByClubeAndAmistoso(Clube clube, Boolean amistoso);
+	
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
 
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndClube(Temporada temporada, Clube clube);

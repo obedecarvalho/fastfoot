@@ -62,7 +62,7 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 			if (idClube == null) {
 				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAll();
 			} else {
-				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAgrupadoTemporadaAtualByClube(new Clube(idClube));
+				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAgrupadoTemporadaAtualByClube(new Clube(idClube), false);
 			}
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {
