@@ -16,7 +16,7 @@ import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.dto.JogadorAlvoDTO;
@@ -73,7 +73,7 @@ public class ProporTransferenciaService {
 	//###	SERVICE	###
 
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes,

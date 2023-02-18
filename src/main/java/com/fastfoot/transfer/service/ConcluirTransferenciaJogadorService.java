@@ -14,7 +14,7 @@ import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
-import com.fastfoot.scheduler.service.SemanaService;
+import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -55,7 +55,7 @@ public class ConcluirTransferenciaJogadorService {
 	//###	SERVICE	###
 
 	@Autowired
-	private SemanaService semanaService;
+	private SemanaCRUDService semanaCRUDService;
 
 	/*@Deprecated
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
@@ -95,7 +95,7 @@ public class ConcluirTransferenciaJogadorService {
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogadorEmLote(List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs) {
 
-		Semana s = semanaService.getProximaSemana();
+		Semana s = semanaCRUDService.getProximaSemana();
 
 		//List<JogadorEstatisticasTemporada> estatisticasSalvar = new ArrayList<JogadorEstatisticasTemporada>();
 		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososSalvar = new ArrayList<JogadorEstatisticasAmistososTemporada>();

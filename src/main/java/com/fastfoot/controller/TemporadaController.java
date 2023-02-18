@@ -14,7 +14,7 @@ import com.fastfoot.scheduler.model.dto.CampeonatoDTO;
 import com.fastfoot.scheduler.model.dto.SemanaDTO;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.service.CriarCalendarioTemporadaService;
-import com.fastfoot.scheduler.service.SemanaService;
+import com.fastfoot.scheduler.service.JogarProximaSemanaService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.service.GerenciarTemporadaService;
@@ -27,7 +27,7 @@ public class TemporadaController {
 	private TemporadaService temporadaService;
 
 	@Autowired
-	private SemanaService semanaService;
+	private JogarProximaSemanaService jogarProximaSemanaService;
 	
 	@Autowired
 	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;
@@ -114,7 +114,7 @@ public class TemporadaController {
 	@GetMapping("/proximaSemana")
 	public ResponseEntity<SemanaDTO> proximaSemana() {//TODO: renomear 'jogarProximaSemana'
 		try {
-			return ResponseEntity.ok(semanaService.proximaSemana());
+			return ResponseEntity.ok(jogarProximaSemanaService.jogarProximaSemana());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

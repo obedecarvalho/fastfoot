@@ -9,21 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
-import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
-import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
-import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.dto.PartidaResultadoDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
-import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
-import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -39,8 +31,6 @@ import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
-import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
 
 @Service
 public class PartidaResultadoService {
@@ -54,8 +44,7 @@ public class PartidaResultadoService {
 	@Autowired
 	private CampeonatoEliminatorioRepository campeonatoEliminatorioRepository;
 
-	@Autowired
-	private JogarPartidaService jogarPartidaService;
+	
 
 	@Autowired
 	private RodadaRepository rodadaRepository;
@@ -90,9 +79,7 @@ public class PartidaResultadoService {
 	/*@Autowired
 	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;*/
 
-	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
-	}
+
 
 	/*private void jogarPartida(PartidaResultadoJogavel partida, Integer numeroJogadas) {
 		
@@ -112,33 +99,7 @@ public class PartidaResultadoService {
 
 	}*/
 
-	public void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
-
-		for (PartidaResultado p : rodada.getPartidas()) {
-			//jogarPartida(p, Constantes.NRO_JOGADAS_PARTIDA);
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
-		}
-		
-		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
-	}
-
-	public void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-
-		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-			//jogarPartida(p, Constantes.NRO_JOGADAS_ELIMINATORIA);
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
-			
-			if (p.getProximaPartida() != null) {
-				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
-			}
-		}
-	}
-
-	public void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
-		}
-	}
+	
 
 	public List<PartidaResultadoDTO> getPartidasPorCampeonato(Long idCampeonato, String tipoCampeonato) {
 		Optional<? extends CampeonatoJogavel> campeonato = null;

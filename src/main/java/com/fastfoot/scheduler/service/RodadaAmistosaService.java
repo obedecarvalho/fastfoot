@@ -12,6 +12,7 @@ import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 
+@Deprecated
 @Service
 public class RodadaAmistosaService {
 

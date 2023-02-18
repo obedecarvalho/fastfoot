@@ -16,6 +16,7 @@ import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.TipoClubeProbabilidade;
 import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
@@ -78,6 +79,9 @@ public class ClubeProbabilidade {
 	
 	@Transient
 	private Map<Integer, ClubeRankingPosicaoProbabilidade> clubeProbabilidadePosicaoGeral;
+	
+	@Transient
+	private Classificacao classificacao;
 
 	public ClubeProbabilidade() {
 		probabilidadeCampeao = 0d;
@@ -243,6 +247,14 @@ public class ClubeProbabilidade {
 
 	public void setTipoClubeProbabilidade(TipoClubeProbabilidade tipoClubeProbabilidade) {
 		this.tipoClubeProbabilidade = tipoClubeProbabilidade;
+	}
+
+	public Classificacao getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(Classificacao classificacao) {
+		this.classificacao = classificacao;
 	}
 
 	@Override

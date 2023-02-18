@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
-import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.CRUDService;
 
 @Service
@@ -18,7 +17,7 @@ public class CampeonatoMistoCRUDService implements CRUDService<CampeonatoMisto, 
 	private CampeonatoMistoRepository campeonatoMistoRepository;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 
 	@Override
 	public List<CampeonatoMisto> getAll() {

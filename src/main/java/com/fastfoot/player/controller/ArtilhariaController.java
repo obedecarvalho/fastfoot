@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.dto.ArtilhariaDTO;
 import com.fastfoot.player.service.ArtilhariaService;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -26,7 +26,7 @@ public class ArtilhariaController {
 	private ArtilhariaService artilhariaService;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@GetMapping("/artilharia")
 	public ResponseEntity<List<ArtilhariaDTO>> getAll(
@@ -52,7 +52,7 @@ public class ArtilhariaController {
 			@RequestParam(name = "amistoso", required = false, defaultValue = "false") Boolean amistoso) {
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getByTemporada(temporadaService.getTemporadaAtual(),
+			List<ArtilhariaDTO> estatisticas = artilhariaService.getByTemporada(temporadaCRUDService.getTemporadaAtual(),
 					amistoso);
 			
 	

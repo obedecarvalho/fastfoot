@@ -16,7 +16,7 @@ import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.CRUDService;
 
 @Service
@@ -26,7 +26,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	@Autowired
 	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;

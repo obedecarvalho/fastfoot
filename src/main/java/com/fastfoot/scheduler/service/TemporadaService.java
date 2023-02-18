@@ -57,6 +57,7 @@ public class TemporadaService {
 		return campeonatos;
 	}
 
+	@Deprecated
 	public Temporada getTemporadaAtual() {
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
 		if (temporadaOpt.isPresent()) {
@@ -65,6 +66,7 @@ public class TemporadaService {
 		return null;
 	}
 	
+	@Deprecated
 	public Temporada getTemporadaAnterior() {
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstAnteriorAtual();
 		if (temporadaOpt.isPresent()) {

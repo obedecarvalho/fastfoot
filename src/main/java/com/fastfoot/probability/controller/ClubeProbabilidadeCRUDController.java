@@ -1,4 +1,4 @@
-package com.fastfoot.club.controller;
+package com.fastfoot.probability.controller;
 
 import java.util.List;
 
@@ -16,38 +16,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.entity.ClubeRanking;
-import com.fastfoot.club.service.crud.ClubeRankingCRUDService;
 import com.fastfoot.controller.CRUDController;
-import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.probability.model.entity.ClubeProbabilidade;
+import com.fastfoot.probability.service.crud.ClubeProbabilidadeCRUDService;
+import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, Integer> {
-	
+public class ClubeProbabilidadeCRUDController implements CRUDController<ClubeProbabilidade, Long> {
+
 	@Autowired
-	private ClubeRankingCRUDService clubeRankingCRUDService;
-	
-	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private ClubeProbabilidadeCRUDService clubeCRUDService;
 
 	@Override
-	@PostMapping("/clubeRankings")
-	public ResponseEntity<ClubeRanking> create(@RequestBody ClubeRanking t) {
+	@PostMapping("/clubesProbabilidade")
+	public ResponseEntity<ClubeProbabilidade> create(@RequestBody ClubeProbabilidade t) {
 		
 		try {
 		
-			ClubeRanking clube = clubeRankingCRUDService.create(t);
+			ClubeProbabilidade clube = clubeCRUDService.create(t);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.internalServerError().build();
 			}
 	
-			return new ResponseEntity<ClubeRanking>(clube, HttpStatus.CREATED);
+			return new ResponseEntity<ClubeProbabilidade>(clube, HttpStatus.CREATED);
 		
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -56,34 +51,39 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	}
 	
 	@Override
-	public ResponseEntity<List<ClubeRanking>> getAll() {
-		return null;//TODO
-	}
-
-	//@Override
-	@GetMapping("/clubeRankings")
-	public ResponseEntity<List<ClubeRanking>> getAll(
-			@RequestParam(name = "liga", required = false) Integer liga,
-			@RequestParam(name = "ano", required = false) Integer ano,
-			@RequestParam(name = "idClube", required = false) Integer idClube) {
+	@GetMapping("/clubesProbabilidade")
+	public ResponseEntity<List<ClubeProbabilidade>> getAll() {
 		
 		try {
 			
-			List<ClubeRanking> clubes;
+			List<ClubeProbabilidade> clubes = clubeCRUDService.getAll();
 			
-			if (!ValidatorUtil.isEmpty(liga)) {
-				if (ValidatorUtil.isEmpty(ano)) {
-					Temporada temporada = temporadaService.getTemporadaAtual();
-					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, temporada.getAno() - 1);
-				} else {
-					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, ano);
-				}
-			} else if (!ValidatorUtil.isEmpty(idClube)) {
-				clubes = clubeRankingCRUDService.getByClube(new Clube(idClube));
-			} else {
-				clubes = clubeRankingCRUDService.getAll();
+			if (ValidatorUtil.isEmpty(clubes)) {
+				return ResponseEntity.noContent().build();
 			}
 	
+			return ResponseEntity.ok(clubes);
+			
+		} catch (Exception e) {
+			return ResponseEntity.internalServerError().build();
+		}
+	}
+	
+	@GetMapping("/clubesProbabilidade/semanaAtual")
+	public ResponseEntity<List<ClubeProbabilidade>> getBySemanaAtual(
+			@RequestParam(name = "idCampeonato", required = true) Long idCampeonato,
+			@RequestParam(name = "comClassificacao", required = false) Boolean comClassificacao) {
+		
+		try {
+			
+			List<ClubeProbabilidade> clubes = null;
+			
+			if (comClassificacao != null && comClassificacao) {
+				clubes = clubeCRUDService.getByCampeonatoAndSemanaAtualComClassificacao(new Campeonato(idCampeonato));
+			} else {
+				clubes = clubeCRUDService.getByCampeonatoAndSemanaAtual(new Campeonato(idCampeonato));
+			}
+
 			if (ValidatorUtil.isEmpty(clubes)) {
 				return ResponseEntity.noContent().build();
 			}
@@ -96,12 +96,12 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	}
 
 	@Override
-	@GetMapping("/clubeRankings/{id}")
-	public ResponseEntity<ClubeRanking> getById(@PathVariable("id") Integer id) {
+	@GetMapping("/clubesProbabilidade/{id}")
+	public ResponseEntity<ClubeProbabilidade> getById(@PathVariable("id") Long id) {
 		
 		try {
 		
-			ClubeRanking clube = clubeRankingCRUDService.getById(id);
+			ClubeProbabilidade clube = clubeCRUDService.getById(id);
 	
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
@@ -115,18 +115,18 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	}
 
 	@Override
-	@PutMapping("/clubeRankings/{id}")
-	public ResponseEntity<ClubeRanking> update(@PathVariable("id") Integer id, @RequestBody ClubeRanking t) {
+	@PutMapping("/clubesProbabilidade/{id}")
+	public ResponseEntity<ClubeProbabilidade> update(@PathVariable("id") Long id, @RequestBody ClubeProbabilidade t) {
 		
 		try {
 		
-			ClubeRanking clube = clubeRankingCRUDService.getById(id);
+			ClubeProbabilidade clube = clubeCRUDService.getById(id);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
 			}
 			
-			clube = clubeRankingCRUDService.update(t);
+			clube = clubeCRUDService.update(t);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.internalServerError().build();
@@ -140,10 +140,10 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	}
 
 	@Override
-	@DeleteMapping("/clubeRankings/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Integer id) {
+	@DeleteMapping("/clubesProbabilidade/{id}")
+	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
-			clubeRankingCRUDService.delete(id);
+			clubeCRUDService.delete(id);
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -151,10 +151,10 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	}
 
 	@Override
-	@DeleteMapping("/clubeRankings")
+	@DeleteMapping("/clubesProbabilidade")
 	public ResponseEntity<HttpStatus> deleteAll() {
 		try {
-			clubeRankingCRUDService.deleteAll();
+			clubeCRUDService.deleteAll();
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();

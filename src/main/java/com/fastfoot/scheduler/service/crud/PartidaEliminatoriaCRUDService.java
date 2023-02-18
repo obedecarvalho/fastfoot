@@ -17,7 +17,6 @@ import com.fastfoot.scheduler.model.repository.CampeonatoEliminatorioRepository;
 import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.CRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -40,7 +39,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 	private CampeonatoEliminatorioRepository campeonatoEliminatorioRepository;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	@Override
 	public List<PartidaEliminatoriaResultado> getAll() {

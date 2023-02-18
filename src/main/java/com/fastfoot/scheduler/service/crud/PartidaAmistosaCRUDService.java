@@ -13,7 +13,6 @@ import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.CRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -30,7 +29,7 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 	private SemanaRepository semanaRepository;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 
 	@Override
 	public List<PartidaAmistosaResultado> getAll() {

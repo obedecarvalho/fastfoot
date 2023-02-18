@@ -30,8 +30,8 @@ import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.scheduler.service.SemanaService;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
@@ -94,7 +94,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo
 	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;
 	
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	@Autowired
 	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
@@ -106,7 +106,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo
 	private CalcularTrajetoriaForcaClubeService calcularTrajetoriaForcaClubeService;
 	
 	@Autowired
-	private SemanaService semanaService;
+	private SemanaCRUDService semanaCRUDService;
 	
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
@@ -161,7 +161,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo
 	
 	public void calcularTrajetoriaForcaClube() {
 		List<Clube> clubes = clubeRepository.findAll(); 
-		Semana s = semanaService.getProximaSemana();
+		Semana s = semanaCRUDService.getProximaSemana();
 
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		

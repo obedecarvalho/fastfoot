@@ -17,7 +17,7 @@ import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.transfer.model.AdequacaoJogadorDTO;
 import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.TipoNegociacao;
@@ -51,7 +51,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	//###	SERVICE	###
 
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	private double getPercentualForcaJogadorForcaClube(Integer forcaJogador, Integer forcaClube) {		
 		return (double) forcaJogador/forcaClube;

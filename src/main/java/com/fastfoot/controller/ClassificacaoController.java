@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +27,7 @@ import com.fastfoot.scheduler.service.ClassificacaoService;
 import com.fastfoot.scheduler.service.TemporadaService;
 import com.fastfoot.service.util.ValidatorUtil;
 
+@Deprecated
 @RestController
 @CrossOrigin("*")
 public class ClassificacaoController {
@@ -48,7 +48,8 @@ public class ClassificacaoController {
 		return ResponseEntity.ok(classificacao);
 	}
 
-	@GetMapping("/probabilidade/campeonato/{idCampeonato}")
+	//@GetMapping("/probabilidade/campeonato/{idCampeonato}")
+	@Deprecated
 	public ResponseEntity<List<ClubeProbabilidadeDTO>> getProbabilidadesCampeonato(@PathVariable(name = "idCampeonato") Long idCampeonato) {
 		List<ClubeProbabilidadeDTO> probabilidades = clubeProbabilidadeService.getProbabilidadePorCampeonato(idCampeonato);
 		if (ValidatorUtil.isEmpty(probabilidades)) {
@@ -69,7 +70,8 @@ public class ClassificacaoController {
 	@Autowired
 	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeCompletoService;
 
-	@GetMapping("/calcularProbabilidades")
+	//@GetMapping("/calcularProbabilidades")
+	@Deprecated
 	public ResponseEntity<Boolean> calcularProbabilidades(){
 		
 		Temporada t = temporadaService.getTemporadaAtual();

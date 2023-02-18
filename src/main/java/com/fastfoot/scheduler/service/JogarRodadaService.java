@@ -18,11 +18,13 @@ import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
 import com.fastfoot.match.service.CalcularTorcidaPartidaService;
+import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
@@ -34,9 +36,10 @@ import com.fastfoot.scheduler.model.repository.PartidaAmistosaResultadoRepositor
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
 
 @Service
-public class RodadaService {
+public class JogarRodadaService {
 	
 	//###	REPOSITORY	###
 	@Autowired
@@ -78,6 +81,9 @@ public class RodadaService {
 	
 	@Autowired
 	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
+	
+	@Autowired
+	private JogarPartidaService jogarPartidaService;
 
 	private static final Boolean SALVAR_LANCES = false;
 
@@ -153,14 +159,14 @@ public class RodadaService {
 
 	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		if(rodada.getCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
 					rodada.getCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getCampeonato().getClassificacao(), false);
 			}
 		} else if (rodada.getGrupoCampeonato() != null) {
-			partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
 					rodada.getGrupoCampeonato().getClassificacao());
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
@@ -297,7 +303,7 @@ public class RodadaService {
 	}
 
 	private void jogarPartidas(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 	}
 
 	private void salvarPartidas(RodadaEliminatoria r) {
@@ -380,7 +386,7 @@ public class RodadaService {
 	}
 
 	private void jogarPartidas(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		partidaResultadoService.jogarRodada(rodada, partidaJogadorEstatisticaDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 	}
 
 	private void salvarPartidas(RodadaAmistosa r) {
@@ -396,5 +402,37 @@ public class RodadaService {
 	private void salvarPartidaTorcida(PartidaTorcidaSalvarDTO dto) {
 		partidaTorcidaRepository.saveAll(dto.getPartidaTorcidaList());
 		movimentacaoFinanceiraRepository.saveAll(dto.getMovimentacaoFinanceira());
+	}
+
+	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
+	}
+
+	public void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
+
+		for (PartidaResultado p : rodada.getPartidas()) {
+			//jogarPartida(p, Constantes.NRO_JOGADAS_PARTIDA);
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
+		}
+		
+		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
+	}
+
+	public void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+
+		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
+			//jogarPartida(p, Constantes.NRO_JOGADAS_ELIMINATORIA);
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
+			
+			if (p.getProximaPartida() != null) {
+				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
+			}
+		}
+	}
+
+	public void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
+			jogarPartida(p, partidaJogadorEstatisticaDTO);
+		}
 	}
 }

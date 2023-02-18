@@ -26,6 +26,7 @@ import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.service.TemporadaService;
 
+@Deprecated
 @Service
 public class ClubeProbabilidadeService {
 
@@ -47,6 +48,7 @@ public class ClubeProbabilidadeService {
 	@Autowired
 	private SemanaRepository semanaRepository;
 	
+	@Deprecated
 	public List<ClubeProbabilidadeDTO> getProbabilidadePorCampeonato(Long idCampeonato) {
 		Optional<Campeonato> campeonatoOpt = campeonatoRepository.findById(idCampeonato);
 		

@@ -40,6 +40,13 @@ public class Campeonato implements CampeonatoJogavel {
 	
 	@Transient
 	private List<Rodada> rodadas;
+	
+	public Campeonato() {
+	}
+	
+	public Campeonato(Long id) {
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;

@@ -73,7 +73,7 @@ import com.fastfoot.service.ParametroService;
  */
 
 @Service
-public class SemanaService {
+public class JogarProximaSemanaService {
 	
 	//#######	REPOSITORY	################
 
@@ -131,7 +131,7 @@ public class SemanaService {
 	private TemporadaService temporadaService;
 	
 	@Autowired
-	private RodadaService rodadaService;
+	private JogarRodadaService jogarRodadaService;
 
 	@Autowired
 	private ParametroService parametroService;
@@ -163,7 +163,7 @@ public class SemanaService {
 	@Autowired
 	private CampeonatoService campeonatoService;
 
-	public SemanaDTO proximaSemana() {
+	public SemanaDTO jogarProximaSemana() {
 		
 		StopWatch stopWatch = new StopWatch();		
 		stopWatch.start();
@@ -212,15 +212,15 @@ public class SemanaService {
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
 
 		for (Rodada r : semana.getRodadas()) {
-			rodadasFuture.add(rodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r));
 		}
 
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-			rodadasFuture.add(rodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r));
 		}
 		
 		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
-			rodadasFuture.add(rodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r));
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
@@ -597,7 +597,7 @@ public class SemanaService {
 		return promotorEliminatoria;
 	}
 
-	public Semana getSemanaAtual() {
+	/*public Semana getSemanaAtual() {
 		Optional<Semana> s = semanaRepository.findSemanaAtual();
 		return s.isPresent() ? s.get() : null;
 	}
@@ -605,7 +605,7 @@ public class SemanaService {
 	public Semana getProximaSemana() {
 		Optional<Semana> s = semanaRepository.findProximaSemana();
 		return s.isPresent() ? s.get() : null;
-	}
+	}*/
 	
 	private void marcarAmistososSemanalmente(Semana semana) {
 		

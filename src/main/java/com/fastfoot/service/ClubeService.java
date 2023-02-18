@@ -32,7 +32,7 @@ import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.scheduler.service.TemporadaService;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 
 @Service
 public class ClubeService {
@@ -47,7 +47,7 @@ public class ClubeService {
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
 	@Autowired
-	private TemporadaService temporadaService;
+	private TemporadaCRUDService temporadaService;
 	
 	@Autowired
 	private CampeonatoMistoRepository campeonatoMistoRepository;
