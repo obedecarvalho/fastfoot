@@ -15,6 +15,7 @@ import com.fastfoot.player.model.dto.ArtilhariaDTO;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
+import com.fastfoot.player.service.crud.JogadorEstatisticasTemporadaCRUDService;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Service
@@ -93,9 +94,14 @@ public class ArtilhariaService {
 		return agruparEstatisticas(estatisticas, 100);
 	}
 
-	public List<ArtilhariaDTO> getByCampeonato() {
-		
-		return null;//TODO
+	public List<ArtilhariaDTO> getByCampeonato(Long idCampeonato) {
+		List<JogadorEstatisticasTemporada> estatisticas = jogadorEstatisticasTemporadaCRUDService
+				.getAgrupadoByIdCampeonato(idCampeonato);
+
+		/*estatisticas = estatisticas.stream().filter(e -> !e.getAmistoso() && e.getGolsMarcados() > 0)
+				.collect(Collectors.toList());*/
+
+		return agruparEstatisticas(estatisticas, 100);
 	}
 
 	public List<ArtilhariaDTO> getByClube(Clube clube, Boolean amistoso) {

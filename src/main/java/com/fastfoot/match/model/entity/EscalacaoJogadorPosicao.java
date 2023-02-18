@@ -21,7 +21,8 @@ import com.fastfoot.player.model.entity.Jogador;
 public class EscalacaoJogadorPosicao {
 	
 	/*
-	 * Fazer escalacao apenas para clube gerenciado
+	 * TODO: Fazer escalacao apenas para clube gerenciado
+	 * TODO: salvar a escalação automatica feita antes da partida?
 	 */
 	
 	@Id
@@ -44,6 +45,8 @@ public class EscalacaoJogadorPosicao {
 	//TODO: temporada??
 	
 	//TODO: semana??
+	
+	//TODO: partida??
 
 	public EscalacaoJogadorPosicao() {
 

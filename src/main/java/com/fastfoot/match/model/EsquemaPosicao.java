@@ -23,6 +23,11 @@ public class EsquemaPosicao {
 	
 	private Double probabilidadeArremateForaVisitante;
 	
+	public EsquemaPosicao() {
+		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
+		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
+	}
+	
 	public EsquemaPosicao(Integer numero, Jogador goleiro) {
 		super();
 		this.goleiro = goleiro;
@@ -31,14 +36,14 @@ public class EsquemaPosicao {
 		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
 	}
 
-	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante) {
+	/*public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante) {
 		super();
 		this.mandante = mandante;
 		this.visitante = visitante;
 		this.numero = numero;
 		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
 		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
-	}
+	}*/
 	
 	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante, Double probabilidadeArremateForaMandante,
 			Double probabilidadeArremateForaVisitante) {

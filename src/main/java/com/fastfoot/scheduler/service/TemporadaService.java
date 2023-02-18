@@ -6,17 +6,17 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
+import com.fastfoot.club.service.util.ClubeRankingUtil;
+import com.fastfoot.club.service.util.ClubeTituloRankingUtil;
 import com.fastfoot.scheduler.model.dto.CampeonatoDTO;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
-import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.scheduler.service.util.ClubeRankingUtil;
-import com.fastfoot.scheduler.service.util.ClubeTituloRankingUtil;
 
 @Service
 public class TemporadaService {

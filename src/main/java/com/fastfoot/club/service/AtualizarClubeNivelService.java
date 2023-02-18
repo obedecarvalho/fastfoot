@@ -16,13 +16,13 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.dto.ClubeRankingHistoricoDTO;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.entity.MudancaClubeNivel;
+import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.MudancaClubeNivelRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
 @Service

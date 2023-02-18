@@ -3,7 +3,7 @@ package com.fastfoot.club.model.dto;
 import java.util.List;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.scheduler.model.entity.ClubeRanking;
+import com.fastfoot.club.model.entity.ClubeRanking;
 
 public class ClubeRankingHistoricoDTO {
 	

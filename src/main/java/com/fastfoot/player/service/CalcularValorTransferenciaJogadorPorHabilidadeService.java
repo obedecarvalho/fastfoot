@@ -25,7 +25,7 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 	 * Taxa desconto: 30%, Max/Inicial: 94%
 	 * Taxa desconto: 25%, Max/Inicial: 77%
 	 */
-	private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
+	//private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
 	
 	private static final Integer FORCA_N_POWER = 3;
 	

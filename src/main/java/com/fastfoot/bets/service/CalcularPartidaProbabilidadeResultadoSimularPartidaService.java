@@ -14,13 +14,10 @@ import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
-import com.fastfoot.match.model.factory.EsquemaFactory;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplDoisTresTresDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroDoisDoisDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroUmDoisUmDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.service.EscalarClubeService;
-import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
@@ -34,7 +31,6 @@ import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
-import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -64,8 +60,8 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 	@Autowired
 	private EscalarClubeService escalarClubeService;
 	
-	@Autowired
-	private ParametroService parametroService;
+	/*@Autowired
+	private ParametroService parametroService;*/
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> simularPartidas(RodadaJogavel rodada) {
@@ -102,7 +98,9 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante);
 
-		Esquema esquema = getEsquemaFactory().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
+		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
+				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
+				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		
 		double vitoriaMandante = 0, vitoriaVisitante = 0, empate = 0;
 		
@@ -154,7 +152,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		HabilidadeValor habilidadeFora = null;
 		HabilidadeValor habilidadeVencedora = null;
 		
-		Jogador jogadorAssistencia = null;
+		//Jogador jogadorAssistencia = null;
 		
 		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
@@ -296,10 +294,10 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 						}*/
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
-					jogadorAssistencia = null;
+					//jogadorAssistencia = null;
 				} else {
 					//PASSE, CRUZAMENTO, ARMACAO
-					jogadorAssistencia = esquema.getJogadorPosse();
+					//jogadorAssistencia = esquema.getJogadorPosse();
 					EsquemaTransicao t = (EsquemaTransicao) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getTransicoesPosse());
 					//if (IMPRIMIR) System.err.println(String.format("%d ==> %d (%s)", esquema.getPosicaoAtual().getNumero(), t.getPosFinal().getNumero(), esquema.getPosseBolaMandante() ? "M" : "V"));
 					esquema.setPosicaoAtual(t.getPosFinal());
@@ -314,7 +312,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 				//if (IMPRIMIR) System.err.println("\t\tPOSSE INVERTIDA");
 				//habilidadeVencedorAnterior = habilidadeValorReacao;
 				habilidadeVencedorAnterior = null;
-				jogadorAssistencia = null;
+				//jogadorAssistencia = null;
 			}
 		}
 
@@ -325,7 +323,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		partidaResultado.setPartidaJogada(true);
 	}
 	
-	private EsquemaFactory getEsquemaFactory() {
+	/*private EsquemaFactory getEsquemaFactory() {
 
 		EsquemaFactory factory = null;
 		String formacao = parametroService.getParametroString(ParametroConstantes.ESCALACAO_PADRAO);
@@ -339,6 +337,6 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		}
 
 		return factory;
-	}
+	}*/
 
 }

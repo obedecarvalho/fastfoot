@@ -8,6 +8,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Temporada {
 
@@ -22,18 +24,23 @@ public class Temporada {
 	private Integer semanaAtual;
 	
 	@Transient
+	@JsonIgnore
 	private List<Semana> semanas;
 
 	@Transient
+	@JsonIgnore
 	private List<Campeonato> campeonatosNacionais;
 	
 	@Transient
+	@JsonIgnore
 	private List<CampeonatoEliminatorio> campeonatosCopasNacionais;
 	
 	@Transient
+	@JsonIgnore
 	private List<CampeonatoMisto> campeonatosContinentais;
 	
 	@Transient
+	@JsonIgnore
 	private List<RodadaAmistosa> rodadasAmistosas;
 	
 	public Temporada() {

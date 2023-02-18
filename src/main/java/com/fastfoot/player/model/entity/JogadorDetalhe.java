@@ -1,5 +1,6 @@
 package com.fastfoot.player.model.entity;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -43,6 +44,10 @@ public class JogadorDetalhe {
 	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
 	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
+	
+	@Transient
+	@JsonIgnore
+	private List<HabilidadeGrupoValor> habilidadeGrupoValores;
 
 	public Long getId() {
 		return id;
@@ -99,6 +104,14 @@ public class JogadorDetalhe {
 
 	public void setEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual) {
 		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
+	}
+
+	public List<HabilidadeGrupoValor> getHabilidadeGrupoValores() {
+		return habilidadeGrupoValores;
+	}
+
+	public void setHabilidadeGrupoValores(List<HabilidadeGrupoValor> habilidadeGrupoValores) {
+		this.habilidadeGrupoValores = habilidadeGrupoValores;
 	}
 
 	@JsonIgnore

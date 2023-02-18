@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 @Entity
 public class PartidaEstatisticas {
@@ -113,6 +114,16 @@ public class PartidaEstatisticas {
 		} else {
 			this.lancesVisitante++;
 		}
+	}
+	
+	@Transient
+	public double getPosseBolaMandante() {
+		return lancesMandante.doubleValue() / (lancesMandante + lancesVisitante);
+	}
+	
+	@Transient
+	public double getPosseBolaVisitante() {
+		return lancesVisitante.doubleValue() / (lancesMandante + lancesVisitante);
 	}
 
 	@Override

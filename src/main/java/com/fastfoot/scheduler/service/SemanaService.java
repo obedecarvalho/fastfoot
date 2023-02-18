@@ -18,8 +18,8 @@ import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPar
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
+import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
-import com.fastfoot.match.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
@@ -52,6 +52,17 @@ import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
+import com.fastfoot.scheduler.service.util.PromotorContinental;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplDoisPorGrupo;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplInterCampeonatos;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplTrintaClubes;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplTrintaEDoisClubes;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplTrintaEDoisClubesII;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteClubes;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEDoisClubes;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEOitoClubes;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEQuatroClubes;
 import com.fastfoot.service.ParametroService;
 
 /*
@@ -417,6 +428,7 @@ public class SemanaService {
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
+	@SuppressWarnings("unused")
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias, boolean old) {
 		//TODO: avaliar necessidade
 		//TODO: transformar em UPDATE

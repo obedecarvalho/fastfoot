@@ -11,10 +11,9 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.scheduler.model.CampeonatoJogavel;
-import com.fastfoot.scheduler.model.entity.Campeonato;
-import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
-import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
@@ -36,7 +35,7 @@ public class JogadorEstatisticaSemana {
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_campeonato")
 	private Campeonato campeonato;
 	
@@ -46,7 +45,15 @@ public class JogadorEstatisticaSemana {
 
 	@ManyToOne
 	@JoinColumn(name = "id_campeonato_misto")
-	private CampeonatoMisto campeonatoMisto;
+	private CampeonatoMisto campeonatoMisto;*/
+	
+	@ManyToOne
+	@JoinColumn(name = "id_partida_resultado")
+	private PartidaResultado partidaResultado;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_partida_eliminatoria_resultado")
+	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
@@ -94,16 +101,21 @@ public class JogadorEstatisticaSemana {
 		
 	}
 	
-	public JogadorEstatisticaSemana(Jogador jogador, Semana semana, Clube clube, CampeonatoJogavel campeonato, Boolean amistoso) {
+	public JogadorEstatisticaSemana(Jogador jogador, Semana semana, Clube clube, /*CampeonatoJogavel campeonato,*/ PartidaResultadoJogavel partida, Boolean amistoso) {
 		this.jogador = jogador;
 		this.semana = semana;
 		this.clube = clube;
-		if (campeonato instanceof Campeonato)
+		/*if (campeonato instanceof Campeonato)
 			this.campeonato = (Campeonato) campeonato;
 		if (campeonato instanceof CampeonatoEliminatorio)
 			this.campeonatoEliminatorio = (CampeonatoEliminatorio) campeonato;
 		if (campeonato instanceof CampeonatoMisto)
-			this.campeonatoMisto = (CampeonatoMisto) campeonato;
+			this.campeonatoMisto = (CampeonatoMisto) campeonato;*/
+		if (partida instanceof PartidaResultado) {
+			this.partidaResultado = (PartidaResultado) partida;
+		} else if (partida instanceof PartidaEliminatoriaResultado) {
+			this.partidaEliminatoriaResultado = (PartidaEliminatoriaResultado) partida;
+		}
 		this.amistoso = amistoso;
 		
 		this.numeroJogos = 0;
@@ -357,7 +369,7 @@ public class JogadorEstatisticaSemana {
 		this.numeroMinutosJogados = numeroMinutosJogados;
 	}
 
-	public Campeonato getCampeonato() {
+	/*public Campeonato getCampeonato() {
 		return campeonato;
 	}
 
@@ -379,6 +391,22 @@ public class JogadorEstatisticaSemana {
 
 	public void setCampeonatoMisto(CampeonatoMisto campeonatoMisto) {
 		this.campeonatoMisto = campeonatoMisto;
+	}*/
+
+	public PartidaResultado getPartidaResultado() {
+		return partidaResultado;
+	}
+
+	public void setPartidaResultado(PartidaResultado partidaResultado) {
+		this.partidaResultado = partidaResultado;
+	}
+
+	public PartidaEliminatoriaResultado getPartidaEliminatoriaResultado() {
+		return partidaEliminatoriaResultado;
+	}
+
+	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
+		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
 	}
 
 	@Override

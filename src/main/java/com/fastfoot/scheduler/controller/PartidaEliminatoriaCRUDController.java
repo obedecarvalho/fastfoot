@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.service.PartidaEliminatoriaCRUDService;
+import com.fastfoot.scheduler.service.crud.PartidaEliminatoriaCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController

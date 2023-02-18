@@ -53,13 +53,13 @@ public class ParametroConstantes {
 	//true, false
 	public static final String CALCULAR_PROBABILIDADES = "CALCULAR_PROBABILIDADES";
 	
-	public static final String ESCALACAO_PADRAO = "ESCALACAO_PADRAO";
+	/*public static final String ESCALACAO_PADRAO = "ESCALACAO_PADRAO";
 
 	public static final String ESCALACAO_PADRAO_PARAM_41212 = "4-1-2-1-2";
 
 	public static final String ESCALACAO_PADRAO_PARAM_4132 = "4-1-3-2";
 
-	public static final String ESCALACAO_PADRAO_PARAM_4222 = "4-2-2-2";
+	public static final String ESCALACAO_PADRAO_PARAM_4222 = "4-2-2-2";*/
 	
 	public static final String USAR_APOSTAS_ESPORTIVAS = "USAR_APOSTAS_ESPORTIVAS";
 	

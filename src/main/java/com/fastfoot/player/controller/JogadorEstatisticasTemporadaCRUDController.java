@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
-import com.fastfoot.player.service.JogadorEstatisticasTemporadaCRUDService;
+import com.fastfoot.player.service.crud.JogadorEstatisticasTemporadaCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController

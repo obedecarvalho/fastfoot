@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
-import com.fastfoot.transfer.service.PropostaTransferenciaJogadorCRUDService;
+import com.fastfoot.transfer.service.crud.PropostaTransferenciaJogadorCRUDService;
 
 @RestController
 @RequestMapping("/api")

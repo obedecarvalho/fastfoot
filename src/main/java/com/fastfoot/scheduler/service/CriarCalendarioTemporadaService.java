@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPartidaService;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.entity.ClubeRanking;
+import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.DistribuirPatrocinioService;
-import com.fastfoot.match.service.DistribuirPremiacaoCompeticoesService;
+import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
@@ -43,6 +45,7 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AdequarModoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
+import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidadeService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
@@ -52,7 +55,6 @@ import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
-import com.fastfoot.scheduler.model.entity.ClubeRanking;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -71,7 +73,6 @@ import com.fastfoot.scheduler.model.factory.CampeonatoFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactory;
 import com.fastfoot.scheduler.model.factory.RodadaAmistosaFactory;
 import com.fastfoot.scheduler.model.factory.TemporadaFactory;
-import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
@@ -173,6 +174,9 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
+	
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -270,6 +274,12 @@ public class CriarCalendarioTemporadaService {
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#criarJogadoresClube:" + (fim - inicio));
+			
+			inicio = stopWatch.getSplitTime();
+			atualizarNumeroJogadores();
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));
 		}
 
 		//stopWatch.split();
@@ -917,4 +927,24 @@ public class CriarCalendarioTemporadaService {
 
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}*/
+	
+	private void atualizarNumeroJogadores() {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
+			} else {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
 }

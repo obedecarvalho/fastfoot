@@ -71,7 +71,7 @@ public class ArtilhariaController {
 	public ResponseEntity<List<ArtilhariaDTO>> getByCampeonato(@PathVariable("id") Long idCampeonato){
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getByCampeonato();
+			List<ArtilhariaDTO> estatisticas = artilhariaService.getByCampeonato(idCampeonato);
 			
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {

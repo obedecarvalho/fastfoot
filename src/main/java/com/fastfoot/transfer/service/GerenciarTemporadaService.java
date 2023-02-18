@@ -39,7 +39,7 @@ import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeReposit
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
 @Service
-public class GerenciarTemporadaService {
+public class GerenciarTemporadaService {//TODO: avaliar modulo
 	
 	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
 	

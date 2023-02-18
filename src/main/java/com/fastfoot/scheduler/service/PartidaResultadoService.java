@@ -40,6 +40,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
+import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
 
 @Service
 public class PartidaResultadoService {

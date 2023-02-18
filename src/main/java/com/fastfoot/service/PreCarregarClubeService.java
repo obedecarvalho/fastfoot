@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
@@ -20,8 +22,6 @@ import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
-import com.fastfoot.scheduler.model.entity.ClubeRanking;
-import com.fastfoot.scheduler.model.repository.ClubeRankingRepository;
 
 /**
  * Pre configurar dados

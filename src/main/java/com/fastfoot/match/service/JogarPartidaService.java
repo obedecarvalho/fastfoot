@@ -10,16 +10,13 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
-import com.fastfoot.match.model.factory.EsquemaFactory;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroDoisDoisDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplDoisTresTresDois;
-import com.fastfoot.match.model.factory.EsquemaFactoryImplQuatroUmDoisUmDois;
+import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
-import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
@@ -32,7 +29,6 @@ import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
-import com.fastfoot.service.ParametroService;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -57,8 +53,8 @@ public class JogarPartidaService {
 	@Autowired
 	private DisputarPenaltsService disputarPenaltsService;
 	
-	@Autowired
-	private ParametroService parametroService;
+	/*@Autowired
+	private ParametroService parametroService;*/
 	
 	@Autowired
 	private EscalarClubeService escalarClubeService;
@@ -154,7 +150,7 @@ public class JogarPartidaService {
 		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO, partidaResultado);
 	}*/
 	
-	private EsquemaFactory getEsquemaFactory() {
+	/*private EsquemaFactory getEsquemaFactory() {
 
 		EsquemaFactory factory = null;
 		String formacao = parametroService.getParametroString(ParametroConstantes.ESCALACAO_PADRAO);
@@ -168,7 +164,7 @@ public class JogarPartidaService {
 		}
 
 		return factory;
-	}
+	}*/
 	
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		
@@ -190,7 +186,9 @@ public class JogarPartidaService {
 		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
 
-		Esquema esquema = getEsquemaFactory().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
+		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
+				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
+				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
 		jogar(esquema, partidaResultado);
@@ -213,13 +211,13 @@ public class JogarPartidaService {
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j
-							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado.getRodada().getCampeonatoJogavel(), false)));
+							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado, false)));
 
 		} else {
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 					.forEach(j -> j
-							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado.getRodada().getCampeonatoJogavel(), true)));
+							.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(j, semana, j.getClube(), null, true)));
 
 		}
 

@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.club.model.dto.ClubeRankingDTO;
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
 import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
-import com.fastfoot.scheduler.model.dto.ClubeRankingDTO;
 import com.fastfoot.service.ClubeService;
 import com.fastfoot.service.util.ValidatorUtil;
 

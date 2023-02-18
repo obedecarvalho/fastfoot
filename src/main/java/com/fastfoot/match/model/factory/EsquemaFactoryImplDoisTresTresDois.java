@@ -11,13 +11,15 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaImpl;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 
+@Deprecated
 public class EsquemaFactoryImplDoisTresTresDois extends EsquemaFactory {//2-3-3-2 ou 4-1-3-2*
 
 	@Override
 	public Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
-			List<EscalacaoJogadorPosicao> visitantes) {
+			List<EscalacaoJogadorPosicao> visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante, JogadorApoioCriacao jogadorApoioCriacaoVisitante) {
 		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> mandantesMap = mandantes.stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
 		
@@ -29,50 +31,50 @@ public class EsquemaFactoryImplDoisTresTresDois extends EsquemaFactory {//2-3-3-
 		int i = 0;
 		
 		//GM
-		EsquemaPosicao gm = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_1).getJogador());i++;
+		EsquemaPosicao gm = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_GOL).getJogador());i++;
 		
 		//ZD ZE
-		EsquemaPosicao zd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_3).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_11).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
+		EsquemaPosicao zd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_ZD).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_AE).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
 		i++;
-		EsquemaPosicao ze = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_4).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_9).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
+		EsquemaPosicao ze = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_ZE).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_AD).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
 		i++;
 		
 		//VD VE
-		EsquemaPosicao vd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_5).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_10).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
+		EsquemaPosicao vd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_VD).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_ME).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
 		i++;
-		EsquemaPosicao ve = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_8).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_7).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
+		EsquemaPosicao ve = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_VE).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_MD).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
 		i++;
 
 		//LD LE
-		EsquemaPosicao ld = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_2).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_6).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
+		EsquemaPosicao ld = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_LD).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_LE).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
 		i++;
-		EsquemaPosicao le = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_6).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_2).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
+		EsquemaPosicao le = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_LE).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_LD).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
 		i++;
 
 		//MD ME
-		EsquemaPosicao md = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_7).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_8).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
+		EsquemaPosicao md = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_MD).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_VE).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
 		i++;
-		EsquemaPosicao me = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_10).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_5).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
+		EsquemaPosicao me = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_ME).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_VD).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
 		i++;
 
 		//AD AE
-		EsquemaPosicao ad = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_9).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_4).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
+		EsquemaPosicao ad = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_AD).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_ZE).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
 		i++;
-		EsquemaPosicao ae = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_11).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_3).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
+		EsquemaPosicao ae = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_AE).getJogador(),
+				visitantesMap.get(EscalacaoPosicao.P_ZD).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
 		i++;
 
 		//GV
-		EsquemaPosicao gv = new EsquemaPosicao(i, visitantesMap.get(EscalacaoPosicao.P_1).getJogador());
+		EsquemaPosicao gv = new EsquemaPosicao(i, visitantesMap.get(EscalacaoPosicao.P_GOL).getJogador());
 
 		addTransicaoMandante(zd, ze, PESO_LATERAL, PESO_LATERAL);
 		addTransicaoMandante(vd, ve, PESO_LATERAL, PESO_LATERAL);

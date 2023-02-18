@@ -60,11 +60,11 @@ public class PreCarregarParametrosService {
 			
 			parametros.add(new Parametro(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS, "false", "false, true"));
 			
-			parametros.add(
+			/*parametros.add(
 					new Parametro(ParametroConstantes.ESCALACAO_PADRAO, ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132,
 							ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132 + ", "
 									+ ParametroConstantes.ESCALACAO_PADRAO_PARAM_4222 + ", "
-									+ ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212));
+									+ ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212));*/
 
 			parametroRepository.saveAll(parametros);
 		}

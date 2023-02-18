@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.service.ClubeCRUDService;
+import com.fastfoot.club.service.crud.ClubeCRUDService;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.service.util.ValidatorUtil;
 
