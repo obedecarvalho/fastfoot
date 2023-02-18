@@ -23,7 +23,7 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
@@ -55,7 +55,7 @@ public class DistribuirPremiacaoCompeticoesService {//TODO: mover para scheduler
 	//#######	SERVICE	#############
 	
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 
 	public void distribuirPremiacaoCompeticoes(Semana semana) {
 		/*

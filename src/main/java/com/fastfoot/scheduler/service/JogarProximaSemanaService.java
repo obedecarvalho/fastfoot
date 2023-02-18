@@ -63,7 +63,7 @@ import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteClubes;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEDoisClubes;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEOitoClubes;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEQuatroClubes;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 
 /*
  * https://www.baeldung.com/apache-commons-collections-vs-guava
@@ -109,9 +109,6 @@ public class JogarProximaSemanaService {
 	
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
-	
-	/*@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;*/
 
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -128,16 +125,10 @@ public class JogarProximaSemanaService {
 	//#####	SERVICE	############
 	
 	@Autowired
-	private TemporadaService temporadaService;
-	
-	@Autowired
 	private JogarRodadaService jogarRodadaService;
 
 	@Autowired
-	private ParametroService parametroService;
-
-	/*@Autowired
-	private DesenvolverJogadorService desenvolverJogadorService;*/
+	private CarregarParametroService parametroService;
 	
 	@Autowired
 	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeCompletoService;
@@ -161,7 +152,10 @@ public class JogarProximaSemanaService {
 	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
 	
 	@Autowired
-	private CampeonatoService campeonatoService;
+	private CarregarCampeonatoService campeonatoService;
+	
+	@Autowired
+	private ClassificarClubesTemporadaService classificarClubesTemporadaService;
 
 	public SemanaDTO jogarProximaSemana() {
 		
@@ -274,7 +268,8 @@ public class JogarProximaSemanaService {
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
-			temporadaService.classificarClubesTemporadaAtual();
+			//temporadaService.classificarClubesTemporadaAtual();
+			classificarClubesTemporadaService.classificarClubesTemporadaAtual();
 			
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();

@@ -31,46 +31,6 @@ public class DesenvolverJogadorService {//TODO:analisar necessidade
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
-	/*@Async("defaultExecutor")
-	public CompletableFuture<Boolean> desenvolverJogadores(List<Jogador> jogadores) {
-		
-		//Jogador j = null;
-		
-		//grupoDesenvolvimento.setQtdeExec(grupoDesenvolvimento.getQtdeExec() + 1);
-
-		//for (GrupoDesenvolvimentoJogador gdj : grupoDesenvolvimento) {
-		for (Jogador j : jogadores) {
-			//j = jogadorRepository.findByJogadorFetchHabilidades(gdj.getJogador()).get(0);
-			
-			j.getGrupoDesenvolvimentoJogador().setQtdeExecAno((j.getGrupoDesenvolvimentoJogador().getQtdeExecAno() + 1));
-			desenvolverJogador(j.getGrupoDesenvolvimentoJogador(), j);
-			//gdj.setJogador(j);//
-			
-			if (j.getGrupoDesenvolvimentoJogador().getQtdeExecAno().equals(JogadorFactory.NUMERO_DESENVOLVIMENTO_ANO_JOGADOR.intValue())) {
-				j.getGrupoDesenvolvimentoJogador().setQtdeExecAno(0);
-			}
-			
-			//grupoDesenvolvimentoJogadorRepository.save(gdj);
-		}
-
-		//
-		//List<Jogador> jogadores = null;
-		List<GrupoDesenvolvimentoJogador> grupoDesenvolvimento = jogadores.stream().map(j -> j.getGrupoDesenvolvimentoJogador()).collect(Collectors.toList());
-		
-		//jogadores = grupoDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
-		jogadorRepository.saveAll(jogadores);
-		for (Jogador jog : jogadores) {
-			habilidadeValorRepository.saveAll(jog.getHabilidades());
-		}
-		
-		grupoDesenvolvimentoJogadorRepository.saveAll(grupoDesenvolvimento);
-		//
-
-		//desenvolvimentoRepository.save(grupoDesenvolvimento);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
-	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> desenvolverGrupo(List<GrupoDesenvolvimentoJogador> grupoDesenvolvimento) {
 		

@@ -57,41 +57,6 @@ public class ConcluirTransferenciaJogadorService {
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
 
-	/*@Deprecated
-	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
-	public void concluirTransferenciaJogador(PropostaTransferenciaJogador propostaTransferenciaJogador,
-			List<PropostaTransferenciaJogador> propostasRejeitar, DisponivelNegociacao disponivelNegociacao) {
-		
-		Semana s = semanaService.getProximaSemana();
-		
-		propostaTransferenciaJogador.setPropostaAceita(true);
-		propostaTransferenciaJogador.setSemanaTransferencia(s);
-		
-		propostaTransferenciaJogador.getJogador().setClube(propostaTransferenciaJogador.getClubeDestino());
-		
-		//TODO: se Temporada.semana.numero = 0 e jogadorEstatisticasTemporadaAtual.isEmpty -> excluir jogadorEstatisticasTemporadaAtual
-		propostaTransferenciaJogador.getJogador()
-				.setJogadorEstatisticasTemporadaAtual(new JogadorEstatisticasTemporada(
-						propostaTransferenciaJogador.getJogador(), propostaTransferenciaJogador.getTemporada(),
-						propostaTransferenciaJogador.getClubeDestino(), false));
-		
-		propostaTransferenciaJogador.getNecessidadeContratacaoClube().setNecessidadeSatisfeita(true);
-		
-		propostasRejeitar.stream().forEach(p -> p.setPropostaAceita(false));
-		
-		propostasRejeitar.add(propostaTransferenciaJogador);
-		
-		disponivelNegociacao.setAtivo(false);
-
-		jogadorEstatisticasTemporadaRepository.save(propostaTransferenciaJogador.getJogador().getJogadorEstatisticasTemporadaAtual());
-		jogadorRepository.save(propostaTransferenciaJogador.getJogador());
-		propostaTransferenciaJogadorRepository.saveAll(propostasRejeitar);
-		necessidadeContratacaoClubeRepository.save(propostaTransferenciaJogador.getNecessidadeContratacaoClube());
-		disponivelNegociacaoRepository.save(disponivelNegociacao);
-
-		//TODO: gerar entradas e saidas financeiras
-	}*/
-	
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogadorEmLote(List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs) {
 

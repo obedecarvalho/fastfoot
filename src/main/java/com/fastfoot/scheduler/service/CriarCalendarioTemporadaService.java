@@ -77,7 +77,7 @@ import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.PreCarregarParametrosService;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.service.PreCarregarClubeService;
@@ -134,7 +134,7 @@ public class CriarCalendarioTemporadaService {
 	private PreCarregarParametrosService preCarregarParametrosService;
 
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 	
 	/*@Autowired
 	private CampeonatoService campeonatoService;

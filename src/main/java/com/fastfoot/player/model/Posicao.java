@@ -5,10 +5,11 @@ public enum Posicao {
 	ZAGUEIRO, 
 	LATERAL, 
 	VOLANTE,
-	/*@Deprecated
-	MEIA_LATERAL,*/ 
 	MEIA, 
-	ATACANTE;
+	ATACANTE,
+	//PONTA (MEIA_LATERAL)
+	//EXTREMO,
+	;
 	
 	public boolean isGoleiro() {
 		return this == GOLEIRO;

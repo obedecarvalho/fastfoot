@@ -25,7 +25,7 @@ import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 
 @Service
 public class CalcularTorcidaPartidaService {
@@ -43,7 +43,7 @@ public class CalcularTorcidaPartidaService {
 	private static final Double PORC_STDEV = 0.05;
 	
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 
 	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
 		

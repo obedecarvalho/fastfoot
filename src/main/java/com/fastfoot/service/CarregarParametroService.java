@@ -14,7 +14,7 @@ import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 
 @Service
-public class ParametroService {
+public class CarregarParametroService {
 
 	@Autowired
 	private ParametroRepository parametroRepository;

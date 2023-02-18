@@ -8,20 +8,16 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.club.model.dto.ClubeRankingDTO;
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
 import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
-import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
-import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
-import com.fastfoot.scheduler.model.dto.ClubeDTO;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -35,10 +31,10 @@ import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 
 @Service
-public class ClubeService {
+public class ClubeService {//TODO: avaliar melhor nome classe
 	
-	@Autowired
-	private ClubeRepository clubeRepository;
+	/*@Autowired
+	private ClubeRepository clubeRepository;*/
 
 	@Autowired
 	private ClubeRankingRepository clubeRankingRepository;
@@ -59,30 +55,13 @@ public class ClubeService {
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
 
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
 
 	@Autowired
 	private TemporadaRepository temporadaRepository;
-
-	@Deprecated
-	public List<ClubeDTO> getClubesPorLiga(String liga) {//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
-		List<Clube> clubes = clubeRepository.findByLiga(Liga.valueOf(liga));
-		return ClubeDTO.convertToDTO(clubes);
-	}
-	
-	@Deprecated
-	public List<ClubeRankingDTO> getClubesRankings(String liga){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		return temporada != null ? ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), temporada.getAno()-1)) : null;
-	}
-
-	@Deprecated
-	public List<ClubeRankingDTO> getClubesRankings(String liga, Integer ano){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
-		return ClubeRankingDTO.convertToDTO(clubeRankingRepository.findByLigaAndAno(Liga.valueOf(liga), ano));
-	}
 
 	public List<Integer> getAnosClubeRanking(){
 		return clubeRankingRepository.findAnosClubeRanking();

@@ -39,7 +39,7 @@ import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeReposit
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
 @Service
-public class GerenciarTemporadaService {//TODO: avaliar modulo
+public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome classe
 	
 	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
 	
@@ -200,42 +200,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
-	
-	/*@Deprecated
-	public void gerarTransferencias2() {
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		List<PropostaTransferenciaJogador> propostasAceitas = propostaTransferenciaJogadorRepository
-				.findByTemporadaAndPropostaAceita(temporada, true);
 
-		Set<Clube> clubes = new HashSet<Clube>();
-
-		propostasAceitas.stream().map(PropostaTransferenciaJogador::getClubeOrigem).collect(Collectors.toSet());
-
-		clubes.addAll(propostasAceitas.stream().map(PropostaTransferenciaJogador::getClubeOrigem)
-				.collect(Collectors.toSet()));
-		clubes.addAll(propostasAceitas.stream().map(PropostaTransferenciaJogador::getClubeDestino)
-				.collect(Collectors.toSet()));
-		
-		//
-		List<DisponivelNegociacao> disponivelNegociacaoList = new ArrayList<DisponivelNegociacao>();
-		List<NecessidadeContratacaoClube> necessidadeContratacaoClubeList = new ArrayList<NecessidadeContratacaoClube>();
-		
-		for (Clube c : clubes) {
-			disponivelNegociacaoList.addAll(disponivelNegociacaoRepository.findByClubeAndTemporadaAndAtivo(c, temporada, true));
-			necessidadeContratacaoClubeList.addAll(necessidadeContratacaoClubeRepository
-					.findByClubeAndTemporadaAndNecessidadeSatisfeita(c, temporada, false));
-		}
-		
-		disponivelNegociacaoList.stream().forEach(dn -> dn.setAtivo(false));
-		necessidadeContratacaoClubeList.stream().forEach(ncc -> ncc.setNecessidadeSatisfeita(true));
-		
-		disponivelNegociacaoRepository.saveAll(disponivelNegociacaoList);
-		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubeList);
-		//
-
-		gerarTransferencias(temporada, new ArrayList<Clube>(clubes));
-	}*/
-	
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
 		//if (semana.getNumero() == 0, 1, 2, 3) {		
 

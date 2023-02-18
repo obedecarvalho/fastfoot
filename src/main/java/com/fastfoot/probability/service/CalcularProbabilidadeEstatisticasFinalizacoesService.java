@@ -44,7 +44,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 
 @Service
 @Deprecated /* Substituir por TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO */
@@ -91,7 +91,7 @@ public class CalcularProbabilidadeEstatisticasFinalizacoesService {
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
 	
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 	
 	/*@Autowired
 	private ClubeRepository clubeRepository;*/

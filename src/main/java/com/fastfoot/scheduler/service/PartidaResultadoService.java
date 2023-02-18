@@ -33,7 +33,7 @@ import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
 @Service
-public class PartidaResultadoService {
+public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 
 	@Autowired
 	private CampeonatoRepository campeonatoRepository;

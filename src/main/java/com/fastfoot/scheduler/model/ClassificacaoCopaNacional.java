@@ -1,10 +1,8 @@
 package com.fastfoot.scheduler.model;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 
-public enum ClassificacaoCopaNacional {//TODO: Fase Preliminar I e II
+public enum ClassificacaoCopaNacional {
 	NAO_PARTICIPOU,//-1
 	CN_FASE_PRELIMINAR_I,//164
 	CN_FASE_PRELIMINAR_II,//132
@@ -58,52 +56,6 @@ public enum ClassificacaoCopaNacional {//TODO: Fase Preliminar I e II
 			}
 		}
 		
-		return NAO_PARTICIPOU;
-	}
-
-	@Deprecated
-	public static ClassificacaoCopaNacional getClassificacao(NivelCampeonato nivel, RodadaEliminatoria rodada, Clube clube) {//TODO: numero rodadas
-		if (NivelCampeonato.COPA_NACIONAL.equals(nivel)) {
-			if (rodada.getNumero() == 6) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubeVencedor().equals(clube)) return CN_CAMPEAO;
-					if (p.getClubePerdedor().equals(clube)) return CN_VICE_CAMPEAO;
-				}
-			} else if (rodada.getNumero() == 5) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CN_SEMI_FINAL;
-				}
-			} else if (rodada.getNumero() == 4) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CN_QUARTAS_FINAL;
-				}
-			} else if (rodada.getNumero() == 3) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CN_OITAVAS_FINAL;
-				}
-			}
-		}
-
-		if (NivelCampeonato.COPA_NACIONAL_II.equals(nivel)) {
-			if (rodada.getNumero() == 4) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubeVencedor().equals(clube)) return CNII_CAMPEAO;
-					if (p.getClubePerdedor().equals(clube)) return CNII_VICE_CAMPEAO;
-				}
-			} else if (rodada.getNumero() == 3) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CNII_SEMI_FINAL;
-				}
-			} else if (rodada.getNumero() == 2) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CNII_QUARTAS_FINAL;
-				}
-			} else if (rodada.getNumero() == 1) {
-				for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-					if (p.getClubePerdedor().equals(clube)) return CNII_OITAVAS_FINAL;
-				}
-			}
-		}
 		return NAO_PARTICIPOU;
 	}
 

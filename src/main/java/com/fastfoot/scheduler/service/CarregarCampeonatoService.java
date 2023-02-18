@@ -33,7 +33,7 @@ import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 
 @Service
-public class CampeonatoService {
+public class CarregarCampeonatoService {
 
 	@Autowired
 	private CampeonatoRepository campeonatoRepository;
@@ -163,26 +163,6 @@ public class CampeonatoService {
 
 	}
 
-	@Deprecated
-	public void salvarCampeonatoEliminatorio(CampeonatoEliminatorio campeonato) {
-		//tem que ordenar por causa da referencia de 'proximaRodada'
-		//
-		Collections.sort(campeonato.getRodadas(), new Comparator<RodadaEliminatoria>() {
-
-			@Override
-			public int compare(RodadaEliminatoria o1, RodadaEliminatoria o2) {
-				return o2.getNumero().compareTo(o1.getNumero());
-			}
-		});
-		//
-
-		campeonatoEliminatorioRepository.save(campeonato);
-		rodadaEliminatoriaRepository.saveAll(campeonato.getRodadas());
-		for (RodadaEliminatoria r : campeonato.getRodadas()) {
-			partidaEliminatoriaRepository.saveAll(r.getPartidas());
-		}
-	}
-
 	public void salvarCampeonatoEliminatorio(List<CampeonatoEliminatorio> campeonatos) {
 		List<RodadaEliminatoria> rodadas = new ArrayList<RodadaEliminatoria>();
 		List<PartidaEliminatoriaResultado> partidas = new ArrayList<PartidaEliminatoriaResultado>();
@@ -209,37 +189,7 @@ public class CampeonatoService {
 		rodadaEliminatoriaRepository.saveAll(rodadas);
 		partidaEliminatoriaRepository.saveAll(partidas);
 	}
-	
-	@Deprecated
-	public void salvarCampeonatoMisto(CampeonatoMisto campeonato) {
-		//tem que ordenar por causa da referencia de 'proximaRodada'
-		//
-		Collections.sort(campeonato.getRodadasEliminatorias(), new Comparator<RodadaEliminatoria>() {
 
-			@Override
-			public int compare(RodadaEliminatoria o1, RodadaEliminatoria o2) {
-				return o2.getNumero().compareTo(o1.getNumero());
-			}
-		});
-		//
-
-		campeonatoMistoRepository.save(campeonato);
-		//Fase final
-		rodadaEliminatoriaRepository.saveAll(campeonato.getRodadasEliminatorias());
-		for (RodadaEliminatoria r : campeonato.getRodadasEliminatorias()) {
-			partidaEliminatoriaRepository.saveAll(r.getPartidas());
-		}
-		//Grupos
-		grupoCampeonatoRepository.saveAll(campeonato.getGrupos());
-		for (GrupoCampeonato gc : campeonato.getGrupos()) {
-			classificacaoRepository.saveAll(gc.getClassificacao());
-			rodadaRepository.saveAll(gc.getRodadas());
-			for (Rodada r : gc.getRodadas()) {
-				partidaRepository.saveAll(r.getPartidas());
-			}
-		}
-	}
-	
 	public void salvarCampeonatoMisto(List<CampeonatoMisto> campeonatos) {
 		
 		List<GrupoCampeonato> grupos = new ArrayList<GrupoCampeonato>();
@@ -293,16 +243,6 @@ public class CampeonatoService {
 		rodadaRepository.saveAll(rodadas);
 		partidaRepository.saveAll(partidas);
 
-	}
-
-	@Deprecated
-	public void salvarCampeonato(Campeonato campeonato) {
-		campeonatoRepository.save(campeonato);
-		classificacaoRepository.saveAll(campeonato.getClassificacao());
-		rodadaRepository.saveAll(campeonato.getRodadas());
-		for (Rodada r : campeonato.getRodadas()) {
-			partidaRepository.saveAll(r.getPartidas());
-		}
 	}
 
 	public void salvarCampeonato(List<Campeonato> campeonatos) {

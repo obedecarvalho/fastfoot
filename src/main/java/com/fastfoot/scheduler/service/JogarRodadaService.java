@@ -408,7 +408,7 @@ public class JogarRodadaService {
 		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
 	}
 
-	public void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
+	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
 			//jogarPartida(p, Constantes.NRO_JOGADAS_PARTIDA);
@@ -418,7 +418,7 @@ public class JogarRodadaService {
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
 	}
 
-	public void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
 			//jogarPartida(p, Constantes.NRO_JOGADAS_ELIMINATORIA);
@@ -430,7 +430,7 @@ public class JogarRodadaService {
 		}
 	}
 
-	public void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
 			jogarPartida(p, partidaJogadorEstatisticaDTO);
 		}

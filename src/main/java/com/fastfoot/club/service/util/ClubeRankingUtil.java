@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -424,32 +423,6 @@ public class ClubeRankingUtil {
 		}
 	}
 
-	@Deprecated
-	protected static void rankearCopaNacional(Map<Clube, ClubeRanking> rankings, List<CampeonatoEliminatorio> campeonatos, boolean old) {
-		ClubeRanking clubeRanking = null;
-		for (CampeonatoEliminatorio c : campeonatos) {
-			List<PartidaEliminatoriaResultado> partidas = new ArrayList<PartidaEliminatoriaResultado>();
-			Clube campeao = null;
-			for (RodadaEliminatoria r : c.getRodadas()) {
-				partidas.addAll(r.getPartidas());
-				if (r.getNumero() == c.getRodadas().size()) {
-					campeao = r.getPartidas().get(0).getClubeVencedor();
-				}
-			}
-
-			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors
-					.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
-
-			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
-				clubeRanking = rankings.get(x.getKey());
-				clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
-			}
-
-			clubeRanking = rankings.get(campeao);
-			clubeRanking.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacaoCampeao(c.getNivelCampeonato()));
-		}
-	}
-	
 	protected static void rankearContinental(Map<Clube, ClubeRanking> rankings, List<CampeonatoMisto> campeonatos) {
 		
 		ClubeRanking clubeRanking = null;
@@ -489,45 +462,6 @@ public class ClubeRankingUtil {
 			}
 		}
 		
-	}
-
-	@Deprecated
-	protected static void rankearContinental(Map<Clube, ClubeRanking> rankings, List<CampeonatoMisto> campeonatos, boolean old) {
-		ClubeRanking clubeRanking = null;
-		for (CampeonatoMisto c : campeonatos) {
-			List<Clube> clubesFaseGrupos = new ArrayList<Clube>();
-			for (GrupoCampeonato gc : c.getGrupos()) {
-				clubesFaseGrupos.addAll(gc.getClassificacao().stream().map(Classificacao::getClube).collect(Collectors.toList()));
-			}
-			
-			List<PartidaEliminatoriaResultado> partidas = new ArrayList<PartidaEliminatoriaResultado>();
-			Clube campeao = null;
-			
-			for (RodadaEliminatoria r : c.getRodadasEliminatorias()) {
-				partidas.addAll(r.getPartidas());
-			}
-			
-			Map<Clube, RodadaEliminatoria> clubeRodada = partidas.stream().collect(Collectors
-					.toMap(PartidaEliminatoriaResultado::getClubePerdedor, PartidaEliminatoriaResultado::getRodada));
-			for (Entry<Clube, RodadaEliminatoria> x : clubeRodada.entrySet()) {
-				clubeRanking = rankings.get(x.getKey());
-				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacao(c.getNivelCampeonato(), x.getValue(), x.getKey()));
-			}
-			
-			RodadaEliminatoria rodadaFinal = c.getRodadasEliminatorias().stream().max(Comparator.comparing(RodadaEliminatoria::getNumero)).get();
-			campeao = rodadaFinal.getPartidas().get(0).getClubeVencedor();			
-			clubeRanking = rankings.get(campeao);
-			clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacaoCampeao(c.getNivelCampeonato()));
-			
-			//Fase Grupos
-			clubesFaseGrupos.removeAll(clubeRodada.keySet());
-			clubesFaseGrupos.remove(campeao);
-			
-			for (Clube cl : clubesFaseGrupos) {
-				clubeRanking = rankings.get(cl);
-				clubeRanking.setClassificacaoContinental(ClassificacaoContinental.getClassificacaoFaseGrupo(c.getNivelCampeonato()));
-			}
-		}
 	}
 
 }

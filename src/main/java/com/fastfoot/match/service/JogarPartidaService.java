@@ -227,47 +227,7 @@ public class JogarPartidaService {
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90)); // TODO: implementar logica substituicao
 	}
-	
-	/*@Deprecated
-	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Temporada temporada, PartidaResultadoJogavel partidaResultado) {
-		//TODO: apenas titular e substituicoes
-		
-		if (!partidaResultado.isAmistoso()) {//Partidas Oficiais
-			/*jogadores.stream().forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
-					.setNumeroJogos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogos() + 1));* /
 
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual()
-							.setNumeroJogos(j.getJogadorEstatisticasTemporadaAtual().getNumeroJogos() + 1));
-			
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.getJogadorEstatisticasTemporadaAtual().setNumeroMinutosJogados(
-							j.getJogadorEstatisticasTemporadaAtual().getNumeroMinutosJogados() + 90));//TODO: implementar logica substituicao
-
-		} else {
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual()
-							.setNumeroJogos(j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroJogos() + 1));
-			
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.getJogadorEstatisticasAmistososTemporadaAtual().setNumeroMinutosJogados(
-							j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados() + 90));//TODO: implementar logica substituicao
-		}
-	}*/
-	
-	/*@Deprecated
-	private void salvarEstatisticasJogador(List<Jogador> jogadores,
-			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, PartidaResultadoJogavel partidaResultado) {
-		//TODO: salvar so de jogadores que jogaram?
-		if (!partidaResultado.isAmistoso()) {
-			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(
-					jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
-		} else {
-			partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticasTemporada(jogadores.stream()
-					.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
-		}
-	}*/
-	
 	private void salvarEstatisticasJogador2(List<Jogador> jogadores,
 			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		// TODO: salvar so de jogadores que jogaram?

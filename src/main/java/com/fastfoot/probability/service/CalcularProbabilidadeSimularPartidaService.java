@@ -48,7 +48,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
-import com.fastfoot.service.ParametroService;
+import com.fastfoot.service.CarregarParametroService;
 
 @Service
 public class CalcularProbabilidadeSimularPartidaService {
@@ -91,7 +91,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
 	
 	@Autowired
-	private ParametroService parametroService;
+	private CarregarParametroService parametroService;
 	
 	/*@Autowired
 	private ClubeRepository clubeRepository;*/
