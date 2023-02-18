@@ -101,10 +101,10 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService 
 
 		for (int j = 0; j < NUM_SIMULACOES; j++) {
 
-			golsMandante = ((DistribuicaoPoissonElemento) RoletaUtil.executarAsDouble(probabilidadeGolsMandante))
+			golsMandante = ((DistribuicaoPoissonElemento) RoletaUtil.sortearAsDouble(probabilidadeGolsMandante))
 					.getValorDescritivo();
 
-			golsVisitante = ((DistribuicaoPoissonElemento) RoletaUtil.executarAsDouble(probabilidadeGolsVisitante))
+			golsVisitante = ((DistribuicaoPoissonElemento) RoletaUtil.sortearAsDouble(probabilidadeGolsVisitante))
 					.getValorDescritivo();
 
 			if (golsMandante > golsVisitante) {

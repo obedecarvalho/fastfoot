@@ -56,17 +56,17 @@ public class SimularConfrontoJogadorService {
 				if (habilidadeVencedorAnterior != null
 						&& habilidadeVencedorAnterior.getHabilidadeAcao().contemAcoesSubsequentes()) {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) jogAcao.getHabilidades(
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidades(
 									habilidadeVencedorAnterior.getHabilidadeAcao().getAcoesSubsequentes()));
 				} else {
 
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoMeioFimValor());
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoMeioFimValor());
 
 				}
 
 				habilidadeValorReacao = (HabilidadeValor) RoletaUtil
-						.executarN((List<? extends ElementoRoleta>) jogReacao
+						.sortearN((List<? extends ElementoRoleta>) jogReacao
 								.getHabilidades(habilidadeValorAcao.getHabilidadeAcao().getPossiveisReacoes()));
 
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
@@ -96,7 +96,7 @@ public class SimularConfrontoJogadorService {
 						|| habilidadeValorAcao.getHabilidadeAcao().isAcaoInicioMeio()) {
 
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoFimValor());
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoFimValor());
 					
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
 						habilidadeValorAcao.getHabilidadeValorEstatistica().incrementarQuantidadeUso();
@@ -109,7 +109,7 @@ public class SimularConfrontoJogadorService {
 
 				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {
 					habilidadeValorReacao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) goleiro.getHabilidades(
+							.sortearN((List<? extends ElementoRoleta>) goleiro.getHabilidades(
 									Arrays.asList(habilidadeValorAcao.getHabilidadeAcao().getReacaoGoleiro())));
 
 					habilidadeFora = new HabilidadeValor(Habilidade.FORA,
@@ -119,7 +119,7 @@ public class SimularConfrontoJogadorService {
 									(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral())));
 
 					habilidadeVencedora = (HabilidadeValor) RoletaUtil
-							.executarN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
+							.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
 					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
 					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					

@@ -201,7 +201,7 @@ public class ProporTransferenciaService {
 
 				jogadoresPossiveis.stream().forEach(JogadorAlvoDTO::calcularRankTransferencia);
 				
-				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.executarN(jogadoresPossiveis);
+				JogadorAlvoDTO jogadorSelecionado = (JogadorAlvoDTO) RoletaUtil.sortearN(jogadoresPossiveis);
 
 				/*List<PropostaTransferenciaJogador> props = new ArrayList<PropostaTransferenciaJogador>();
 				PropostaTransferenciaJogador prop = null;

@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
+public class RoletaUtil {
 
 	private static final Random R = new Random();
 
-	public static ElementoRoleta executar(ElementoRoleta e1, ElementoRoleta e2) {
+	public static ElementoRoleta sortear(ElementoRoleta e1, ElementoRoleta e2) {
 		int valor = e1.getValor() + e2.getValor();
 		int x = R.nextInt(valor);
 		return (x < e1.getValor()) ? e1 : e2;
 	}
 
-	public static ElementoRoleta executarN(ElementoRoleta e1, ElementoRoleta e2) {
+	public static ElementoRoleta sortearN(ElementoRoleta e1, ElementoRoleta e2) {
 		int valor = e1.getValorN() + e2.getValorN();
 		int x = R.nextInt(valor);
 		return (x < e1.getValorN()) ? e1 : e2;
@@ -33,7 +33,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return (x < e1.getValorN()) ? true : false;
 	}
 	
-	public static ElementoRoleta executar(List<? extends ElementoRoleta> elementos) {
+	public static ElementoRoleta sortear(List<? extends ElementoRoleta> elementos) {
 		int valor = 0;
 		
 		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
@@ -53,7 +53,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos.get(i);
 	}
 
-	public static ElementoRoleta executarN(List<? extends ElementoRoleta> elementos) {
+	public static ElementoRoleta sortearN(List<? extends ElementoRoleta> elementos) {
 		int valor = 0;
 		
 		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
@@ -73,7 +73,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos.get(i);
 	}
 	
-	public static ElementoRoleta executar(ElementoRoleta[] elementos) {
+	public static ElementoRoleta sortear(ElementoRoleta[] elementos) {
 		int valor = 0;
 		
 		for (ElementoRoleta er : elementos) {
@@ -92,7 +92,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos[i];
 	}
 
-	public static ElementoRoleta executarN(ElementoRoleta[] elementos) {
+	public static ElementoRoleta sortearN(ElementoRoleta[] elementos) {
 		int valor = 0;
 		
 		for (ElementoRoleta er : elementos) {
@@ -129,7 +129,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return R.nextDouble() <= probabilidade;
 	}
 	
-	public static ElementoRoleta executarAsDouble(List<? extends ElementoRoleta> elementos) {
+	public static ElementoRoleta sortearAsDouble(List<? extends ElementoRoleta> elementos) {
 		double valor = 0.0;
 		
 		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
@@ -150,7 +150,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos.get(i);
 	}
 	
-	public static ElementoRoleta executarNAsDouble(List<? extends ElementoRoleta> elementos) {
+	public static ElementoRoleta sortearNAsDouble(List<? extends ElementoRoleta> elementos) {
 		double valor = 0;
 		
 		for (Iterator<? extends ElementoRoleta> iterator = elementos.iterator(); iterator.hasNext();) {
@@ -171,7 +171,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos.get(i);
 	}
 	
-	public static ElementoRoleta executarAsDouble(ElementoRoleta[] elementos) {
+	public static ElementoRoleta sortearAsDouble(ElementoRoleta[] elementos) {
 		double valor = 0;
 		
 		for (ElementoRoleta er : elementos) {
@@ -191,7 +191,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos[i];
 	}
 
-	public static ElementoRoleta executarNAsDouble(ElementoRoleta[] elementos) {
+	public static ElementoRoleta sortearNAsDouble(ElementoRoleta[] elementos) {
 		double valor = 0;
 		
 		for (ElementoRoleta er : elementos) {
@@ -211,7 +211,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return elementos[i];
 	}
 	
-	public static <T> T executar(Map<T, Integer> elementos) {
+	public static <T> T sortear(Map<T, Integer> elementos) {
 
 		int valor = 0;
 		
@@ -236,7 +236,7 @@ public class RoletaUtil {//TODO: renomear 'executar' para 'sortear'??
 		return null;
 	}
 	
-	public static <T> T executarAsDouble(Map<T, Double> elementos) {
+	public static <T> T sortearAsDouble(Map<T, Double> elementos) {
 
 		double valor = 0;
 		

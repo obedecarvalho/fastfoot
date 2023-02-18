@@ -151,7 +151,7 @@ public class AnalisarPropostaTransferenciaService {
 				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);
 				
 				do {
-					propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.executarN(propostasJogTmp);
+					propostaAceitar = (PropostaTransferenciaJogador) RoletaUtil.sortearN(propostasJogTmp);
 
 					propostasJogTmp.remove(propostaAceitar);
 					clubeSaldo = clubesSaldo.get(propostaAceitar.getClubeDestino());

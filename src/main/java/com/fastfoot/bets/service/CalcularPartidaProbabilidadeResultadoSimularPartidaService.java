@@ -162,14 +162,14 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 			
 				if (habilidadeVencedorAnterior != null && habilidadeVencedorAnterior.getHabilidadeAcao().contemAcoesSubsequentes()) {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) esquema.getHabilidades(
+							.sortearN((List<? extends ElementoRoleta>) esquema.getHabilidades(
 									habilidadeVencedorAnterior.getHabilidadeAcao().getAcoesSubsequentes()));
 				} else {
-					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse());
+					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.sortearN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse());
 				}
 				
 				habilidadeValorReacao = (HabilidadeValor) RoletaUtil
-						.executarN((List<? extends ElementoRoleta>) esquema.getHabilidadesJogadorPosicaoAtualSemPosse(
+						.sortearN((List<? extends ElementoRoleta>) esquema.getHabilidadesJogadorPosicaoAtualSemPosse(
 								habilidadeValorAcao.getHabilidadeAcao().getPossiveisReacoes()));
 				
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
@@ -197,7 +197,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 			if (jogadorAcaoVenceu) {
 
 				if (habilidadeValorAcao.getHabilidadeAcao().isAcaoMeio() || habilidadeValorAcao.getHabilidadeAcao().isAcaoInicioMeio()) {
-					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoFimJogadorPosicaoAtualPosse());
+					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.sortearN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoFimJogadorPosicaoAtualPosse());
 					//if (IMPRIMIR) System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
 						//if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
@@ -209,7 +209,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 				
 				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {//FINALIZACAO, CABECEIO
 					habilidadeValorReacao = (HabilidadeValor) RoletaUtil
-							.executarN((List<? extends ElementoRoleta>) esquema.getGoleiroSemPosse().getGoleiro()
+							.sortearN((List<? extends ElementoRoleta>) esquema.getGoleiroSemPosse().getGoleiro()
 									.getHabilidades(
 											Arrays.asList(habilidadeValorAcao.getHabilidadeAcao().getReacaoGoleiro())));
 					
@@ -221,7 +221,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
 					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
-					habilidadeVencedora = (HabilidadeValor) RoletaUtil.executarN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
+					habilidadeVencedora = (HabilidadeValor) RoletaUtil.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
 					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
 					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					//System.err.println("\t\tFORA!!!!");
@@ -298,7 +298,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 				} else {
 					//PASSE, CRUZAMENTO, ARMACAO
 					//jogadorAssistencia = esquema.getJogadorPosse();
-					EsquemaTransicao t = (EsquemaTransicao) RoletaUtil.executarN((List<? extends ElementoRoleta>) esquema.getTransicoesPosse());
+					EsquemaTransicao t = (EsquemaTransicao) RoletaUtil.sortearN((List<? extends ElementoRoleta>) esquema.getTransicoesPosse());
 					//if (IMPRIMIR) System.err.println(String.format("%d ==> %d (%s)", esquema.getPosicaoAtual().getNumero(), t.getPosFinal().getNumero(), esquema.getPosseBolaMandante() ? "M" : "V"));
 					esquema.setPosicaoAtual(t.getPosFinal());
 				}
