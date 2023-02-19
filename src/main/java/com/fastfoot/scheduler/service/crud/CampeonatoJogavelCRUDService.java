@@ -71,5 +71,38 @@ public class CampeonatoJogavelCRUDService {
 
 		return campeonatos;
 	}
+	
+	public List<CampeonatoJogavel> getNacionalByTemporadaAtual() {
+		
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		
+		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
+		
+		campeonatos.addAll(campeonatoRepository.findByTemporada(temporada));
+
+		return campeonatos;
+	}
+
+	public List<CampeonatoJogavel> getCopaNacionalByTemporadaAtual() {
+		
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		
+		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
+		
+		campeonatos.addAll(campeonatoEliminatorioRepository.findByTemporada(temporada));
+	
+		return campeonatos;
+	}
+	
+	public List<CampeonatoJogavel> getContinentalByTemporadaAtual() {
+		
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		
+		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
+
+		campeonatos.addAll(campeonatoMistoRepository.findByTemporada(temporada));
+	
+		return campeonatos;
+	}
 
 }

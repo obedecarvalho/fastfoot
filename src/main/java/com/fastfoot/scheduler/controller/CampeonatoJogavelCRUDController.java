@@ -59,7 +59,7 @@ public class CampeonatoJogavelCRUDController {
 	public ResponseEntity<List<CampeonatoJogavel>> getNacionalByTemporadaAtual() {
 		try {
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getNacionalByTemporadaAtual();
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
@@ -76,7 +76,7 @@ public class CampeonatoJogavelCRUDController {
 	public ResponseEntity<List<CampeonatoJogavel>> getCopaNacionalByTemporadaAtual() {
 		try {
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getCopaNacionalByTemporadaAtual();
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
@@ -93,7 +93,7 @@ public class CampeonatoJogavelCRUDController {
 	public ResponseEntity<List<CampeonatoJogavel>> getContinentalByTemporadaAtual() {
 		try {
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getContinentalByTemporadaAtual();
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
