@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -40,8 +41,10 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_proxima_partida")
+	@JsonIgnore
 	private PartidaEliminatoriaResultado proximaPartida;
 
+	@JsonIgnore
 	private Boolean classificaAMandante;
 	
 	private Boolean partidaJogada;
@@ -167,6 +170,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		this.classificaAMandante = classificaAMandante;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAmistoso() {
 		return false;
@@ -174,6 +178,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	
 	//###	METODOS AUXILIARES	###
 
+	@JsonIgnore
 	@Override
 	public Clube getClubeVencedor() {
 		if (partidaJogada) {
@@ -185,6 +190,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		return null;
 	}
 
+	@JsonIgnore
 	@Override
 	public Clube getClubePerdedor() {
 		if (partidaJogada) {
@@ -196,33 +202,39 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		return null;
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isResultadoEmpatado() {
 		return partidaJogada && (golsMandante == golsVisitante);
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isMandanteVencedor() {
 		return partidaJogada && (golsMandante > golsVisitante);
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isVisitanteVencedor() {
 		return partidaJogada && (golsMandante < golsVisitante);
 	}
 	
+	@JsonIgnore
 	public boolean isMandanteEliminado() {
 		if (partidaJogada && golsMandante < golsVisitante) return true;
 		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts < golsVisitantePenalts) return true;
 		return false;
 	}
 	
+	@JsonIgnore
 	public boolean isVisitanteEliminado() {
 		if (partidaJogada && golsMandante > golsVisitante) return true;
 		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts > golsVisitantePenalts) return true;
 		return false;
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isDisputarPenalts() {
 		return true;

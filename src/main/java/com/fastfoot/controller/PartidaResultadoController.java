@@ -14,6 +14,7 @@ import com.fastfoot.scheduler.model.dto.PartidaResultadoDTO;
 import com.fastfoot.scheduler.service.PartidaResultadoService;
 import com.fastfoot.service.util.ValidatorUtil;
 
+@Deprecated
 @RestController
 @CrossOrigin("*")
 public class PartidaResultadoController {
@@ -21,7 +22,8 @@ public class PartidaResultadoController {
 	@Autowired
 	private PartidaResultadoService partidaResultadoService;
 	
-	@GetMapping("/partidas/campeonato/{idCampeonato}")
+	//@GetMapping("/partidas/campeonato/{idCampeonato}")
+	@Deprecated
 	public ResponseEntity<List<PartidaResultadoDTO>> getPartidasCampeonato(@PathVariable(name = "idCampeonato") Long idCampeonato, @RequestParam(name = "nivel") String nivel){
 		List<PartidaResultadoDTO> partidas = partidaResultadoService.getPartidasPorCampeonato(idCampeonato, nivel);
 		if (ValidatorUtil.isEmpty(partidas)) {
@@ -30,7 +32,8 @@ public class PartidaResultadoController {
 		return ResponseEntity.ok(partidas);
 	}
 	
-	@GetMapping("/partidas/clube/{idClube}")
+	//@GetMapping("/partidas/clube/{idClube}")
+	@Deprecated
 	public ResponseEntity<List<PartidaResultadoDTO>> getPartidasClube(@PathVariable(name = "idClube") Integer idClube){
 		List<PartidaResultadoDTO> partidas = partidaResultadoService.getPartidasPorClube(idClube);
 		if (ValidatorUtil.isEmpty(partidas)) {
@@ -39,7 +42,8 @@ public class PartidaResultadoController {
 		return ResponseEntity.ok(partidas);
 	}
 	
-	@GetMapping("/partidas/semana/{numeroSemana}")
+	@Deprecated
+	//@GetMapping("/partidas/semana/{numeroSemana}")
 	public ResponseEntity<List<PartidaResultadoDTO>> getPartidasSemana(@PathVariable(name = "numeroSemana") Integer numeroSemana){
 		List<PartidaResultadoDTO> partidas = partidaResultadoService.getPartidasPorSemana(numeroSemana);
 		if (ValidatorUtil.isEmpty(partidas)) {
@@ -48,7 +52,8 @@ public class PartidaResultadoController {
 		return ResponseEntity.ok(partidas);
 	}
 
-	@GetMapping("/partidas/amistosas/{numeroSemana}")
+	//@GetMapping("/partidas/amistosas/{numeroSemana}")
+	@Deprecated
 	public ResponseEntity<List<PartidaResultadoDTO>> getPartidasAmistosas(@PathVariable(name = "numeroSemana") Integer numeroSemana){
 		List<PartidaResultadoDTO> partidas = partidaResultadoService.getPartidasAmistosasPorSemana(numeroSemana);
 		if (ValidatorUtil.isEmpty(partidas)) {

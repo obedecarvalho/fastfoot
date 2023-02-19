@@ -10,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -127,6 +128,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 		this.rodada = rodada;
 	}
 
+	@JsonIgnore
 	@Override
 	public boolean isAmistoso() {
 		return false;
@@ -134,6 +136,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	
 	//###	METODOS AUXILIARES	###
 	
+	@JsonIgnore
 	@Override
 	public Clube getClubeVencedor() {
 		//if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
@@ -142,6 +145,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 		return null;//Empate
 	}
 
+	@JsonIgnore
 	@Override
 	public Clube getClubePerdedor() {
 		//if (golsMandante == null || golsVisitante == null) return null;//Partida nao realizada
@@ -150,21 +154,25 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 		return null;//Empate
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isResultadoEmpatado() {
 		return partidaJogada && (golsMandante == golsVisitante);
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isMandanteVencedor() {
 		return partidaJogada && (golsMandante > golsVisitante);
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isVisitanteVencedor() {
 		return partidaJogada && (golsMandante < golsVisitante);
 	}
 	
+	@JsonIgnore
 	@Override
 	public boolean isDisputarPenalts() {
 		return false;

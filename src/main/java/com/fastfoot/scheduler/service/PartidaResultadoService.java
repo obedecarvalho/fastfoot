@@ -32,6 +32,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
+@Deprecated
 @Service
 public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 
@@ -100,7 +101,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 	}*/
 
 	
-
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorCampeonato(Long idCampeonato, String tipoCampeonato) {
 		Optional<? extends CampeonatoJogavel> campeonato = null;
 
@@ -115,6 +116,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return campeonato.isPresent() ? getPartidasPorCampeonato(campeonato.get()) : null;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorCampeonato(CampeonatoJogavel campeonato) {
 		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
 		
@@ -152,6 +154,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return partidas;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorClube(Integer idClube) {
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
 		if (temporadaOpt.isPresent()) {
@@ -160,6 +163,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return null;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorClube(Integer idClube, Temporada temporada) {
 		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
 		Optional<Clube> c = clubeRepository.findById(idClube);
@@ -170,6 +174,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return partidas;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorSemana(Integer numeroSemana) {
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
 		if (temporadaOpt.isPresent()) {
@@ -178,6 +183,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return null;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasPorSemana(Integer numeroSemana, Temporada temporada) {
 		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
 		Optional<Semana> s = semanaRepository.findFirstByTemporadaAndNumero(temporada, numeroSemana);
@@ -188,6 +194,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return partidas;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasAmistosasPorSemana(Integer numeroSemana) {
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
 		if (temporadaOpt.isPresent()) {
@@ -196,6 +203,7 @@ public class PartidaResultadoService {//TODO: avaliar melhor nome classe
 		return null;
 	}
 	
+	@Deprecated
 	public List<PartidaResultadoDTO> getPartidasAmistosasPorSemana(Integer numeroSemana, Temporada temporada) {
 		List<PartidaResultadoDTO> partidas = new ArrayList<PartidaResultadoDTO>();
 		if (numeroSemana.equals(-1)) {

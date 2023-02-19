@@ -20,6 +20,7 @@ public class TemporadaService {
 	@Autowired
 	private CarregarCampeonatoService campeonatoService;
 
+	@Deprecated
 	public List<CampeonatoDTO> getCampeonatosTemporada(String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'
 		
 		List<CampeonatoDTO> campeonatos = null;
@@ -35,6 +36,7 @@ public class TemporadaService {
 		return TemporadaDTO.convertToDTO(temporadaRepository.findAll());
 	}
 
+	@Deprecated
 	public List<Integer> getAnosTemporadas(){
 		return temporadaRepository.getAnosTemporadas();
 	}

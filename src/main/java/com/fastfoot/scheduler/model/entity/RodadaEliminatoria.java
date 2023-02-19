@@ -38,6 +38,7 @@ public class RodadaEliminatoria implements RodadaJogavel {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_proxima_rodada")
+	@JsonIgnore
 	private RodadaEliminatoria proximaRodada;
 	
 	@ManyToOne

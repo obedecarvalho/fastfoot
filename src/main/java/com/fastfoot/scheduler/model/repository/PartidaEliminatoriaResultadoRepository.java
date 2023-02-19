@@ -41,4 +41,6 @@ public interface PartidaEliminatoriaResultadoRepository extends JpaRepository<Pa
 	@Query("SELECT pe FROM PartidaEliminatoriaResultado pe WHERE pe.rodada.campeonatoEliminatorio = :campeonato")
 	public List<PartidaEliminatoriaResultado> findByCampeonato(@Param("campeonato") CampeonatoEliminatorio campeonato);
 
+	@Query("SELECT p FROM PartidaEliminatoriaResultado p WHERE p.clubeMandante = :clube OR p.clubeVisitante = :clube")
+	public List<PartidaEliminatoriaResultado> findByClube(@Param("clube") Clube clube);
 }

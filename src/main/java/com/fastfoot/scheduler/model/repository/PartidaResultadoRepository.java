@@ -39,4 +39,7 @@ public interface PartidaResultadoRepository extends JpaRepository<PartidaResulta
 	public List<PartidaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
 
 	public List<PartidaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
+	
+	@Query("SELECT p FROM PartidaResultado p WHERE p.clubeMandante = :clube OR p.clubeVisitante = :clube")
+	public List<PartidaResultado> findByClube(@Param("clube") Clube clube);
 }

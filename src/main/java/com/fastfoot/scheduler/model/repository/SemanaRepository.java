@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -22,4 +23,7 @@ public interface SemanaRepository extends JpaRepository<Semana, Long>{
 	
 	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND (s.temporada.semanaAtual + 1) = s.numero ")
 	public Optional<Semana> findProximaSemana();
+	
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.numero = :numero")
+	public Optional<Semana> findByNumeroSemanaTemporadaAtual(@Param("numero") Integer numero);
 }

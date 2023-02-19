@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -114,10 +115,12 @@ public class Campeonato implements CampeonatoJogavel {
 		this.nivelCampeonato = nivelCampeonato;
 	}
 
+	@JsonIgnore
 	public boolean isNacional() {
 		return NivelCampeonato.NACIONAL.equals(nivelCampeonato);
 	}
 
+	@JsonIgnore
 	public boolean isNacionalII() {
 		return NivelCampeonato.NACIONAL_II.equals(nivelCampeonato);
 	}

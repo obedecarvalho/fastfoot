@@ -19,7 +19,7 @@ import com.fastfoot.player.service.crud.JogadorEstatisticasTemporadaCRUDService;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Service
-public class ArtilhariaService {
+public class CalcularArtilhariaService {
 	
 	@Autowired
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;

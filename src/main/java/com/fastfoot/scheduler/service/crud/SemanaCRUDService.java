@@ -65,4 +65,12 @@ public class SemanaCRUDService implements CRUDService<Semana, Long> {
 		}
 		return null;
 	}
+	
+	public Semana getByNumeroSemanaTemporadaAtual(Integer numeroSemana) {
+		Optional<Semana> semanaOpt = semanaRepository.findByNumeroSemanaTemporadaAtual(numeroSemana);
+		if (semanaOpt.isPresent()) {
+			return semanaOpt.get();
+		}
+		return null;
+	}
 }

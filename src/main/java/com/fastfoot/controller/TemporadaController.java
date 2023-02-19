@@ -125,7 +125,8 @@ public class TemporadaController {
 		}
 	}*/
 
-	@GetMapping("/campeonatosTemporadaAtual")
+	//@GetMapping("/campeonatosTemporadaAtual")
+	@Deprecated
 	public ResponseEntity<List<CampeonatoDTO>> getCampeonatosTemporada(@RequestParam(name = "nivel") String nivel) {//'NACIONAL', 'COPA NACIONAL', 'CONTINENTAL'
 		try {
 			return ResponseEntity.ok(temporadaService.getCampeonatosTemporada(nivel));
@@ -143,7 +144,8 @@ public class TemporadaController {
 		}
 	}
 
-	@GetMapping("/anoTemporadaItens")
+	//@GetMapping("/anoTemporadaItens")
+	@Deprecated
 	public ResponseEntity<List<Integer>> getAnoTemporadaItens(){
 		List<Integer> anos = temporadaService.getAnosTemporadas();
 		if (ValidatorUtil.isEmpty(anos)) {

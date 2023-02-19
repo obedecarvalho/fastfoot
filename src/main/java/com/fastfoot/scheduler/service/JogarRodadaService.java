@@ -76,8 +76,8 @@ public class JogarRodadaService {
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
 	//###	SERVICE	###
-	@Autowired
-	private PartidaResultadoService partidaResultadoService;
+	/*@Autowired
+	private PartidaResultadoService partidaResultadoService;*/
 	
 	@Autowired
 	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;

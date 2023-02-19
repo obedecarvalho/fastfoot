@@ -51,7 +51,7 @@ import com.fastfoot.scheduler.model.repository.RodadaAmistoraRepository;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.scheduler.model.repository.TemporadaRepository;
+import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.scheduler.service.util.PromotorContinental;
 import com.fastfoot.scheduler.service.util.PromotorContinentalImplDoisPorGrupo;
 import com.fastfoot.scheduler.service.util.PromotorContinentalImplInterCampeonatos;
@@ -76,9 +76,6 @@ import com.fastfoot.service.CarregarParametroService;
 public class JogarProximaSemanaService {
 	
 	//#######	REPOSITORY	################
-
-	@Autowired
-	private TemporadaRepository temporadaRepository;
 
 	@Autowired
 	private SemanaRepository semanaRepository;
@@ -156,6 +153,9 @@ public class JogarProximaSemanaService {
 	
 	@Autowired
 	private ClassificarClubesTemporadaService classificarClubesTemporadaService;
+	
+	@Autowired
+	private TemporadaCRUDService temporadaCRUDService;
 
 	public SemanaDTO jogarProximaSemana() {
 		
@@ -168,7 +168,8 @@ public class JogarProximaSemanaService {
 		inicio = stopWatch.getSplitTime();
 		
 		//Carregar dados
-		Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
+		//Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
 		

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.dto.ArtilhariaDTO;
-import com.fastfoot.player.service.ArtilhariaService;
+import com.fastfoot.player.service.CalcularArtilhariaService;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -23,7 +23,7 @@ import com.fastfoot.service.util.ValidatorUtil;
 public class ArtilhariaController {
 	
 	@Autowired
-	private ArtilhariaService artilhariaService;
+	private CalcularArtilhariaService artilhariaService;
 	
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
