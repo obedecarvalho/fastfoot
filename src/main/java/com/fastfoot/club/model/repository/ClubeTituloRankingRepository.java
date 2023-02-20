@@ -12,7 +12,7 @@ import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.model.Liga;
 
 @Repository
-public interface ClubeTituloRankingRepository extends JpaRepository<ClubeTituloRanking, Long> {
+public interface ClubeTituloRankingRepository extends JpaRepository<ClubeTituloRanking, Integer> {
 
 	public List<ClubeTituloRanking> findByClube(Clube clube);
 

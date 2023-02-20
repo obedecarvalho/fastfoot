@@ -7,26 +7,22 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fastfoot.scheduler.model.dto.SemanaDTO;
-import com.fastfoot.scheduler.model.dto.TemporadaDTO;
-import com.fastfoot.scheduler.service.CriarCalendarioTemporadaService;
-import com.fastfoot.scheduler.service.JogarProximaSemanaService;
 import com.fastfoot.transfer.service.GerenciarTemporadaService;
 
 @RestController
 @CrossOrigin("*")
 public class TemporadaController {
 
-	@Autowired
-	private JogarProximaSemanaService jogarProximaSemanaService;
+	/*@Autowired
+	private JogarPartidasSemanaService jogarProximaSemanaService;*/
 	
-	@Autowired
-	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;
+	/*@Autowired
+	private CriarCalendarioTemporadaService criarCalendarioTemporadaService;*/
 	
 	@Autowired
 	private GerenciarTemporadaService gerenciarTemporadaService;
 
-	@GetMapping("/novaTemporada")
+	/*@GetMapping("/novaTemporada")
 	public ResponseEntity<TemporadaDTO> criarTemporada() {
 		try {
 			return ResponseEntity.ok(criarCalendarioTemporadaService.criarTemporada());
@@ -34,7 +30,7 @@ public class TemporadaController {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 	
 	@GetMapping("/gerarTransferencias")
 	public ResponseEntity<Boolean> gerarTransferencias() {
@@ -80,15 +76,15 @@ public class TemporadaController {
 		}
 	}
 
-	@GetMapping("/proximaSemana")
-	public ResponseEntity<SemanaDTO> proximaSemana() {//TODO: renomear 'jogarProximaSemana'
+	/*@GetMapping("/proximaSemana")
+	public ResponseEntity<SemanaDTO> proximaSemana() {
 		try {
-			return ResponseEntity.ok(jogarProximaSemanaService.jogarProximaSemana());
+			return ResponseEntity.ok(jogarProximaSemanaService.jogarPartidasSemana());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 
 	/*@GetMapping("/jogarTemporadaCompleta")
 	public ResponseEntity<SemanaDTO> jogarTemporadaCompleta() {

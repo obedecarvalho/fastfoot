@@ -3,8 +3,10 @@ import requests
 import time
 import sys
 
-url = 'http://localhost:8081/proximaSemana'
-urlNovaTemporada = 'http://localhost:8081/novaTemporada'
+#url = 'http://localhost:8081/proximaSemana'
+url = 'http://localhost:8081/api/jogarPartidasSemana'
+#urlNovaTemporada = 'http://localhost:8081/novaTemporada'
+urlNovaTemporada = 'http://localhost:8081/api/criarNovaTemporada'
 #urlTrans = 'http://localhost:8081/gerarTransferencias'
 
 numero = 0

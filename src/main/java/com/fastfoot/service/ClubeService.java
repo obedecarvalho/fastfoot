@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
-import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
-import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
@@ -39,8 +37,8 @@ public class ClubeService {//TODO: avaliar melhor nome classe
 	@Autowired
 	private ClubeRankingRepository clubeRankingRepository;
 	
-	@Autowired
-	private ClubeTituloRankingRepository clubeTituloRankingRepository;
+	/*@Autowired
+	private ClubeTituloRankingRepository clubeTituloRankingRepository;*/
 
 	@Autowired
 	private TemporadaCRUDService temporadaService;
@@ -201,7 +199,7 @@ public class ClubeService {//TODO: avaliar melhor nome classe
 		return clubeTituloAnosList;
 	}
 
-	public List<ClubeTituloRankingDTO> getClubesTitulosRankings(String ligaStr){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
+	/*public List<ClubeTituloRankingDTO> getClubesTitulosRankings(String ligaStr){//'GENEBE', 'SPAPOR', 'ITAFRA', 'ENGLND'
 		
 		Liga liga = null;
 
@@ -218,5 +216,5 @@ public class ClubeService {//TODO: avaliar melhor nome classe
 		}
 
 		return temporada != null ? ClubeTituloRankingDTO.convertToDTO(clubeTituloRankingRepository.findByLiga(liga)) : null;
-	}
+	}*/
 }

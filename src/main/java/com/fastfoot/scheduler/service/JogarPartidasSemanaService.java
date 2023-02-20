@@ -73,7 +73,7 @@ import com.fastfoot.service.CarregarParametroService;
  */
 
 @Service
-public class JogarProximaSemanaService {
+public class JogarPartidasSemanaService {
 	
 	//#######	REPOSITORY	################
 
@@ -157,7 +157,7 @@ public class JogarProximaSemanaService {
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
 
-	public SemanaDTO jogarProximaSemana() {
+	public SemanaDTO jogarPartidasSemana() {
 		
 		StopWatch stopWatch = new StopWatch();		
 		stopWatch.start();

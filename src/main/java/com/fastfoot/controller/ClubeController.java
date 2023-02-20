@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
-import com.fastfoot.club.model.dto.ClubeTituloRankingDTO;
 import com.fastfoot.service.ClubeService;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -41,7 +40,7 @@ public class ClubeController {
 		return ResponseEntity.ok(clubesCampeoes);
 	}
 
-	@GetMapping("/clubesTitulosRankings/{liga}")
+	/*@GetMapping("/clubesTitulosRankings/{liga}")
 	public ResponseEntity<List<ClubeTituloRankingDTO>> getClubesTitulosRankings(@PathVariable(name = "liga") String liga) {
 		List<ClubeTituloRankingDTO> partidas = clubeService.getClubesTitulosRankings(liga);
 		
@@ -49,6 +48,6 @@ public class ClubeController {
 			return ResponseEntity.notFound().build();
 		}
 		return ResponseEntity.ok(partidas);
-	}
+	}*/
 
 }
