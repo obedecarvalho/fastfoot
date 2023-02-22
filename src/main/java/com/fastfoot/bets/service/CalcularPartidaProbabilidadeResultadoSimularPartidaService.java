@@ -15,7 +15,7 @@ import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepositor
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
-import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.player.model.Habilidade;
@@ -93,12 +93,18 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		List<Jogador> jogadoresVisitante = jogadorRepository
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
 
-		List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante);
+		/*List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, null);
 		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante);
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);*/
+		
+		EscalacaoClube escalacaoMandante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, null);
+		EscalacaoClube escalacaoVisitante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);
 
-		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
+		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
+				escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		

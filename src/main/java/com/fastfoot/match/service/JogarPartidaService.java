@@ -12,6 +12,7 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
@@ -173,20 +174,26 @@ public class JogarPartidaService {
 		List<Jogador> jogadoresVisitante = jogadorRepository
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
 
-		List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante);
+		/*List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
 		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante);
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);*/
+		
+		EscalacaoClube escalacaoMandante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
+		EscalacaoClube escalacaoVisitante = escalarClubeService
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
 
 		//inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
 		//inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		inicializarEstatisticasJogador2(escalacaoMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
-		inicializarEstatisticasJogador2(escalacaoVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticasJogador2(escalacaoMandante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticasJogador2(escalacaoVisitante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
 		
 		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
 		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
 
-		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
+		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
+				escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		

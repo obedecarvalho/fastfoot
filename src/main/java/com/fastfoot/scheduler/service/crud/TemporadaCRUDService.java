@@ -65,4 +65,12 @@ public class TemporadaCRUDService implements CRUDService<Temporada, Long> {
 		}
 		return null;
 	}
+	
+	public Temporada getTemporadaByAno(Integer ano) {
+		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAno(ano);
+		if (temporadaOpt.isPresent()) {
+			return temporadaOpt.get();
+		}
+		return null;
+	}
 }

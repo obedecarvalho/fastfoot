@@ -38,9 +38,13 @@ public class EscalacaoJogadorPosicao {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
-	private Clube clube;
+	private Clube clube;//TODO: usar o de EscalacaoClubePartida
 	
 	private Boolean ativo;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_escalacao_clube")
+	private EscalacaoClube escalacaoClube;
 	
 	//TODO: temporada??
 	
@@ -52,12 +56,13 @@ public class EscalacaoJogadorPosicao {
 
 	}
 
-	public EscalacaoJogadorPosicao(Clube clube, EscalacaoPosicao escalacaoPosicao, Jogador jogador, Boolean ativo) {
+	public EscalacaoJogadorPosicao(Clube clube, EscalacaoClube escalacaoClube, EscalacaoPosicao escalacaoPosicao, Jogador jogador, Boolean ativo) {
 		super();
 		this.escalacaoPosicao = escalacaoPosicao;
 		this.jogador = jogador;
 		this.clube = clube;
 		this.ativo = ativo;
+		this.escalacaoClube = escalacaoClube;
 	}
 
 	public Long getId() {
@@ -98,6 +103,14 @@ public class EscalacaoJogadorPosicao {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public EscalacaoClube getEscalacaoClubePartida() {
+		return escalacaoClube;
+	}
+
+	public void setEscalacaoClubePartida(EscalacaoClube escalacaoClubePartida) {
+		this.escalacaoClube = escalacaoClubePartida;
 	}
 
 	@Override

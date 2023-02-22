@@ -8,9 +8,13 @@ import com.fastfoot.scheduler.model.NivelCampeonato;
 
 public class ClubeTituloAnoDTO {
 	
-	private String clubeNome;
+	//private String clubeNome;
+	
+	private Clube clube;
 
-	private String nivelCampeonato;
+	//private String nivelCampeonato;
+	
+	private NivelCampeonato nivelCampeonato;
 	
 	private Integer ano;
 	
@@ -18,25 +22,25 @@ public class ClubeTituloAnoDTO {
 
 	}
 
-	public ClubeTituloAnoDTO(String clubeNome, String nivelCampeonato, Integer ano) {
-		this.clubeNome = clubeNome;
+	public ClubeTituloAnoDTO(Clube clube, NivelCampeonato nivelCampeonato, Integer ano) {
+		this.clube = clube;
 		this.nivelCampeonato = nivelCampeonato;
 		this.ano = ano;
 	}
 
-	public String getClubeNome() {
-		return clubeNome;
+	public Clube getClube() {
+		return clube;
 	}
 
-	public void setClubeNome(String clubeNome) {
-		this.clubeNome = clubeNome;
+	public void setClubeNome(Clube clube) {
+		this.clube = clube;
 	}
 
-	public String getNivelCampeonato() {
+	public NivelCampeonato getNivelCampeonato() {
 		return nivelCampeonato;
 	}
 
-	public void setNivelCampeonato(String nivelCampeonato) {
+	public void setNivelCampeonato(NivelCampeonato nivelCampeonato) {
 		this.nivelCampeonato = nivelCampeonato;
 	}
 
@@ -53,6 +57,6 @@ public class ClubeTituloAnoDTO {
 	}
 
 	public static ClubeTituloAnoDTO convertToDTO(Clube clube, NivelCampeonato nivelCampeonato, Integer ano) {
-		return new ClubeTituloAnoDTO(clube.getNome(), nivelCampeonato.name(), ano);
+		return new ClubeTituloAnoDTO(clube, nivelCampeonato, ano);
 	}
 }
