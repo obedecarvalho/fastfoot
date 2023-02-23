@@ -289,7 +289,7 @@ public class CriarCalendarioTemporadaService {
 
 		inicio = stopWatch.getSplitTime();
 		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
-			calcularValorTransferenciaJogadoresSimplificado();
+			calcularValorTransferenciaJogadoresSimplificado2();
 		} else {
 			calcularValorTransferenciaJogadores();
 		}
@@ -648,6 +648,27 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
+	}
+	
+	private void calcularValorTransferenciaJogadoresSimplificado2() {
+
+		List<Clube> clubes = clubeRepository.findAll(); 
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaService
+						.calcularValorTransferencia2(clubes.subList(i * offset, clubes.size())));
+			} else {
+				desenvolverJogadorFuture.add(calcularValorTransferenciaService
+						.calcularValorTransferencia2(clubes.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
 	private void calcularValorTransferenciaJogadores() {

@@ -32,7 +32,7 @@ public class TemporadaController {
 		}
 	}*/
 	
-	@Deprecated
+	/*@Deprecated
 	@GetMapping("/gerarTransferencias")
 	public ResponseEntity<Boolean> gerarTransferencias() {
 		try {
@@ -42,7 +42,7 @@ public class TemporadaController {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 	
 	@GetMapping("/calcularClubeSaldoSemana")
 	public ResponseEntity<Boolean> calcularClubeSaldoSemana() {
@@ -55,7 +55,7 @@ public class TemporadaController {
 		}
 	}
 	
-	@Deprecated
+	/*@Deprecated
 	@GetMapping("/gerarMudancaClubeNivel")
 	public ResponseEntity<Boolean> gerarMudancaClubeNivel() {
 		try {
@@ -65,7 +65,7 @@ public class TemporadaController {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 		}
-	}
+	}*/
 	
 	@GetMapping("/calcularTrajetoriaForcaClube")
 	public ResponseEntity<Boolean> calcularTrajetoriaForcaClube() {

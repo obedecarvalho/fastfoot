@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -38,6 +40,54 @@ public class CalcularValorTransferenciaService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularValorTransferencia2(List<Clube> clubes) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		List<Jogador> jogadores = new ArrayList<Jogador>();
+		
+		for (Clube c : clubes) {	
+			jogadores.addAll(jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO));
+		}
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#findByClubeAndStatusJogador:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		for (Jogador j : jogadores) {
+			calcularValorTransferencia(j);
+		}
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularValorTransferencia:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		jogadorRepository.saveAll(jogadores);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#saveAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+		
+		System.err.println(mensagens);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularValorTransferencia(List<Jogador> jogadores) {
