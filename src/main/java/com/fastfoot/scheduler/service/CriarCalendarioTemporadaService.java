@@ -650,6 +650,17 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 	
+	private void calcularValorTransferenciaJogadoresSimplificado3() {
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(liga));
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
 	private void calcularValorTransferenciaJogadoresSimplificado2() {
 
 		List<Clube> clubes = clubeRepository.findAll(); 

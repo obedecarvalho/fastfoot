@@ -104,7 +104,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes) {
 		//TODO: fazer validação de Constantes.NUMERO_MINIMO_JOGADORES_LINHA e Constantes.NUMERO_MINIMO_GOLEIROS
 
-		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
+		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//TODO: otimizar
 		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
 		

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 
@@ -21,6 +22,9 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube AND j.statusJogador = :status ")
 	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidades(@Param("clube") Clube clube, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube.liga = :liga AND j.statusJogador = :status ")
+	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga, @Param("status") StatusJogador status);
 
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j = :jogador ")
 	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);

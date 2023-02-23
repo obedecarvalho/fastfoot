@@ -57,7 +57,7 @@ public class EscalarClubeService {
 	
 	private void escalarClube(Clube clube, List<EscalacaoClube> escalacoes) {
 
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//TODO: otimizar
 		
 		//List<EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores, null);
 		EscalacaoClube escalacaoClube = gerarEscalacaoInicial(clube, jogadores, null);

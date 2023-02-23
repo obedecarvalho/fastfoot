@@ -46,7 +46,7 @@ public class AtualizarNumeroJogadoresService {
 	}
 
 	public void atualizarNumeroJogadores(Clube c, List<Jogador> jogadoresAtualizar) {//TODO: tratar qdo numero de jog por posicao for maior que 10
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//TODO: otimizar
 		
 		List<Jogador> jogPosicao = null;
 		
