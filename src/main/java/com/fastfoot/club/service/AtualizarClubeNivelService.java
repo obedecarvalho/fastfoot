@@ -87,7 +87,8 @@ public class AtualizarClubeNivelService {
 			if (t.isPresent()) {
 				rankings.addAll(clubeRankingRepository.findByLigaAndTemporada(liga, t.get()));
 			} else {
-				throw new RuntimeException("Não há temporadas suficientes.");
+				//throw new RuntimeException("Não há temporadas suficientes.");
+				return CompletableFuture.completedFuture(Boolean.FALSE);
 			}
 		}
 		
@@ -157,7 +158,8 @@ public class AtualizarClubeNivelService {
 			if (t.isPresent()) {
 				rankings.addAll(clubeRankingRepository.findByTemporada(t.get()));
 			} else {
-				throw new RuntimeException("Não há temporadas suficientes.");
+				//throw new RuntimeException("Não há temporadas suficientes.");
+				return CompletableFuture.completedFuture(Boolean.FALSE);
 			}
 		}
 		

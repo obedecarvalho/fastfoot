@@ -1,8 +1,10 @@
 package com.fastfoot.player.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,11 +42,35 @@ public class CalcularValorTransferenciaService {
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularValorTransferencia(List<Jogador> jogadores) {
 		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
 		for (Jogador j : jogadores) {
 			calcularValorTransferencia(j);
 		}
 		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularValorTransferencia:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
 		jogadorRepository.saveAll(jogadores);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#saveAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+		
+		System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}

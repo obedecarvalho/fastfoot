@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +26,36 @@ public class AgruparHabilidadeValorEstatisticaService {
 	private HabilidadeValorEstatisticaGrupoRepository habilidadeValorEstatisticaGrupoRepository;
 	
 	public void agrupar2(Temporada temporada) {
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+
 		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
-		habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#agruparHabilidadeValorEstatisticas:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+
+		//habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
+		habilidadeValorEstatisticaRepository.deleteAllInBatch();
 		//habilidadeValorEstatisticaRepository.deleteAll();
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#deleteAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+		
+		System.err.println(mensagens);
 	}
 	
 	public void agrupar(Temporada temporada) {

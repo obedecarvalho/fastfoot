@@ -1,5 +1,6 @@
 package com.fastfoot.match.model.factory;
 
+import java.util.Collections;
 import java.util.List;
 
 import com.fastfoot.match.model.Esquema;
@@ -51,5 +52,34 @@ public abstract class EsquemaFactory {
 	protected static void addTransicaoVisitante(EsquemaPosicao p1, EsquemaPosicao p2, Integer pesoP1P2, Integer pesoP2P1) {
 		p1.addTransicaoVisitante(new EsquemaTransicao(p1, p2, pesoP1P2));
 		p2.addTransicaoVisitante(new EsquemaTransicao(p2, p1, pesoP2P1));
+	}
+	
+	synchronized protected static void print(List<EsquemaPosicao> x) {
+		//
+		System.err.println("----------------------------------------------");
+		for (EsquemaPosicao ep : x) {
+
+			System.err.println(String.format("Posicao: %d", ep.getNumero()));
+
+			for (EsquemaTransicao et : ep.getTransicoesMandante()) {
+				System.err.println(String.format("\t%s (%d) ---> %s (%d) [p:%d]",
+						et.getPosInicial().getMandante().getPosicao(), et.getPosInicial().getNumero(),
+						et.getPosFinal().getMandante().getPosicao(), et.getPosFinal().getNumero(), et.getPeso()));
+			}
+		}
+		
+		Collections.reverse(x);
+
+		for (EsquemaPosicao ep : x) {
+
+			System.err.println(String.format("Posicao: %d", 13 - ep.getNumero()));
+
+			for (EsquemaTransicao et : ep.getTransicoesVisitante()) {
+				System.err.println(String.format("\t%s (%d) ---> %s (%d) [p:%d]",
+						et.getPosInicial().getVisitante().getPosicao(), 13 - et.getPosInicial().getNumero(),
+						et.getPosFinal().getVisitante().getPosicao(), 13 - et.getPosFinal().getNumero(), et.getPeso()));
+			}
+		}
+		//
 	}
 }

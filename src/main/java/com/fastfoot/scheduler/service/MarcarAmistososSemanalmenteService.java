@@ -116,7 +116,6 @@ public class MarcarAmistososSemanalmenteService {
 				.flatMap(r -> r.getPartidas().stream()).collect(Collectors.toList()));
 	}
 	
-	@SuppressWarnings("unused")
 	private void criarPartidas(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa, RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
 		
 		List<Clube> clubesA = null;

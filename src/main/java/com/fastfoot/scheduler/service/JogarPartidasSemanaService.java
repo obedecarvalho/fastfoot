@@ -383,7 +383,6 @@ public class JogarPartidasSemanaService {
 		}
 	}*/
 	
-	@SuppressWarnings("unused")
 	private void escalarClubes(Semana semana) {
 		//if (semana.getNumero() % 5 == 0) {
 		List<Clube> clubes = clubeRepository.findAll(); 
@@ -424,7 +423,6 @@ public class JogarPartidasSemanaService {
 		CompletableFuture.allOf(calculoProbabilidadesFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
-	@SuppressWarnings("unused")
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias, boolean old) {
 		//TODO: avaliar necessidade
 		//TODO: transformar em UPDATE
@@ -593,16 +591,6 @@ public class JogarPartidasSemanaService {
 		return promotorEliminatoria;
 	}
 
-	/*public Semana getSemanaAtual() {
-		Optional<Semana> s = semanaRepository.findSemanaAtual();
-		return s.isPresent() ? s.get() : null;
-	}
-	
-	public Semana getProximaSemana() {
-		Optional<Semana> s = semanaRepository.findProximaSemana();
-		return s.isPresent() ? s.get() : null;
-	}*/
-	
 	private void marcarAmistososSemanalmente(Semana semana) {
 		
 		boolean marcarAmistosos = parametroService.isMarcarAmistososAutomaticamenteSemanaASemana()

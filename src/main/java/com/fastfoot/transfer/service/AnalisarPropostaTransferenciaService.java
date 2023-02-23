@@ -58,7 +58,7 @@ public class AnalisarPropostaTransferenciaService {
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasClube, Map<Clube, ClubeSaldo> clubesSaldo,
 			Set<Clube> clubesRefazerEscalacao) {
 		
-		System.err.println("\t#c:" + propostasClube.keySet().size());
+		//System.err.println("\t#c:" + propostasClube.keySet().size());
 		
 		List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
 

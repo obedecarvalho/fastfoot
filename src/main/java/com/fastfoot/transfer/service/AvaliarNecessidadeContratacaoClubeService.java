@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -64,12 +65,36 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
 		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
 		for (Clube c : clubes) {
 			calcularNecessidadeContratacaoClube(c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
 		}
 		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularNecessidadeContratacaoClube:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
 		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubes);
 		disponivelNegociacaoRepository.saveAll(disponivelNegociacao);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#saveAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+		
+		System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
@@ -155,7 +180,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 
 	}
 	
-	public static Comparator<AdequacaoJogadorDTO> getComparator() {
+	private static Comparator<AdequacaoJogadorDTO> getComparator() {
 		if (COMPARATOR == null) {
 			COMPARATOR = new Comparator<AdequacaoJogadorDTO>() {
 	

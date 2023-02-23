@@ -64,4 +64,8 @@ public class ParametroConstantes {
 	public static final String USAR_APOSTAS_ESPORTIVAS = "USAR_APOSTAS_ESPORTIVAS";
 	
 	public static final String DISPUTAR_TERCEIRO_LUGAR = "DISPUTAR_TERCEIRO_LUGAR";//TODO: implementar logica (conferir ClubeRankingUtil)
+	
+	public static final String GERAR_TRANSFERENCIA_INICIO_TEMPORADA = "GERAR_TRANSFERENCIA_INICIO_TEMPORADA";
+	
+	public static final String GERAR_MUDANCA_CLUBE_NIVEL = "GERAR_MUDANCA_CLUBE_NIVEL";
 }

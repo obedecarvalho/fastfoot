@@ -60,6 +60,10 @@ public class PreCarregarParametrosService {
 			
 			parametros.add(new Parametro(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS, "false", "false, true"));
 			
+			parametros.add(new Parametro(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA, "true", "false, true"));
+			
+			parametros.add(new Parametro(ParametroConstantes.GERAR_MUDANCA_CLUBE_NIVEL, "true", "false, true"));
+			
 			/*parametros.add(
 					new Parametro(ParametroConstantes.ESCALACAO_PADRAO, ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132,
 							ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132 + ", "

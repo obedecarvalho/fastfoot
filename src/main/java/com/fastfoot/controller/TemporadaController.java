@@ -32,6 +32,7 @@ public class TemporadaController {
 		}
 	}*/
 	
+	@Deprecated
 	@GetMapping("/gerarTransferencias")
 	public ResponseEntity<Boolean> gerarTransferencias() {
 		try {
@@ -54,6 +55,7 @@ public class TemporadaController {
 		}
 	}
 	
+	@Deprecated
 	@GetMapping("/gerarMudancaClubeNivel")
 	public ResponseEntity<Boolean> gerarMudancaClubeNivel() {
 		try {

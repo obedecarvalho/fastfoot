@@ -20,6 +20,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.club.service.AtualizarClubeNivelService;
 import com.fastfoot.club.service.DistribuirPatrocinioService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.model.Constantes;
@@ -50,6 +51,7 @@ import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidadeService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
+import com.fastfoot.player.service.GerarTransferenciasService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -135,12 +137,6 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private CarregarParametroService parametroService;
-	
-	/*@Autowired
-	private CampeonatoService campeonatoService;
-	
-	@Autowired
-	private RodadaAmistosaService rodadaAmistosaService;*/
 
 	@Autowired
 	private AposentarJogadorService aposentarJogadorService;
@@ -177,6 +173,12 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
+	
+	@Autowired
+	private AtualizarClubeNivelService atualizarClubeNivelService;
+	
+	@Autowired
+	private GerarTransferenciasService gerarTransferenciasService;
 
 	public TemporadaDTO criarTemporada() {
 		
@@ -206,7 +208,8 @@ public class CriarCalendarioTemporadaService {
 			
 			inicio = stopWatch.getSplitTime();
 			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada(temporada.getId());
-			jogadorEstatisticaSemanaRepository.deleteByIdTemporada(temporada.getId());
+			//jogadorEstatisticaSemanaRepository.deleteByIdTemporada(temporada.getId());
+			jogadorEstatisticaSemanaRepository.deleteAllInBatch();
 			//jogadorEstatisticaSemanaRepository.deleteAll();
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
@@ -283,12 +286,6 @@ public class CriarCalendarioTemporadaService {
 		}
 
 		//stopWatch.split();
-		
-		/*inicio = stopWatch.getSplitTime();
-		calcularValorTransferenciaJogadores();
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));*/
 
 		inicio = stopWatch.getSplitTime();
 		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
@@ -319,12 +316,6 @@ public class CriarCalendarioTemporadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#salvar:" + (fim - inicio));
 		
-		/*inicio = stopWatch.getSplitTime();
-		criarEstatisticasJogadorTemporada(temporada);
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#criarEstatisticasJogadorTemporada:" + (fim - inicio));*/
-		
 		inicio = stopWatch.getSplitTime();
 		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
@@ -342,6 +333,23 @@ public class CriarCalendarioTemporadaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#distribuirPatrocinio:" + (fim - inicio));
+		
+		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
+			inicio = stopWatch.getSplitTime();
+			gerarTransferenciasService.gerarTransferencias(temporada);
+			//TODO: atualizar numero jogadores transferidos
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#gerarTransferencias:" + (fim - inicio));
+		}
+		
+		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_MUDANCA_CLUBE_NIVEL)) {
+			inicio = stopWatch.getSplitTime();
+			gerarMudancaClubeNivel(temporada);
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#gerarMudancaClubeNivel:" + (fim - inicio));
+		}
 
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
@@ -350,79 +358,6 @@ public class CriarCalendarioTemporadaService {
 		
 		return TemporadaDTO.convertToDTO(temporada);
 	}
-	
-	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
-
-		jogadorEstatisticasTemporadaRepository.criarJogadorEstatisticasTemporada(temporada.getId(), false);
-		jogadorEstatisticasTemporadaRepository.criarJogadorEstatisticasTemporada(temporada.getId(), true);
-		jogadorEstatisticasTemporadaRepository.associarJogadorEstatistica(temporada.getId());
-		jogadorEstatisticasTemporadaRepository.associarJogadorEstatisticaAmistosos(temporada.getId());
-
-	}*/
-
-	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
-
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(
-				new JogadorEstatisticasTemporada(j, temporada, j.getClube(), false)));
-		jogadorEstatisticasTemporadaRepository.saveAll(
-				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
-		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(
-				new JogadorEstatisticasTemporada(j, temporada, j.getClube(), true)));
-		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream()
-				.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
-
-		jogadorRepository.saveAll(jogadores);
-	}*/
-	
-	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
-
-		List<JogadorDetalhe> detalhejogadores = jogadorDetalheRepository.findByStatusJogador(StatusJogador.ATIVO);
-		
-		detalhejogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(
-				new JogadorEstatisticasTemporada(j.getJogador(), temporada, j.getClube(), false)));
-		/*jogadorEstatisticasTemporadaRepository.saveAll(
-				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));* /
-		
-		detalhejogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(
-				new JogadorEstatisticasTemporada(j.getJogador(), temporada, j.getClube(), true)));
-		/*jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream()
-				.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));* /
-		
-		List<JogadorEstatisticasTemporada> jet = detalhejogadores.stream()
-				.map(JogadorDetalhe::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList());
-
-		jet.addAll(detalhejogadores.stream().map(JogadorDetalhe::getJogadorEstatisticasAmistososTemporadaAtual)
-				.collect(Collectors.toList()));
-		
-		jogadorEstatisticasTemporadaRepository.saveAll(jet);
-
-		jogadorDetalheRepository.saveAll(detalhejogadores);
-	}*/
-	
-	/*private void criarEstatisticasJogadorTemporada(Temporada temporada) {
-
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-
-		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
-
-		List<CompletableFuture<Boolean>> criarEstatisticasJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				criarEstatisticasJogadorFuture.add(salvarCampeonatosService
-						.criarEstatisticasJogadorTemporada(jogadores.subList(i * offset, jogadores.size()), temporada));
-			} else {
-				criarEstatisticasJogadorFuture.add(salvarCampeonatosService
-						.criarEstatisticasJogadorTemporada(jogadores.subList(i * offset, (i + 1) * offset), temporada));
-			}
-		}
-
-		CompletableFuture.allOf(criarEstatisticasJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-
-	}*/
 	
 	private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
@@ -575,22 +510,6 @@ public class CriarCalendarioTemporadaService {
 
 		return campeonatoEliminatorioFactory;
 	}
-
-	/*private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
-			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
-			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
-
-		salvarTemporada(temporada);
-
-		campeonatoService.salvarCampeonato(campeonatosNacionais);
-
-		campeonatoService.salvarCampeonatoEliminatorio(copasNacionais);
-
-		campeonatoService.salvarCampeonatoMisto(campeonatosContinentais);
-
-		rodadaAmistosaService.salvarRodadasAmistosas(rodadaAmistosaAutomaticas);
-
-	}*/
 	
 	private void salvarTemporada(Temporada temporada) {
 		temporadaRepository.save(temporada);
@@ -705,7 +624,13 @@ public class CriarCalendarioTemporadaService {
 	private void calcularValorTransferenciaJogadoresSimplificado() {
 		//if (semana.getNumero() == 1) {
 			
+		long inicio = System.currentTimeMillis();
+		
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
+		
+		long fim = System.currentTimeMillis();
+		
+		System.err.println("\tcalcularValorTransferenciaJogadoresSimplificado#findByStatusJogador: " + (fim - inicio));
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -748,7 +673,6 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}
 
-	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador() {
 		//if (semana.getNumero() == 1) {
 		
@@ -794,7 +718,6 @@ public class CriarCalendarioTemporadaService {
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 
-	@SuppressWarnings("unused")
 	private void atualizarPassoDesenvolvimentoJogador2() {
 		//if (semana.getNumero() == 1) {
 
@@ -907,27 +830,6 @@ public class CriarCalendarioTemporadaService {
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
-	/*private void adequarModoDesenvolvimentoJogador(Temporada temporada, boolean old) {
-
-		List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
-
-		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
-
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(adequarModoDesenvolvimentoJogadorService
-						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, jogadores.size())));
-			} else {
-				desenvolverJogadorFuture.add(adequarModoDesenvolvimentoJogadorService
-						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}*/
-	
 	private void atualizarNumeroJogadores() {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		
@@ -945,6 +847,21 @@ public class CriarCalendarioTemporadaService {
 			}
 		}
 		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	private void gerarMudancaClubeNivel(Temporada temporada) {
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga l : Liga.getAll()) {
+			desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivel(temporada, l));
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		desenvolverJogadorFuture.clear();
+		desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelInternacional(temporada));
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 }

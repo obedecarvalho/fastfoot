@@ -1,8 +1,7 @@
-package com.fastfoot.transfer.service;
+package com.fastfoot.player.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,49 +17,23 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
-import com.fastfoot.club.service.AtualizarClubeNivelService;
 import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
-import com.fastfoot.club.service.CalcularTrajetoriaForcaClubeService;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
-import com.fastfoot.financial.service.CalcularClubeSaldoSemanaService;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
-import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
-import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
+import com.fastfoot.transfer.service.AnalisarPropostaTransferenciaService;
+import com.fastfoot.transfer.service.AvaliarNecessidadeContratacaoClubeService;
+import com.fastfoot.transfer.service.ProporTransferenciaService;
 
 @Service
-public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome classe
+public class GerarTransferenciasService {
 	
 	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
-	
-	private static final Comparator<Semana> COMPARATOR;
-	
-	static {
-		COMPARATOR = new Comparator<Semana>() {
-			
-			@Override
-			public int compare(Semana o1, Semana o2) {
-				
-				int compare = o1.getTemporada().getAno().compareTo(o2.getTemporada().getAno());
-				
-				if (compare == 0) {
-					compare = o1.getNumero().compareTo(o2.getNumero());
-				}
-
-				return compare;
-			}
-		};
-	}
 	
 	//###	REPOSITORY	###
 	
@@ -71,18 +44,15 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
 	
 	@Autowired
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+	
+	@Autowired
 	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
 	
-	/*@Autowired
-	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;*/
-
-	@Autowired
-	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
-
-	@Autowired
-	private SemanaRepository semanaRepository;
-	
 	//###	SERVICE	###
+	
+	/*@Autowired
+	private TemporadaCRUDService temporadaService;*/
 	
 	@Autowired
 	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;
@@ -94,117 +64,18 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 	private AnalisarPropostaTransferenciaService analisarPropostaTransferenciaService;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
-	
-	@Autowired
-	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
-	
-	@Autowired
-	private AtualizarClubeNivelService atualizarClubeNivelService;
-	
-	@Autowired
-	private CalcularTrajetoriaForcaClubeService calcularTrajetoriaForcaClubeService;
-	
-	@Autowired
-	private SemanaCRUDService semanaCRUDService;
-	
-	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
-
-	@Autowired
-	private CalcularClubeSaldoSemanaService calcularClubeSaldoSemanaService;
 	
-	@Deprecated
-	public void gerarTransferencias() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		Temporada temporada = temporadaService.getTemporadaAtual();
+	/*@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;*/
+	
+	public void gerarTransferencias(Temporada temporada) {
+		//Temporada temporada = temporadaService.getTemporadaAtual();
+		List<Clube> clubes = clubeRepository.findAll();
 		gerarTransferencias(temporada, clubes);
-		atualizarNumeroJogadores();
+		//atualizarNumeroJogadores();//TODO: tem necessidade?
 	}
 	
-	public void calcularClubeSaldoSemana() {
-		
-		List<Semana> semanas = semanaRepository.findAll();
-		
-		Collections.sort(semanas, COMPARATOR);
-		
-		List<MovimentacaoFinanceira> movimentaceosFinanceiras = movimentacaoFinanceiraRepository.findAll();
-
-		Map<Integer, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
-				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,
-						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			desenvolverJogadorFuture
-					.add(calcularClubeSaldoSemanaService.calcularClubeSaldoSemana(semanas, movimentacoesClube.get(i)));
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}
-	
-	@Deprecated
-	public void gerarMudancaClubeNivel() {
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		for (Liga l : Liga.getAll()) {
-			desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivel(temporada, l));
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		desenvolverJogadorFuture.clear();
-		desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelInternacional(temporada));
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}
-	
-	public void calcularTrajetoriaForcaClube() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		Semana s = semanaCRUDService.getProximaSemana();
-
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
-						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, clubes.size()), s));
-			} else {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
-						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, (i + 1) * offset), s));
-			}
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-
-	}
-	
-	@Deprecated
-	private void atualizarNumeroJogadores() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
-			} else {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}
-
-	@Deprecated
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
 		//if (semana.getNumero() == 0, 1, 2, 3) {		
 
@@ -235,7 +106,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("#calcularNecessidadeContratacao:" + (fim - inicio));
+		mensagens.add("\t#calcularNecessidadeContratacao:" + (fim - inicio));
 
 		transferenciasFuture.clear();
 		
@@ -276,7 +147,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
+		mensagens.add("\t#gerarPropostaTransferencia:" + (fim - inicio));
 
 		transferenciasFuture.clear();
 		
@@ -311,7 +182,7 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
 		}
 		
-		System.err.println(clubesSaldo.values());
+		//System.err.println(clubesSaldo.values());
 		
 		//Analisar propostas transferencia
 		//for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {
@@ -351,15 +222,35 @@ public class GerenciarTemporadaService {//TODO: avaliar modulo, melhorar nome cl
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("#analisarPropostaTransferencia:" + (fim - inicio));
+		mensagens.add("\t#analisarPropostaTransferencia:" + (fim - inicio));
 		
 		stopWatch.stop();
 		
-		mensagens.add("#tempoTotal:" + stopWatch.getTime());
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
 		System.err.println(mensagens);
 		
 		//}
 	}
+	
+	/*private void atualizarNumeroJogadores() {
+		List<Clube> clubes = clubeRepository.findAll(); 
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
+			} else {
+				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
+						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}*/
 
 }

@@ -45,12 +45,6 @@ public class EscalacaoJogadorPosicao {
 	@ManyToOne
 	@JoinColumn(name = "id_escalacao_clube")
 	private EscalacaoClube escalacaoClube;
-	
-	//TODO: temporada??
-	
-	//TODO: semana??
-	
-	//TODO: partida??
 
 	public EscalacaoJogadorPosicao() {
 

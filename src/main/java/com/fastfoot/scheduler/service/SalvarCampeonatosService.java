@@ -69,12 +69,6 @@ public class SalvarCampeonatosService {
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
 
-	/*@Autowired
-	private JogadorRepository jogadorRepository;
-	
-	@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
-
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> salvarRodadasAmistosas(List<RodadaAmistosa> rodadaAmistosas) {
 
@@ -202,21 +196,4 @@ public class SalvarCampeonatosService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	/*@Async("defaultExecutor")
-	public CompletableFuture<Boolean> criarEstatisticasJogadorTemporada(List<Jogador> jogadores, Temporada temporada) {
-		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasTemporadaAtual(
-				new JogadorEstatisticasTemporada(j, temporada, j.getClube(), false)));
-		jogadorEstatisticasTemporadaRepository.saveAll(
-				jogadores.stream().map(Jogador::getJogadorEstatisticasTemporadaAtual).collect(Collectors.toList()));
-		
-		jogadores.stream().forEach(j -> j.setJogadorEstatisticasAmistososTemporadaAtual(
-				new JogadorEstatisticasTemporada(j, temporada, j.getClube(), true)));
-		jogadorEstatisticasTemporadaRepository.saveAll(jogadores.stream()
-				.map(Jogador::getJogadorEstatisticasAmistososTemporadaAtual).collect(Collectors.toList()));
-
-		jogadorRepository.saveAll(jogadores);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
 }
