@@ -16,10 +16,10 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -37,8 +37,8 @@ public class GerarTransferenciasService {
 	
 	//###	REPOSITORY	###
 	
-	@Autowired
-	private ClubeRepository clubeRepository;
+	/*@Autowired
+	private ClubeRepository clubeRepository;*/
 	
 	@Autowired
 	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
@@ -71,15 +71,15 @@ public class GerarTransferenciasService {
 	
 	public void gerarTransferencias(Temporada temporada) {
 		//Temporada temporada = temporadaService.getTemporadaAtual();
-		List<Clube> clubes = clubeRepository.findAll();
-		gerarTransferencias(temporada, clubes);
+		//List<Clube> clubes = clubeRepository.findAll();
+		gerarTransferencias(temporada, null);
 		//atualizarNumeroJogadores();//TODO: tem necessidade?
 	}
 	
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
 		//if (semana.getNumero() == 0, 1, 2, 3) {		
 
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+		//int offset = clubes.size() / FastfootApplication.NUM_THREAD;
 		
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -92,7 +92,7 @@ public class GerarTransferenciasService {
 		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
 		//Calcular necessidade contratacao
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+		/*for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
 				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
 						.calcularNecessidadeContratacao(clubes.subList(i * offset, clubes.size())));
@@ -100,6 +100,13 @@ public class GerarTransferenciasService {
 				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
 						.calcularNecessidadeContratacao(clubes.subList(i * offset, (i + 1) * offset)));
 			}
+		}*/
+		
+		for (Liga liga : Liga.getAll()) {
+			transferenciasFuture
+					.add(avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(liga, true));
+			transferenciasFuture
+					.add(avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacao(liga, false));
 		}
 		
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();

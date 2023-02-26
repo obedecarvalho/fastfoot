@@ -2,6 +2,7 @@ package com.fastfoot.transfer.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
@@ -56,6 +58,9 @@ public class ConcluirTransferenciaJogadorService {
 
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
+	
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
 
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
 	public void concluirTransferenciaJogadorEmLote(List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs) {
@@ -64,8 +69,8 @@ public class ConcluirTransferenciaJogadorService {
 
 		//List<JogadorEstatisticasTemporada> estatisticasSalvar = new ArrayList<JogadorEstatisticasTemporada>();
 		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososSalvar = new ArrayList<JogadorEstatisticasAmistososTemporada>();
-		//List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();//TODO: maior parte do tempo é gasto aqui
-		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososExcluir = new ArrayList<JogadorEstatisticasAmistososTemporada>();//TODO: maior parte do tempo é gasto aqui
+		//List<JogadorEstatisticasTemporada> estatisticasExcluir = new ArrayList<JogadorEstatisticasTemporada>();//maior parte do tempo é gasto aqui
+		//List<JogadorEstatisticasAmistososTemporada> estatisticasAmistososExcluir = new ArrayList<JogadorEstatisticasAmistososTemporada>();//maior parte do tempo é gasto aqui
 		List<PropostaTransferenciaJogador> propostasSalvar = new ArrayList<PropostaTransferenciaJogador>();
 		List<Jogador> jogadoresSalvar = new ArrayList<Jogador>();
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
@@ -131,6 +136,8 @@ public class ConcluirTransferenciaJogadorService {
 			disponivelSalvar.add(transferenciaConcluidaDTO.getDisponivelNegociacao());
 
 		}
+		
+		atualizarNumeroJogadoresService.atualizarNumeroJogadores(jogadoresSalvar.stream().collect(Collectors.groupingBy(Jogador::getClube)));
 
 		//jogadorEstatisticasAmistososTemporadaRepository.saveAll(estatisticasAmistososSalvar);
 		//jogadorEstatisticasTemporadaRepository.saveAll(estatisticasSalvar);

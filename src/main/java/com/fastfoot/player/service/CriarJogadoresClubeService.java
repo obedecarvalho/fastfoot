@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
@@ -21,6 +22,7 @@ import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepositor
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
@@ -40,6 +42,15 @@ public class CriarJogadoresClubeService {
 	
 	@Autowired
 	private JogadorDetalheRepository jogadorDetalheRepository;
+	
+	@Autowired
+	private CarregarParametroService carregarParametroService;
+	
+	@Autowired
+	private CalcularValorTransferenciaService calcularValorTransferenciaService;
+	
+	@Autowired
+	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
@@ -51,6 +62,8 @@ public class CriarJogadoresClubeService {
 			criarJogadoresClube(c, jogadores, gruposJogador);
 		}
 		
+		calcularValorTransferencia(jogadores);
+		
 		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream())
 				.collect(Collectors.toList());
 
@@ -61,6 +74,18 @@ public class CriarJogadoresClubeService {
 		habilidadeValorRepository.saveAll(habilidades);
 
 		return CompletableFuture.completedFuture(true);
+	}
+	
+	protected void calcularValorTransferencia(List<Jogador> jogadores) {
+		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
+			for (Jogador jogador : jogadores) {
+				calcularValorTransferenciaService.calcularValorTransferencia(jogador);
+			}
+		} else {
+			for (Jogador jogador : jogadores) {
+				calcularValorTransferenciaJogadorPorHabilidadeService.calcularValorTransferencia(jogador);
+			}
+		}
 	}
 
 	protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {

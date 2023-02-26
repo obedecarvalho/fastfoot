@@ -20,6 +20,8 @@ public class Constantes {
 	
 	public static final Integer NRO_LIGAS = 4;
 	
+	public static final Integer NRO_CLUBES_POR_LIGA = 32;
+	
 	//###	CAMPEONATO NACIONAL	###
 	
 	/** Numero de clubes que disputam o campeonato nacional por divisao */

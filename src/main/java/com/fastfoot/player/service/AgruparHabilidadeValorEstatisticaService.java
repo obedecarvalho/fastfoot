@@ -35,7 +35,8 @@ public class AgruparHabilidadeValorEstatisticaService {
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 
-		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
+		//habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
+		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas();
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
@@ -55,7 +56,7 @@ public class AgruparHabilidadeValorEstatisticaService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 	}
 	
 	public void agrupar(Temporada temporada) {

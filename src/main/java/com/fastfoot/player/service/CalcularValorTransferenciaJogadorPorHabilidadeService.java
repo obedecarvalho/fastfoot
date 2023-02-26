@@ -1,15 +1,19 @@
 package com.fastfoot.player.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.ValorTransferenciaHabilidade;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -73,6 +77,51 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 		
 		jogadorRepository.saveAll(jogadores);
 		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularValorTransferencia(Liga liga, boolean primeirosIds) {
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+
+		List<Jogador> jogadores;
+
+		if (primeirosIds) {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+		} else {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+		}
+
+		for (Jogador j : jogadores) {
+			calcularValorTransferencia(j);
+		}
+
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularValorTransferencia:" + (fim - inicio));
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+
+		jogadorRepository.saveAll(jogadores);
+
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#saveAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+
+		//System.err.println(mensagens);
+
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	

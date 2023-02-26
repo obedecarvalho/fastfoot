@@ -201,13 +201,14 @@ public class CriarCalendarioTemporadaService {
 			}
 
 			inicio = stopWatch.getSplitTime();
-			agruparHabilidadeValorEstatisticaService.agrupar2(temporada);
+			agruparHabilidadeValorEstatisticaService.agrupar2(temporada);//TODO: substituir pelo 2 comandos?
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (fim - inicio));
 			
 			inicio = stopWatch.getSplitTime();
-			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada(temporada.getId());
+			//jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada(temporada.getId());
+			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();
 			//jogadorEstatisticaSemanaRepository.deleteByIdTemporada(temporada.getId());
 			jogadorEstatisticaSemanaRepository.deleteAllInBatch();
 			//jogadorEstatisticaSemanaRepository.deleteAll();
@@ -243,6 +244,16 @@ public class CriarCalendarioTemporadaService {
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
+			
+			inicio = stopWatch.getSplitTime();
+			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
+				calcularValorTransferenciaJogadoresSimplificado3();
+			} else {
+				calcularValorTransferenciaJogadores2();
+			}
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
 		} else {
 
@@ -278,24 +289,14 @@ public class CriarCalendarioTemporadaService {
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#criarJogadoresClube:" + (fim - inicio));
 			
-			inicio = stopWatch.getSplitTime();
+			/*inicio = stopWatch.getSplitTime();
 			atualizarNumeroJogadores();
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));
+			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
 		}
 
 		//stopWatch.split();
-
-		inicio = stopWatch.getSplitTime();
-		if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
-			calcularValorTransferenciaJogadoresSimplificado2();
-		} else {
-			calcularValorTransferenciaJogadores();
-		}
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
 
 		temporada = TemporadaFactory.criarTemporada(ano);
 
@@ -337,7 +338,6 @@ public class CriarCalendarioTemporadaService {
 		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
 			inicio = stopWatch.getSplitTime();
 			gerarTransferenciasService.gerarTransferencias(temporada);
-			//TODO: atualizar numero jogadores transferidos
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#gerarTransferencias:" + (fim - inicio));
@@ -655,7 +655,8 @@ public class CriarCalendarioTemporadaService {
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (Liga liga : Liga.getAll()) {
-			desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(liga));
+			desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(liga, true));
+			desenvolverJogadorFuture.add(calcularValorTransferenciaService.calcularValorTransferencia(liga, false));
 		}
 
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
@@ -701,6 +702,22 @@ public class CriarCalendarioTemporadaService {
 			}
 		}
 		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		//}
+	}
+	
+	private void calcularValorTransferenciaJogadores2() {
+		//if (semana.getNumero() == 1) {
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture
+					.add(calcularValorTransferenciaJogadorPorHabilidadeService.calcularValorTransferencia(liga, true));
+			desenvolverJogadorFuture
+					.add(calcularValorTransferenciaJogadorPorHabilidadeService.calcularValorTransferencia(liga, false));
+		}
+
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
 	}

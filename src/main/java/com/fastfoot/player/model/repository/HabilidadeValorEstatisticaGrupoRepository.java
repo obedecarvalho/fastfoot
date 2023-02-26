@@ -49,4 +49,18 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			" GROUP BY s.id_temporada, id_habilidade_valor, amistoso;"
 	)
 	public void agruparHabilidadeValorEstatisticas(Long idTemporadaAgrupar);
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" INSERT INTO habilidade_valor_estatistica_grupo" +
+			" (id, id_habilidade_valor, id_temporada, quantidade_uso, quantidade_uso_vencedor, amistoso)" +
+			" SELECT NEXTVAL('habilidade_valor_estatistica_grupo_seq') AS id, id_habilidade_valor, s.id_temporada, " +
+			" 	SUM(quantidade_uso) AS quantidade_uso, " +
+			" 	SUM(quantidade_uso_vencedor) AS quantidade_uso_vencedor, amistoso" +
+			" FROM habilidade_valor_estatistica hve" +
+			" INNER JOIN semana s ON s.id = hve.id_semana" +
+			" GROUP BY s.id_temporada, id_habilidade_valor, amistoso;"
+	)
+	public void agruparHabilidadeValorEstatisticas();
 }

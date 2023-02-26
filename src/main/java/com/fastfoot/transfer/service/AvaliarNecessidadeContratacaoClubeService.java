@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
@@ -73,8 +75,10 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 		
+		List<Jogador> jogs;
 		for (Clube c : clubes) {
-			calcularNecessidadeContratacaoClube(c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
+			jogs = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
+			calcularNecessidadeContratacaoClube(jogs, c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
 		}
 		
 		stopWatch.split();
@@ -94,17 +98,74 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularNecessidadeContratacao(Liga liga, boolean primeirosIds) {
+		Temporada temporada = temporadaService.getTemporadaAtual();
+		
+		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
+		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
+		
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
+		long inicio = 0, fim = 0;
+		List<String> mensagens = new ArrayList<String>();
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		List<Jogador> jogs;
+		
+		if (primeirosIds) {
+			jogs = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO, liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+		} else {
+			jogs = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO, liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+		}
+		Map<Clube, List<Jogador>> jogClube = jogs.stream().collect(Collectors.groupingBy(Jogador::getClube));
+
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#findByLigaClubeAndStatusJogador:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		for (Clube c : jogClube.keySet()) {
+			calcularNecessidadeContratacaoClube(jogClube.get(c), c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
+		}
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularNecessidadeContratacaoClube:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		
+		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubes);
+		disponivelNegociacaoRepository.saveAll(disponivelNegociacao);
+		
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#saveAll:" + (fim - inicio));
+		
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
+		
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	private void calcularNecessidadeContratacaoClube(Clube clube, Temporada temporada,
+	private void calcularNecessidadeContratacaoClube(List<Jogador> jogs, Clube clube, Temporada temporada,
 			List<DisponivelNegociacao> disponivelNegociacao,
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes) {
 		//TODO: fazer validação de Constantes.NUMERO_MINIMO_JOGADORES_LINHA e Constantes.NUMERO_MINIMO_GOLEIROS
 
-		List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//TODO: otimizar
+		//List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
 		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
 		

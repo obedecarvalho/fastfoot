@@ -5,13 +5,23 @@ import java.util.List;
 
 public enum Liga {
 	
-	NULL,
-	GENEBE,
-	SPAPOR,
-	ITAFRA,
-	ENGLND,
+	NULL(0),
+	GENEBE(100),
+	SPAPOR(200),
+	ITAFRA(300),
+	ENGLND(400),
 	/*BRASIL*/
 	;
+	
+	private Integer idBaseLiga;
+	
+	private Liga(Integer idBaseLiga) {
+		this.idBaseLiga = idBaseLiga;
+	}
+
+	public Integer getIdBaseLiga() {
+		return idBaseLiga;
+	}
 
 	public static List<Liga> getAll() {
 		return Arrays.asList(Liga.GENEBE, Liga.SPAPOR, Liga.ITAFRA, Liga.ENGLND);

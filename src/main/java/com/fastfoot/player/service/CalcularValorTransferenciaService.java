@@ -55,7 +55,7 @@ public class CalcularValorTransferenciaService {
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		
 		for (Clube c : clubes) {	
-			jogadores.addAll(jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO));//TODO: otimizar
+			jogadores.addAll(jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO));
 		}
 		
 		stopWatch.split();
@@ -85,13 +85,13 @@ public class CalcularValorTransferenciaService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularValorTransferencia(Liga liga) {
+	public CompletableFuture<Boolean> calcularValorTransferencia(Liga liga, boolean primeirosIds) {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		long inicio = 0, fim = 0;
@@ -100,7 +100,15 @@ public class CalcularValorTransferenciaService {
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 		
-		List<Jogador> jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO);
+		List<Jogador> jogadores;
+		
+		if (primeirosIds) {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+		} else {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+		}
 		
 		for (Jogador j : jogadores) {
 			calcularValorTransferencia(j);
@@ -122,7 +130,7 @@ public class CalcularValorTransferenciaService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
@@ -158,7 +166,7 @@ public class CalcularValorTransferenciaService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}

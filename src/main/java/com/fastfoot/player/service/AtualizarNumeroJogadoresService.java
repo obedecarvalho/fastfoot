@@ -1,7 +1,9 @@
 package com.fastfoot.player.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -19,15 +21,15 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 @Service
 public class AtualizarNumeroJogadoresService {
 	
-	private static final int[] NUM_ZAG = new int[] {3, 4, 13, 14, 24, 33, 43, 44, 53, 54};
+	private static final Integer[] NUM_ZAG = new Integer[] {3, 4, 13, 14, 24, 33, 43, 44, 53, 54};
 	
-	private static final int[] NUM_LAT = new int[] {2, 6, 16, 22, 26, 32, 36, 42, 46, 52};
+	private static final Integer[] NUM_LAT = new Integer[] {2, 6, 16, 22, 26, 32, 36, 42, 46, 52};
 	
-	private static final int[] NUM_VOL = new int[] {8, 5, 18, 15, 28, 25, 38, 35, 48, 55};
+	private static final Integer[] NUM_VOL = new Integer[] {8, 5, 18, 15, 28, 25, 38, 35, 48, 55};
 	
-	private static final int[] NUM_MEI = new int[] {7, 10, 17, 20, 27, 30, 37, 40, 47, 50};
+	private static final Integer[] NUM_MEI = new Integer[] {7, 10, 17, 20, 27, 30, 37, 40, 47, 50};
 	
-	private static final int[] NUM_ATA = new int[] {9, 11, 19, 21, 29, 31, 39, 41, 49, 51};
+	private static final Integer[] NUM_ATA = new Integer[] {9, 11, 19, 21, 29, 31, 39, 41, 49, 51};
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -92,5 +94,53 @@ public class AtualizarNumeroJogadoresService {
 		}
 		
 		jogadoresAtualizar.addAll(jogadores);
+	}
+	
+	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar) {
+		
+		List<Jogador> jogadoresNaoAtualizar;
+		
+		for (Clube c : jogadoresAtualizar.keySet()) {
+			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
+			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar);
+		}
+	}
+	
+	protected Integer[] getNumerosPorPosicao(Posicao posicao) {
+		if (Posicao.ZAGUEIRO.equals(posicao)) return NUM_ZAG;
+		if (Posicao.LATERAL.equals(posicao)) return NUM_LAT;
+		if (Posicao.VOLANTE.equals(posicao)) return NUM_VOL;
+		if (Posicao.MEIA.equals(posicao)) return NUM_MEI;
+		if (Posicao.ATACANTE.equals(posicao)) return NUM_ATA;
+		return null;
+	}
+	
+	protected void atualizarNumeroJogadoresClube(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar) {
+		
+		List<Integer> numerosDisponiveis;
+		
+		for (Jogador jogador : jogadoresAtualizar) {
+			
+			if (jogador.getPosicao().isGoleiro()) {
+				numerosDisponiveis = new ArrayList<Integer>();
+				for (int i = 0; i < 10; i++) {
+					numerosDisponiveis.add(i * 11 + 1);
+				}
+			} else {
+				numerosDisponiveis = new ArrayList<Integer>(Arrays.asList(getNumerosPorPosicao(jogador.getPosicao())));
+			}
+			
+			numerosDisponiveis
+					.removeAll(jogadoresNaoAtualizar.stream()
+							/*.filter(j -> j.getPosicao().equals(jogador.getPosicao()))*/
+							.map(j -> j.getNumero()).collect(Collectors.toList()));
+			
+			if (numerosDisponiveis.isEmpty()) {
+				throw new RuntimeException("Erro ao atualizarNumeroJogadoresClube");
+			} else {
+				jogador.setNumero(numerosDisponiveis.get(0));
+				jogadoresNaoAtualizar.add(jogador);
+			}
+		}
 	}
 }

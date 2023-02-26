@@ -25,6 +25,16 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube.liga = :liga AND j.statusJogador = :status ")
 	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube.liga = :liga AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
+	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga,
+			@Param("status") StatusJogador status, @Param("idClubeMin") Integer idClubeMin,
+			@Param("idClubeMax") Integer idClubeMax);
+	
+	@Query(" SELECT j FROM Jogador j WHERE j.clube.liga = :liga AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
+	public List<Jogador> findByLigaClubeAndStatusJogador(@Param("liga") Liga liga,
+			@Param("status") StatusJogador status, @Param("idClubeMin") Integer idClubeMin,
+			@Param("idClubeMax") Integer idClubeMax);
 
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j = :jogador ")
 	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
