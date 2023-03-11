@@ -129,6 +129,10 @@ public class RoletaUtil {
 		return R.nextDouble() <= probabilidade;
 	}
 	
+	public static int sortearIntervalo(int min, int max) {
+		return min + R.nextInt(max);
+	}
+	
 	public static ElementoRoleta sortearAsDouble(List<? extends ElementoRoleta> elementos) {
 		double valor = 0.0;
 		

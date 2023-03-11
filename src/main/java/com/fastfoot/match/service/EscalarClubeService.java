@@ -94,6 +94,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 1);
 		}
 
@@ -118,6 +119,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 2);
 		}
 		
@@ -148,6 +150,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 2);
 		}
 		
@@ -178,6 +181,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 2);
 		}
 		
@@ -208,6 +212,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 2);
 		}
 		
@@ -238,6 +243,7 @@ public class EscalarClubeService {
 				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 		
 		if (partida.isAmistoso()) {
+			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
 			jogPos = deslocarListNPosicoes(jogPos, 2);
 		}
 		

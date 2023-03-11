@@ -279,6 +279,9 @@ public class JogarPartidaService {
 		
 		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
+		int minutoSubstituicaoMandante = RoletaUtil.sortearIntervalo(60, 75);
+		int minutoSubstituicaoVisitante = RoletaUtil.sortearIntervalo(60, 75);
+		
 		for (int minuto = 1; minuto <= MINUTOS; minuto++) {
 			
 			// Diminuir energia
@@ -308,14 +311,20 @@ public class JogarPartidaService {
 
 			}
 			
-			if (minuto == (60 + 5)) {//TODO: sortear entre 60' e 74'
+			if (minuto == minutoSubstituicaoMandante) {
+				EstrategiaSubstituicao estrategia = RoletaUtil.sortearPesoUm(
+						new EstrategiaSubstituicao[] { EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES,
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS });
 				realizarSubstituicoesJogadorPartidaService.realizarSubstituicoesJogadorPartida(esquema,
-						EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS, partidaResultado, true, minuto);
+						estrategia, partidaResultado, true, minuto);
 			}
 			
-			if (minuto == (60 + 10)) {//TODO: sortear entre 60' e 74'
+			if (minuto == minutoSubstituicaoVisitante) {
+				EstrategiaSubstituicao estrategia = RoletaUtil.sortearPesoUm(
+						new EstrategiaSubstituicao[] { EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES,
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS });
 				realizarSubstituicoesJogadorPartidaService.realizarSubstituicoesJogadorPartida(esquema,
-						EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS, partidaResultado, false, minuto);
+						estrategia, partidaResultado, false, minuto);
 			}
 
 			//
