@@ -28,6 +28,7 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
@@ -40,6 +41,7 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
+import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -126,6 +128,9 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;
+	
+	@Autowired
+	private JogadorEnergiaRepository jogadorEnergiaRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -350,6 +355,13 @@ public class CriarCalendarioTemporadaService {
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#gerarMudancaClubeNivel:" + (fim - inicio));
 		}
+		
+		inicio = stopWatch.getSplitTime();
+		jogadorEnergiaRepository.deleteAllInBatch();
+		jogadorEnergiaRepository.inserirEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL);
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#inserirEnergiaTodosJogadores:" + (fim - inicio));
 
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
@@ -604,8 +616,11 @@ public class CriarCalendarioTemporadaService {
 	}
 	
 	public List<QuantitativoPosicaoClubeDTO> getQuantitativoPosicaoClube() {
-		List<Map<String, Object>> result = grupoDesenvolvimentoJogadorRepository
-				.findQtdeJogadorPorPosicaoPorClube(Posicao.GOLEIRO.ordinal(), JogadorFactory.IDADE_MAX);
+		/*List<Map<String, Object>> result = grupoDesenvolvimentoJogadorRepository
+				.findQtdeJogadorPorPosicaoPorClube(Posicao.GOLEIRO.ordinal(), JogadorFactory.IDADE_MAX);*/
+		List<Map<String, Object>> result = grupoDesenvolvimentoJogadorRepository.findQtdeJogadorPorPosicaoPorClube(
+				PosicaoAttributeConverter.getInstance().convertToDatabaseColumn(Posicao.GOLEIRO),
+				JogadorFactory.IDADE_MAX);
 		
 		List<QuantitativoPosicaoClubeDTO> quantitativoPosicaoClubeList = new ArrayList<QuantitativoPosicaoClubeDTO>();
 		QuantitativoPosicaoClubeDTO dto = null;
@@ -613,7 +628,8 @@ public class CriarCalendarioTemporadaService {
 		for (Map<String, Object> map : result) {
 			dto = new QuantitativoPosicaoClubeDTO();
 			dto.setClube(new Clube((Integer) map.get("id_clube")));
-			dto.setPosicao(Posicao.values()[(Integer) map.get("posicao")]);
+			//dto.setPosicao(Posicao.values()[(Integer) map.get("posicao")]);
+			dto.setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((Character) map.get("posicao")));
 			dto.setQtde(((BigInteger) map.get("total")).intValue());
 			quantitativoPosicaoClubeList.add(dto);
 		}

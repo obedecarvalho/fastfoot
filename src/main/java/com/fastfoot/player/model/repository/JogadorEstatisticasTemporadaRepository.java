@@ -52,7 +52,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	0 as numero_rodada_disputa_penalt, j.id_clube as id_clube," +
 			" 	j.id as id_jogador, ?1 as id_temporada" +
 			" from jogador j" +
-			" where status_jogador = 0;"
+			" where status_jogador = 0;"//StatusJogador.ATIVO
 	)
 	public void criarJogadorEstatisticasTemporada(Long idTemporada, Boolean amistoso);
 	

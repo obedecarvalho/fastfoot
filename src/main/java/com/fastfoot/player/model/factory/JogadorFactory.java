@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.EstrategiaHabilidadeAtacante;
 import com.fastfoot.player.model.EstrategiaHabilidadeGoleiro;
 import com.fastfoot.player.model.EstrategiaHabilidadeLateral;
@@ -29,7 +30,11 @@ import com.fastfoot.service.util.RoletaUtil;
 
 public abstract class JogadorFactory {
 	
-	private static Comparator<Jogador> COMPARATOR;
+	private static Comparator<Jogador> COMPARATOR_FORCA_GERAL;
+	
+	private static Comparator<Jogador> COMPARATOR_FORCA_GERAL_ENERGIA;
+	
+	private static Comparator<Jogador> COMPARATOR_ENERGIA;
 	
 	//########	SUPER CLASSE ABSTRACT	########################
 	
@@ -346,9 +351,9 @@ public abstract class JogadorFactory {
 		return sumHabValor / peso;
 	}
 	
-	public static Comparator<Jogador> getComparator() {
-		if (COMPARATOR == null) {
-			COMPARATOR = new Comparator<Jogador>() {
+	public static Comparator<Jogador> getComparatorForcaGeral() {
+		if (COMPARATOR_FORCA_GERAL == null) {
+			COMPARATOR_FORCA_GERAL = new Comparator<Jogador>() {
 	
 				@Override
 				public int compare(Jogador o1, Jogador o2) {
@@ -357,6 +362,45 @@ public abstract class JogadorFactory {
 				}
 			};
 		}
-		return COMPARATOR;
+		return COMPARATOR_FORCA_GERAL;
+	}
+	
+	public static Comparator<Jogador> getComparatorForcaGeralEnergia() {
+		if (COMPARATOR_FORCA_GERAL_ENERGIA == null) {
+			COMPARATOR_FORCA_GERAL_ENERGIA = new Comparator<Jogador>() {
+	
+				@Override
+				public int compare(Jogador o1, Jogador o2) {
+					Double forcaPonderada1 = Math.pow(o1.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (o1.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+
+					Double forcaPonderada2 = Math.pow(o2.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (o2.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+					
+					int compare = forcaPonderada2.compareTo(forcaPonderada1);//reverse
+					
+					if (compare == 0) {
+						compare = o1.getIdade().compareTo(o2.getIdade());
+					}
+					
+					return compare;
+				}
+			};
+		}
+		return COMPARATOR_FORCA_GERAL_ENERGIA;
+	}
+	
+	public static Comparator<Jogador> getComparatorEnergia() {
+		if (COMPARATOR_ENERGIA == null) {
+			COMPARATOR_ENERGIA = new Comparator<Jogador>() {
+	
+				@Override
+				public int compare(Jogador o1, Jogador o2) {
+					return o1.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual()
+							.compareTo(o2.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual());
+				}
+			};
+		}
+		return COMPARATOR_ENERGIA;
 	}
 }

@@ -33,6 +33,8 @@ public class PartidaLance {
 	private Integer ordem;
 
 	private Boolean acao;
+	
+	private Integer minuto;
 
 	@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
@@ -128,6 +130,14 @@ public class PartidaLance {
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
+	}
+
+	public Integer getMinuto() {
+		return minuto;
+	}
+
+	public void setMinuto(Integer minuto) {
+		this.minuto = minuto;
 	}
 
 	@Override

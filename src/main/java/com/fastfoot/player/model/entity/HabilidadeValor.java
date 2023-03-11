@@ -18,6 +18,7 @@ import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
@@ -97,9 +98,28 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	@Override
 	public Integer getValorN() {
 		if (valorN == null) {
-			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
+			//valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
+			calcularValorN();
 		}
 		return valorN;
+	}
+	
+	public void calcularValorN() {
+
+		/*int energia = Constantes.ENERGIA_MINIMA_JOGAR;
+		
+		if (!ValidatorUtil.isEmpty(getJogador()) && !ValidatorUtil.isEmpty(getJogador().getJogadorDetalhe())
+				&& !ValidatorUtil.isEmpty(getJogador().getJogadorDetalhe().getJogadorEnergia())
+				&& !ValidatorUtil.isEmpty(getJogador().getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual())) {
+			energia = getJogador().getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual();
+		}*/
+
+		if (ValidatorUtil.isEmpty(getJogador())) {
+			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
+		} else {
+			double energia = (getJogador().getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+			valorN = (int) (Math.pow(valor, Constantes.ROLETA_N_POWER) * energia);
+		}
 	}
 
 	public void setValor(Integer valor) {

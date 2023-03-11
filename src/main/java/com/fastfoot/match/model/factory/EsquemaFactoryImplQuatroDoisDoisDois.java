@@ -1,7 +1,6 @@
 package com.fastfoot.match.model.factory;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,20 +10,21 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaImpl;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 
 @Deprecated
 public class EsquemaFactoryImplQuatroDoisDoisDois extends EsquemaFactory {//4-2-2-2 ou 4-4-2 Quadrado ou 2-2-2-2-2
 
 	@Override
-	public Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
-			List<EscalacaoJogadorPosicao> visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
+	public Esquema gerarEsquemaEscalacao(EscalacaoClube mandantes,
+			EscalacaoClube visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
 			JogadorApoioCriacao jogadorApoioCriacaoVisitante) {
 		
-		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> mandantesMap = mandantes.stream()
+		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> mandantesMap = mandantes.getListEscalacaoJogadorPosicao().stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
 		
-		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> visitantesMap = visitantes.stream()
+		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> visitantesMap = visitantes.getListEscalacaoJogadorPosicao().stream()
 				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
 
 		EsquemaImpl esquema = new EsquemaImpl();

@@ -13,6 +13,7 @@ delete from habilidade_valor;
 delete from escalacao_jogador_posicao;
 delete from escalacao_clube;
 delete from grupo_desenvolvimento_jogador;
+delete from jogador_energia;
 delete from jogador;
 delete from jogador_detalhe;
 delete from clube_probabilidade;

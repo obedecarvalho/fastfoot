@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
-import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
@@ -21,8 +20,8 @@ import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
+import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
-import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
@@ -74,6 +73,9 @@ public class JogarRodadaService {
 
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+	
+	@Autowired
+	private JogadorEnergiaRepository jogadorEnergiaRepository;
 
 	//###	SERVICE	###
 	/*@Autowired
@@ -107,7 +109,7 @@ public class JogarRodadaService {
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularTorcidaPartida:" + (fim - inicio));
@@ -146,6 +148,15 @@ public class JogarRodadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#salvarPartidaTorcida:" + (fim - inicio));
 		
+		if (SALVAR_LANCES) {
+			stopWatch.split();
+			inicio = stopWatch.getSplitTime();
+			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#partidaLanceRepository:" + (fim - inicio));
+		}
+		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		//System.err.println(mensagens);
@@ -153,9 +164,9 @@ public class JogarRodadaService {
 		return CompletableFuture.completedFuture(rodada);
 	}
 	
-	private void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+	/*private void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
-	}
+	}*/
 
 	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		if(rodada.getCampeonato() != null) {
@@ -193,7 +204,7 @@ public class JogarRodadaService {
 
 		partidaRepository.saveAllAndFlush(r.getPartidas());
 
-		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
+		//if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 
 		if(r.getCampeonato() != null) {
 			classificacaoRepository.saveAllAndFlush(r.getCampeonato().getClassificacao());
@@ -258,14 +269,14 @@ public class JogarRodadaService {
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularTorcidaPartida:" + (fim - inicio));
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#jogarPartidas:" + (fim - inicio));
@@ -291,6 +302,15 @@ public class JogarRodadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#salvarPartidaTorcida:" + (fim - inicio));
 		
+		if (SALVAR_LANCES) {
+			stopWatch.split();
+			inicio = stopWatch.getSplitTime();
+			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#partidaLanceRepository:" + (fim - inicio));
+		}
+		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal(RE):" + stopWatch.getTime());
 		//System.err.println(mensagens);
@@ -302,9 +322,9 @@ public class JogarRodadaService {
 		rodada.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada));
 	}
 
-	private void jogarPartidas(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	/*private void jogarPartidas(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
-	}
+	}*/
 
 	private void salvarPartidas(RodadaEliminatoria r) {
 		
@@ -318,16 +338,7 @@ public class JogarRodadaService {
 		partidaEliminatoriaRepository.saveAll(r.getPartidas().stream().filter(p -> p.getProximaPartida() != null)
 				.map(p -> p.getProximaPartida()).collect(Collectors.toList()));
 
-		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
-	}
-
-	private void salvarLances(List<? extends PartidaResultadoJogavel> partidas) {//TODO: salvar PartidaLance
-		List<PartidaLance> lances = null;
-
-		for (PartidaResultadoJogavel partida : partidas) {
-			lances = null;//partida.getPartidaLances();
-			partidaLanceRepository.saveAll(lances);//TODO: agrupar lances e fazer apenas um saveAll??
-		}
+		//if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}
 
 	@Async("defaultExecutor")
@@ -337,12 +348,16 @@ public class JogarRodadaService {
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
-		calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
-		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
 
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
 		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		
+		if (SALVAR_LANCES) {
+			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+		}
 
 		return CompletableFuture.completedFuture(rodada);
 	}
@@ -361,20 +376,19 @@ public class JogarRodadaService {
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#habilidadeValorEstatisticaRepository:" + (fim - inicio));
 		
-		/*stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		//TODO:melhorar aqui
-		jogadorEstatisticasTemporadaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasTemporada());
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#jogadorEstatisticasTemporadaRepository:" + (fim - inicio));*/
-		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 		jogadorEstatisticaSemanaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasSemana());
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#jogadorEstatisticaSemanaRepository:" + (fim - inicio));
+		
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		jogadorEnergiaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEnergias());
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#jogadorEnergiaRepository:" + (fim - inicio));
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
@@ -385,9 +399,9 @@ public class JogarRodadaService {
 		rodada.setPartidas(partidaAmistosaResultadoRepository.findByRodada(rodada));
 	}
 
-	private void jogarPartidas(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	/*private void jogarPartidas(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
-	}
+	}*/
 
 	private void salvarPartidas(RodadaAmistosa r) {
 		
@@ -396,7 +410,7 @@ public class JogarRodadaService {
 
 		partidaAmistosaResultadoRepository.saveAllAndFlush(r.getPartidas());
 		
-		if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
+		//if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}
 	
 	private void salvarPartidaTorcida(PartidaTorcidaSalvarDTO dto) {
@@ -404,15 +418,14 @@ public class JogarRodadaService {
 		movimentacaoFinanceiraRepository.saveAll(dto.getMovimentacaoFinanceira());
 	}
 
-	private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	/*private void jogarPartida(PartidaResultadoJogavel partida, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		jogarPartidaService.jogar(partida, partidaJogadorEstatisticaDTO);
-	}
+	}*/
 
 	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
-			//jogarPartida(p, Constantes.NRO_JOGADAS_PARTIDA);
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
+			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
@@ -421,9 +434,8 @@ public class JogarRodadaService {
 	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-			//jogarPartida(p, Constantes.NRO_JOGADAS_ELIMINATORIA);
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
-			
+			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
+
 			if (p.getProximaPartida() != null) {
 				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
 			}
@@ -432,7 +444,7 @@ public class JogarRodadaService {
 
 	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
-			jogarPartida(p, partidaJogadorEstatisticaDTO);
+			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package com.fastfoot.transfer.model.entity;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.transfer.model.NivelAdequacao;
 
@@ -26,6 +28,7 @@ public class NecessidadeContratacaoClube {
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
 	
+	@Convert(converter = PosicaoAttributeConverter.class)
 	private Posicao posicao;
 	
 	private NivelAdequacao nivelAdequacaoMin;

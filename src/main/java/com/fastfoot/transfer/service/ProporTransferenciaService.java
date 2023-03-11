@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -192,7 +192,8 @@ public class ProporTransferenciaService {
 					j.setForcaGeralJogador((int) jogMap.get("forca_geral_jog"));
 					j.setForcaGeralClube((int) jogMap.get("forca_geral_clube"));
 					j.setDisponivelNegociacao((Boolean) jogMap.get("disponivel_negociacao"));
-					j.setPosicao(Posicao.values()[(int) jogMap.get("posicao")]);
+					//j.setPosicao(Posicao.values()[(int) jogMap.get("posicao")]);
+					j.setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((Character) jogMap.get("posicao")));
 					j.setIdade((int) jogMap.get("idade"));
 					j.setValorTransferencia((double) jogMap.get("valor_transferencia"));
 					

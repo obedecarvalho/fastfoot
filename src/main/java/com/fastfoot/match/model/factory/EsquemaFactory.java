@@ -7,7 +7,7 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
-import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 
 public abstract class EsquemaFactory {
 	
@@ -40,8 +40,12 @@ public abstract class EsquemaFactory {
 	
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_5 = 1.10d;
 	
-	public abstract Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
+	/*public abstract Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
 			List<EscalacaoJogadorPosicao> visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
+			JogadorApoioCriacao jogadorApoioCriacaoVisitante);*/
+	
+	public abstract Esquema gerarEsquemaEscalacao(EscalacaoClube mandantes,
+			EscalacaoClube visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
 			JogadorApoioCriacao jogadorApoioCriacaoVisitante);
 
 	protected static void addTransicaoMandante(EsquemaPosicao p1, EsquemaPosicao p2, Integer pesoP1P2, Integer pesoP2P1) {

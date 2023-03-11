@@ -104,7 +104,8 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
-				escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
+				//escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
+				escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		

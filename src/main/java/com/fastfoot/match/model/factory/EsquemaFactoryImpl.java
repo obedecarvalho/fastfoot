@@ -1,7 +1,6 @@
 package com.fastfoot.match.model.factory;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,6 +10,7 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaImpl;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 
 public class EsquemaFactoryImpl extends EsquemaFactory {
@@ -175,14 +175,13 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 	 */
 
 	@Override
-	public Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
-			List<EscalacaoJogadorPosicao> visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
-			JogadorApoioCriacao jogadorApoioCriacaoVisitante) {
-		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> mandantesMap = mandantes.stream()
-				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
-		
-		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> visitantesMap = visitantes.stream()
-				.collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
+	public Esquema gerarEsquemaEscalacao(EscalacaoClube mandantes, EscalacaoClube visitantes,
+			JogadorApoioCriacao jogadorApoioCriacaoMandante, JogadorApoioCriacao jogadorApoioCriacaoVisitante) {
+		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> mandantesMap = mandantes.getListEscalacaoJogadorPosicao()
+				.stream().collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
+
+		Map<EscalacaoPosicao, EscalacaoJogadorPosicao> visitantesMap = visitantes.getListEscalacaoJogadorPosicao()
+				.stream().collect(Collectors.toMap(EscalacaoJogadorPosicao::getEscalacaoPosicao, Function.identity()));
 
 		EsquemaImpl esquema = new EsquemaImpl();
 
@@ -408,6 +407,9 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 		esquema.setGoleiroVisitante(gov);
 		
 		//print(Arrays.asList(ded, dee, mdd, mdc, mde, mod, moc, moe, atd, ate));
+		
+		esquema.setEscalacaoClubeMandante(mandantes);
+		esquema.setEscalacaoClubeVisitante(visitantes);
 
 		return esquema;
 	}

@@ -114,7 +114,7 @@ public class AposentarJogadorService {
 				Collections.sort(quantitativoPosicaoClubeDTOs);
 				quantitativoPosicaoClubeDTOs.get(0).setQtde(quantitativoPosicaoClubeDTOs.get(0).getQtde() + 1);
 				p = gdj.getJogador().getPosicao().isGoleiro() ? gdj.getJogador().getPosicao()
-						: quantitativoPosicaoClubeDTOs.get(0).getPosicao();
+						: quantitativoPosicaoClubeDTOs.get(0).getPosicao();//TODO: conferir se tem que diminuir QuantitativoPosicaoClubeDTO
 				
 				//aposentar
 				gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
@@ -156,7 +156,7 @@ public class AposentarJogadorService {
 	}
 	
 	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
-			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
+			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {//TODO: conferir qual numero jogador ira usar de acordo com a posição
 
 		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
 				JogadorFactory.IDADE_MIN);//TODO: passar modo de desenvolvimento do jogador aposentado

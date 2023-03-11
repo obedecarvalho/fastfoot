@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
@@ -211,7 +211,8 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			
 			jogadorEstatisticasTemporada.setJogador(new Jogador(((BigInteger) e.get("id_jogador")).longValue()));
 			jogadorEstatisticasTemporada.getJogador().setNome((String) e.get("nome_jogador"));
-			jogadorEstatisticasTemporada.getJogador().setPosicao(Posicao.values()[(Integer) e.get("posicao")]);
+			//jogadorEstatisticasTemporada.getJogador().setPosicao(Posicao.values()[(Integer) e.get("posicao")]);
+			jogadorEstatisticasTemporada.getJogador().setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((Character) e.get("posicao")));
 			jogadorEstatisticasTemporada.setClube(new Clube((Integer) e.get("id_clube")));
 			jogadorEstatisticasTemporada.getClube().setNome((String) e.get("nome_clube"));
 			jogadorEstatisticasTemporada.getJogador().setClube(jogadorEstatisticasTemporada.getClube());

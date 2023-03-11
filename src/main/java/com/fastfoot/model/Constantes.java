@@ -87,4 +87,18 @@ public class Constantes {
 	//###	SALARIO		###
 	/** Porcentagem do Valor de Transferencia que seja pago como salário semanal para o Jogador */
 	public static final Double PORC_VALOR_JOG_SALARIO_SEMANAL = 0.004;
+	
+	//###	ENERGIA JOGADOR	###
+	public static final Integer ENERGIA_INICIAL = 100;
+
+	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA = 4;
+	
+	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO = 7;
+
+	public static final Integer REPOSICAO_ENERGIA_SEMANAL = 19;
+	
+	public static final Integer ENERGIA_MINIMA_JOGAR = 30;
+	
+	//###	SUBSTITUICOES	###
+	public static final Integer NUMERO_MAX_SUBSTITUICOES = 5;
 }

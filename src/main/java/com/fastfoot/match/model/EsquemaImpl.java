@@ -2,6 +2,7 @@ package com.fastfoot.match.model;
 
 import java.util.List;
 
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -17,6 +18,10 @@ public class EsquemaImpl implements Esquema {
 	private EsquemaPosicao goleiroMandante;
 
 	private EsquemaPosicao goleiroVisitante;
+	
+	private EscalacaoClube escalacaoClubeMandante;
+	
+	private EscalacaoClube escalacaoClubeVisitante;
 
 	@Override
 	public List<EsquemaPosicao> getPosicoes() {
@@ -162,5 +167,23 @@ public class EsquemaImpl implements Esquema {
 	@Override
 	public Double getProbabilidadeArremateForaPosicaoPosse() {
 		return getPosicaoAtual().getProbabilidadeArremateFora(getPosseBolaMandante());
+	}
+
+	@Override
+	public EscalacaoClube getEscalacaoClubeMandante() {
+		return escalacaoClubeMandante;
+	}
+
+	public void setEscalacaoClubeMandante(EscalacaoClube escalacaoClubeMandante) {
+		this.escalacaoClubeMandante = escalacaoClubeMandante;
+	}
+
+	@Override
+	public EscalacaoClube getEscalacaoClubeVisitante() {
+		return escalacaoClubeVisitante;
+	}
+
+	public void setEscalacaoClubeVisitante(EscalacaoClube escalacaoClubeVisitante) {
+		this.escalacaoClubeVisitante = escalacaoClubeVisitante;
 	}
 }

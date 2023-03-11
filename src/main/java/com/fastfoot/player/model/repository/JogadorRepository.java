@@ -97,7 +97,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_transferencia) as valor_transferencia" +
 			" from jogador j" +
-			" where status_jogador = 0" +
+			" where status_jogador = 0" + //StatusJogador.ATIVO
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findValorTransferenciaPorClube();

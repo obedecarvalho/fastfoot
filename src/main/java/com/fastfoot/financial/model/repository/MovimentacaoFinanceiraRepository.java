@@ -45,7 +45,7 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 			" inner join (" +
 			" 	select id_clube, sum(valor_transferencia) * ?1 as salarios" +
 			" 	from jogador j" +
-			" 	where j.status_jogador = 0" +
+			" 	where j.status_jogador = 0" +//StatusJogador.ATIVO
 			" 	group by id_clube" +
 			" ) as sal on sal.id_clube = c.id"
 	)

@@ -25,6 +25,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
+import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.PagarSalarioJogadoresService;
 import com.fastfoot.probability.service.CalcularProbabilidadeEstatisticasSimplesService;
@@ -118,6 +119,9 @@ public class JogarPartidasSemanaService {
 	
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+	
+	@Autowired
+	private JogadorEnergiaRepository jogadorEnergiaRepository;
 	
 	//#####	SERVICE	############
 	
@@ -313,6 +317,13 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#pagarSalarioJogadores:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitTime();
+		//jogadorEnergiaRepository.inserirEnergiaTodosJogadores(Constantes.REPOSICAO_ENERGIA_SEMANAL);
+		jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);//TODO: recuperação especifica por idade jogador
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#recuperarEnergia:" + (fim - inicio));
 
 		//inicio = stopWatch.getSplitTime();
 

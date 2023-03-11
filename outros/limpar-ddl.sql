@@ -20,9 +20,12 @@ drop table if exists habilidade_valor;
 drop table if exists jogador_estatistica_semana;
 drop table if exists jogador_estatisticas_temporada;
 drop table if exists partida_lance;
+drop table if exists jogador_energia;
+drop table if exists habilidade_grupo_valor;
 drop table if exists jogador;
 drop table if exists jogador_detalhe;
 
+drop table if exists escalacao_clube;
 drop table if exists clube_saldo_semana;
 drop table if exists clube_resumo_temporada;
 drop table if exists partida_torcida;

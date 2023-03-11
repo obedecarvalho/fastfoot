@@ -38,16 +38,22 @@ public class JogadorDetalhe {
 	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;*/
 	
 	@Transient
-	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;
+	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;//TODO: avaliar se é melhor colocar no Jogador.java
 	
 	@Transient
-	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
+	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;//TODO: avaliar se é melhor colocar no Jogador.java
 	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 	
 	@Transient
 	@JsonIgnore
-	private List<HabilidadeGrupoValor> habilidadeGrupoValores;
+	private List<HabilidadeGrupoValor> habilidadeGrupoValores;//TODO: avaliar se é melhor colocar no Jogador.java
+	
+	@Transient
+	private JogadorEstatisticaSemana jogadorEstatisticaSemana;//TODO: avaliar se é melhor colocar no Jogador.java
+	
+	@Transient
+	private JogadorEnergia jogadorEnergia;//TODO: avaliar se é melhor colocar no Jogador.java
 
 	public Long getId() {
 		return id;
@@ -112,6 +118,22 @@ public class JogadorDetalhe {
 
 	public void setHabilidadeGrupoValores(List<HabilidadeGrupoValor> habilidadeGrupoValores) {
 		this.habilidadeGrupoValores = habilidadeGrupoValores;
+	}
+
+	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
+		return jogadorEstatisticaSemana;
+	}
+
+	public void setJogadorEstatisticaSemana(JogadorEstatisticaSemana jogadorEstatisticaSemana) {
+		this.jogadorEstatisticaSemana = jogadorEstatisticaSemana;
+	}
+
+	public JogadorEnergia getJogadorEnergia() {
+		return jogadorEnergia;
+	}
+
+	public void setJogadorEnergia(JogadorEnergia jogadorEnergia) {
+		this.jogadorEnergia = jogadorEnergia;
 	}
 
 	@JsonIgnore

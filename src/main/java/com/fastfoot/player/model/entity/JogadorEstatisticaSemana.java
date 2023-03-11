@@ -9,6 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -63,7 +64,7 @@ public class JogadorEstatisticaSemana {
 	
 	private Integer numeroJogos;//Numero total de jogos
 	
-	private Integer numeroJogosTitular;//TODO: implementar lógica
+	private Integer numeroJogosTitular;
 	
 	private Integer numeroMinutosJogados;
 	
@@ -96,6 +97,15 @@ public class JogadorEstatisticaSemana {
 	private Integer defesasDisputaPenalt;
 
 	private Integer golsSofridosDisputaPenalt;
+	
+	
+	//
+	@Transient
+	private Integer minutoInicial;
+	
+	@Transient
+	private Integer minutoFinal;
+	//
 
 	public JogadorEstatisticaSemana() {
 		
@@ -407,6 +417,22 @@ public class JogadorEstatisticaSemana {
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
+	}
+
+	public Integer getMinutoInicial() {
+		return minutoInicial;
+	}
+
+	public void setMinutoInicial(Integer minutoInicial) {
+		this.minutoInicial = minutoInicial;
+	}
+
+	public Integer getMinutoFinal() {
+		return minutoFinal;
+	}
+
+	public void setMinutoFinal(Integer minutoFinal) {
+		this.minutoFinal = minutoFinal;
 	}
 
 	@Override

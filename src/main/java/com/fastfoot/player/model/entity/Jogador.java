@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -25,6 +26,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.Posicao;
+import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.StatusJogador;
 
 @Entity
@@ -42,6 +44,7 @@ public class Jogador {
 	@JoinColumn(name = "id_clube")
 	private Clube clube;
 	
+	@Convert(converter = PosicaoAttributeConverter.class)
 	private Posicao posicao;
 	
 	private Integer numero;
@@ -66,7 +69,7 @@ public class Jogador {
 	private Double tmpForcaGeralAta2;*/
 	//
 	
-	private Double forcaGeralPotencialEfetiva;
+	private Double forcaGeralPotencialEfetiva;//TODO: avaliar necessidade
 	
 	private StatusJogador statusJogador;
 	
@@ -89,8 +92,8 @@ public class Jogador {
 	@JoinColumn(name = "id_jogador_detalhe")
 	private JogadorDetalhe jogadorDetalhe;
 	
-	@Transient
-	private JogadorEstatisticaSemana jogadorEstatisticaSemana;
+	/*@Transient
+	private JogadorEstatisticaSemana jogadorEstatisticaSemana;*/
 
 	public Jogador() {
 		
@@ -231,12 +234,14 @@ public class Jogador {
 		this.jogadorDetalhe = jogadorDetalhe;
 	}
 
+	@JsonIgnore
+	@Transient
 	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
-		return jogadorEstatisticaSemana;
+		return jogadorDetalhe.getJogadorEstatisticaSemana();
 	}
 
 	public void setJogadorEstatisticaSemana(JogadorEstatisticaSemana jogadorEstatisticaSemana) {
-		this.jogadorEstatisticaSemana = jogadorEstatisticaSemana;
+		jogadorDetalhe.setJogadorEstatisticaSemana(jogadorEstatisticaSemana);
 	}
 
 	@JsonIgnore

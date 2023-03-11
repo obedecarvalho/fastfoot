@@ -2,6 +2,7 @@ package com.fastfoot.match.model;
 
 import java.util.List;
 
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -43,4 +44,8 @@ public interface Esquema {
 	public EsquemaPosicao getGoleiroVisitante();
 	
 	public EsquemaPosicao getGoleiroMandante();
+	
+	public EscalacaoClube getEscalacaoClubeMandante();
+	
+	public EscalacaoClube getEscalacaoClubeVisitante();
 }

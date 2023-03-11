@@ -17,6 +17,7 @@ import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacionalAttributeConverter;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
@@ -35,6 +36,7 @@ public class ClubeResumoTemporada {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 	
+	@Convert(converter = NivelCampeonatoAttributeConverter.class)
 	private NivelCampeonato nivelCampeonato;
 	
 	private Integer jogos;

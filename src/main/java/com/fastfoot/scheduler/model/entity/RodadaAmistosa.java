@@ -3,6 +3,7 @@ package com.fastfoot.scheduler.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import javax.persistence.Transient;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 
 @Entity
@@ -40,6 +42,7 @@ public class RodadaAmistosa implements RodadaJogavel {
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
 	
+	@Convert(converter = NivelCampeonatoAttributeConverter.class)
 	private NivelCampeonato nivelCampeonato;
 
 	@Transient

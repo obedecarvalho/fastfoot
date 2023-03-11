@@ -48,5 +48,5 @@ public interface GrupoDesenvolvimentoJogadorRepository extends JpaRepository<Gru
 			" group by j.id_clube, j.posicao" +
 			" order by j.id_clube, total"
 	)
-	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(Integer posicaoExcluir, Integer idadeExcluir);
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(Character posicaoExcluir, Integer idadeExcluir);
 }

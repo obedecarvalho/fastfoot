@@ -2,6 +2,7 @@ package com.fastfoot.scheduler.model.entity;
 
 import java.util.List;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
 
 @Entity
 public class Campeonato implements CampeonatoJogavel {
@@ -34,6 +36,7 @@ public class Campeonato implements CampeonatoJogavel {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 
+	@Convert(converter = NivelCampeonatoAttributeConverter.class)
 	private NivelCampeonato nivelCampeonato;
 	
 	@Transient

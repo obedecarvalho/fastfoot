@@ -19,6 +19,7 @@ import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.repository.EscalacaoClubeRepository;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
@@ -84,9 +85,17 @@ public class EscalarClubeService {
 		List<EscalacaoPosicao> posicoesVazias = new ArrayList<EscalacaoPosicao>();
 		Map<Posicao, List<Jogador>> jogadoresSuplentes = new HashMap<Posicao, List<Jogador>>();
 		
-		//Gol
-		jogPos = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
+		List<Jogador> jogadoresDisponiveis = jogadores.stream().filter(
+				j -> j.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() > Constantes.ENERGIA_MINIMA_JOGAR)
 				.collect(Collectors.toList());
+		
+		//Gol
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 1);
+		}
 
 		if (jogPos.size() > 0) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_GOL, jogPos.get(0), true));
@@ -105,8 +114,13 @@ public class EscalarClubeService {
 		}
 		
 		//Zag
-		jogPos = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
-				.collect(Collectors.toList());
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 2);
+		}
+		
 		if (jogPos.size() > 0) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_ZD, jogPos.get(0), true));
 		} else {
@@ -130,8 +144,13 @@ public class EscalarClubeService {
 		}
 		
 		//Lateral
-		jogPos = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
-				.collect(Collectors.toList());
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 2);
+		}
+		
 		if (jogPos.size() > 0) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_LD, jogPos.get(0), true));
 		} else {
@@ -155,22 +174,27 @@ public class EscalarClubeService {
 		}
 		
 		//Vol
-		jogPos = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
-				.collect(Collectors.toList());
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 2);
+		}
+		
 		if (jogPos.size() > 0) {
-		escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_VD, jogPos.get(0), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_VD, jogPos.get(0), true));
 		} else {
 			posicoesVazias.add(EscalacaoPosicao.P_VD);
 		}
 		
 		if (jogPos.size() > 1) {
-		escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_VE, jogPos.get(1), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_VE, jogPos.get(1), true));
 		} else {
 			posicoesVazias.add(EscalacaoPosicao.P_VE);
 		}
 		
 		if (jogPos.size() > 2) {
-		escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_3, jogPos.get(2), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_3, jogPos.get(2), true));
 		} else {
 			posicoesVazias.add(EscalacaoPosicao.P_RES_3);
 		}
@@ -180,8 +204,13 @@ public class EscalarClubeService {
 		}
 		
 		//Meia
-		jogPos = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
-				.collect(Collectors.toList());
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 2);
+		}
+		
 		if (jogPos.size() > 0) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_MD, jogPos.get(0), true));
 		} else {
@@ -205,8 +234,13 @@ public class EscalarClubeService {
 		}
 		
 		//Ata
-		jogPos = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparator())
-				.collect(Collectors.toList());
+		jogPos = jogadoresDisponiveis.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
+		
+		if (partida.isAmistoso()) {
+			jogPos = deslocarListNPosicoes(jogPos, 2);
+		}
+		
 		if (jogPos.size() > 0) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_AD, jogPos.get(0), true));
 		} else {
@@ -252,5 +286,21 @@ public class EscalarClubeService {
 		escalacaoClubePartida.setListEscalacaoJogadorPosicao(escalacao);
 		
 		return escalacaoClubePartida;
+	}
+	
+	private <T> List<T> deslocarListNPosicoes(List<T> list, int n) {
+
+		if (list.size() <= n) return list;
+
+		List<T> novaLista = new ArrayList<T>();
+
+		int i = n;
+
+		for (int j = 0; j < list.size(); j++) {
+			novaLista.add(list.get(i));
+			i = (i + 1) % list.size();
+		}
+
+		return novaLista;
 	}
 }

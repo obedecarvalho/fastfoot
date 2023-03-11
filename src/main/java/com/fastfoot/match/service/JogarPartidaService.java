@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
+import com.fastfoot.match.model.EstrategiaSubstituicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
@@ -18,18 +19,15 @@ import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
-import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
-import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -48,17 +46,23 @@ public class JogarPartidaService {
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 	
-	@Autowired
-	private JogadorRepository jogadorRepository;
+	/*@Autowired
+	private JogadorRepository jogadorRepository;*/
 	
 	@Autowired
 	private DisputarPenaltsService disputarPenaltsService;
 	
+	@Autowired
+	private CarregarEscalacaoJogadoresPartidaService carregarJogadoresPartidaService;
+	
+	@Autowired
+	private RealizarSubstituicoesJogadorPartidaService realizarSubstituicoesJogadorPartidaService;
+	
 	/*@Autowired
 	private ParametroService parametroService;*/
 	
-	@Autowired
-	private EscalarClubeService escalarClubeService;
+	/*@Autowired
+	private EscalarClubeService escalarClubeService;*/
 
 	private static final Double NUM_LANCES_POR_MINUTO = 1d;
 	
@@ -73,7 +77,7 @@ public class JogarPartidaService {
 	private static final Boolean LANCE_A_LANCE = true;
 
 	private PartidaLance criarPartidaLance(List<PartidaLance> lances, PartidaResultadoJogavel partida, Jogador jogador,
-			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao) {
+			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao, Integer minuto) {
 		PartidaLance pl = new PartidaLance();
 		if (partida instanceof PartidaResultado) {
 			pl.setPartidaResultado((PartidaResultado) partida);
@@ -87,6 +91,7 @@ public class JogarPartidaService {
 		pl.setHabilidadeUsada(habilidade);
 		pl.setOrdem(ordem);
 		pl.setAcao(acao);
+		pl.setMinuto(minuto);
 		lances.add(pl);
 		return pl;
 	}
@@ -98,13 +103,13 @@ public class JogarPartidaService {
 		}
 	}
 
-	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana, PartidaResultadoJogavel partidaResultado) {
+	/*private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana, PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
 			for (HabilidadeValor hv : j.getHabilidades()) {
-				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana, partidaResultado.isAmistoso()/*, partidaResultado*/));
+				hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv, semana, partidaResultado.isAmistoso()/*, partidaResultado* /));
 			}
 		}
-	}
+	}*/
 	
 	private void salvarEstatisticas(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		List<HabilidadeValorEstatistica> estatisticas = new ArrayList<HabilidadeValorEstatistica>();
@@ -119,98 +124,106 @@ public class JogarPartidaService {
 		
 		partidaJogadorEstatisticaDTO.adicionarHabilidadeValorEstatistica(estatisticas);
 	}
-
-	/*public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		List<EscalacaoJogadorPosicao> escalacaoMandante = escalacaoJogadorPosicaoRepository
-				.findByClubeAndAtivoFetchJogadorHabilidades(partidaResultado.getClubeMandante(), true);
-
-		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalacaoJogadorPosicaoRepository
-				.findByClubeAndAtivoFetchJogadorHabilidades(partidaResultado.getClubeVisitante(), true);
-
-		List<Jogador> jogadoresMandante = escalacaoMandante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
-		List<Jogador> jogadoresVisitante = escalacaoVisitante.stream().map(e -> e.getJogador()).collect(Collectors.toList());
-
-		inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		
-		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
-		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
-
-		Esquema esquema = getEsquemaFactory().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante);
-		
-		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
-		jogar(esquema, partidaResultado);
-		
-		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
-			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
-		}
-		
-		salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticas(jogadoresVisitante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador(jogadoresMandante, partidaJogadorEstatisticaDTO, partidaResultado);
-		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO, partidaResultado);
-	}*/
 	
-	/*private EsquemaFactory getEsquemaFactory() {
-
-		EsquemaFactory factory = null;
-		String formacao = parametroService.getParametroString(ParametroConstantes.ESCALACAO_PADRAO);
-
-		if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212.equals(formacao)) {
-			factory = new EsquemaFactoryImplQuatroUmDoisUmDois();
-		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4222.equals(formacao)) {
-			factory = new EsquemaFactoryImplQuatroDoisDoisDois();
-		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132.equals(formacao)) {
-			factory = new EsquemaFactoryImplDoisTresTresDois();
+	private void calcularMinutosJogador(Esquema esquema) {
+		
+		if (esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal() == null) {
+			esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().setMinutoFinal(90);
 		}
 
-		return factory;
-	}*/
-	
+		if (esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal() == null) {
+			esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().setMinutoFinal(90);
+		}
+
+		esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().setNumeroMinutosJogados(
+				esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal()
+						- esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoInicial());
+
+		esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().setNumeroMinutosJogados(
+				esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal()
+						- esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoInicial());
+
+		esquema.getPosicoes().stream().filter(
+				p -> p.getMandante() != null && p.getMandante().getJogadorEstatisticaSemana().getMinutoFinal() == null)
+				.forEach(p -> p.getMandante().getJogadorEstatisticaSemana().setMinutoFinal(90));
+
+		esquema.getPosicoes().stream()
+				.filter(p -> p.getVisitante() != null
+						&& p.getVisitante().getJogadorEstatisticaSemana().getMinutoFinal() == null)
+				.forEach(p -> p.getVisitante().getJogadorEstatisticaSemana().setMinutoFinal(90));
+
+		esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
+				.forEach(p -> p.getMandante().getJogadorEstatisticaSemana()
+						.setNumeroMinutosJogados(p.getMandante().getJogadorEstatisticaSemana().getMinutoFinal()
+								- p.getMandante().getJogadorEstatisticaSemana().getMinutoInicial()));
+
+		esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
+				.forEach(p -> p.getVisitante().getJogadorEstatisticaSemana()
+						.setNumeroMinutosJogados(p.getVisitante().getJogadorEstatisticaSemana().getMinutoFinal()
+								- p.getVisitante().getJogadorEstatisticaSemana().getMinutoInicial()));
+
+	}
+
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		
-		List<Jogador> jogadoresMandante = jogadorRepository
+		/*List<Jogador> jogadoresMandante = jogadorRepository
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeMandante(), StatusJogador.ATIVO);
 		List<Jogador> jogadoresVisitante = jogadorRepository
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
-
-		/*List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
-		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);*/
 		
 		EscalacaoClube escalacaoMandante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
 		EscalacaoClube escalacaoVisitante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
 
-		//inicializarEstatisticasJogador(escalacaoMandante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		//inicializarEstatisticasJogador(escalacaoVisitante, partidaResultado.getRodada().getSemana().getTemporada(), partidaResultado);
-		inicializarEstatisticasJogador2(escalacaoMandante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
-		inicializarEstatisticasJogador2(escalacaoVisitante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticasJogador(escalacaoMandante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticasJogador(escalacaoVisitante.getListEscalacaoJogadorPosicao(), partidaResultado.getRodada().getSemana(), partidaResultado);
 		
 		inicializarEstatisticas(jogadoresMandante, partidaResultado.getRodada().getSemana(), partidaResultado);
-		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);
+		inicializarEstatisticas(jogadoresVisitante, partidaResultado.getRodada().getSemana(), partidaResultado);*/
+		
+		EscalacaoClube escalacaoMandante = carregarJogadoresPartidaService
+				.carregarJogadoresPartida(partidaResultado.getClubeMandante(), partidaResultado);
+		EscalacaoClube escalacaoVisitante = carregarJogadoresPartidaService
+				.carregarJogadoresPartida(partidaResultado.getClubeVisitante(), partidaResultado);
 
-		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
-				escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
+		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
 		
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
-		jogar(esquema, partidaResultado);
+		List<PartidaLance> lances = jogar(esquema, partidaResultado);
 		
 		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
 			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
 		}
 		
-		salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
+		//
+		calcularMinutosJogador(esquema);
+		//
+		
+		/*salvarEstatisticas(jogadoresMandante, partidaJogadorEstatisticaDTO);
 		salvarEstatisticas(jogadoresVisitante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador2(jogadoresMandante, partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador2(jogadoresVisitante, partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(jogadoresMandante, partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(jogadoresVisitante, partidaJogadorEstatisticaDTO);*/
+		
+		salvarEstatisticas(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		salvarEstatisticas(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		salvarEstatisticasJogador(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		salvarJogadorEnergia(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		salvarJogadorEnergia(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+		
+		partidaJogadorEstatisticaDTO.adicionarPartidaLance(lances);
 	}
 	
-	private void inicializarEstatisticasJogador2(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
+	/*private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
 			PartidaResultadoJogavel partidaResultado) {
 		// TODO: apenas titular e substituicoes
 
@@ -233,17 +246,24 @@ public class JogarPartidaService {
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90)); // TODO: implementar logica substituicao
-	}
+	}*/
 
-	private void salvarEstatisticasJogador2(List<Jogador> jogadores,
+	private void salvarEstatisticasJogador(List<Jogador> jogadores,
 			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		// TODO: salvar so de jogadores que jogaram?
 		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticaSemana(
 				jogadores.stream().filter(j -> j.getJogadorEstatisticaSemana() != null)
 						.map(Jogador::getJogadorEstatisticaSemana).collect(Collectors.toList()));
 	}
+	
+	private void salvarJogadorEnergia(List<Jogador> jogadores,
+			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {//TODO: salvar apenas os que gastaram energia
+		partidaJogadorEstatisticaDTO
+				.adicionarJogadorEnergias(jogadores.stream().map(j -> j.getJogadorDetalhe().getJogadorEnergia())
+						.filter(je -> je.getEnergia() != 0).collect(Collectors.toList()));
+	}
 
-	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
+	private List<PartidaLance> jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
 		List<PartidaLance> lances = new ArrayList<PartidaLance>();
 		Integer ordemJogada = 1;
@@ -259,7 +279,47 @@ public class JogarPartidaService {
 		
 		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
-		for (int i = 0; i < (NUM_LANCES_POR_MINUTO * MINUTOS); i++) {
+		for (int minuto = 1; minuto <= MINUTOS; minuto++) {
+			
+			// Diminuir energia
+			if (minuto % 15 == 0) {
+				esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
+						.forEach(p -> p.getMandante().getJogadorDetalhe().getJogadorEnergia()
+								.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA));
+				esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
+						.forEach(p -> p.getVisitante().getJogadorDetalhe().getJogadorEnergia()
+								.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA));
+				
+				esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
+						.forEach(p -> p.getMandante().getHabilidades().stream().forEach(h -> h.calcularValorN()));
+
+				esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
+						.forEach(p -> p.getMandante().getHabilidades().stream().forEach(h -> h.calcularValorN()));
+				
+				if (minuto % 30 == 0) {
+					esquema.getGoleiroMandante().getGoleiro().getJogadorDetalhe().getJogadorEnergia()
+							.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO);
+					esquema.getGoleiroVisitante().getGoleiro().getJogadorDetalhe().getJogadorEnergia()
+							.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO);
+					
+					esquema.getGoleiroMandante().getGoleiro().getHabilidades().forEach(h -> h.calcularValorN());
+					esquema.getGoleiroVisitante().getGoleiro().getHabilidades().forEach(h -> h.calcularValorN());
+				}
+
+			}
+			
+			if (minuto == (60 + 5)) {//TODO: sortear entre 60' e 74'
+				realizarSubstituicoesJogadorPartidaService.realizarSubstituicoesJogadorPartida(esquema,
+						EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS, partidaResultado, true, minuto);
+			}
+			
+			if (minuto == (60 + 10)) {//TODO: sortear entre 60' e 74'
+				realizarSubstituicoesJogadorPartidaService.realizarSubstituicoesJogadorPartida(esquema,
+						EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS, partidaResultado, false, minuto);
+			}
+
+			//
+			for (int j = 0; j < NUM_LANCES_POR_MINUTO; j++) {
 			
 			do {
 			
@@ -277,9 +337,9 @@ public class JogarPartidaService {
 				
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
 
-				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
+				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true, minuto);
 				atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
-				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false);
+				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false, minuto);
 				atualizarEstatisticasHabilidade(habilidadeValorReacao, !jogadorAcaoVenceu);
 				ordemJogada++;
 				
@@ -303,7 +363,7 @@ public class JogarPartidaService {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil.sortearN((List<? extends ElementoRoleta>) esquema.getHabilidadesAcaoFimJogadorPosicaoAtualPosse());
 					if (IMPRIMIR) System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
-						if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true);
+						if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true, minuto);
 						atualizarEstatisticasHabilidade(habilidadeValorAcao, true);
 					}
 					ordemJogada++;
@@ -320,7 +380,7 @@ public class JogarPartidaService {
 					//habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
 					habilidadeFora = new HabilidadeValor(Habilidade.FORA, (int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
-							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));
+							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));//TODO: ajustar para compreender diminuição da energia??
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
 					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
@@ -331,11 +391,11 @@ public class JogarPartidaService {
 					
 					//
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(),
-							habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true);
+							habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true, minuto);
 					atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
 					
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getGoleiroSemPosse().getGoleiro(),
-							habilidadeValorReacao.getHabilidade(), goleiroVenceu, ordemJogada, false);
+							habilidadeValorReacao.getHabilidade(), goleiroVenceu, ordemJogada, false, minuto);
 					atualizarEstatisticasHabilidade(habilidadeValorReacao, goleiroVenceu);
 					ordemJogada++;
 					
@@ -417,6 +477,9 @@ public class JogarPartidaService {
 				habilidadeVencedorAnterior = null;
 				jogadorAssistencia = null;
 			}
+			
+			}
+			//
 		}
 
 		//JogadorAgruparGrupoEstatisticasUtil.agruparEstatisticas(lances);
@@ -424,6 +487,8 @@ public class JogarPartidaService {
 		if (IMPRIMIR) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
 		
 		partidaResultado.setPartidaJogada(true);
+		
+		return lances;
 	}
 	
 	//###	TESTE	###

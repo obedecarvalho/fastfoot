@@ -42,6 +42,10 @@ public enum EscalacaoPosicao {
 	public static List<EscalacaoPosicao> getEscalacaoTitulares() {
 		return Arrays.asList(P_GOL, P_LD, P_ZD, P_ZE, P_LE, P_VD, P_VE, P_MD, P_ME, P_AD, P_AE);
 	}
+	
+	public static List<EscalacaoPosicao> getEscalacaoReservas() {
+		return Arrays.asList(P_RES_1, P_RES_2, P_RES_3, P_RES_4, P_RES_5, P_RES_6);
+	}
 
 	public boolean isTitular() {
 		return titular;

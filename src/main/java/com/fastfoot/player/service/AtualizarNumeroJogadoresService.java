@@ -52,41 +52,41 @@ public class AtualizarNumeroJogadoresService {
 		
 		List<Jogador> jogPosicao = null;
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());		
+		jogPosicao = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());		
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(i * 11 + 1);
 			//System.err.println("\t->" + jogPosicao.get(i).getPosicao().name() + ":" + jogPosicao.get(i).getNumero() + ", J:" + jogPosicao.get(i).getNome());
 		}
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());
+		jogPosicao = jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
 		//X3, X4
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(NUM_ZAG[i]);
 			//System.err.println("\t->" + jogPosicao.get(i).getPosicao().name() + ":" + jogPosicao.get(i).getNumero() + ", J:" + jogPosicao.get(i).getNome());
 		}
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());
+		jogPosicao = jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
 		//X2, X6
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(NUM_LAT[i]);
 			//System.err.println("\t->" + jogPosicao.get(i).getPosicao().name() + ":" + jogPosicao.get(i).getNumero() + ", J:" + jogPosicao.get(i).getNome());
 		}
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());
+		jogPosicao = jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
 		//X8, X5
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(NUM_VOL[i]);
 			//System.err.println("\t->" + jogPosicao.get(i).getPosicao().name() + ":" + jogPosicao.get(i).getNumero() + ", J:" + jogPosicao.get(i).getNome());
 		}
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());
+		jogPosicao = jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
 		//X7, X0
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(NUM_MEI[i]);
 			//System.err.println("\t->" + jogPosicao.get(i).getPosicao().name() + ":" + jogPosicao.get(i).getNumero() + ", J:" + jogPosicao.get(i).getNome());
 		}
 		
-		jogPosicao = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparator()).collect(Collectors.toList());
+		jogPosicao = jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
 		//X9, X1
 		for (int i = 0; i < jogPosicao.size(); i++) {
 			jogPosicao.get(i).setNumero(NUM_ATA[i]);
