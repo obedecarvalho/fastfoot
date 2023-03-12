@@ -24,8 +24,8 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
 public class RodadaAmistosa implements RodadaJogavel {
 
 	@Id //Sequence compartilhada com entidades equivalentes
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rodadaAmistosaSequence")	
-	@SequenceGenerator(name = "rodadaAmistosaSequence", sequenceName = "rodada_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rodadaSequence")	
+	@SequenceGenerator(name = "rodadaSequence", sequenceName = "rodada_seq")
 	private Long id;
 	
 	private Integer numero;

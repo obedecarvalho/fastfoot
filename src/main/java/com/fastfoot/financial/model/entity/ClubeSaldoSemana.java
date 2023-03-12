@@ -16,8 +16,8 @@ import com.fastfoot.service.util.FormatadorUtil;
 public class ClubeSaldoSemana {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "movimentacaoFinanceiraSequence")
-	@SequenceGenerator(name = "movimentacaoFinanceiraSequence", sequenceName = "movimentacao_financeira_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubeSaldoSemanaSequence")
+	@SequenceGenerator(name = "clubeSaldoSemanaSequence", sequenceName = "clube_saldo_semana_seq")
 	private Long id;
 	
 	@ManyToOne

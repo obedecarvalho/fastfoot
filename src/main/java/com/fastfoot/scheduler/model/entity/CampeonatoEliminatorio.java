@@ -21,8 +21,8 @@ import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
 public class CampeonatoEliminatorio implements CampeonatoJogavel {
 
 	@Id //Sequence compartilhada com entidades equivalentes
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campeonatoEliminatorioSequence")
-	@SequenceGenerator(name = "campeonatoEliminatorioSequence", sequenceName = "campeonato_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campeonatoSequence")
+	@SequenceGenerator(name = "campeonatoSequence", sequenceName = "campeonato_seq")
 	private Long id;
 	
 	private Liga liga;

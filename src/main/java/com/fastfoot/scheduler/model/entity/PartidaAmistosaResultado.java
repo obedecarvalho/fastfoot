@@ -19,8 +19,8 @@ import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 
 	@Id //Sequence compartilhada com entidades equivalentes
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaAmistosaResultadoSequence")	
-	@SequenceGenerator(name = "partidaAmistosaResultadoSequence", sequenceName = "partida_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaSequence")	
+	@SequenceGenerator(name = "partidaSequence", sequenceName = "partida_seq")
 	private Long id;
 	
 	@ManyToOne

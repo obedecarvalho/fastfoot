@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.financial.model.PremiacaoClassificacao;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
-import com.fastfoot.match.model.PremiacaoClassificacao;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
@@ -27,24 +27,12 @@ import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
-public class DistribuirPremiacaoCompeticoesService {//TODO: mover para scheduler.service
+public class DistribuirPremiacaoCompeticoesService {
 	
 	//########	REPOSITORY	##########
-	
-	/*@Autowired
-	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;*/
-	
+
 	@Autowired
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
-
-	/*@Autowired
-	private RodadaRepository rodadaRepository;*/
-	
-	/*@Autowired
-	private PartidaResultadoRepository partidaResultadoRepository;*/
-	
-	/*@Autowired
-	private MovimentacaoFinanceiraEntradaRepository movimentacaoFinanceiraEntradaRepository;*/
 	
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;

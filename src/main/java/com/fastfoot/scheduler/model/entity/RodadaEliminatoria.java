@@ -22,8 +22,8 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
 public class RodadaEliminatoria implements RodadaJogavel {
 
 	@Id //Sequence compartilhada com entidades equivalentes
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rodadaEliminatoriaSequence")	
-	@SequenceGenerator(name = "rodadaEliminatoriaSequence", sequenceName = "rodada_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rodadaSequence")	
+	@SequenceGenerator(name = "rodadaSequence", sequenceName = "rodada_seq")
 	private Long id;
 	
 	private Integer numero;
