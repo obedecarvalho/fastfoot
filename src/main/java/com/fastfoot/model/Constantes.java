@@ -101,4 +101,8 @@ public class Constantes {
 	
 	//###	SUBSTITUICOES	###
 	public static final Integer NUMERO_MAX_SUBSTITUICOES = 5;
+	
+	//###	FINANCAS	###
+	public static final Double PORC_JUROS_BANCARIOS_SEMANAL = 0.0038;
+
 }

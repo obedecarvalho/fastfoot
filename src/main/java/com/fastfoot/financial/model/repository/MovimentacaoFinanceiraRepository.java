@@ -33,6 +33,24 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findSaldoPorClube();
+	
+	@Query(nativeQuery = true, value =
+			" select id_clube, sum(valor_movimentacao) as saldo" +
+			" from movimentacao_financeira mf" +
+			" inner join semana s on mf.id_semana = s.id " +
+			" where s.id_temporada = ?1 " +
+			" group by id_clube"
+	)
+	public List<Map<String, Object>> findSaldoPorClube(Long idTemporada);
+	
+	@Query(nativeQuery = true, value =
+			" select id_clube, tipo_movimentacao, sum(valor_movimentacao) as valor_movimentacao, s.id_temporada as id_temporada " +
+			" from movimentacao_financeira mf " +
+			" inner join semana s on mf.id_semana = s.id " +
+			" where s.id_temporada = ?1 " +
+			" group by id_clube, tipo_movimentacao, s.id_temporada "
+	)
+	public List<Map<String, Object>> findAgrupadoPorTipoAndTemporada(Long idTemporada);
 
 	@Query(nativeQuery = true, value =
 			" select c.id as id_clube, mov.saldo, sal.salarios as salarios_projetado" +

@@ -35,6 +35,7 @@ delete from clube_titulo_ranking;
 delete from clube_resumo_temporada;
 delete from clube_ranking where ano <> 2022;
 delete from movimentacao_financeira where tipo_movimentacao <> 12;
+delete from demonstrativo_financeiro_temporada;
 delete from trajetoria_forca_clube;
 delete from semana;
 delete from mudanca_clube_nivel;

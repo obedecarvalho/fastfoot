@@ -44,6 +44,9 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.statusJogador = :status ")
 	public List<Jogador> findByStatusJogadorFetchHabilidades(@Param("status") StatusJogador status);
 	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupo hv WHERE j.statusJogador = :status ")
+	public List<Jogador> findByStatusJogadorFetchHabilidadesGrupo(@Param("status") StatusJogador status);
+	
 	@Query(" SELECT j FROM Jogador j WHERE j.idade BETWEEN :idadeMin AND :idadeMax ")
 	public List<Jogador> findByIdadeBetween(@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
 

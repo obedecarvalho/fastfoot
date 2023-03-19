@@ -152,13 +152,13 @@ public class CalcularTorcidaPartidaService {
 		
 		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoMandante);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeMandante(),
 				semana, renda,
 				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoVisitante);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeVisitante(),
+		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeVisitante(),
 				semana, renda,
 				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -232,6 +232,20 @@ public class CalcularTorcidaPartidaService {
 		entrada.setClube(clube);
 		entrada.setSemana(semana);
 		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceira.ENTRADA_INGRESSOS);
+		entrada.setValorMovimentacao(valorMovimentacao);
+		entrada.setDescricao(descricao);
+
+		return entrada;
+	}
+	
+	private MovimentacaoFinanceira criarMovimentacaoFinanceiraAmistosos(Clube clube, Semana semana,
+			Double valorMovimentacao, String descricao) {
+		
+		MovimentacaoFinanceira entrada = new MovimentacaoFinanceira();
+		
+		entrada.setClube(clube);
+		entrada.setSemana(semana);
+		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceira.ENTRADA_INGRESSOS_AMISTOSOS);
 		entrada.setValorMovimentacao(valorMovimentacao);
 		entrada.setDescricao(descricao);
 

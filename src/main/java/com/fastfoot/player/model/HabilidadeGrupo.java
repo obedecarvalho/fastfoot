@@ -1,5 +1,8 @@
 package com.fastfoot.player.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum HabilidadeGrupo {
 
 	DEFESA(new Habilidade[] {Habilidade.MARCACAO, Habilidade.DESARME, Habilidade.INTERCEPTACAO, Habilidade.CABECEIO, Habilidade.FORCA}),
@@ -24,5 +27,14 @@ public enum HabilidadeGrupo {
 	public Habilidade[] getHabilidades() {
 		return habilidades;
 	}
+	
+	public int[] getHabilidadesOrdinal() {
+		return Arrays.stream(habilidades).mapToInt(h -> h.ordinal()).toArray();
+	}
 
+	public static List<HabilidadeGrupo> getAll() {
+		return Arrays.asList(
+				new HabilidadeGrupo[] { HabilidadeGrupo.CONCLUSAO, HabilidadeGrupo.CRIACAO, HabilidadeGrupo.DEFESA,
+						HabilidadeGrupo.GOLEIRO, HabilidadeGrupo.POSSE_BOLA, HabilidadeGrupo.QUEBRA_LINHA });
+	}
 }

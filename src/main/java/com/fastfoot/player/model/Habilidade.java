@@ -1,5 +1,8 @@
 package com.fastfoot.player.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum Habilidade {
 	
 	/**
@@ -101,5 +104,12 @@ public enum Habilidade {
 	
 	public boolean isAcaoInicioMeio() {
 		return TipoHabilidadeAcao.ACAO_INICIO_MEIO.equals(getTipoHabilidade());
+	}
+	
+	public static List<Habilidade> getAll(){
+		return Arrays.asList(new Habilidade[] { Habilidade.PASSE, Habilidade.FINALIZACAO, Habilidade.CRUZAMENTO,
+				Habilidade.ARMACAO, Habilidade.MARCACAO, Habilidade.DESARME, Habilidade.INTERCEPTACAO,
+				Habilidade.VELOCIDADE, Habilidade.DRIBLE, Habilidade.FORCA, Habilidade.CABECEIO,
+				Habilidade.POSICIONAMENTO, Habilidade.DOMINIO, Habilidade.REFLEXO, Habilidade.JOGO_AEREO });
 	}
 }

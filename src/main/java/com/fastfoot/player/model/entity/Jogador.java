@@ -25,6 +25,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.StatusJogador;
@@ -78,6 +79,10 @@ public class Jogador {
 	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeValor> habilidades;
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
+	private List<HabilidadeGrupoValor> habilidadesGrupo;
 	
 	@JsonIgnore
 	@Transient
@@ -244,6 +249,14 @@ public class Jogador {
 		jogadorDetalhe.setJogadorEstatisticaSemana(jogadorEstatisticaSemana);
 	}
 
+	public List<HabilidadeGrupoValor> getHabilidadesGrupo() {
+		return habilidadesGrupo;
+	}
+
+	public void setHabilidadesGrupo(List<HabilidadeGrupoValor> habilidadesGrupo) {
+		this.habilidadesGrupo = habilidadesGrupo;
+	}
+
 	@JsonIgnore
 	public Double getNivelDesenvolvimento() {
 		return getForcaGeral() / getForcaGeralPotencialEfetiva();
@@ -295,6 +308,11 @@ public class Jogador {
 	@JsonIgnore
 	public HabilidadeValor getHabilidadeValorByHabilidade(Habilidade habilidade) {
 		return getHabilidades().stream().filter(hv -> habilidade.equals(hv.getHabilidade())).findFirst().get();
+	}
+	
+	@JsonIgnore
+	public HabilidadeGrupoValor getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo habilidade) {
+		return getHabilidadesGrupo().stream().filter(hv -> habilidade.equals(hv.getHabilidadeGrupo())).findFirst().get();
 	}
 
 	@JsonIgnore

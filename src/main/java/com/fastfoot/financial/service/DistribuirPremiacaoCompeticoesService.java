@@ -2,6 +2,7 @@ package com.fastfoot.financial.service;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -11,10 +12,13 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.PremiacaoClassificacao;
+import com.fastfoot.financial.model.PremiacaoJogador;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -39,6 +43,9 @@ public class DistribuirPremiacaoCompeticoesService {
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
+	
+	@Autowired
+	private JogadorRepository jogadorRepository;
 
 	//#######	SERVICE	#############
 	
@@ -62,11 +69,13 @@ public class DistribuirPremiacaoCompeticoesService {
 		Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel = partidaEliminatoriasSemana.stream()
 				.collect(Collectors.groupingBy(PartidaEliminatoriaResultado::getNivelCampeonato));
 		
+		Map<Clube, List<PremiacaoJogador>> clubePremiacao = new HashMap<Clube, List<PremiacaoJogador>>();
+		
 		if (SemanaUtil.isSemanaContinental(semana.getNumero())) {
 			// r: 0, 3, 4, 5, 6
 			int rodada = SemanaUtil.getRodadaContinental(semana.getNumero());
 			if (rodada >= 4) {
-				distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(semana, rodada, partidasNivel, entradas);
+				distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(semana, rodada, partidasNivel, entradas, clubePremiacao);
 			} else if (rodada == 3) {
 				List<Classificacao> classificacao = classificacaoRepository
 						.findByTemporadaGrupoCampeonato(semana.getTemporada());
@@ -86,7 +95,7 @@ public class DistribuirPremiacaoCompeticoesService {
 		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
 		
 		if (SemanaUtil.isSemanaCopaNacional(numRodadasCN, semana.getNumero())) {
-			distribuirPremiacaoCompeticoesCopaNacional(semana, numRodadasCN, partidasNivel, entradas);
+			distribuirPremiacaoCompeticoesCopaNacional(semana, numRodadasCN, partidasNivel, entradas, clubePremiacao);
 		}
 		
 		if (SemanaUtil.isSemanaCampeonatoNacional(semana.getNumero())) {
@@ -102,9 +111,15 @@ public class DistribuirPremiacaoCompeticoesService {
 								c.getPosicao()),
 						String.format("Classificação Final (%s)", c.getCampeonato().getNivelCampeonato().name())))
 						.collect(Collectors.toList()));
+				
+				classificacao.stream().filter(c -> c.getPosicao() == 1)
+						.forEach(cl -> preCadastrarPremiacaoClube(clubePremiacao, cl.getClube(),
+								cl.getCampeonato().getNivelCampeonato()));
 			}
 			
 		}
+		
+		entradas.addAll(distribuirPremiacaoJogadores(clubePremiacao, semana));
 		
 		movimentacaoFinanceiraRepository.saveAll(entradas);
 	}
@@ -129,7 +144,8 @@ public class DistribuirPremiacaoCompeticoesService {
 
 	private void distribuirPremiacaoCompeticoesCopaNacional(Semana semana, Integer numRodadasCN,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
-			List<MovimentacaoFinanceira> entradas) {
+			List<MovimentacaoFinanceira> entradas,
+			Map<Clube, List<PremiacaoJogador>> clubePremiacao) {
 
 		List<PartidaEliminatoriaResultado> partidaEliminatorias = null;
 
@@ -148,6 +164,8 @@ public class DistribuirPremiacaoCompeticoesService {
 									String.format("Campeão (%s)", nc.name())))
 							.collect(Collectors.toList()));
 
+					partidaEliminatorias.stream().map(p -> p.getClubeVencedor())
+							.forEach(c -> preCadastrarPremiacaoClube(clubePremiacao, c, nc));
 				}
 	
 				if (rodada == (numRodadasCN - 1)) {// SemiFinal
@@ -204,7 +222,8 @@ public class DistribuirPremiacaoCompeticoesService {
 	
 	private void distribuirPremiacaoCompeticoesContinentalFaseEliminatoria(Semana semana, int rodada,
 			Map<NivelCampeonato, List<PartidaEliminatoriaResultado>> partidasNivel,
-			List<MovimentacaoFinanceira> entradas) {
+			List<MovimentacaoFinanceira> entradas,
+			Map<Clube, List<PremiacaoJogador>> clubePremiacao) {
 
 		List<PartidaEliminatoriaResultado> partidaEliminatorias = null;
 
@@ -220,6 +239,9 @@ public class DistribuirPremiacaoCompeticoesService {
 									PremiacaoClassificacao.getPremiacao(nc, PremiacaoClassificacao.CAMPEAO),
 									String.format("Campeão (%s)", nc.name())))
 							.collect(Collectors.toList()));
+					
+					partidaEliminatorias.stream().map(p -> p.getClubeVencedor())
+							.forEach(c -> preCadastrarPremiacaoClube(clubePremiacao, c, nc));
 
 				}
 	
@@ -305,5 +327,56 @@ public class DistribuirPremiacaoCompeticoesService {
 		entrada.setDescricao(descricao);
 
 		return entrada;
+	}
+	
+	private MovimentacaoFinanceira criarMovimentacaoFinanceiraPremiacaoJogador(Clube clube, Semana semana,
+			Double valorMovimentacao, String descricao) {
+		
+		MovimentacaoFinanceira entrada = new MovimentacaoFinanceira();
+		
+		entrada.setClube(clube);
+		entrada.setSemana(semana);
+		entrada.setTipoMovimentacao(TipoMovimentacaoFinanceira.SAIDA_PREMIACAO_JOGADORES);
+		entrada.setValorMovimentacao(valorMovimentacao);
+		entrada.setDescricao(descricao);
+
+		return entrada;
+	}
+	
+	private void preCadastrarPremiacaoClube(Map<Clube, List<PremiacaoJogador>> clubePremiacao, Clube c, NivelCampeonato nivelCampeonato) {
+		List<PremiacaoJogador> premiacoes = clubePremiacao.get(c);
+
+		if (ValidatorUtil.isEmpty(premiacoes)) {
+			premiacoes = new ArrayList<PremiacaoJogador>();
+			clubePremiacao.put(c, premiacoes);
+		}
+
+		premiacoes.add(PremiacaoJogador.getPremiacaoJogadorNivelCampeonato(nivelCampeonato));
+	}
+	
+	private List<MovimentacaoFinanceira> distribuirPremiacaoJogadores(Map<Clube, List<PremiacaoJogador>> clubePremiacao, Semana semana) {
+		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+
+		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
+		
+		double valorPremiacao, porcentagemSalario = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 100;
+		
+		Map<Integer, Double> valorTransferenciaPorClube = new HashMap<Integer, Double>();
+
+		for (Map<String, Object> vtc : valorTransferenciaClubes) {
+			valorTransferenciaPorClube.put((Integer) vtc.get("id_clube"), (Double) vtc.get("valor_transferencia"));
+		}
+		
+		for (Clube c : clubePremiacao.keySet()) {
+			List<PremiacaoJogador> premiacoes = clubePremiacao.get(c);
+			
+			for (PremiacaoJogador p : premiacoes) {
+				valorPremiacao = Math.round(valorTransferenciaPorClube.get(c.getId()) * porcentagemSalario * p.getPorcentagemSalario()) / 100d; // Arredondar
+				
+				saidas.add(criarMovimentacaoFinanceiraPremiacaoJogador(c, semana, -valorPremiacao, "Premiação Jogadores"));
+			}
+		}
+		
+		return saidas;
 	}
 }

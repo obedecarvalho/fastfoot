@@ -18,15 +18,19 @@ import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPar
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
+import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.CalcularHabilidadeGrupoValorService;
 import com.fastfoot.player.service.PagarSalarioJogadoresService;
 import com.fastfoot.probability.service.CalcularProbabilidadeEstatisticasSimplesService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -122,9 +126,15 @@ public class JogarPartidasSemanaService {
 	
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
+
+	@Autowired
+	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
 	
 	//#####	SERVICE	############
 	
+	@Autowired
+	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
+
 	@Autowired
 	private JogarRodadaService jogarRodadaService;
 
@@ -160,6 +170,9 @@ public class JogarPartidasSemanaService {
 	
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
+	
+	@Autowired
+	private CalcularJurosBancariosService calcularJurosBancariosService;
 
 	public SemanaDTO jogarPartidasSemana() {
 		
@@ -293,10 +306,17 @@ public class JogarPartidasSemanaService {
 		if (semana.getNumero() % 5 == 0) {
 			habilidadeValorRepository.desenvolverTodasHabilidades();
 			jogadorRepository.calcularForcaGeral();
-
+			
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#desenvolverTodasHabilidades:" + (fim - inicio));
+			inicio = stopWatch.getSplitTime();
+			
+			calcularHabilidadeGrupoValor3();
+
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#desenvolverTodasHabilidades2:" + (fim - inicio));
 			inicio = stopWatch.getSplitTime();
 		}
 		
@@ -324,6 +344,12 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#recuperarEnergia:" + (fim - inicio));
+		
+		inicio = stopWatch.getSplitTime();
+		calcularJurosBancariosService.calcularJurosBancarios(semana);
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularJurosBancarios:" + (fim - inicio));
 
 		//inicio = stopWatch.getSplitTime();
 
@@ -414,6 +440,39 @@ public class JogarPartidasSemanaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
+	}
+	
+	private void calcularHabilidadeGrupoValor2() {
+		for (HabilidadeGrupo hg : HabilidadeGrupo.getAll()) {
+			habilidadeGrupoValorRepository.calcular(hg.ordinal(), hg.getHabilidadesOrdinal());
+		}
+	}
+	
+	private void calcularHabilidadeGrupoValor3() {
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		for (HabilidadeGrupo hg : HabilidadeGrupo.getAll()) {
+			desenvolverJogadorFuture.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(hg));
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	private void calcularHabilidadeGrupoValor() {
+
+		habilidadeGrupoValorRepository.deleteAllInBatch();
+		
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture
+					.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(liga, true));
+			desenvolverJogadorFuture
+					.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(liga, false));
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
 	private void calcularProbabilidades(Semana semana, Temporada temporada) {

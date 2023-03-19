@@ -15,10 +15,12 @@ import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -51,6 +53,12 @@ public class CriarJogadoresClubeService {
 	
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
+	
+	@Autowired
+	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
+	
+	@Autowired
+	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
@@ -64,6 +72,12 @@ public class CriarJogadoresClubeService {
 		
 		calcularValorTransferencia(jogadores);
 		
+		List<HabilidadeGrupoValor> habilidadeGrupoValores = new ArrayList<HabilidadeGrupoValor>();
+		
+		for (Jogador jogador : jogadores) {
+			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
+		}
+		
 		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream())
 				.collect(Collectors.toList());
 
@@ -72,6 +86,7 @@ public class CriarJogadoresClubeService {
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		habilidadeValorRepository.saveAll(habilidades);
+		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 
 		return CompletableFuture.completedFuture(true);
 	}

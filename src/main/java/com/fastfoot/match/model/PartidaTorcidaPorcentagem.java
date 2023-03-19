@@ -20,13 +20,13 @@ public enum PartidaTorcidaPorcentagem {
 	
 	private static final Map<Integer, Double> PORC_PUBLICO_NACIONAL;
 	
-	private static final Double TICKET_MEDIO_CONTINENTAL = 120.0d;
+	private static final Double TICKET_MEDIO_CONTINENTAL = 150.0d;
 
-	private static final Double TICKET_MEDIO_COPA_NACIONAL = 80.0d;
+	private static final Double TICKET_MEDIO_COPA_NACIONAL = 100.0d;
 
-	private static final Double TICKET_MEDIO_NACIONAL = 60.0d;
+	private static final Double TICKET_MEDIO_NACIONAL = 80.0d;
 	
-	private static final Double TICKET_MEDIO_AMISTOSO = 30.0d;
+	private static final Double TICKET_MEDIO_AMISTOSO = 40.0d;
 	
 	private static final Double PORC_PUBLICO_AMISTOSO = 0.75d;
 	
@@ -34,13 +34,13 @@ public enum PartidaTorcidaPorcentagem {
 	
 	private static final Double MULTIPLICADOR_INGRESSOS_SEMI_FINAL = 1.25d;
 	
-	private static final Double DIVISOR_NACIONAL_II = 3d;
+	private static final Double DIVISOR_NACIONAL_II = 2.5d;
 	
-	private static final Double DIVISOR_COPA_NACIONAL_II = 4d;
+	private static final Double DIVISOR_COPA_NACIONAL_II = 2.5d;
 	
-	private static final Double DIVISOR_CONTINENTAL_II = 1.5d;//2/3
+	private static final Double DIVISOR_CONTINENTAL_II = 1.33333d; //1.5d;//2/3
 	
-	private static final Double DIVISOR_CONTINENTAL_III = 3.0d;//1/3
+	private static final Double DIVISOR_CONTINENTAL_III = 2.0d; //3.0d;//1/3
 
 	static {
 		PORC_PUBLICO_CONTINENTAL = new HashMap<PartidaTorcidaPorcentagem, Double>();

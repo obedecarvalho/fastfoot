@@ -17,10 +17,12 @@ import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
+import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -39,6 +41,12 @@ public class AposentarJogadorService {
 	
 	@Autowired
 	private JogadorDetalheRepository jogadorDetalheRepository;
+	
+	@Autowired
+	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
+	
+	@Autowired
+	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
 
 	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
@@ -137,6 +145,12 @@ public class AposentarJogadorService {
 		//Novos
 		jogadores = newGruposDesenvolvimento.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
 		
+		List<HabilidadeGrupoValor> habilidadeGrupoValores = new ArrayList<HabilidadeGrupoValor>();
+		
+		for (Jogador jogador : jogadores) {
+			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
+		}
+		
 		jogadorDetalheRepository.saveAll(jogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(newGruposDesenvolvimento);
@@ -145,6 +159,7 @@ public class AposentarJogadorService {
 			jogHab.addAll(j.getHabilidades());
 		}
 		habilidadeValorRepository.saveAll(jogHab);
+		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 		
 		//TODO: transformar em UPDATE?
 		jogadores = gruposDesenvolvimentoAposentar.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
