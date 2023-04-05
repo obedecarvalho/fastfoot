@@ -117,7 +117,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
 		} else {
 			double energia = (getJogador().getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
-			valorN = (int) (Math.pow(valor, Constantes.ROLETA_N_POWER) * energia);
+			valorN = Math.max((int) (Math.pow(valor, Constantes.ROLETA_N_POWER) * energia), 1);
 		}
 	}
 

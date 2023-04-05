@@ -64,8 +64,8 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
 		for (Jogador j : jogadores) {
-			j.setIdade(j.getIdade() + 1);
-			if (j.getIdade() < JogadorFactory.IDADE_MAX) {
+			//j.setIdade(j.getIdade() + 1);
+			if ((j.getIdade() + 1) < JogadorFactory.IDADE_MAX) {
 				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
 			}
 		}
