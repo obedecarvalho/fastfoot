@@ -225,7 +225,7 @@ public class JogarPartidaService {
 	
 	/*private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
 			PartidaResultadoJogavel partidaResultado) {
-		// TODO: apenas titular e substituicoes
+
 
 		if (!partidaResultado.isAmistoso()) {// Partidas Oficiais
 
@@ -245,19 +245,18 @@ public class JogarPartidaService {
 				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroJogos(1));
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90)); // TODO: implementar logica substituicao
+				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90)); 
 	}*/
 
 	private void salvarEstatisticasJogador(List<Jogador> jogadores,
 			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		// TODO: salvar so de jogadores que jogaram?
 		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticaSemana(
 				jogadores.stream().filter(j -> j.getJogadorEstatisticaSemana() != null)
 						.map(Jogador::getJogadorEstatisticaSemana).collect(Collectors.toList()));
 	}
 	
 	private void salvarJogadorEnergia(List<Jogador> jogadores,
-			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {//TODO: salvar apenas os que gastaram energia
+			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		partidaJogadorEstatisticaDTO
 				.adicionarJogadorEnergias(jogadores.stream().map(j -> j.getJogadorDetalhe().getJogadorEnergia())
 						.filter(je -> je.getEnergia() != 0).collect(Collectors.toList()));

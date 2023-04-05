@@ -57,7 +57,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	
 	@Override
 	public ResponseEntity<List<ClubeRanking>> getAll() {
-		return null;//TODO
+		return null;
 	}
 
 	//@Override

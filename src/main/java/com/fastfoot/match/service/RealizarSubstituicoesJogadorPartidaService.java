@@ -28,7 +28,7 @@ public class RealizarSubstituicoesJogadorPartidaService {
 
 	public void realizarSubstituicoesJogadorPartida(Esquema esquema, EstrategiaSubstituicao estrategiaSubstituicao,
 			PartidaResultadoJogavel partidaResultado, boolean mandante, int minutoSubstituicao) {
-		//TODO: sortear numero de substituicoes
+		
 		//TODO: validar para que jogador que acabou de ser entrar na substituição não seja substituido
 		
 		if (EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS.equals(estrategiaSubstituicao)) {

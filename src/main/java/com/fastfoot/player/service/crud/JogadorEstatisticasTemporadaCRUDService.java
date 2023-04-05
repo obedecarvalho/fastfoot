@@ -212,7 +212,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			jogadorEstatisticasTemporada.setJogador(new Jogador(((BigInteger) e.get("id_jogador")).longValue()));
 			jogadorEstatisticasTemporada.getJogador().setNome((String) e.get("nome_jogador"));
 			//jogadorEstatisticasTemporada.getJogador().setPosicao(Posicao.values()[(Integer) e.get("posicao")]);
-			jogadorEstatisticasTemporada.getJogador().setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((Character) e.get("posicao")));
+			jogadorEstatisticasTemporada.getJogador().setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((String) e.get("posicao")));
 			jogadorEstatisticasTemporada.setClube(new Clube((Integer) e.get("id_clube")));
 			jogadorEstatisticasTemporada.getClube().setNome((String) e.get("nome_clube"));
 			jogadorEstatisticasTemporada.getJogador().setClube(jogadorEstatisticasTemporada.getClube());

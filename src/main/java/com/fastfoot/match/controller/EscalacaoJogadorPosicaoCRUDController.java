@@ -50,7 +50,6 @@ public class EscalacaoJogadorPosicaoCRUDController implements CRUDController<Esc
 	
 	@Override
 	public ResponseEntity<List<EscalacaoJogadorPosicao>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

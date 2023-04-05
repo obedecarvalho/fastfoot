@@ -1,32 +1,22 @@
 package com.fastfoot.transfer.model;
 
-public enum NivelAdequacao {//TODO: adequar porcentagemMinima
-	
+public enum NivelAdequacao {
+
 	A(0.875), 
 	B(0.775), 
 	C(0.675), 
 	D(0.500), 
-	E(0.240),//E(JogadorFactory.POT_DES_PORC_INICIAL / 100),
+	E(0.240),
 	F(0d);
 
-	//private Double porcentagemMaxima;
-	
 	private Double porcentagemMinima;
 	
-	private NivelAdequacao(Double porcentagemMinima /*, Double porcentagemMaxima*/) {
-		//this.porcentagemMaxima = porcentagemMaxima;
+	private NivelAdequacao(Double porcentagemMinima) {
 		this.porcentagemMinima = porcentagemMinima;
 	}
-
-	/*public Double getPorcentagemMaxima() {
-		return porcentagemMaxima;
-	}*/
 
 	public Double getPorcentagemMinima() {
 		return porcentagemMinima;
 	}
-	
-	/*public List<NivelAdequacao> getAll(){
-		
-	}*/
+
 }

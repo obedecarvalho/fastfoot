@@ -51,24 +51,6 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 			
 		} else {
 			
-			/*if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_7, EscalacaoPosicao.P_10};
-			} else if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_2, EscalacaoPosicao.P_10};
-			} else if (JogadorApoioCriacao.LATERAL_ESQUERDO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_10, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.LATERAL_ESQUERDO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_6, EscalacaoPosicao.P_10};
-			} else if (JogadorApoioCriacao.VOLANTE_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_5, EscalacaoPosicao.P_7, EscalacaoPosicao.P_10};
-			} else if (JogadorApoioCriacao.VOLANTE_DIREITO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_5, EscalacaoPosicao.P_10};
-			} else if (JogadorApoioCriacao.VOLANTE_ESQUERDO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_10, EscalacaoPosicao.P_8};
-			} else if (JogadorApoioCriacao.VOLANTE_ESQUERDO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_7, EscalacaoPosicao.P_8, EscalacaoPosicao.P_10};
-			}*/
-			
 			if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
 				posicoes = new EscalacaoPosicao[] { EscalacaoPosicao.P_ME, EscalacaoPosicao.P_MD, EscalacaoPosicao.P_LD};
 			} else if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_MEIO.equals(jogadorApoioCriacao)) {
@@ -117,24 +99,6 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 			}
 			
 		} else {
-			
-			/*if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_5, EscalacaoPosicao.P_8, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_5, EscalacaoPosicao.P_8, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.LATERAL_ESQUERDO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_5, EscalacaoPosicao.P_8};
-			} else if (JogadorApoioCriacao.LATERAL_ESQUERDO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_5, EscalacaoPosicao.P_8};
-			} else if (JogadorApoioCriacao.VOLANTE_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_8, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.VOLANTE_DIREITO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_8, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.VOLANTE_ESQUERDO_PELO_LADO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_5, EscalacaoPosicao.P_6};
-			} else if (JogadorApoioCriacao.VOLANTE_ESQUERDO_PELO_MEIO.equals(jogadorApoioCriacao)) {
-				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_2, EscalacaoPosicao.P_5, EscalacaoPosicao.P_6};
-			}*/
 			
 			if (JogadorApoioCriacao.LATERAL_DIREITO_PELO_LADO.equals(jogadorApoioCriacao)) {
 				posicoes = new EscalacaoPosicao[] {EscalacaoPosicao.P_LE, EscalacaoPosicao.P_VE, EscalacaoPosicao.P_VD};
@@ -280,54 +244,6 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 		EsquemaPosicao gov = new EsquemaPosicao();
 		gov.setNumero(i++);
 		gov.setGoleiro(visitantesMap.get(EscalacaoPosicao.P_GOL).getJogador());
-		
-		/*
-		//GM
-		EsquemaPosicao gm = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_1).getJogador());i++;
-		
-		//ZD ZE
-		EsquemaPosicao zd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_3).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_11).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
-		i++;
-		EsquemaPosicao ze = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_4).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_9).getJogador(), PROBABILIDADE_ARREMATE_FORA_ZAG, PROBABILIDADE_ARREMATE_FORA_ATA);
-		i++;
-		
-		//VD VE
-		EsquemaPosicao vd = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_5).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_10).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
-		i++;
-		EsquemaPosicao ve = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_8).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_7).getJogador(), PROBABILIDADE_ARREMATE_FORA_VOL, PROBABILIDADE_ARREMATE_FORA_MEI);
-		i++;
-
-		//LD LE
-		EsquemaPosicao ld = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_2).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_6).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
-		i++;
-		EsquemaPosicao le = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_6).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_2).getJogador(), PROBABILIDADE_ARREMATE_FORA_LAT, PROBABILIDADE_ARREMATE_FORA_LAT);
-		i++;
-
-		//MD ME
-		EsquemaPosicao md = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_7).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_8).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
-		i++;
-		EsquemaPosicao me = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_10).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_5).getJogador(), PROBABILIDADE_ARREMATE_FORA_MEI, PROBABILIDADE_ARREMATE_FORA_VOL);
-		i++;
-
-		//AD AE
-		EsquemaPosicao ad = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_9).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_4).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
-		i++;
-		EsquemaPosicao ae = new EsquemaPosicao(i, mandantesMap.get(EscalacaoPosicao.P_11).getJogador(),
-				visitantesMap.get(EscalacaoPosicao.P_3).getJogador(), PROBABILIDADE_ARREMATE_FORA_ATA, PROBABILIDADE_ARREMATE_FORA_ZAG);
-		i++;
-
-		//GV
-		EsquemaPosicao gv = new EsquemaPosicao(i, visitantesMap.get(EscalacaoPosicao.P_1).getJogador());
-		*/
 
 		addTransicaoMandante(ded, dee, PESO_LATERAL, PESO_LATERAL);
 		addTransicaoMandante(mdd, mdc, PESO_LATERAL, PESO_LATERAL);

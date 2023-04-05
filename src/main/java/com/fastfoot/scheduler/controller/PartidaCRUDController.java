@@ -50,7 +50,6 @@ public class PartidaCRUDController implements CRUDController<PartidaResultado, L
 	
 	@Override
 	public ResponseEntity<List<PartidaResultado>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

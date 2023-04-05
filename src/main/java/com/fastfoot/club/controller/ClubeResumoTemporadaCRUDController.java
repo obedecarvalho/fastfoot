@@ -52,7 +52,7 @@ public class ClubeResumoTemporadaCRUDController implements CRUDController<ClubeR
 	
 	@Override
 	public ResponseEntity<List<ClubeResumoTemporada>> getAll() {
-		return null;//TODO
+		return null;
 	}
 
 	//@Override

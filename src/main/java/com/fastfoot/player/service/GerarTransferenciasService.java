@@ -73,7 +73,7 @@ public class GerarTransferenciasService {
 		//Temporada temporada = temporadaService.getTemporadaAtual();
 		//List<Clube> clubes = clubeRepository.findAll();
 		gerarTransferencias(temporada, null);
-		//atualizarNumeroJogadores();//TODO: tem necessidade?
+		//atualizarNumeroJogadores();
 	}
 	
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
@@ -225,7 +225,7 @@ public class GerarTransferenciasService {
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		//
 		
-		//System.err.println(clubesRefazerEscalacao);//TODO:ajustar escalação: apenas caso de semanas nao contempladas em SemanaService
+		//System.err.println(clubesRefazerEscalacao);
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();

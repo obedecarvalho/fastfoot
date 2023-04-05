@@ -85,7 +85,8 @@ public class DistribuirPremiacaoCompeticoesService {
 					if (premiacao != null) {
 						entradas.add(criarMovimentacaoFinanceira(c.getClube(), semana, premiacao,
 								String.format("Classificação à Quartas Final (%s)",
-										c.getGrupoCampeonato().getCampeonato().getNivelCampeonato().name())));//TODO: corrigir NivelCampeonato na descricao
+										getNivelFinal(c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(),
+												c.getPosicao()).name())));
 					}
 				}
 				
@@ -313,6 +314,17 @@ public class DistribuirPremiacaoCompeticoesService {
 		}
 		
 		return null;
+	}
+	
+	private NivelCampeonato getNivelFinal(NivelCampeonato nivelCampeonato, int posicao) {
+		Boolean melhorEliminado = parametroService.isEstrategiaPromotorContinentalMelhorEliminado();
+		Boolean jogarCIII = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+		
+		if (melhorEliminado && nivelCampeonato.isContinental() && posicao == 3) return NivelCampeonato.CONTINENTAL_II;
+		
+		if (melhorEliminado && jogarCIII && nivelCampeonato.isContinentalII() && posicao == 2) return NivelCampeonato.CONTINENTAL_III;
+
+		return nivelCampeonato;
 	}
 	
 	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,

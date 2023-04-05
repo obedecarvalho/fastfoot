@@ -49,6 +49,8 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	
 	@Query(" SELECT j FROM Jogador j WHERE j.idade BETWEEN :idadeMin AND :idadeMax ")
 	public List<Jogador> findByIdadeBetween(@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
+	
+	public List<Jogador> findByIdadeAndStatusJogador(Integer idade, StatusJogador status);
 
 	@Transactional
 	@Modifying
@@ -104,4 +106,24 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findValorTransferenciaPorClube();
+	
+	@Query(nativeQuery = true, value =
+			" select j.id_clube, j.posicao, count(*) as total" +
+			" from jogador j" +
+			" where j.status_jogador = 0" + //StatusJogador.ATIVO
+			" group by j.id_clube, j.posicao" +
+			" order by j.id_clube, total"
+	)
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube();
+
+	@Query(nativeQuery = true, value =
+			" select j.id_clube, j.posicao, count(*) as total" +
+			" from jogador j" +
+			" where j.status_jogador = 0" + //StatusJogador.ATIVO
+			" 	and j.posicao not in (?1)" +
+			" 	and j.idade not in (?2)" +
+			" group by j.id_clube, j.posicao" +
+			" order by j.id_clube, total"
+	)
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(String posicaoExcluir, Integer idadeExcluir);
 }

@@ -68,4 +68,6 @@ public class ParametroConstantes {
 	public static final String GERAR_TRANSFERENCIA_INICIO_TEMPORADA = "GERAR_TRANSFERENCIA_INICIO_TEMPORADA";
 	
 	public static final String GERAR_MUDANCA_CLUBE_NIVEL = "GERAR_MUDANCA_CLUBE_NIVEL";
+	
+	public static final String USAR_BANCO_DADOS_EM_MEMORIA = "USAR_BANCO_DADOS_EM_MEMORIA";
 }

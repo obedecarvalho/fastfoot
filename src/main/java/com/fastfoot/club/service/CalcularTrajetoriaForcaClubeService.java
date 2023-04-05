@@ -87,7 +87,7 @@ public class CalcularTrajetoriaForcaClubeService {
 				j.setIdade(JogadorFactory.IDADE_MIN + ((j.getIdade() + 1 - JogadorFactory.IDADE_MIN) % numTemporadas));
 				/*j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencial()
 						* JogadorFactory.VALOR_AJUSTE.get(j.getIdade() - JogadorFactory.IDADE_MIN));*/
-				j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencial()
+				j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencialEfetiva()
 						* j.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[j.getIdade() - JogadorFactory.IDADE_MIN]);
 			}
 			

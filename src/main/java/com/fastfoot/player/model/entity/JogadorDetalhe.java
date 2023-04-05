@@ -1,6 +1,5 @@
 package com.fastfoot.player.model.entity;
 
-import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.Entity;
@@ -45,9 +44,9 @@ public class JogadorDetalhe {
 	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 	
-	@Transient
+	/*@Transient
 	@JsonIgnore
-	private List<HabilidadeGrupoValor> habilidadeGrupoValores;//TODO: avaliar se é melhor colocar no Jogador.java
+	private List<HabilidadeGrupoValor> habilidadeGrupoValores;*/
 	
 	@Transient
 	private JogadorEstatisticaSemana jogadorEstatisticaSemana;//TODO: avaliar se é melhor colocar no Jogador.java
@@ -112,13 +111,13 @@ public class JogadorDetalhe {
 		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
 	}
 
-	public List<HabilidadeGrupoValor> getHabilidadeGrupoValores() {
+	/*public List<HabilidadeGrupoValor> getHabilidadeGrupoValores() {
 		return habilidadeGrupoValores;
 	}
 
 	public void setHabilidadeGrupoValores(List<HabilidadeGrupoValor> habilidadeGrupoValores) {
 		this.habilidadeGrupoValores = habilidadeGrupoValores;
-	}
+	}*/
 
 	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
 		return jogadorEstatisticaSemana;

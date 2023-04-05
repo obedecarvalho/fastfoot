@@ -124,10 +124,9 @@ public abstract class JogadorFactory {
 	}
 
 	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
-			HabilidadeTipo habilidadeTipo, Double potencial, Double potencialDesenvolvimentoEfetivo,
-			Double passoDesenvolvimento) {
+			HabilidadeTipo habilidadeTipo, Double potencial, Double passoDesenvolvimento) {
 		HabilidadeValor hv = new HabilidadeValor(jogador, habilidade, valor, valorDecimal, habilidadeTipo, potencial,
-				potencialDesenvolvimentoEfetivo, passoDesenvolvimento);
+				passoDesenvolvimento);
 		jogador.addHabilidade(hv);
 	}
 

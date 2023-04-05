@@ -28,25 +28,6 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" 		(hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
-			" 	inner join grupo_desenvolvimento_jogador gdj on gdj.id_jogador = j.id " +
-			" 	where gdj.ativo and gdj.celula_desenvolvimento = ?1 " +
-			" ) as tmp " +
-			" where tmp.id = hvx.id; "
-	)
-	public void desenvolverHabilidadesByCelulaDesenvolvimento(Integer ordinalCelulaDesenvolvimento);
-
-	@Transactional
-	@Modifying
-	@Query( nativeQuery = true, value =
-			" update habilidade_valor hvx " +
-			" set valor = tmp.valor_novo, valor_decimal = tmp.valor_decimal_novo " +
-			" from ( " +
-			" 	select " +
-			" 		hv.id, " +
-			" 		floor(hv.valor_decimal + hv.passo_desenvolvimento) as valor_novo, " +
-			" 		(hv.valor_decimal + hv.passo_desenvolvimento) as valor_decimal_novo " +
-			" 	from habilidade_valor hv " +
-			" 	inner join jogador j on j.id = hv.id_jogador " +
 			" 	where j.status_jogador = 0 " + //StatusJogador.ATIVO
 			" ) as tmp " +
 			" where tmp.id = hvx.id; "
@@ -60,7 +41,7 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" set passo_desenvolvimento = tmp.novo_passo " +
 			" from ( " +
 			" 	select hv.id, " +
-			" 		((hv.potencial_desenvolvimento_efetivo * ?3) - (hv.valor_decimal))/?2 as novo_passo " +
+			" 		((hv.potencial_desenvolvimento * ?3) - (hv.valor_decimal))/?2 as novo_passo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
 			" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +

@@ -2,26 +2,26 @@ package com.fastfoot.player.model;
 
 import javax.persistence.AttributeConverter;
 
-public class PosicaoAttributeConverter implements AttributeConverter<Posicao, Character> {
+public class PosicaoAttributeConverter implements AttributeConverter<Posicao, String> {
 
 	@Override
-	public Character convertToDatabaseColumn(Posicao attribute) {
+	public String convertToDatabaseColumn(Posicao attribute) {
 		if (attribute == null)
 			return null;
 
 		switch (attribute) {
 		case GOLEIRO:
-			return 'G';
+			return "G";
 		case ZAGUEIRO:
-			return 'Z';
+			return "Z";
 		case LATERAL:
-			return 'L';
+			return "L";
 		case VOLANTE:
-			return 'V';
+			return "V";
 		case MEIA:
-			return 'M';
+			return "M";
 		case ATACANTE:
-			return 'A';
+			return "A";
 		
 
 		default:
@@ -30,22 +30,22 @@ public class PosicaoAttributeConverter implements AttributeConverter<Posicao, Ch
 	}
 
 	@Override
-	public Posicao convertToEntityAttribute(Character dbData) {
+	public Posicao convertToEntityAttribute(String dbData) {
 		if (dbData == null)
 			return null;
 
 		switch (dbData) {
-		case 'G':
+		case "G":
 			return Posicao.GOLEIRO;
-		case 'Z':
+		case "Z":
 			return Posicao.ZAGUEIRO;
-		case 'L':
+		case "L":
 			return Posicao.LATERAL;
-		case 'V':
+		case "V":
 			return Posicao.VOLANTE;
-		case 'M':
+		case "M":
 			return Posicao.MEIA;
-		case 'A':
+		case "A":
 			return Posicao.ATACANTE;
 
 		default:

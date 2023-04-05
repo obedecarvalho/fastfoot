@@ -50,7 +50,6 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 	
 	@Override
 	public ResponseEntity<List<EscalacaoClube>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

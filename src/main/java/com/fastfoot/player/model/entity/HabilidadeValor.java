@@ -42,7 +42,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	
 	private Double potencialDesenvolvimento;
 	
-	private Double potencialDesenvolvimentoEfetivo;
+	//private Double potencialDesenvolvimentoEfetivo;
 
 	private HabilidadeTipo habilidadeTipo;
 	
@@ -73,8 +73,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	}
 
 	public HabilidadeValor(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
-			HabilidadeTipo habilidadeTipo, Double potencialDesenvolvimento, Double potencialDesenvolvimentoEfetivo,
-			Double passoDesenvolvimento) {
+			HabilidadeTipo habilidadeTipo, Double potencialDesenvolvimento, Double passoDesenvolvimento) {
 		super();
 		this.jogador = jogador;
 		this.habilidade = habilidade;
@@ -82,7 +81,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 		this.valorDecimal = valorDecimal;
 		this.habilidadeTipo = habilidadeTipo;
 		this.potencialDesenvolvimento = potencialDesenvolvimento;
-		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
+		//this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
 		this.passoDesenvolvimento = passoDesenvolvimento;	
 	}
 
@@ -215,13 +214,13 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 		this.probabilidadeErro = probabilidadeErro;
 	}
 
-	public Double getPotencialDesenvolvimentoEfetivo() {
+	/*public Double getPotencialDesenvolvimentoEfetivo() {
 		return potencialDesenvolvimentoEfetivo;
 	}
 
 	public void setPotencialDesenvolvimentoEfetivo(Double potencialDesenvolvimentoEfetivo) {
 		this.potencialDesenvolvimentoEfetivo = potencialDesenvolvimentoEfetivo;
-	}
+	}*/
 	
 	@Override
 	public Double getValorAsDouble() {

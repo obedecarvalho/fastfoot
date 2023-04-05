@@ -118,7 +118,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 	
 	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
 			PartidaResultadoJogavel partidaResultado) {
-		// TODO: apenas titular e substituicoes
+
 
 		if (!partidaResultado.isAmistoso()) {// Partidas Oficiais
 

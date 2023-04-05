@@ -12,16 +12,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
-import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
@@ -29,9 +26,6 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
 public class AposentarJogadorService {
-	
-	@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
@@ -56,7 +50,7 @@ public class AposentarJogadorService {
 		for (GrupoDesenvolvimentoJogador gdj : gruposDesenvolvimento) {
 
 			//aposentar
-			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);//TODO: transformar em UPDATE?
+			gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
 			gdj.setAtivo(false);
 
 			//substituto
@@ -89,10 +83,10 @@ public class AposentarJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}*/
 	
-	@Async("defaultExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(
 			Map<Clube, List<GrupoDesenvolvimentoJogador>> grupoDesenvolvimentoClube,
-			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?
+			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {
 		
 		List<GrupoDesenvolvimentoJogador> newGruposDesenvolvimento = new ArrayList<GrupoDesenvolvimentoJogador>();
 		List<GrupoDesenvolvimentoJogador> gruposDesenvolvimentoAposentar = new ArrayList<GrupoDesenvolvimentoJogador>();
@@ -115,14 +109,14 @@ public class AposentarJogadorService {
 				Collections.sort(quantitativoPosicaoClubeDTOs);
 				posicaoNecessidade.add(quantitativoPosicaoClubeDTOs.get(0).getPosicao());
 				quantitativoPosicaoClubeDTOs.get(0).setQtde(quantitativoPosicaoClubeDTOs.get(0).getQtde() + 1);
-			}*/
+			}* /
 
 			for (GrupoDesenvolvimentoJogador gdj : gruposDesenvolvimento) {
 				
 				Collections.sort(quantitativoPosicaoClubeDTOs);
 				quantitativoPosicaoClubeDTOs.get(0).setQtde(quantitativoPosicaoClubeDTOs.get(0).getQtde() + 1);
 				p = gdj.getJogador().getPosicao().isGoleiro() ? gdj.getJogador().getPosicao()
-						: quantitativoPosicaoClubeDTOs.get(0).getPosicao();//TODO: conferir se tem que diminuir QuantitativoPosicaoClubeDTO
+						: quantitativoPosicaoClubeDTOs.get(0).getPosicao();
 				
 				//aposentar
 				gdj.getJogador().setStatusJogador(StatusJogador.APOSENTADO);
@@ -161,7 +155,7 @@ public class AposentarJogadorService {
 		habilidadeValorRepository.saveAll(jogHab);
 		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 		
-		//TODO: transformar em UPDATE?
+		
 		jogadores = gruposDesenvolvimentoAposentar.stream().map(gd -> gd.getJogador()).collect(Collectors.toList());
 		jogadorRepository.saveAll(jogadores);
 		grupoDesenvolvimentoJogadorRepository.saveAll(gruposDesenvolvimentoAposentar);
@@ -171,10 +165,10 @@ public class AposentarJogadorService {
 	}
 	
 	private GrupoDesenvolvimentoJogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
-			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {//TODO: conferir qual numero jogador ira usar de acordo com a posição
+			CelulaDesenvolvimento celulaDesenvolvimento, Integer forcaGeral) {
 
 		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
-				JogadorFactory.IDADE_MIN);//TODO: passar modo de desenvolvimento do jogador aposentado
+				JogadorFactory.IDADE_MIN);
 		
 		//Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero, JogadorFactory.IDADE_MIN, forcaGeral);
 		
@@ -182,5 +176,80 @@ public class AposentarJogadorService {
 				novoJogador, true);
 
 		return grupoDesenvolvimentoJogador;
+	}*/
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> aposentarJogador(Map<Clube, List<Jogador>> jogadoresAposentarPorClube,
+			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {
+		//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?
+		
+		List<Jogador> novosJogadores = new ArrayList<Jogador>();
+		List<Jogador> jogadoresAposentar = new ArrayList<Jogador>();
+		
+		List<Jogador> jogadoresClubeAposentar = null;
+		List<QuantitativoPosicaoClubeDTO> quantitativoPosicaoClubeDTOs = null;
+
+		Posicao p = null;
+		
+		for (Clube c : jogadoresAposentarPorClube.keySet()) {
+			jogadoresClubeAposentar =  jogadoresAposentarPorClube.get(c);
+			quantitativoPosicaoClubeDTOs = quantitativoPosicaoPorClube.get(c);
+			
+			if (quantitativoPosicaoClubeDTOs.size() != (Posicao.values().length - 1)) {
+				throw new RuntimeException("Quantitativo de jogadores por posição diferente do esperado");
+			}
+
+			for (Jogador jogador : jogadoresClubeAposentar) {
+				
+				Collections.sort(quantitativoPosicaoClubeDTOs);
+				
+				p = jogador.getPosicao().isGoleiro() ? jogador.getPosicao() : quantitativoPosicaoClubeDTOs.get(0).getPosicao();
+				if (!jogador.getPosicao().isGoleiro()) {
+					quantitativoPosicaoClubeDTOs.get(0).setQtde(quantitativoPosicaoClubeDTOs.get(0).getQtde() + 1);
+				}
+				
+				//aposentar
+				jogador.setStatusJogador(StatusJogador.APOSENTADO);
+				
+				//substituto
+				novosJogadores.add(criarNovoJogadorSubsAposentado(jogador.getClube(), p, jogador.getNumero(),
+						jogador.getForcaGeralPotencialEfetiva().intValue()));
+				
+			}
+			
+			jogadoresAposentar.addAll(jogadoresClubeAposentar);
+		}
+		
+		List<HabilidadeGrupoValor> habilidadeGrupoValores = new ArrayList<HabilidadeGrupoValor>();
+		
+		for (Jogador jogador : novosJogadores) {
+			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
+		}
+		
+		jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
+		jogadorRepository.saveAll(novosJogadores);
+		List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();
+		for (Jogador j : novosJogadores) {
+			jogHab.addAll(j.getHabilidades());
+		}
+		habilidadeValorRepository.saveAll(jogHab);
+		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
+		
+		//TODO: transformar em UPDATE?
+		jogadorRepository.saveAll(jogadoresAposentar);
+		//
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	private Jogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
+			Integer forcaGeral) {
+		//TODO: conferir qual numero jogador ira usar de acordo com a posição
+
+		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
+				JogadorFactory.IDADE_MIN);
+		//TODO: passar modo de desenvolvimento do jogador aposentado??
+
+		return novoJogador;
 	}
 }

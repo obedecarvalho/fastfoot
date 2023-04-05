@@ -54,23 +54,9 @@ public class Jogador {
 
 	private Integer forcaGeral;
 	
-	private Integer forcaGeralPotencial;
+	//private Integer forcaGeralPotencial;
 	
-	//
-	/*private Double tmpForcaGeralZag;
-	private Double tmpForcaGeralLat;
-	private Double tmpForcaGeralVol;
-	private Double tmpForcaGeralMei;
-	private Double tmpForcaGeralAta;
-	
-	private Double tmpForcaGeralZag2;
-	private Double tmpForcaGeralLat2;
-	private Double tmpForcaGeralVol2;
-	private Double tmpForcaGeralMei2;
-	private Double tmpForcaGeralAta2;*/
-	//
-	
-	private Double forcaGeralPotencialEfetiva;//TODO: avaliar necessidade
+	private Double forcaGeralPotencialEfetiva;
 	
 	private StatusJogador statusJogador;
 	
@@ -172,13 +158,13 @@ public class Jogador {
 		this.forcaGeral = forcaGeral;
 	}
 
-	public Integer getForcaGeralPotencial() {
+	/*public Integer getForcaGeralPotencial() {
 		return forcaGeralPotencial;
 	}
 
 	public void setForcaGeralPotencial(Integer forcaGeralPotencial) {
 		this.forcaGeralPotencial = forcaGeralPotencial;
-	}
+	}*/
 
 	public Double getValorTransferencia() {
 		return valorTransferencia;

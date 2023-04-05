@@ -49,6 +49,7 @@ drop table if exists campeonato_misto;
 drop table if exists clube_titulo_ranking;
 drop table if exists semana;
 drop table if exists parametro;
+drop table if exists demonstrativo_financeiro_temporada;
 
 drop table if exists clube_ranking;
 drop table if exists clube;

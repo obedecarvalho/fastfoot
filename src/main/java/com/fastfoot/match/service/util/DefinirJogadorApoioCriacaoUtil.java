@@ -23,6 +23,11 @@ public class DefinirJogadorApoioCriacaoUtil {
 
 		//TODO
 		
+		ld.getAtivo();
+		vd.getAtivo();
+		ve.getAtivo();
+		le.getAtivo();
+		
 		return null;
 	}
 

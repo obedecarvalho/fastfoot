@@ -31,14 +31,12 @@ import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
-import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
@@ -107,9 +105,6 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private SemanaRepository semanaRepository;
-	
-	@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 	
 	@Autowired
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
@@ -239,13 +234,17 @@ public class CriarCalendarioTemporadaService {
 
 			//stopWatch.split();
 			inicio = stopWatch.getSplitTime();
-			atualizarPassoDesenvolvimentoJogador4();
+			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
+				atualizarPassoDesenvolvimentoJogador();
+			} else {
+				atualizarPassoDesenvolvimentoJogadorOtimizado();
+			}
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));
 			
 			inicio = stopWatch.getSplitTime();
-			aposentarJogadores();
+			aposentarJogadores2();
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
@@ -488,7 +487,6 @@ public class CriarCalendarioTemporadaService {
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		Boolean jogarCNCompleta = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
-		//TODO: parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = null;
 
@@ -589,7 +587,7 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}*/
 	
-	private void aposentarJogadores() {
+	/*private void aposentarJogadores() {
 
 		//if (semana.getNumero() == 25) {
 			
@@ -613,12 +611,35 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		//}
+	}*/
+	
+	private void aposentarJogadores2() {
+
+		List<Jogador> jogadores = jogadorRepository.findByIdadeAndStatusJogador(JogadorFactory.IDADE_MAX,
+				StatusJogador.ATIVO);
+
+		Map<Integer, Map<Clube, List<Jogador>>> jogAgrupado = jogadores.stream()
+				.collect(Collectors.groupingBy(j -> (j.getClube().getId() % FastfootApplication.NUM_THREAD),
+						Collectors.groupingBy(j -> j.getClube())));
+
+		Map<Integer, Map<Clube, List<QuantitativoPosicaoClubeDTO>>> quantitativoPosicaoPorClubeMap = getQuantitativoPosicaoClube()
+				.stream().collect(Collectors.groupingBy(q -> (q.getClube().getId() % FastfootApplication.NUM_THREAD),
+						Collectors.groupingBy(q -> q.getClube())));
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(jogAgrupado.get(i),
+					quantitativoPosicaoPorClubeMap.get(i)));
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+
 	}
 	
-	public List<QuantitativoPosicaoClubeDTO> getQuantitativoPosicaoClube() {
-		/*List<Map<String, Object>> result = grupoDesenvolvimentoJogadorRepository
-				.findQtdeJogadorPorPosicaoPorClube(Posicao.GOLEIRO.ordinal(), JogadorFactory.IDADE_MAX);*/
-		List<Map<String, Object>> result = grupoDesenvolvimentoJogadorRepository.findQtdeJogadorPorPosicaoPorClube(
+	public List<QuantitativoPosicaoClubeDTO> getQuantitativoPosicaoClube() {//TODO: avaliar colocar em Service
+
+		List<Map<String, Object>> result = jogadorRepository.findQtdeJogadorPorPosicaoPorClube(
 				PosicaoAttributeConverter.getInstance().convertToDatabaseColumn(Posicao.GOLEIRO),
 				JogadorFactory.IDADE_MAX);
 		
@@ -628,8 +649,7 @@ public class CriarCalendarioTemporadaService {
 		for (Map<String, Object> map : result) {
 			dto = new QuantitativoPosicaoClubeDTO();
 			dto.setClube(new Clube((Integer) map.get("id_clube")));
-			//dto.setPosicao(Posicao.values()[(Integer) map.get("posicao")]);
-			dto.setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((Character) map.get("posicao")));
+			dto.setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((String) map.get("posicao")));
 			dto.setQtde(((BigInteger) map.get("total")).intValue());
 			quantitativoPosicaoClubeList.add(dto);
 		}
@@ -739,9 +759,6 @@ public class CriarCalendarioTemporadaService {
 	}
 
 	private void atualizarPassoDesenvolvimentoJogador() {
-		//if (semana.getNumero() == 1) {
-		
-		//TODO: jogadorRepository.incrementarIdade();??
 
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
 		
@@ -760,11 +777,10 @@ public class CriarCalendarioTemporadaService {
 		}
 		
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		//}
+
 	}
 
-	private void atualizarPassoDesenvolvimentoJogador4() {
-		//jogadorRepository.incrementarIdade();
+	private void atualizarPassoDesenvolvimentoJogadorOtimizado() {
 		
 		int offset = 3;//(JogadorFactory.IDADE_MAX - JogadorFactory.IDADE_MIN) / FastfootApplication.NUM_THREAD;
 		

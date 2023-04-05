@@ -1,7 +1,6 @@
 package com.fastfoot.player.model.entity;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -11,9 +10,8 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.player.model.CelulaDesenvolvimento;
 
-@Entity
-//@Table(indexes = { @Index(columnList = "id_jogador"), @Index(columnList = "celula_desenvolvimento, ativo") })
-public class GrupoDesenvolvimentoJogador {//TODO: ainda é necessario??
+@Deprecated
+public class GrupoDesenvolvimentoJogador {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grupoDesenvolvimentoJogadorSequence")

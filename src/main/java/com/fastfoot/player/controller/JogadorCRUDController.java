@@ -50,7 +50,6 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 	
 	@Override
 	public ResponseEntity<List<Jogador>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

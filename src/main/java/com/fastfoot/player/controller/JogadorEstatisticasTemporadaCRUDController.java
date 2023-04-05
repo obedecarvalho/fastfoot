@@ -50,7 +50,7 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 	
 	@Override
 	public ResponseEntity<List<JogadorEstatisticasTemporada>> getAll() {
-		return null;//TODO
+		return null;
 	}
 
 	@GetMapping("/jogadorEstatisticasTemporada")

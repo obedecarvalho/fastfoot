@@ -35,7 +35,6 @@ public class DisputarPenaltsService {
 	}
 
 	public void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
-		//TODO: considerar substituiçoes
 		//TODO: criar penalt para fora
 
 		List<Jogador> jogadoresMandantes = esquema.getPosicoes().stream().map(EsquemaPosicao::getMandante).filter(j -> j != null)

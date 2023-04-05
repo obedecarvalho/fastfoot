@@ -26,11 +26,14 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.StatusJogador;
+import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.CalcularHabilidadeGrupoValorService;
+import com.fastfoot.player.service.DesenvolverJogadorService;
 import com.fastfoot.player.service.PagarSalarioJogadoresService;
 import com.fastfoot.probability.service.CalcularProbabilidadeEstatisticasSimplesService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -173,6 +176,9 @@ public class JogarPartidasSemanaService {
 	
 	@Autowired
 	private CalcularJurosBancariosService calcularJurosBancariosService;
+	
+	@Autowired
+	private DesenvolverJogadorService desenvolverJogadorService;
 
 	public SemanaDTO jogarPartidasSemana() {
 		
@@ -302,22 +308,34 @@ public class JogarPartidasSemanaService {
 		}
 
 		//Desenvolver jogadores
-		//desenvolverJogadores(semana);
 		if (semana.getNumero() % 5 == 0) {
-			habilidadeValorRepository.desenvolverTodasHabilidades();
-			jogadorRepository.calcularForcaGeral();
-			
-			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#desenvolverTodasHabilidades:" + (fim - inicio));
-			inicio = stopWatch.getSplitTime();
-			
-			calcularHabilidadeGrupoValor3();
+			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
 
-			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#desenvolverTodasHabilidades2:" + (fim - inicio));
-			inicio = stopWatch.getSplitTime();
+				desenvolverJogadores();
+
+				stopWatch.split();
+				fim = stopWatch.getSplitTime();
+				mensagens.add("\t#desenvolverJogadores:" + (fim - inicio));
+				inicio = stopWatch.getSplitTime();
+
+			} else {
+
+				habilidadeValorRepository.desenvolverTodasHabilidades();
+				jogadorRepository.calcularForcaGeral();
+				
+				stopWatch.split();
+				fim = stopWatch.getSplitTime();
+				mensagens.add("\t#desenvolverTodasHabilidades:" + (fim - inicio));
+				inicio = stopWatch.getSplitTime();
+				
+				calcularHabilidadeGrupoValor3();
+
+				stopWatch.split();
+				fim = stopWatch.getSplitTime();
+				mensagens.add("\t#desenvolverTodasHabilidades2:" + (fim - inicio));
+				inicio = stopWatch.getSplitTime();
+			}
+
 		}
 		
 		//Bets
@@ -393,32 +411,25 @@ public class JogarPartidasSemanaService {
 
 	//private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = FastfootApplication.NUM_THREAD; 
 	
-	/*private void desenvolverJogadores(Semana semana) {
-		if (semana.getNumero() <= 25) {
-			CelulaDesenvolvimento cd = CelulaDesenvolvimento.getAll()[semana.getNumero()
-					% CelulaDesenvolvimento.getAll().length];
-			
-			List<GrupoDesenvolvimentoJogador> celulasDevJog = grupoDesenvolvimentoJogadorRepository.findByCelulaDesenvolvimentoAndAtivoFetchJogadorHabilidades(cd, Boolean.TRUE);
-			
-			List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-			
-			int offset = celulasDevJog.size() / FastfootApplication.NUM_THREAD;
-			
-			//System.err.println("\t\t->Total: " + gds.size());
-			
-			for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-				if ((i + 1) == FastfootApplication.NUM_THREAD) {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(celulasDevJog.subList(i * offset, celulasDevJog.size())));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + gds.size());
-				} else {
-					desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverGrupo(celulasDevJog.subList(i * offset, (i+1) * offset)));
-					//System.err.println("\t\t->I: " + (i * offset) + ", F: " + ((i+1) * offset));
-				}
+	private void desenvolverJogadores() {
+
+		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
+
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverJogador(jogadores.subList(i * offset, jogadores.size())));
+			} else {
+				desenvolverJogadorFuture.add(desenvolverJogadorService.desenvolverJogador(jogadores.subList(i * offset, (i+1) * offset)));
 			}
-			
-			CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 		}
-	}*/
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+
+	}
 	
 	private void escalarClubes(Semana semana) {
 		//if (semana.getNumero() % 5 == 0) {
@@ -494,8 +505,7 @@ public class JogarPartidasSemanaService {
 	}
 
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias, boolean old) {
-		//TODO: avaliar necessidade
-		//TODO: transformar em UPDATE
+
 		Set<Campeonato> camps1 = new HashSet<Campeonato>();
 		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
 		Set<CampeonatoMisto> camps3 = new HashSet<CampeonatoMisto>();
@@ -523,7 +533,7 @@ public class JogarPartidasSemanaService {
 	}
 	
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {
-		//TODO: avaliar necessidade
+
 		Set<Long> camps1 = new HashSet<Long>();
 		Set<Long> camps2 = new HashSet<Long>();
 		Set<Long> camps3 = new HashSet<Long>();
@@ -628,7 +638,7 @@ public class JogarPartidasSemanaService {
 		Integer numRodadas = parametroService.getNumeroRodadasCopaNacional();
 		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 		Boolean jogarCNCompleta = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
-		//TODO: parametroService.isEstrategiaPromotorContinentalMelhorEliminado()
+
 		
 		PromotorEliminatoria promotorEliminatoria = null;
 		

@@ -49,7 +49,7 @@ public class PropostaTransferenciaJogadorCRUDController implements CRUDControlle
 
 	@Override
 	public ResponseEntity<List<PropostaTransferenciaJogador>> getAll() {
-		return null;//TODO
+		return null;
 	}
 	
 	@GetMapping("/propostaTransferenciaJogador")

@@ -1,5 +1,6 @@
 package com.fastfoot.player.model;
 
+@Deprecated
 public enum CelulaDesenvolvimento {
 	CELULA_1,
 	CELULA_2,

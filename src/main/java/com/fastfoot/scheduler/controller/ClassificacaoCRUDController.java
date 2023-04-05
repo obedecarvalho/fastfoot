@@ -49,7 +49,6 @@ public class ClassificacaoCRUDController implements CRUDController<Classificacao
 	
 	@Override
 	public ResponseEntity<List<Classificacao>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -12,14 +12,11 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.ParametroConstantes;
-import com.fastfoot.player.model.CelulaDesenvolvimento;
 import com.fastfoot.player.model.Posicao;
-import com.fastfoot.player.model.entity.GrupoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
-import com.fastfoot.player.model.repository.GrupoDesenvolvimentoJogadorRepository;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
@@ -38,9 +35,6 @@ public class CriarJogadoresClubeService {
 
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
-
-	@Autowired
-	private GrupoDesenvolvimentoJogadorRepository grupoDesenvolvimentoJogadorRepository;
 	
 	@Autowired
 	private JogadorDetalheRepository jogadorDetalheRepository;
@@ -63,11 +57,10 @@ public class CriarJogadoresClubeService {
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
 
-		List<GrupoDesenvolvimentoJogador> gruposJogador = new ArrayList<GrupoDesenvolvimentoJogador>();
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		
 		for (Clube c : clubes) {
-			criarJogadoresClube(c, jogadores, gruposJogador);
+			criarJogadoresClube(c, jogadores);
 		}
 		
 		calcularValorTransferencia(jogadores);
@@ -84,7 +77,6 @@ public class CriarJogadoresClubeService {
 		jogadorDetalheRepository
 				.saveAll(jogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
-		grupoDesenvolvimentoJogadorRepository.saveAll(gruposJogador);
 		habilidadeValorRepository.saveAll(habilidades);
 		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 
@@ -103,138 +95,105 @@ public class CriarJogadoresClubeService {
 		}
 	}
 
-	protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
+	/*protected void associarGrupoDesenvolvimento(Jogador j, List<GrupoDesenvolvimentoJogador> gruposJogador, int pos) {
 		int i = pos % CelulaDesenvolvimento.getAll().length;
 		gruposJogador.add(new GrupoDesenvolvimentoJogador(CelulaDesenvolvimento.getAll()[i], j, true));
-	}
+	}*/
 
-	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores,
-			List<GrupoDesenvolvimentoJogador> grupoDesenvolvimentos) {
+	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores) {
 
-		//List<Jogador> jogadores = new ArrayList<Jogador>();
 		Jogador j = null;
-		int i = 0;
-		
+
 		//Goleiro
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 1);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 12);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 23);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		//Zagueiro
 
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 3);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 4);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 13);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 14);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Lateral
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 2);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 6);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 22);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 16);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Volante
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 5);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 8);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 15);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 18);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Meia
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 7);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 10);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 17);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 20);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 
 		//Atacante
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 9);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 11);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 19);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 21);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
 		jogadores.add(j);
 		
 		//Jogadores Adicionais
 		
+		int qtdeJogadoresAdicionais = RoletaUtil.sortearIntervalo(0, 4);
 		
-		Posicao p = RoletaUtil.sortearPesoUm(
-				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
-		j = JogadorFactory.getInstance().gerarJogador(clube, p, 24);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
-		jogadores.add(j);
+		Posicao p;
 		
-		p = RoletaUtil.sortearPesoUm(
-				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
-		j = JogadorFactory.getInstance().gerarJogador(clube, p, 25);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
-		jogadores.add(j);
-		
-		p = RoletaUtil.sortearPesoUm(
-				Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
-		j = JogadorFactory.getInstance().gerarJogador(clube, p, 26);
-		associarGrupoDesenvolvimento(j, grupoDesenvolvimentos, i++);
-		jogadores.add(j);
+		for (int i = 0; i < qtdeJogadoresAdicionais; i++) {
+			p = RoletaUtil.sortearPesoUm(
+					Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
+			j = JogadorFactory.getInstance().gerarJogador(clube, p, 24 + i);
+			jogadores.add(j);
+		}
+
 		//
 		
 		/*clube = clubeRepository.getById(clube.getId());

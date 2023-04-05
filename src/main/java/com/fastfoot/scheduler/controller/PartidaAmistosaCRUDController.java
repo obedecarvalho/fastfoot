@@ -50,7 +50,6 @@ public class PartidaAmistosaCRUDController implements CRUDController<PartidaAmis
 
 	@Override
 	public ResponseEntity<List<PartidaAmistosaResultado>> getAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
