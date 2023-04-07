@@ -43,15 +43,15 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax) {
 
 		for (int i = idadeMin; i < idadeMax; i++) {
-			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
+			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.REGULAR.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
 					ModoDesenvolvimentoJogador.REGULAR.ordinal());
-			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
+			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.PRECOCE.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
 					ModoDesenvolvimentoJogador.PRECOCE.ordinal());
-			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
+			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.TARDIO.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
 					ModoDesenvolvimentoJogador.TARDIO.ordinal());

@@ -1,5 +1,6 @@
 package com.fastfoot.player.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.service.crud.JogadorCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
@@ -69,6 +71,8 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 			if (ValidatorUtil.isEmpty(jogadores)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			Collections.sort(jogadores, JogadorFactory.getComparatorPosicaoForcaGeral());
 	
 			return ResponseEntity.ok(jogadores);
 			

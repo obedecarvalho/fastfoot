@@ -234,11 +234,11 @@ public class CriarCalendarioTemporadaService {
 
 			//stopWatch.split();
 			inicio = stopWatch.getSplitTime();
-			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
+			/*if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
 				atualizarPassoDesenvolvimentoJogador();
-			} else {
+			} else {*/
 				atualizarPassoDesenvolvimentoJogadorOtimizado();
-			}
+			//}
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));

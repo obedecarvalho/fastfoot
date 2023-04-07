@@ -56,7 +56,7 @@ public class Jogador {
 	
 	//private Integer forcaGeralPotencial;
 	
-	private Double forcaGeralPotencialEfetiva;
+	private Double forcaGeralPotencialEfetiva;//TODO:renomear forcaGeralPotencial
 	
 	private StatusJogador statusJogador;
 	

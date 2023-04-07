@@ -309,7 +309,7 @@ public class JogarPartidasSemanaService {
 
 		//Desenvolver jogadores
 		if (semana.getNumero() % 5 == 0) {
-			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
+			/*if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
 
 				desenvolverJogadores();
 
@@ -318,10 +318,10 @@ public class JogarPartidasSemanaService {
 				mensagens.add("\t#desenvolverJogadores:" + (fim - inicio));
 				inicio = stopWatch.getSplitTime();
 
-			} else {
+			} else {*/
 
-				habilidadeValorRepository.desenvolverTodasHabilidades();
-				jogadorRepository.calcularForcaGeral();
+				habilidadeValorRepository.desenvolverTodasHabilidades2();
+				jogadorRepository.calcularForcaGeral2();
 				
 				stopWatch.split();
 				fim = stopWatch.getSplitTime();
@@ -334,7 +334,7 @@ public class JogarPartidasSemanaService {
 				fim = stopWatch.getSplitTime();
 				mensagens.add("\t#desenvolverTodasHabilidades2:" + (fim - inicio));
 				inicio = stopWatch.getSplitTime();
-			}
+			//}
 
 		}
 		

@@ -54,15 +54,33 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	@Transactional
 	@Modifying
-	@Query(nativeQuery = true, value = " update jogador jog " + " set forca_geral = tmp.forca_geral " + " from ( "
-			+ " 	select j.id, avg(hv.valor) as forca_geral " + " 	from jogador j "
-			+ " 	inner join habilidade_valor hv on hv.id_jogador = j.id "
-			+ " 	where hv.habilidade_tipo = 0 " //HabilidadeTipo.ESPECIFICA 
-			+ " 		and j.status_jogador = 0 " //StatusJogador.ATIVO
-			+ " 	group by j.id " + " ) tmp "
-			+ " where jog.id = tmp.id "
+	@Query(nativeQuery = true, value = 
+			" update jogador jog " + 
+			" set forca_geral = tmp.forca_geral " + 
+			" from ( " +
+			" 	select j.id, avg(hv.valor_decimal) as forca_geral " +
+			" 	from jogador j " +
+			" 	inner join habilidade_valor hv on hv.id_jogador = j.id " +
+			" 	where hv.habilidade_tipo = 0 " +//HabilidadeTipo.ESPECIFICA 
+			" 		and j.status_jogador = 0 " +//StatusJogador.ATIVO
+			" 	group by j.id " +
+			" ) tmp " + 
+			" where jog.id = tmp.id "
 	)
 	public void calcularForcaGeral();
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update jogador j " +
+			" set forca_geral = ( " +
+			" 	select avg(valor_decimal) " +
+			" 	from habilidade_valor hv " +
+			" 	where j.id = hv.id_jogador " +
+			" 		and hv.habilidade_tipo = 0) " +	//HabilidadeTipo.ESPECIFICA
+			" where j.status_jogador = 0 "	//StatusJogador.ATIVO
+	)
+	public void calcularForcaGeral2();
 	
 	@Transactional
 	@Modifying

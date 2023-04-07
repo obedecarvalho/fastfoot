@@ -30,7 +30,7 @@ public class CalcularHabilidadeGrupoValorService {
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularHabilidadeGrupoValor(HabilidadeGrupo habilidadeGrupo) {
 
-		habilidadeGrupoValorRepository.calcular(habilidadeGrupo.ordinal(), habilidadeGrupo.getHabilidadesOrdinal());
+		habilidadeGrupoValorRepository.calcular2(habilidadeGrupo.ordinal(), habilidadeGrupo.getHabilidadesOrdinal());
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}

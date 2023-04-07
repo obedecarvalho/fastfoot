@@ -182,6 +182,7 @@ public class AposentarJogadorService {
 	public CompletableFuture<Boolean> aposentarJogador(Map<Clube, List<Jogador>> jogadoresAposentarPorClube,
 			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {
 		//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?
+		//TODO: deletar HabilidadeValor do jogador aposentado?
 		
 		List<Jogador> novosJogadores = new ArrayList<Jogador>();
 		List<Jogador> jogadoresAposentar = new ArrayList<Jogador>();

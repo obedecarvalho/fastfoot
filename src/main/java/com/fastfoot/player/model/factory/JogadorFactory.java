@@ -30,6 +30,8 @@ import com.fastfoot.service.util.RoletaUtil;
 
 public abstract class JogadorFactory {
 	
+	private static Comparator<Jogador> COMPARATOR_POSICAO_FORCA_GERAL;
+	
 	private static Comparator<Jogador> COMPARATOR_FORCA_GERAL;
 	
 	private static Comparator<Jogador> COMPARATOR_FORCA_GERAL_ENERGIA;
@@ -362,6 +364,21 @@ public abstract class JogadorFactory {
 			};
 		}
 		return COMPARATOR_FORCA_GERAL;
+	}
+	
+	public static Comparator<Jogador> getComparatorPosicaoForcaGeral() {
+		if (COMPARATOR_POSICAO_FORCA_GERAL == null) {
+			COMPARATOR_POSICAO_FORCA_GERAL = new Comparator<Jogador>() {
+	
+				@Override
+				public int compare(Jogador o1, Jogador o2) {
+					//return o1.getForcaGeral().compareTo(o2.getForcaGeral());
+					int compare = o1.getPosicao().compareTo(o2.getPosicao());
+					return compare != 0 ? compare : o2.getForcaGeral().compareTo(o1.getForcaGeral());//reverse
+				}
+			};
+		}
+		return COMPARATOR_POSICAO_FORCA_GERAL;
 	}
 	
 	public static Comparator<Jogador> getComparatorForcaGeralEnergia() {

@@ -34,5 +34,19 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 			" 	and habilidade_grupo = ?1 "
 	)
 	public void calcular(int habilidadeGrupoOrdinal, int[] habilidadeOrdinal);
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update habilidade_grupo_valor hgv " +
+			" set valor = ( " +
+			" 	select avg(hv.valor_decimal) " +
+			" 	from habilidade_valor hv " +
+			" 	where hv.habilidade in (?2) " +
+			" 		and hv.id_jogador = hgv.id_jogador " +
+			" ) " +
+			" where habilidade_grupo = ?1 "
+	)
+	public void calcular2(int habilidadeGrupoOrdinal, int[] habilidadeOrdinal);
 
 }

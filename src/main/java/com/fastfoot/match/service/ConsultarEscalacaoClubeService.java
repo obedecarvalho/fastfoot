@@ -17,6 +17,7 @@ import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.dto.JogadorDTO;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.dto.ClubeDTO;
 
@@ -60,6 +61,8 @@ public class ConsultarEscalacaoClubeService {
 		jogadores.removeAll(escalacao.stream().map(e -> e.getJogador()).collect(Collectors.toList()));
 		
 		ClubeDTO clubeDTO = ClubeDTO.convertToDTO(c);
+		
+		Collections.sort(jogadores, JogadorFactory.getComparatorPosicaoForcaGeral());
 		
 		escalacaoClubeDTO.setEscalacaoSuplente(jogadores.stream()
 				.map(j -> new EscalacaoJogadorDTO(JogadorDTO.convertToDTO(j), clubeDTO, EscalacaoPosicao.P_SUPLENTE))
