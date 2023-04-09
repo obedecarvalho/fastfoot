@@ -183,7 +183,7 @@ public class CalcularValorTransferenciaService {
 			/*double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
 					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());*/
 			
-			double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
+			double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencial()), FORCA_N_POWER)
 					/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];
 			
 			valor += valorAj;

@@ -27,7 +27,7 @@ public class CalcularTrajetoriaForcaClubeService {
 		
 		@Override
 		public int compare(Jogador o1, Jogador o2) {
-			return o1.getForcaGeralPotencialEfetiva().compareTo(o2.getForcaGeralPotencialEfetiva());
+			return o1.getForcaGeralPotencial().compareTo(o2.getForcaGeralPotencial());
 		}
 	};
 	
@@ -87,7 +87,7 @@ public class CalcularTrajetoriaForcaClubeService {
 				j.setIdade(JogadorFactory.IDADE_MIN + ((j.getIdade() + 1 - JogadorFactory.IDADE_MIN) % numTemporadas));
 				/*j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencial()
 						* JogadorFactory.VALOR_AJUSTE.get(j.getIdade() - JogadorFactory.IDADE_MIN));*/
-				j.setForcaGeralPotencialEfetiva(j.getForcaGeralPotencialEfetiva()
+				j.setForcaGeralPotencial(j.getForcaGeralPotencial()
 						* j.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[j.getIdade() - JogadorFactory.IDADE_MIN]);
 			}
 			
@@ -135,7 +135,7 @@ public class CalcularTrajetoriaForcaClubeService {
 			idadeMediaTitulares.add(String.format(Locale.US, "%.2f",
 					jogadorTitularTemporada.stream().mapToInt(Jogador::getIdade).average().getAsDouble()));
 			forcaMediaTitulares.add(String.format(Locale.US, "%.2f", jogadorTitularTemporada.stream()
-					.mapToDouble(Jogador::getForcaGeralPotencialEfetiva).average().getAsDouble()));
+					.mapToDouble(Jogador::getForcaGeralPotencial).average().getAsDouble()));
 			
 		}
 		

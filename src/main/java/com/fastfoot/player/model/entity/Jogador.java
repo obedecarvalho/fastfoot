@@ -56,7 +56,7 @@ public class Jogador {
 	
 	//private Integer forcaGeralPotencial;
 	
-	private Double forcaGeralPotencialEfetiva;//TODO:renomear forcaGeralPotencial
+	private Double forcaGeralPotencial;
 	
 	private StatusJogador statusJogador;
 	
@@ -209,12 +209,12 @@ public class Jogador {
 		jogadorDetalhe.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasAmistososTemporadaAtual);
 	}*/
 
-	public Double getForcaGeralPotencialEfetiva() {
-		return forcaGeralPotencialEfetiva;
+	public Double getForcaGeralPotencial() {
+		return forcaGeralPotencial;
 	}
 
-	public void setForcaGeralPotencialEfetiva(Double forcaGeralPotencialEfetiva) {
-		this.forcaGeralPotencialEfetiva = forcaGeralPotencialEfetiva;
+	public void setForcaGeralPotencial(Double forcaGeralPotencial) {
+		this.forcaGeralPotencial = forcaGeralPotencial;
 	}
 
 	public JogadorDetalhe getJogadorDetalhe() {
@@ -245,7 +245,7 @@ public class Jogador {
 
 	@JsonIgnore
 	public Double getNivelDesenvolvimento() {
-		return getForcaGeral() / getForcaGeralPotencialEfetiva();
+		return getForcaGeral() / getForcaGeralPotencial();
 	}
 
 	@Override

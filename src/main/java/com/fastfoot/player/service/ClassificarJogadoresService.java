@@ -45,7 +45,7 @@ public class ClassificarJogadoresService {
 			int k = i;
 			jogadores.stream().forEach(j -> x.get(j)
 					.getAtributos()[k] = (j.getHabilidadeValorByHabilidade(habilidade[k]).getPotencialDesenvolvimento()
-							/ j.getForcaGeralPotencialEfetiva()));
+							/ j.getForcaGeralPotencial()));
 		}
 		
 		return new ArrayList<ElementoKMeansImpl<Jogador>>(x.values());

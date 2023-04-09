@@ -214,7 +214,7 @@ public class AposentarJogadorService {
 				
 				//substituto
 				novosJogadores.add(criarNovoJogadorSubsAposentado(jogador.getClube(), p, jogador.getNumero(),
-						jogador.getForcaGeralPotencialEfetiva().intValue()));
+						jogador.getForcaGeralPotencial().intValue()));
 				
 			}
 			

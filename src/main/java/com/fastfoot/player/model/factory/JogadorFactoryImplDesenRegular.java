@@ -76,7 +76,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		/*jogador.setForcaGeralPotencial(
 				(new Double(valorHabilidadesEspecificasPot.stream().mapToDouble(v -> v).average().getAsDouble()))
 						.intValue());*/
-		jogador.setForcaGeralPotencialEfetiva(
+		jogador.setForcaGeralPotencial(
 				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
 		
 		//Outros
@@ -134,7 +134,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 
 		}
 		
-		j.setForcaGeralPotencialEfetiva(
+		j.setForcaGeralPotencial(
 				(valorHabilidadesEspecificasPotEfetiva.stream().mapToDouble(v -> v).average().getAsDouble()));
 	}
 	

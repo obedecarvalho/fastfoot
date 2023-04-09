@@ -108,7 +108,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" WHERE ncc.id = ?1 " +
 			" 	AND j.forca_geral >= c.forca_geral * ?2 " +
 			" 	AND j.forca_geral < c.forca_geral * ?3 " +
-			" 	AND j.forca_geral_potencial_efetiva BETWEEN c.forca_geral * ?4 AND c.forca_geral * ?5 " +
+			" 	AND j.forca_geral_potencial BETWEEN c.forca_geral * ?4 AND c.forca_geral * ?5 " +
 			" 	AND ptj.id IS NULL " +
 			" 	AND ptj2.id IS NULL " +
 			" 	AND dn.tipo_negociacao = 0 " //TipoNegociacao.COMPRA_VENDA
