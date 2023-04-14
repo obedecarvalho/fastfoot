@@ -54,8 +54,6 @@ public class Jogador {
 
 	private Integer forcaGeral;
 	
-	//private Integer forcaGeralPotencial;
-	
 	private Double forcaGeralPotencial;
 	
 	private StatusJogador statusJogador;
@@ -83,8 +81,11 @@ public class Jogador {
 	@JoinColumn(name = "id_jogador_detalhe")
 	private JogadorDetalhe jogadorDetalhe;
 	
-	/*@Transient
-	private JogadorEstatisticaSemana jogadorEstatisticaSemana;*/
+	@Transient
+	private JogadorEstatisticasSemana jogadorEstatisticasSemana;
+
+	@Transient
+	private JogadorEnergia jogadorEnergia;
 
 	public Jogador() {
 		
@@ -158,14 +159,6 @@ public class Jogador {
 		this.forcaGeral = forcaGeral;
 	}
 
-	/*public Integer getForcaGeralPotencial() {
-		return forcaGeralPotencial;
-	}
-
-	public void setForcaGeralPotencial(Integer forcaGeralPotencial) {
-		this.forcaGeralPotencial = forcaGeralPotencial;
-	}*/
-
 	public Double getValorTransferencia() {
 		return valorTransferencia;
 	}
@@ -186,29 +179,6 @@ public class Jogador {
 		return StatusJogador.ATIVO.equals(this.statusJogador);
 	}
 
-	/*@JsonIgnore
-	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
-		//return jogadorEstatisticasTemporadaAtual;
-		return jogadorDetalhe.getJogadorEstatisticasTemporadaAtual();
-	}
-
-	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporada) {
-		//this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporada;
-		jogadorDetalhe.setJogadorEstatisticasTemporadaAtual(jogadorEstatisticasTemporada);
-	}
-
-	@JsonIgnore
-	public JogadorEstatisticasTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
-		//return jogadorEstatisticasAmistososTemporadaAtual;
-		return jogadorDetalhe.getJogadorEstatisticasAmistososTemporadaAtual();
-	}
-
-	public void setJogadorEstatisticasAmistososTemporadaAtual(
-			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
-		//this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
-		jogadorDetalhe.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasAmistososTemporadaAtual);
-	}*/
-
 	public Double getForcaGeralPotencial() {
 		return forcaGeralPotencial;
 	}
@@ -225,14 +195,22 @@ public class Jogador {
 		this.jogadorDetalhe = jogadorDetalhe;
 	}
 
-	@JsonIgnore
-	@Transient
-	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
-		return jogadorDetalhe.getJogadorEstatisticaSemana();
+	public JogadorEnergia getJogadorEnergia() {
+		return jogadorEnergia;
 	}
 
-	public void setJogadorEstatisticaSemana(JogadorEstatisticaSemana jogadorEstatisticaSemana) {
-		jogadorDetalhe.setJogadorEstatisticaSemana(jogadorEstatisticaSemana);
+	public void setJogadorEnergia(JogadorEnergia jogadorEnergia) {
+		this.jogadorEnergia = jogadorEnergia;
+	}
+
+	@JsonIgnore
+	@Transient
+	public JogadorEstatisticasSemana getJogadorEstatisticasSemana() {
+		return jogadorEstatisticasSemana;
+	}
+
+	public void setJogadorEstatisticasSemana(JogadorEstatisticasSemana jogadorEstatisticasSemana) {
+		this.jogadorEstatisticasSemana = jogadorEstatisticasSemana;
 	}
 
 	public List<HabilidadeGrupoValor> getHabilidadesGrupo() {

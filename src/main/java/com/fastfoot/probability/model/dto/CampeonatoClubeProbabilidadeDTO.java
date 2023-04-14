@@ -3,10 +3,10 @@ package com.fastfoot.probability.model.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.fastfoot.probability.model.entity.ClubeProbabilidade;
+import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
 import com.fastfoot.scheduler.model.dto.ClassificacaoDTO;
 
-public class ClubeProbabilidadeDTO {
+public class CampeonatoClubeProbabilidadeDTO {
 	
 	private String nomeClube;
 	
@@ -118,12 +118,12 @@ public class ClubeProbabilidadeDTO {
 		this.probabilidadeClassificacaoCNI = probabilidadeClassificacaoCNI;
 	}
 
-	public static List<ClubeProbabilidadeDTO> convertToDTO(List<ClubeProbabilidade> partidas) {
+	public static List<CampeonatoClubeProbabilidadeDTO> convertToDTO(List<CampeonatoClubeProbabilidade> partidas) {
 		return partidas.stream().map(p -> convertToDTO(p)).collect(Collectors.toList());
 	}
 
-	public static ClubeProbabilidadeDTO convertToDTO(ClubeProbabilidade cp) {
-		ClubeProbabilidadeDTO dto = new ClubeProbabilidadeDTO();
+	public static CampeonatoClubeProbabilidadeDTO convertToDTO(CampeonatoClubeProbabilidade cp) {
+		CampeonatoClubeProbabilidadeDTO dto = new CampeonatoClubeProbabilidadeDTO();
 		
 		dto.setNomeClube(cp.getClube().getNome());
 		

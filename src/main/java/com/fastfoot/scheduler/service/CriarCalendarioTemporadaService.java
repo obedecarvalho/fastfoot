@@ -40,7 +40,7 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AdequarModoDesenvolvimentoJogadorService;
@@ -122,7 +122,7 @@ public class CriarCalendarioTemporadaService {
 	private JogadorDetalheRepository jogadorDetalheRepository;
 
 	@Autowired
-	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;
+	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
 	
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
@@ -210,7 +210,7 @@ public class CriarCalendarioTemporadaService {
 			//jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada(temporada.getId());
 			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();
 			//jogadorEstatisticaSemanaRepository.deleteByIdTemporada(temporada.getId());
-			jogadorEstatisticaSemanaRepository.deleteAllInBatch();
+			jogadorEstatisticasSemanaRepository.deleteAllInBatch();
 			//jogadorEstatisticaSemanaRepository.deleteAll();
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();

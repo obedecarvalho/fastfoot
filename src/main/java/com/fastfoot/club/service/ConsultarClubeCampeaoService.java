@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
@@ -60,7 +61,7 @@ public class ConsultarClubeCampeaoService {
 
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
 
-		if (temporada.getAno().equals(ano) && temporada.getSemanaAtual() < 25) {
+		if (temporada.getAno().equals(ano) && temporada.getSemanaAtual() < Constantes.NUM_SEMANAS) {
 
 			if (temporada.getSemanaAtual() >= 16) {
 				clubeTituloAnosList.addAll(getCampeoesCopaNacional(temporada));

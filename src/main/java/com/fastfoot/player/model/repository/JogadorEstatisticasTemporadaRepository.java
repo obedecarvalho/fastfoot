@@ -135,7 +135,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
 			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
 			" 	sum(numero_rodada_disputa_penalt) AS numero_rodada_disputa_penalt" +
-			" FROM jogador_estatistica_semana jes" +
+			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" WHERE s.id_temporada = ?1" +
 			" GROUP BY id_jogador, id_clube, s.id_temporada, amistoso"
@@ -168,7 +168,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
 			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
 			" 	sum(numero_rodada_disputa_penalt) AS numero_rodada_disputa_penalt" +
-			" FROM jogador_estatistica_semana jes" +
+			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" GROUP BY id_jogador, id_clube, s.id_temporada, amistoso"
 	)

@@ -6,13 +6,13 @@ import java.util.List;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.JogadorEnergia;
-import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
+import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
 
 public class PartidaJogadorEstatisticaDTO {
 
 	private List<HabilidadeValorEstatistica> habilidadeValorEstatistica;
 
-	private List<JogadorEstatisticaSemana> jogadorEstatisticasSemana;
+	private List<JogadorEstatisticasSemana> jogadorEstatisticasSemana;
 	
 	private List<PartidaLance> partidaLances;
 	
@@ -20,7 +20,7 @@ public class PartidaJogadorEstatisticaDTO {
 
 	public PartidaJogadorEstatisticaDTO() {
 		this.habilidadeValorEstatistica = new ArrayList<HabilidadeValorEstatistica>();
-		this.jogadorEstatisticasSemana = new ArrayList<JogadorEstatisticaSemana>();
+		this.jogadorEstatisticasSemana = new ArrayList<JogadorEstatisticasSemana>();
 		this.partidaLances = new ArrayList<PartidaLance>();
 		this.jogadorEnergias = new ArrayList<JogadorEnergia>();
 	}
@@ -33,11 +33,11 @@ public class PartidaJogadorEstatisticaDTO {
 		this.habilidadeValorEstatistica.addAll(habilidadeValorEstatistica);
 	}
 
-	public List<JogadorEstatisticaSemana> getJogadorEstatisticasSemana() {
+	public List<JogadorEstatisticasSemana> getJogadorEstatisticasSemana() {
 		return jogadorEstatisticasSemana;
 	}
 
-	public void adicionarJogadorEstatisticaSemana(List<JogadorEstatisticaSemana> jogadorEstatisticaSemana) {
+	public void adicionarJogadorEstatisticaSemana(List<JogadorEstatisticasSemana> jogadorEstatisticaSemana) {
 		this.jogadorEstatisticasSemana.addAll(jogadorEstatisticaSemana);
 	}
 

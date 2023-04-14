@@ -17,32 +17,32 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
-import com.fastfoot.probability.model.entity.ClubeProbabilidade;
-import com.fastfoot.probability.service.crud.ClubeProbabilidadeCRUDService;
+import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
+import com.fastfoot.probability.service.crud.CampeonatoClubeProbabilidadeCRUDService;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class ClubeProbabilidadeCRUDController implements CRUDController<ClubeProbabilidade, Long> {
+public class CampeonatoClubeProbabilidadeCRUDController implements CRUDController<CampeonatoClubeProbabilidade, Long> {
 
 	@Autowired
-	private ClubeProbabilidadeCRUDService clubeCRUDService;
+	private CampeonatoClubeProbabilidadeCRUDService clubeCRUDService;
 
 	@Override
-	@PostMapping("/clubesProbabilidade")
-	public ResponseEntity<ClubeProbabilidade> create(@RequestBody ClubeProbabilidade t) {
+	@PostMapping("/campeonatoClubeProbabilidades")
+	public ResponseEntity<CampeonatoClubeProbabilidade> create(@RequestBody CampeonatoClubeProbabilidade t) {
 		
 		try {
 		
-			ClubeProbabilidade clube = clubeCRUDService.create(t);
+			CampeonatoClubeProbabilidade clube = clubeCRUDService.create(t);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.internalServerError().build();
 			}
 	
-			return new ResponseEntity<ClubeProbabilidade>(clube, HttpStatus.CREATED);
+			return new ResponseEntity<CampeonatoClubeProbabilidade>(clube, HttpStatus.CREATED);
 		
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -51,12 +51,12 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 	}
 	
 	@Override
-	@GetMapping("/clubesProbabilidade")
-	public ResponseEntity<List<ClubeProbabilidade>> getAll() {
+	@GetMapping("/campeonatoClubeProbabilidades")
+	public ResponseEntity<List<CampeonatoClubeProbabilidade>> getAll() {
 		
 		try {
 			
-			List<ClubeProbabilidade> clubes = clubeCRUDService.getAll();
+			List<CampeonatoClubeProbabilidade> clubes = clubeCRUDService.getAll();
 			
 			if (ValidatorUtil.isEmpty(clubes)) {
 				return ResponseEntity.noContent().build();
@@ -69,14 +69,14 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 		}
 	}
 	
-	@GetMapping("/clubesProbabilidade/semanaAtual")
-	public ResponseEntity<List<ClubeProbabilidade>> getBySemanaAtual(
+	@GetMapping("/campeonatoClubeProbabilidades/semanaAtual")
+	public ResponseEntity<List<CampeonatoClubeProbabilidade>> getBySemanaAtual(
 			@RequestParam(name = "idCampeonato", required = true) Long idCampeonato,
 			@RequestParam(name = "comClassificacao", required = false) Boolean comClassificacao) {
 		
 		try {
 			
-			List<ClubeProbabilidade> clubes = null;
+			List<CampeonatoClubeProbabilidade> clubes = null;
 			
 			if (comClassificacao != null && comClassificacao) {
 				clubes = clubeCRUDService.getByCampeonatoAndSemanaAtualComClassificacao(new Campeonato(idCampeonato));
@@ -96,12 +96,12 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 	}
 
 	@Override
-	@GetMapping("/clubesProbabilidade/{id}")
-	public ResponseEntity<ClubeProbabilidade> getById(@PathVariable("id") Long id) {
+	@GetMapping("/campeonatoClubeProbabilidades/{id}")
+	public ResponseEntity<CampeonatoClubeProbabilidade> getById(@PathVariable("id") Long id) {
 		
 		try {
 		
-			ClubeProbabilidade clube = clubeCRUDService.getById(id);
+			CampeonatoClubeProbabilidade clube = clubeCRUDService.getById(id);
 	
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
@@ -115,12 +115,12 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 	}
 
 	@Override
-	@PutMapping("/clubesProbabilidade/{id}")
-	public ResponseEntity<ClubeProbabilidade> update(@PathVariable("id") Long id, @RequestBody ClubeProbabilidade t) {
+	@PutMapping("/campeonatoClubeProbabilidades/{id}")
+	public ResponseEntity<CampeonatoClubeProbabilidade> update(@PathVariable("id") Long id, @RequestBody CampeonatoClubeProbabilidade t) {
 		
 		try {
 		
-			ClubeProbabilidade clube = clubeCRUDService.getById(id);
+			CampeonatoClubeProbabilidade clube = clubeCRUDService.getById(id);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
@@ -140,7 +140,7 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 	}
 
 	@Override
-	@DeleteMapping("/clubesProbabilidade/{id}")
+	@DeleteMapping("/campeonatoClubeProbabilidades/{id}")
 	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
 			clubeCRUDService.delete(id);
@@ -151,7 +151,7 @@ public class ClubeProbabilidadeCRUDController implements CRUDController<ClubePro
 	}
 
 	@Override
-	@DeleteMapping("/clubesProbabilidade")
+	@DeleteMapping("/campeonatoClubeProbabilidades")
 	public ResponseEntity<HttpStatus> deleteAll() {
 		try {
 			clubeCRUDService.deleteAll();

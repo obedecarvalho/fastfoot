@@ -130,7 +130,11 @@ public class RoletaUtil {
 	}
 	
 	public static int sortearIntervalo(int min, int max) {
-		return min + R.nextInt(max);
+		return min + R.nextInt(max - min);
+	}
+	
+	public static int sortearMinAndRange(int min, int range) {
+		return min + R.nextInt(range);
 	}
 	
 	public static ElementoRoleta sortearAsDouble(List<? extends ElementoRoleta> elementos) {

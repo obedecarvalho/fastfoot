@@ -26,33 +26,13 @@ public class JogadorDetalhe {
 	@OneToOne(mappedBy = "jogadorDetalhe")
 	private Jogador jogador;
 	
-	/*@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_jogador_estatisticas_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
-	
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_jogador_estatisticas_amistosos_temporada_atual")
-	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;*/
-	
-	@Transient
-	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;//TODO: avaliar se é melhor colocar no Jogador.java
-	
-	@Transient
-	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;//TODO: avaliar se é melhor colocar no Jogador.java
-	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 	
-	/*@Transient
-	@JsonIgnore
-	private List<HabilidadeGrupoValor> habilidadeGrupoValores;*/
+	@Transient
+	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;
 	
 	@Transient
-	private JogadorEstatisticaSemana jogadorEstatisticaSemana;//TODO: avaliar se é melhor colocar no Jogador.java
-	
-	@Transient
-	private JogadorEnergia jogadorEnergia;//TODO: avaliar se é melhor colocar no Jogador.java
+	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
 
 	public Long getId() {
 		return id;
@@ -69,23 +49,6 @@ public class JogadorDetalhe {
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
-
-	/*public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
-		return jogadorEstatisticasTemporadaAtual;
-	}
-
-	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual) {
-		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporadaAtual;
-	}
-
-	public JogadorEstatisticasTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
-		return jogadorEstatisticasAmistososTemporadaAtual;
-	}
-
-	public void setJogadorEstatisticasAmistososTemporadaAtual(
-			JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
-		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
-	}*/
 
 	public ModoDesenvolvimentoJogador getModoDesenvolvimentoJogador() {
 		return modoDesenvolvimentoJogador;
@@ -109,30 +72,6 @@ public class JogadorDetalhe {
 
 	public void setEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual) {
 		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
-	}
-
-	/*public List<HabilidadeGrupoValor> getHabilidadeGrupoValores() {
-		return habilidadeGrupoValores;
-	}
-
-	public void setHabilidadeGrupoValores(List<HabilidadeGrupoValor> habilidadeGrupoValores) {
-		this.habilidadeGrupoValores = habilidadeGrupoValores;
-	}*/
-
-	public JogadorEstatisticaSemana getJogadorEstatisticaSemana() {
-		return jogadorEstatisticaSemana;
-	}
-
-	public void setJogadorEstatisticaSemana(JogadorEstatisticaSemana jogadorEstatisticaSemana) {
-		this.jogadorEstatisticaSemana = jogadorEstatisticaSemana;
-	}
-
-	public JogadorEnergia getJogadorEnergia() {
-		return jogadorEnergia;
-	}
-
-	public void setJogadorEnergia(JogadorEnergia jogadorEnergia) {
-		this.jogadorEnergia = jogadorEnergia;
 	}
 
 	@JsonIgnore

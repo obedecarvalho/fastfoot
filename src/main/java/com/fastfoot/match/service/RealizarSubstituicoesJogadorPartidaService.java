@@ -17,7 +17,7 @@ import com.fastfoot.match.model.EstrategiaSubstituicao;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
+import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.service.util.RoletaUtil;
@@ -104,22 +104,22 @@ public class RealizarSubstituicoesJogadorPartidaService {
 				jogadorSubstituir = jogadoresTitularesPosicao.get(0);
 				
 				if (!partidaResultado.isAmistoso()) {
-					jogadorSubstituto.setJogadorEstatisticaSemana(
-							new JogadorEstatisticaSemana(jogadorSubstituto, partidaResultado.getRodada().getSemana(),
+					jogadorSubstituto.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(jogadorSubstituto, partidaResultado.getRodada().getSemana(),
 									jogadorSubstituto.getClube(), partidaResultado, false));
 				} else {
-					jogadorSubstituto.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(jogadorSubstituto,
+					jogadorSubstituto.setJogadorEstatisticasSemana(new JogadorEstatisticasSemana(jogadorSubstituto,
 							partidaResultado.getRodada().getSemana(), jogadorSubstituto.getClube(), null, true));
 				}
-				jogadorSubstituto.getJogadorEstatisticaSemana().setNumeroJogos(1);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setNumeroJogos(1);
 				
 				
-				jogadorSubstituir.getJogadorEstatisticaSemana().setMinutoFinal(minutoSubstituicao);
-				jogadorSubstituto.getJogadorEstatisticaSemana().setMinutoInicial(minutoSubstituicao);
+				jogadorSubstituir.getJogadorEstatisticasSemana().setMinutoFinal(minutoSubstituicao);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setMinutoInicial(minutoSubstituicao);
 				
-				jogadorSubstituir.getJogadorEstatisticaSemana()
-						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticaSemana().getMinutoFinal()
-								- jogadorSubstituir.getJogadorEstatisticaSemana().getMinutoInicial());
+				jogadorSubstituir.getJogadorEstatisticasSemana()
+						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
+								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
 				if (mandante) {
 					jogPosicao.get(jogadorSubstituir).setMandante(jogadorSubstituto);
@@ -182,22 +182,22 @@ public class RealizarSubstituicoesJogadorPartidaService {
 				jogadorSubstituto = jogadoresReservas.get(0);
 				
 				if (!partidaResultado.isAmistoso()) {
-					jogadorSubstituto.setJogadorEstatisticaSemana(
-							new JogadorEstatisticaSemana(jogadorSubstituto, partidaResultado.getRodada().getSemana(),
+					jogadorSubstituto.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(jogadorSubstituto, partidaResultado.getRodada().getSemana(),
 									jogadorSubstituto.getClube(), partidaResultado, false));
 				} else {
-					jogadorSubstituto.setJogadorEstatisticaSemana(new JogadorEstatisticaSemana(jogadorSubstituto,
+					jogadorSubstituto.setJogadorEstatisticasSemana(new JogadorEstatisticasSemana(jogadorSubstituto,
 							partidaResultado.getRodada().getSemana(), jogadorSubstituto.getClube(), null, true));
 				}
-				jogadorSubstituto.getJogadorEstatisticaSemana().setNumeroJogos(1);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setNumeroJogos(1);
 				
 				
-				jogadorSubstituir.getJogadorEstatisticaSemana().setMinutoFinal(minutoSubstituicao);
-				jogadorSubstituto.getJogadorEstatisticaSemana().setMinutoInicial(minutoSubstituicao);
+				jogadorSubstituir.getJogadorEstatisticasSemana().setMinutoFinal(minutoSubstituicao);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setMinutoInicial(minutoSubstituicao);
 				
-				jogadorSubstituir.getJogadorEstatisticaSemana()
-						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticaSemana().getMinutoFinal()
-								- jogadorSubstituir.getJogadorEstatisticaSemana().getMinutoInicial());
+				jogadorSubstituir.getJogadorEstatisticasSemana()
+						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
+								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
 				if (mandante) {
 					jogPosicao.get(jogadorSubstituir).setMandante(jogadorSubstituto);

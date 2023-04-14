@@ -7,7 +7,7 @@ delete from habilidade_grupo_valor;
 delete from disponivel_negociacao;
 delete from proposta_transferencia_jogador;
 delete from necessidade_contratacao_clube;
-delete from jogador_estatistica_semana;
+delete from jogador_estatisticas_semana;
 delete from jogador_estatisticas_temporada;
 delete from habilidade_valor;
 delete from escalacao_jogador_posicao;
@@ -15,7 +15,7 @@ delete from escalacao_clube;
 delete from jogador_energia;
 delete from jogador;
 delete from jogador_detalhe;
-delete from clube_probabilidade;
+delete from campeonato_clube_probabilidade;
 delete from partida_probabilidade_resultado;
 delete from partida_torcida;
 delete from partida_amistosa_resultado;
@@ -39,5 +39,8 @@ delete from trajetoria_forca_clube;
 delete from semana;
 delete from mudanca_clube_nivel;
 delete from temporada;
+select setval(sequence_schema || '.' || sequence_name, 1000)
+from information_schema.sequences
+where sequence_schema = 'public';
 ";
 

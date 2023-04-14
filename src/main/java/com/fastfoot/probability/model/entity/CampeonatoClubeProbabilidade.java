@@ -12,7 +12,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
+import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.TipoClubeProbabilidade;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -21,11 +21,11 @@ import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 //@Table(indexes = { @Index(columnList = "id_semana"), @Index(columnList = "id_semana, id_campeonato") })
-public class ClubeProbabilidade {
+public class CampeonatoClubeProbabilidade {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubeProbabilidadeSequence")	
-	@SequenceGenerator(name = "clubeProbabilidadeSequence", sequenceName = "clube_probabilidade_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "campeonatoClubeProbabilidadeSequence")	
+	@SequenceGenerator(name = "campeonatoClubeProbabilidadeSequence", sequenceName = "campeonato_clube_probabilidade_seq")
 	private Long id;
 	
 	@ManyToOne
@@ -52,30 +52,12 @@ public class ClubeProbabilidade {
 	
 	private Double probabilidadeClassificacaoCIII;
 	
-	//TESTE
-	/*private Integer qtdeClassificacaoCIII;
-	
-	private Integer qtdeClassificacaoCII;
-	
-	private Integer qtdeClassificacaoCI;
-	
-	private Integer qtdeClassificacaoCNI;
-	
-	private Integer qtdeAcesso;
-	
-	private Integer qtdeRebaixamento;
-	
-	private Integer qtdeCampeao;
-	
-	private Boolean completo;*/
-	//
-	
 	private Double probabilidadeClassificacaoCNI;
 	
 	private TipoClubeProbabilidade tipoClubeProbabilidade;
 
 	@Transient
-	private Map<Integer, ClubeProbabilidadePosicao> clubeProbabilidadePosicao;//Key: posicao
+	private Map<Integer, CampeonatoClubeProbabilidadePosicao> clubeProbabilidadePosicao;//Key: posicao
 	
 	@Transient
 	private Map<Integer, ClubeRankingPosicaoProbabilidade> clubeProbabilidadePosicaoGeral;
@@ -83,7 +65,7 @@ public class ClubeProbabilidade {
 	@Transient
 	private Classificacao classificacao;
 
-	public ClubeProbabilidade() {
+	public CampeonatoClubeProbabilidade() {
 		probabilidadeCampeao = 0d;
 		probabilidadeRebaixamento = 0d;
 		probabilidadeAcesso = 0d;
@@ -91,13 +73,6 @@ public class ClubeProbabilidade {
 		probabilidadeClassificacaoCII = 0d;
 		probabilidadeClassificacaoCIII = 0d;
 		probabilidadeClassificacaoCNI = 0d;
-		/*qtdeClassificacaoCIII = 0;
-		qtdeClassificacaoCI = 0;
-		qtdeClassificacaoCII = 0;
-		qtdeClassificacaoCNI = 0;
-		qtdeCampeao = 0;
-		qtdeAcesso = 0;
-		qtdeRebaixamento = 0;*/
 	}
 	
 	public Clube getClube() {
@@ -116,11 +91,11 @@ public class ClubeProbabilidade {
 		this.id = id;
 	}
 
-	public Map<Integer, ClubeProbabilidadePosicao> getClubeProbabilidadePosicao() {
+	public Map<Integer, CampeonatoClubeProbabilidadePosicao> getClubeProbabilidadePosicao() {
 		return clubeProbabilidadePosicao;
 	}
 
-	public void setClubeProbabilidadePosicao(Map<Integer, ClubeProbabilidadePosicao> clubeProbabilidadePosicao) {
+	public void setClubeProbabilidadePosicao(Map<Integer, CampeonatoClubeProbabilidadePosicao> clubeProbabilidadePosicao) {
 		this.clubeProbabilidadePosicao = clubeProbabilidadePosicao;
 	}
 
@@ -268,67 +243,4 @@ public class ClubeProbabilidade {
 				+ "]";
 	}
 
-	/*public Integer getQtdeClassificacaoCIII() {
-		return qtdeClassificacaoCIII;
-	}
-
-	public void setQtdeClassificacaoCIII(Integer qtdeClassificacaoCIII) {
-		this.qtdeClassificacaoCIII = qtdeClassificacaoCIII;
-	}
-
-	public Integer getQtdeClassificacaoCII() {
-		return qtdeClassificacaoCII;
-	}
-
-	public void setQtdeClassificacaoCII(Integer qtdeClassificacaoCII) {
-		this.qtdeClassificacaoCII = qtdeClassificacaoCII;
-	}
-
-	public Integer getQtdeClassificacaoCI() {
-		return qtdeClassificacaoCI;
-	}
-
-	public void setQtdeClassificacaoCI(Integer qtdeClassificacaoCI) {
-		this.qtdeClassificacaoCI = qtdeClassificacaoCI;
-	}
-
-	public Integer getQtdeClassificacaoCNI() {
-		return qtdeClassificacaoCNI;
-	}
-
-	public void setQtdeClassificacaoCNI(Integer qtdeClassificacaoCNI) {
-		this.qtdeClassificacaoCNI = qtdeClassificacaoCNI;
-	}
-
-	public Integer getQtdeAcesso() {
-		return qtdeAcesso;
-	}
-
-	public void setQtdeAcesso(Integer qtdeAcesso) {
-		this.qtdeAcesso = qtdeAcesso;
-	}
-
-	public Integer getQtdeRebaixamento() {
-		return qtdeRebaixamento;
-	}
-
-	public void setQtdeRebaixamento(Integer qtdeRebaixamento) {
-		this.qtdeRebaixamento = qtdeRebaixamento;
-	}
-
-	public Integer getQtdeCampeao() {
-		return qtdeCampeao;
-	}
-
-	public Boolean getCompleto() {
-		return completo;
-	}
-
-	public void setCompleto(Boolean completo) {
-		this.completo = completo;
-	}
-
-	public void setQtdeCampeao(Integer qtdeCampeao) {
-		this.qtdeCampeao = qtdeCampeao;
-	}*/
 }

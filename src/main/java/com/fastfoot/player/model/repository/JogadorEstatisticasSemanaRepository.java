@@ -11,22 +11,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
+import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Repository
-public interface JogadorEstatisticaSemanaRepository extends JpaRepository<JogadorEstatisticaSemana, Long> {
+public interface JogadorEstatisticasSemanaRepository extends JpaRepository<JogadorEstatisticasSemana, Long> {
 
-	public List<JogadorEstatisticaSemana> findByClube(Clube clube);
+	public List<JogadorEstatisticasSemana> findByClube(Clube clube);
 	
-	public List<JogadorEstatisticaSemana> findByJogador(Jogador jogador);
+	public List<JogadorEstatisticasSemana> findByJogador(Jogador jogador);
 	
-	public List<JogadorEstatisticaSemana> findBySemana(Semana semana);
+	public List<JogadorEstatisticasSemana> findBySemana(Semana semana);
 	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
-			" delete from jogador_estatistica_semana" +
+			" delete from jogador_estatisticas_semana" +
 			" where id_semana in (select id from semana s where s.id_temporada = ?1)"
 	)
 	public void deleteByIdTemporada(Long idTemporada);
@@ -50,7 +50,7 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
 			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
 			" 	sum(numero_rodada_disputa_penalt) AS numero_rodada_disputa_penalt" +
-			" FROM jogador_estatistica_semana jes" +
+			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
 			" INNER JOIN clube c ON c.id = jes.id_clube" +//TODO: clube da estatistica ou clube do jogador?
@@ -79,7 +79,7 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
 			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
 			" 	sum(numero_rodada_disputa_penalt) AS numero_rodada_disputa_penalt" +
-			" FROM jogador_estatistica_semana jes" +
+			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
 			" INNER JOIN clube c ON c.id = jes.id_clube" +//TODO: clube da estatistica ou clube do jogador?
@@ -109,13 +109,13 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
 			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
 			" 	sum(numero_rodada_disputa_penalt) AS numero_rodada_disputa_penalt" +
-			" FROM jogador_estatistica_semana jes" +
+			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
 			" INNER JOIN clube c ON c.id = jes.id_clube" +//TODO: clube da estatistica ou clube do jogador?
 			" INNER JOIN (" +
 			"	 SELECT jes.id" +
-			"	 FROM jogador_estatistica_semana jes" +
+			"	 FROM jogador_estatisticas_semana jes" +
 			"	 INNER JOIN partida_resultado pr ON jes.id_partida_resultado = pr.id" +
 			"	 INNER JOIN rodada r ON r.id = pr.id_rodada" +
 			"	 LEFT JOIN grupo_campeonato gc ON gc.id = r.id_grupo_campeonato" +
@@ -123,7 +123,7 @@ public interface JogadorEstatisticaSemanaRepository extends JpaRepository<Jogado
 			"	 	OR gc.id_campeonato_misto = ?1" +
 			"	 UNION" +
 			"	 SELECT jes.id" +
-			"	 FROM jogador_estatistica_semana jes" +
+			"	 FROM jogador_estatisticas_semana jes" +
 			"	 INNER JOIN partida_eliminatoria_resultado per ON jes.id_partida_eliminatoria_resultado = per.id" +
 			"	 INNER JOIN rodada_eliminatoria re ON re.id = per.id_rodada_eliminatoria" +
 			"	 WHERE re.id_campeonato_eliminatorio = ?1" +

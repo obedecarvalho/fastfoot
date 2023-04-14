@@ -86,7 +86,7 @@ public class EscalarClubeService {
 		Map<Posicao, List<Jogador>> jogadoresSuplentes = new HashMap<Posicao, List<Jogador>>();
 		
 		List<Jogador> jogadoresDisponiveis = jogadores.stream().filter(
-				j -> j.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() > Constantes.ENERGIA_MINIMA_JOGAR)
+				j -> j.getJogadorEnergia().getEnergiaAtual() > Constantes.ENERGIA_MINIMA_JOGAR)
 				.collect(Collectors.toList());
 		
 		//Gol

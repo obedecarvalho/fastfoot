@@ -116,7 +116,8 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 		if (ValidatorUtil.isEmpty(getJogador())) {
 			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
 		} else {
-			double energia = (getJogador().getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+			double energia = (getJogador().getJogadorEnergia().getEnergiaAtual() / 100.0);
+			if (energia > 1.0) throw new RuntimeException("Erro: energia jogador maior que 100%. [idJogador:" + getJogador() + "]");
 			valorN = Math.max((int) (Math.pow(valor, Constantes.ROLETA_N_POWER) * energia), 1);
 		}
 	}

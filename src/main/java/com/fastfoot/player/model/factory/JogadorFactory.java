@@ -388,10 +388,10 @@ public abstract class JogadorFactory {
 				@Override
 				public int compare(Jogador o1, Jogador o2) {
 					Double forcaPonderada1 = Math.pow(o1.getForcaGeral(), Constantes.ROLETA_N_POWER)
-							* (o1.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+							* (o1.getJogadorEnergia().getEnergiaAtual() / 100.0);
 
 					Double forcaPonderada2 = Math.pow(o2.getForcaGeral(), Constantes.ROLETA_N_POWER)
-							* (o2.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual() / 100.0);
+							* (o2.getJogadorEnergia().getEnergiaAtual() / 100.0);
 					
 					int compare = forcaPonderada2.compareTo(forcaPonderada1);//reverse
 					
@@ -412,8 +412,8 @@ public abstract class JogadorFactory {
 	
 				@Override
 				public int compare(Jogador o1, Jogador o2) {
-					return o1.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual()
-							.compareTo(o2.getJogadorDetalhe().getJogadorEnergia().getEnergiaAtual());
+					return o1.getJogadorEnergia().getEnergiaAtual()
+							.compareTo(o2.getJogadorEnergia().getEnergiaAtual());
 				}
 			};
 		}

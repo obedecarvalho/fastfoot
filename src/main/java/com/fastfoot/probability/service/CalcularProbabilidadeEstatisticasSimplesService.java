@@ -19,12 +19,12 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
-import com.fastfoot.probability.model.ClubeProbabilidadePosicao;
+import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
 import com.fastfoot.probability.model.TipoClubeProbabilidade;
-import com.fastfoot.probability.model.entity.ClubeProbabilidade;
-import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;
+import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
+import com.fastfoot.probability.model.repository.CampeonatoClubeProbabilidadeRepository;
 import com.fastfoot.probability.service.util.ClassificacaoProbabilidadeUtil;
 import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeUtil;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -92,7 +92,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	private ClubeRepository clubeRepository;*/
 	
 	@Autowired
-	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
+	private CampeonatoClubeProbabilidadeRepository clubeProbabilidadeRepository;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
@@ -111,16 +111,16 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 			r.setPartidas(partidaRepository.findByRodada(r));
 		}
 		
-		Collection<ClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII);
+		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII);
 		
 		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	private Collection<ClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	private Collection<CampeonatoClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
 		
-		Map<Clube, ClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, ClubeProbabilidade>();
+		Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, CampeonatoClubeProbabilidade>();
 		
 		List<Clube> clubesLiga = nacional.getClassificacao().stream().map(c -> c.getClube()).collect(Collectors.toList());
 		
@@ -194,15 +194,15 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 
 	}
 	
-	private void calcularProbabilidadesEspecificas(Map<Clube, ClubeProbabilidade> clubeProbabilidades, Semana semana/*, NivelCampeonato nivelCampeonato*/) {
+	private void calcularProbabilidadesEspecificas(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades, Semana semana/*, NivelCampeonato nivelCampeonato*/) {
 		
 		Integer numeroRebaixados = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
 
-		ClubeProbabilidadePosicao cpp = null;
+		CampeonatoClubeProbabilidadePosicao cpp = null;
 
 		ClubeRankingPosicaoProbabilidade crpp = null;
 		
-		for (ClubeProbabilidade cp : clubeProbabilidades.values()) {
+		for (CampeonatoClubeProbabilidade cp : clubeProbabilidades.values()) {
 			
 			//Campeao
 			cpp = cp.getClubeProbabilidadePosicao().get(1);
@@ -287,17 +287,17 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 
 	}
 	
-	private void agruparClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
+	private void agruparClubeProbabilidade(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades,
 			List<ClassificacaoProbabilidade> classificacaoProbabilidades) {
 
 		for (ClassificacaoProbabilidade clasp : classificacaoProbabilidades) {
-			ClubeProbabilidade clup = clubeProbabilidades.get(clasp.getClube());
+			CampeonatoClubeProbabilidade clup = clubeProbabilidades.get(clasp.getClube());
 			
 			
-			ClubeProbabilidadePosicao cpp = clup.getClubeProbabilidadePosicao().get(clasp.getPosicao());
+			CampeonatoClubeProbabilidadePosicao cpp = clup.getClubeProbabilidadePosicao().get(clasp.getPosicao());
 			
 			if (cpp == null) {
-				cpp = new ClubeProbabilidadePosicao();
+				cpp = new CampeonatoClubeProbabilidadePosicao();
 				
 				cpp.setPosicao(clasp.getPosicao());
 				cpp.setProbabilidade(1);
@@ -328,13 +328,13 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 		
 	}
 	
-	private void agruparClubeRankingProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades, List<ClubeRankingProbabilidade> ranking) {
+	private void agruparClubeRankingProbabilidade(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades, List<ClubeRankingProbabilidade> ranking) {
 
 		ClubeRankingPosicaoProbabilidade crpp = null;
 		
 		for (ClubeRankingProbabilidade crp : ranking) {
 			if (clubeProbabilidades.get(crp.getClube()) != null) {
-				ClubeProbabilidade clubeProb = clubeProbabilidades.get(crp.getClube());
+				CampeonatoClubeProbabilidade clubeProb = clubeProbabilidades.get(crp.getClube());
 				crpp = clubeProb.getClubeProbabilidadePosicaoGeral().get(crp.getPosicaoGeral());
 					
 				if (crpp == null) {
@@ -354,11 +354,11 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 		}		
 	}
 	
-	private void inicializarClubeProbabilidade(Map<Clube, ClubeProbabilidade> clubeProbabilidades,
+	private void inicializarClubeProbabilidade(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades,
 			List<Clube> clubes, Semana semana, Campeonato campeonato) {
 		//if (clubeProbabilidades.isEmpty()) {
 		for (Clube clube : clubes) {
-			ClubeProbabilidade clup = new ClubeProbabilidade();
+			CampeonatoClubeProbabilidade clup = new CampeonatoClubeProbabilidade();
 			
 			clup.setClube(clube);
 			clup.setCampeonato(campeonato);
@@ -366,7 +366,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 			//clup.setCompleto(true);
 			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.ESTATISTICAS_SIMPLES);
 
-			clup.setClubeProbabilidadePosicao(new HashMap<Integer, ClubeProbabilidadePosicao>());
+			clup.setClubeProbabilidadePosicao(new HashMap<Integer, CampeonatoClubeProbabilidadePosicao>());
 			
 			clup.setClubeProbabilidadePosicaoGeral(new HashMap<Integer, ClubeRankingPosicaoProbabilidade>());
 			
@@ -435,7 +435,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 		return -1;
 	}
 	
-	private void salvarProbabilidades(Collection<ClubeProbabilidade> probabilidades) {
+	private void salvarProbabilidades(Collection<CampeonatoClubeProbabilidade> probabilidades) {
 		clubeProbabilidadeRepository.saveAll(probabilidades);
 	}
 
@@ -534,8 +534,8 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	
 	//########	TESTE	##############
 
-	private synchronized void printClubeProbabilidade(Collection<ClubeProbabilidade> clubeProbabilidades) {
-		for (ClubeProbabilidade cp : clubeProbabilidades) {
+	private synchronized void printClubeProbabilidade(Collection<CampeonatoClubeProbabilidade> clubeProbabilidades) {
+		for (CampeonatoClubeProbabilidade cp : clubeProbabilidades) {
 			/*System.err.println("\t" + cp.getClube().getNome());
 			System.err.println("\t\tCampeao: " + cp.getProbabilidadeCampeao());
 			System.err.println("\t\tRebaixamento: " + cp.getProbabilidadeRebaixamento());

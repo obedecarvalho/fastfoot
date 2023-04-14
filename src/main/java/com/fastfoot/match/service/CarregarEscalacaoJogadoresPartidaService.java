@@ -18,7 +18,7 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEnergia;
-import com.fastfoot.player.model.entity.JogadorEstatisticaSemana;
+import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -80,7 +80,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
 			}
 
-			j.getJogadorDetalhe().setJogadorEnergia(je);
+			j.setJogadorEnergia(je);
 		}
 
 	}
@@ -123,28 +123,28 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		if (!partidaResultado.isAmistoso()) {// Partidas Oficiais
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.setJogadorEstatisticaSemana(
-							new JogadorEstatisticaSemana(j, semana, j.getClube(), partidaResultado, false)));
+					.forEach(j -> j.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(j, semana, j.getClube(), partidaResultado, false)));
 
 		} else {
 
 			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.setJogadorEstatisticaSemana(
-							new JogadorEstatisticaSemana(j, semana, j.getClube(), null, true)));
+					.forEach(j -> j.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(j, semana, j.getClube(), null, true)));
 
 		}
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroJogos(1));
+				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogos(1));
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroJogosTitular(1));
+				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogosTitular(1));
 
 		/*escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90));*/
 		
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticaSemana().setMinutoInicial(0));
+				.forEach(j -> j.getJogadorEstatisticasSemana().setMinutoInicial(0));
 	}
 
 	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana,

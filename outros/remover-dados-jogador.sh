@@ -7,6 +7,7 @@ delete from habilidade_grupo_valor;
 delete from disponivel_negociacao;
 delete from proposta_transferencia_jogador;
 delete from necessidade_contratacao_clube;
+delete from jogador_estatisticas_semana;
 delete from jogador_estatisticas_temporada;
 delete from habilidade_valor;
 delete from escalacao_jogador_posicao;

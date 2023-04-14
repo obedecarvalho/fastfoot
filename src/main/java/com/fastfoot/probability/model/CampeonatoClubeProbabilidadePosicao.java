@@ -1,10 +1,10 @@
 package com.fastfoot.probability.model;
 
-import com.fastfoot.probability.model.entity.ClubeProbabilidade;
+import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
 
-public class ClubeProbabilidadePosicao {
+public class CampeonatoClubeProbabilidadePosicao {
 
-	private ClubeProbabilidade clubeProbabilidade;
+	private CampeonatoClubeProbabilidade clubeProbabilidade;
 	
 	private Integer posicao;
 	
@@ -16,11 +16,11 @@ public class ClubeProbabilidadePosicao {
 	
 	//private Integer pontuacaoMinima;
 
-	public ClubeProbabilidade getClubeProbabilidade() {
+	public CampeonatoClubeProbabilidade getClubeProbabilidade() {
 		return clubeProbabilidade;
 	}
 
-	public void setClubeProbabilidade(ClubeProbabilidade clubeProbabilidade) {
+	public void setClubeProbabilidade(CampeonatoClubeProbabilidade clubeProbabilidade) {
 		this.clubeProbabilidade = clubeProbabilidade;
 	}
 

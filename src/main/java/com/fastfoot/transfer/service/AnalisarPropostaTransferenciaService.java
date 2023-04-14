@@ -135,7 +135,7 @@ public class AnalisarPropostaTransferenciaService {
 		PropostaTransferenciaJogador propostaAceitar = null;
 		ClubeSaldo clubeSaldo = null;
 		Boolean haSaldo = null;
-		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 25;
+		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
 		//List<TransferenciaConcluidaDTO> transferenciaConcluidaDTOs = new ArrayList<TransferenciaConcluidaDTO>();
 		
 		for (Jogador j : jogadorPropostas.keySet()) {

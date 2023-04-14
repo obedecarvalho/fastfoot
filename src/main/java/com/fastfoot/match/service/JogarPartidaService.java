@@ -127,40 +127,40 @@ public class JogarPartidaService {
 	
 	private void calcularMinutosJogador(Esquema esquema) {
 		
-		if (esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal() == null) {
-			esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().setMinutoFinal(90);
+		if (esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal() == null) {
+			esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().setMinutoFinal(90);
 		}
 
-		if (esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal() == null) {
-			esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().setMinutoFinal(90);
+		if (esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal() == null) {
+			esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().setMinutoFinal(90);
 		}
 
-		esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().setNumeroMinutosJogados(
-				esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal()
-						- esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticaSemana().getMinutoInicial());
+		esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().setNumeroMinutosJogados(
+				esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal()
+						- esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().getMinutoInicial());
 
-		esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().setNumeroMinutosJogados(
-				esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoFinal()
-						- esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticaSemana().getMinutoInicial());
+		esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().setNumeroMinutosJogados(
+				esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal()
+						- esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().getMinutoInicial());
 
 		esquema.getPosicoes().stream().filter(
-				p -> p.getMandante() != null && p.getMandante().getJogadorEstatisticaSemana().getMinutoFinal() == null)
-				.forEach(p -> p.getMandante().getJogadorEstatisticaSemana().setMinutoFinal(90));
+				p -> p.getMandante() != null && p.getMandante().getJogadorEstatisticasSemana().getMinutoFinal() == null)
+				.forEach(p -> p.getMandante().getJogadorEstatisticasSemana().setMinutoFinal(90));
 
 		esquema.getPosicoes().stream()
 				.filter(p -> p.getVisitante() != null
-						&& p.getVisitante().getJogadorEstatisticaSemana().getMinutoFinal() == null)
-				.forEach(p -> p.getVisitante().getJogadorEstatisticaSemana().setMinutoFinal(90));
+						&& p.getVisitante().getJogadorEstatisticasSemana().getMinutoFinal() == null)
+				.forEach(p -> p.getVisitante().getJogadorEstatisticasSemana().setMinutoFinal(90));
 
 		esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
-				.forEach(p -> p.getMandante().getJogadorEstatisticaSemana()
-						.setNumeroMinutosJogados(p.getMandante().getJogadorEstatisticaSemana().getMinutoFinal()
-								- p.getMandante().getJogadorEstatisticaSemana().getMinutoInicial()));
+				.forEach(p -> p.getMandante().getJogadorEstatisticasSemana()
+						.setNumeroMinutosJogados(p.getMandante().getJogadorEstatisticasSemana().getMinutoFinal()
+								- p.getMandante().getJogadorEstatisticasSemana().getMinutoInicial()));
 
 		esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
-				.forEach(p -> p.getVisitante().getJogadorEstatisticaSemana()
-						.setNumeroMinutosJogados(p.getVisitante().getJogadorEstatisticaSemana().getMinutoFinal()
-								- p.getVisitante().getJogadorEstatisticaSemana().getMinutoInicial()));
+				.forEach(p -> p.getVisitante().getJogadorEstatisticasSemana()
+						.setNumeroMinutosJogados(p.getVisitante().getJogadorEstatisticasSemana().getMinutoFinal()
+								- p.getVisitante().getJogadorEstatisticasSemana().getMinutoInicial()));
 
 	}
 
@@ -251,14 +251,14 @@ public class JogarPartidaService {
 	private void salvarEstatisticasJogador(List<Jogador> jogadores,
 			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticaSemana(
-				jogadores.stream().filter(j -> j.getJogadorEstatisticaSemana() != null)
-						.map(Jogador::getJogadorEstatisticaSemana).collect(Collectors.toList()));
+				jogadores.stream().filter(j -> j.getJogadorEstatisticasSemana() != null)
+						.map(Jogador::getJogadorEstatisticasSemana).collect(Collectors.toList()));
 	}
 	
 	private void salvarJogadorEnergia(List<Jogador> jogadores,
 			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		partidaJogadorEstatisticaDTO
-				.adicionarJogadorEnergias(jogadores.stream().map(j -> j.getJogadorDetalhe().getJogadorEnergia())
+				.adicionarJogadorEnergias(jogadores.stream().map(j -> j.getJogadorEnergia())
 						.filter(je -> je.getEnergia() != 0).collect(Collectors.toList()));
 	}
 
@@ -286,10 +286,10 @@ public class JogarPartidaService {
 			// Diminuir energia
 			if (minuto % 15 == 0) {
 				esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
-						.forEach(p -> p.getMandante().getJogadorDetalhe().getJogadorEnergia()
+						.forEach(p -> p.getMandante().getJogadorEnergia()
 								.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA));
 				esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
-						.forEach(p -> p.getVisitante().getJogadorDetalhe().getJogadorEnergia()
+						.forEach(p -> p.getVisitante().getJogadorEnergia()
 								.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA));
 				
 				esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
@@ -299,9 +299,9 @@ public class JogarPartidaService {
 						.forEach(p -> p.getMandante().getHabilidades().stream().forEach(h -> h.calcularValorN()));
 				
 				if (minuto % 30 == 0) {
-					esquema.getGoleiroMandante().getGoleiro().getJogadorDetalhe().getJogadorEnergia()
+					esquema.getGoleiroMandante().getGoleiro().getJogadorEnergia()
 							.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO);
-					esquema.getGoleiroVisitante().getGoleiro().getJogadorDetalhe().getJogadorEnergia()
+					esquema.getGoleiroVisitante().getGoleiro().getJogadorEnergia()
 							.adicionarEnergia(-Constantes.CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO);
 					
 					esquema.getGoleiroMandante().getGoleiro().getHabilidades().forEach(h -> h.calcularValorN());
@@ -430,13 +430,13 @@ public class JogarPartidaService {
 							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticaSemana()
 									.incrementarGolsSofridos();
 						} else {*/
-							habilidadeValorAcao.getJogador().getJogadorEstatisticaSemana()
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana()
 									.incrementarGolsMarcados();
 							if (jogadorAssistencia != null) {
-								jogadorAssistencia.getJogadorEstatisticaSemana()
+								jogadorAssistencia.getJogadorEstatisticasSemana()
 										.incrementarAssistencias();
 							}
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticaSemana()
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 									.incrementarGolsSofridos();
 						//}
 					} else if (goleiroVenceu) {
@@ -448,9 +448,9 @@ public class JogarPartidaService {
 							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticaSemana()
 									.incrementarGoleiroFinalizacoesDefendidas();
 						} else {*/
-							habilidadeValorAcao.getJogador().getJogadorEstatisticaSemana()
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana()
 									.incrementarFinalizacoesDefendidas();
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticaSemana()
+							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 									.incrementarGoleiroFinalizacoesDefendidas();
 						//}
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
@@ -460,7 +460,7 @@ public class JogarPartidaService {
 							habilidadeValorAcao.getJogador().getJogadorEstatisticaSemana()
 									.incrementarFinalizacoesFora();
 						} else {*/
-							habilidadeValorAcao.getJogador().getJogadorEstatisticaSemana()
+							habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana()
 									.incrementarFinalizacoesFora();
 						//}
 					}

@@ -1,9 +1,13 @@
 package com.fastfoot.bets.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -12,16 +16,20 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.service.EscalarClubeService;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorEnergia;
+import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -33,6 +41,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
@@ -59,6 +68,9 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 	
 	@Autowired
 	private EscalarClubeService escalarClubeService;
+	
+	@Autowired
+	private JogadorEnergiaRepository jogadorEnergiaRepository;
 	
 	/*@Autowired
 	private ParametroService parametroService;*/
@@ -98,10 +110,13 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);*/
 		
+		carregarJogadorEnergia(partidaResultado.getClubeMandante(), jogadoresMandante);
+		carregarJogadorEnergia(partidaResultado.getClubeVisitante(), jogadoresVisitante);
+		
 		EscalacaoClube escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, null);
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
 		EscalacaoClube escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
 				//escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
@@ -346,4 +361,35 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		return factory;
 	}*/
 
+	private void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
+		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
+
+		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
+				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
+
+		JogadorEnergia je = null;
+		Map<String, Object> jes = null;
+		Integer energia = null;
+
+		for (Jogador j : jogadores) {
+			je = new JogadorEnergia();
+			je.setJogador(j);
+			je.setEnergia(0);//Variacao de energia
+
+			jes = x.get(j);
+			if (!ValidatorUtil.isEmpty(jes)) {
+				energia = ((BigInteger) jes.get("energia")).intValue();
+				if (energia > Constantes.ENERGIA_INICIAL) {
+					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
+				} else {
+					je.setEnergiaInicial(energia);
+				}
+			} else {
+				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
+			}
+
+			j.setJogadorEnergia(je);
+		}
+
+	}
 }

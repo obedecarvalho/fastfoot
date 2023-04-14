@@ -19,13 +19,13 @@ import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_semana, id_jogador") })
-public class JogadorEstatisticaSemana {
+public class JogadorEstatisticasSemana {
 
 	//TODO: roubadas de bola
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticaSemanaSequence")	
-	@SequenceGenerator(name = "jogadorEstatisticaSemanaSequence", sequenceName = "jogador_estatistica_semana_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEstatisticasSemanaSequence")	
+	@SequenceGenerator(name = "jogadorEstatisticasSemanaSequence", sequenceName = "jogador_estatisticas_semana_seq")
 	private Long id;
 
 	@ManyToOne
@@ -107,11 +107,11 @@ public class JogadorEstatisticaSemana {
 	private Integer minutoFinal;
 	//
 
-	public JogadorEstatisticaSemana() {
+	public JogadorEstatisticasSemana() {
 		
 	}
 	
-	public JogadorEstatisticaSemana(Jogador jogador, Semana semana, Clube clube, /*CampeonatoJogavel campeonato,*/ PartidaResultadoJogavel partida, Boolean amistoso) {
+	public JogadorEstatisticasSemana(Jogador jogador, Semana semana, Clube clube, /*CampeonatoJogavel campeonato,*/ PartidaResultadoJogavel partida, Boolean amistoso) {
 		this.jogador = jogador;
 		this.semana = semana;
 		this.clube = clube;
@@ -148,7 +148,7 @@ public class JogadorEstatisticaSemana {
 		this.golsSofridosDisputaPenalt = 0;
 	}
 	
-	public JogadorEstatisticaSemana(Jogador jogador) {
+	public JogadorEstatisticasSemana(Jogador jogador) {
 		this.jogador = jogador;
 		
 		this.numeroJogos = 0;

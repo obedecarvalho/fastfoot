@@ -13,7 +13,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
-import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
@@ -29,7 +29,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	private TemporadaCRUDService temporadaService;
 	
 	@Autowired
-	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;
+	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
 
 	@Override
 	public List<JogadorEstatisticasTemporada> getAll() {
@@ -77,7 +77,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	
 	public List<JogadorEstatisticasTemporada> getAgrupadoTemporadaAtualByClube(Clube clube, Boolean amistoso) {
 
-		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticaSemanaRepository
+		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticasSemanaRepository
 				.findAgrupadoByTemporadaAndClube(temporadaService.getTemporadaAtual().getId(), clube.getId(), amistoso);
 		
 		return transformMapToObj(estatisticasAgrupada);
@@ -122,7 +122,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	
 	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporada(Temporada temporada, Boolean amistoso) {
 
-		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticaSemanaRepository
+		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticasSemanaRepository
 				.findAgrupadoByTemporada(temporada.getId(), amistoso);
 		
 		return transformMapToObj(estatisticasAgrupada);
@@ -164,7 +164,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 
 	public List<JogadorEstatisticasTemporada> getAgrupadoByIdCampeonato(Long idCampeonato) {
 
-		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticaSemanaRepository
+		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticasSemanaRepository
 				.findAgrupadoByIdCampeonato(idCampeonato);
 		
 		return transformMapToObj(estatisticasAgrupada);

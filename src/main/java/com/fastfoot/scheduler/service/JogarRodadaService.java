@@ -21,7 +21,7 @@ import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
-import com.fastfoot.player.model.repository.JogadorEstatisticaSemanaRepository;
+import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
@@ -63,7 +63,7 @@ public class JogarRodadaService {
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
 	
 	@Autowired
-	private JogadorEstatisticaSemanaRepository jogadorEstatisticaSemanaRepository;
+	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
 	
 	@Autowired
 	private PartidaEstatisticasRepository partidaEstatisticasRepository;
@@ -378,7 +378,7 @@ public class JogarRodadaService {
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		jogadorEstatisticaSemanaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasSemana());
+		jogadorEstatisticasSemanaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasSemana());
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#jogadorEstatisticaSemanaRepository:" + (fim - inicio));

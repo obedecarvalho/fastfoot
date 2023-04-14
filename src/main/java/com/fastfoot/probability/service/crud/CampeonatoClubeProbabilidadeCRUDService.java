@@ -10,8 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.probability.model.entity.ClubeProbabilidade;
-import com.fastfoot.probability.model.repository.ClubeProbabilidadeRepository;
+import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
+import com.fastfoot.probability.model.repository.CampeonatoClubeProbabilidadeRepository;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -20,10 +20,10 @@ import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 import com.fastfoot.service.CRUDService;
 
 @Service
-public class ClubeProbabilidadeCRUDService implements CRUDService<ClubeProbabilidade, Long> {
+public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<CampeonatoClubeProbabilidade, Long> {
 
 	@Autowired
-	private ClubeProbabilidadeRepository clubeProbabilidadeRepository;
+	private CampeonatoClubeProbabilidadeRepository clubeProbabilidadeRepository;
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
@@ -32,13 +32,13 @@ public class ClubeProbabilidadeCRUDService implements CRUDService<ClubeProbabili
 	private SemanaCRUDService semanaCRUDService;
 
 	@Override
-	public List<ClubeProbabilidade> getAll() {
+	public List<CampeonatoClubeProbabilidade> getAll() {
 		return clubeProbabilidadeRepository.findAll();
 	}
 
 	@Override
-	public ClubeProbabilidade getById(Long id) {
-		Optional<ClubeProbabilidade> clubeOpt = clubeProbabilidadeRepository.findById(id);
+	public CampeonatoClubeProbabilidade getById(Long id) {
+		Optional<CampeonatoClubeProbabilidade> clubeOpt = clubeProbabilidadeRepository.findById(id);
 		if (clubeOpt.isPresent()) {
 			return clubeOpt.get();
 		}
@@ -56,30 +56,30 @@ public class ClubeProbabilidadeCRUDService implements CRUDService<ClubeProbabili
 	}
 
 	@Override
-	public ClubeProbabilidade create(ClubeProbabilidade t) {
+	public CampeonatoClubeProbabilidade create(CampeonatoClubeProbabilidade t) {
 		return clubeProbabilidadeRepository.save(t);
 	}
 
 	@Override
-	public ClubeProbabilidade update(ClubeProbabilidade t) {
+	public CampeonatoClubeProbabilidade update(CampeonatoClubeProbabilidade t) {
 		return clubeProbabilidadeRepository.save(t);
 	}
 	
-	public List<ClubeProbabilidade> getByCampeonato(Campeonato campeonato){
+	public List<CampeonatoClubeProbabilidade> getByCampeonato(Campeonato campeonato){
 		return clubeProbabilidadeRepository.findByCampeonato(campeonato);
 	}
 
-	public List<ClubeProbabilidade> getByCampeonatoAndSemana(Campeonato campeonato, Semana semana){
+	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemana(Campeonato campeonato, Semana semana){
 		return clubeProbabilidadeRepository.findByCampeonatoAndSemana(campeonato, semana);
 	}
 	
-	public List<ClubeProbabilidade> getByCampeonatoAndSemanaAtual(Campeonato campeonato){
+	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemanaAtual(Campeonato campeonato){
 		return getByCampeonatoAndSemana(campeonato, semanaCRUDService.getSemanaAtual());
 	}
 	
-	public List<ClubeProbabilidade> getByCampeonatoAndSemanaAtualComClassificacao(Campeonato campeonato){
+	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemanaAtualComClassificacao(Campeonato campeonato){
 		
-		List<ClubeProbabilidade> probabilidades = getByCampeonatoAndSemana(campeonato, semanaCRUDService.getSemanaAtual());
+		List<CampeonatoClubeProbabilidade> probabilidades = getByCampeonatoAndSemana(campeonato, semanaCRUDService.getSemanaAtual());
 		
 		List<Classificacao> classificacoes = classificacaoRepository.findByCampeonato(campeonato);
 		

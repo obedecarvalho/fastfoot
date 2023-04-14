@@ -20,6 +20,7 @@ import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
 import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
+import com.fastfoot.financial.service.GerarDemonstrativoFinanceiroTemporadaService;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
@@ -180,6 +181,9 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private DesenvolverJogadorService desenvolverJogadorService;
 
+	@Autowired
+	private GerarDemonstrativoFinanceiroTemporadaService gerarDemonstrativoFinanceiroTemporadaService;
+
 	public SemanaDTO jogarPartidasSemana() {
 		
 		StopWatch stopWatch = new StopWatch();		
@@ -191,16 +195,15 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();
 		
 		//Carregar dados
-		//Temporada temporada = temporadaRepository.findFirstByAtual(true).get();
 		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
 		
-		stopWatch.split();
+		/*stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#carregar:" + (fim - inicio));
 
-		inicio = stopWatch.getSplitTime();
+		inicio = stopWatch.getSplitTime();*/
 		
 		//Escalar clubes
 		/*if (semana.getNumero() % 5 == 1) {
@@ -222,7 +225,7 @@ public class JogarPartidasSemanaService {
 		
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#carregar2:" + (fim - inicio));
+		mensagens.add("\t#carregar:" + (fim - inicio));
 
 		inicio = stopWatch.getSplitTime();
 
@@ -255,7 +258,7 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#promover:" + (fim - inicio));
 		
 		inicio = stopWatch.getSplitTime();
-		//Promover
+		//Marcar amistosos
 		marcarAmistososSemanalmente(semana);
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
@@ -292,7 +295,7 @@ public class JogarPartidasSemanaService {
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
-			//temporadaService.classificarClubesTemporadaAtual();
+
 			classificarClubesTemporadaService.classificarClubesTemporadaAtual();
 			
 			stopWatch.split();
@@ -309,16 +312,6 @@ public class JogarPartidasSemanaService {
 
 		//Desenvolver jogadores
 		if (semana.getNumero() % 5 == 0) {
-			/*if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
-
-				desenvolverJogadores();
-
-				stopWatch.split();
-				fim = stopWatch.getSplitTime();
-				mensagens.add("\t#desenvolverJogadores:" + (fim - inicio));
-				inicio = stopWatch.getSplitTime();
-
-			} else {*/
 
 				habilidadeValorRepository.desenvolverTodasHabilidades2();
 				jogadorRepository.calcularForcaGeral2();
@@ -332,9 +325,8 @@ public class JogarPartidasSemanaService {
 
 				stopWatch.split();
 				fim = stopWatch.getSplitTime();
-				mensagens.add("\t#desenvolverTodasHabilidades2:" + (fim - inicio));
+				mensagens.add("\t#calcularHabilidadeGrupoValor:" + (fim - inicio));
 				inicio = stopWatch.getSplitTime();
-			//}
 
 		}
 		
@@ -357,8 +349,8 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#pagarSalarioJogadores:" + (fim - inicio));
 		
 		inicio = stopWatch.getSplitTime();
-		//jogadorEnergiaRepository.inserirEnergiaTodosJogadores(Constantes.REPOSICAO_ENERGIA_SEMANAL);
-		jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);//TODO: recuperação especifica por idade jogador
+		//TODO: recuperação especifica por idade jogador
+		jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#recuperarEnergia:" + (fim - inicio));
@@ -368,6 +360,15 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularJurosBancarios:" + (fim - inicio));
+		
+		if (semana.getNumero() == Constantes.NUM_SEMANAS) {
+			inicio = stopWatch.getSplitTime();
+			gerarDemonstrativoFinanceiroTemporadaService.gerarDemonstrativoFinanceiroTemporada(temporada);
+			gerarDemonstrativoFinanceiroTemporadaService.gerarDemonstrativoFinanceiroTemporadaCaixa(temporada);
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#gerarDemonstrativoFinanceiroTemporada:" + (fim - inicio));
+		}
 
 		//inicio = stopWatch.getSplitTime();
 
@@ -490,8 +491,8 @@ public class JogarPartidasSemanaService {
 		
 		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);
 		
-		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap =
-		campeonatos.stream().collect(Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
+		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap = campeonatos.stream().collect(
+				Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
 		
 		List<CompletableFuture<Boolean>> calculoProbabilidadesFuture = new ArrayList<CompletableFuture<Boolean>>();
 
