@@ -30,6 +30,8 @@ public class Clube implements ElementoRoleta {
 	private ClubeNivel clubeNivel;
 	
 	private ClubeNivel clubeNivelInternacional;
+	
+	private String logo;
 
 	@Transient
 	@JsonIgnore
@@ -52,7 +54,7 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}*/
 	
-	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, ClubeNivel clubeNivelInternacional, String nome) {
+	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, ClubeNivel clubeNivelInternacional, String nome, String logo) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -60,6 +62,7 @@ public class Clube implements ElementoRoleta {
 		this.forcaGeral = clubeNivel.getForcaGeral();//TODO
 		this.liga = liga;
 		this.clubeNivelInternacional = clubeNivelInternacional;
+		this.logo = logo;
 	}
 
 	public Integer getId() {
@@ -163,6 +166,14 @@ public class Clube implements ElementoRoleta {
 	@JsonIgnore
 	public Double getValorNAsDouble() {
 		return new Double(getValorN());
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
 	}
 
 }

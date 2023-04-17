@@ -35,6 +35,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +
 			" 	j.nome as nome_jogador, j.posicao," +
 			" 	c.nome as nome_clube," +
+			" 	c.logo as logo_clube," +
 			" 	sum(assistencias) AS assistencias," +
 			" 	sum(defesas_disputa_penalt) AS defesas_disputa_penalt," +
 			" 	sum(faltas) AS faltas," +
@@ -56,7 +57,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" INNER JOIN clube c ON c.id = jes.id_clube" +//TODO: clube da estatistica ou clube do jogador?
 			" WHERE s.id_temporada = ?1" +
 			" 	AND jes.amistoso = ?2" +
-			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao"
+			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao, c.logo"
 	)
 	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada, Boolean amistoso);
 	
@@ -64,6 +65,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +
 			" 	j.nome as nome_jogador, j.posicao," +
 			" 	c.nome as nome_clube," +
+			" 	c.logo as logo_clube," +
 			" 	sum(assistencias) AS assistencias," +
 			" 	sum(defesas_disputa_penalt) AS defesas_disputa_penalt," +
 			" 	sum(faltas) AS faltas," +
@@ -86,7 +88,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" WHERE s.id_temporada = ?1" +
 			" 	AND jes.id_clube = ?2" +
 			" 	AND jes.amistoso = ?3" +
-			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao"
+			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao, c.logo"
 	)
 	public List<Map<String, Object>> findAgrupadoByTemporadaAndClube(Long idTemporada, Integer idClube, Boolean amistoso);
 	
@@ -94,6 +96,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +
 			" 	j.nome as nome_jogador, j.posicao," +
 			" 	c.nome as nome_clube," +
+			" 	c.logo as logo_clube," +
 			" 	sum(assistencias) AS assistencias," +
 			" 	sum(defesas_disputa_penalt) AS defesas_disputa_penalt," +
 			" 	sum(faltas) AS faltas," +
@@ -129,7 +132,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			"	 WHERE re.id_campeonato_eliminatorio = ?1" +
 			"	 	OR re.id_campeonato_misto = ?1" +
 			" ) AS tmp on jes.id = tmp.id " +
-			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao"
+			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao, c.logo"
 	)
 	public List<Map<String, Object>> findAgrupadoByIdCampeonato(Long idCampeonato);
 }
