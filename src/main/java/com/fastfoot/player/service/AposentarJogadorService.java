@@ -41,6 +41,9 @@ public class AposentarJogadorService {
 	
 	@Autowired
 	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
+	
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
 
 	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
@@ -213,7 +216,7 @@ public class AposentarJogadorService {
 				jogador.setStatusJogador(StatusJogador.APOSENTADO);
 				
 				//substituto
-				novosJogadores.add(criarNovoJogadorSubsAposentado(jogador.getClube(), p, jogador.getNumero(),
+				novosJogadores.add(criarNovoJogadorSubsAposentado(jogador.getClube(), p, null,
 						jogador.getForcaGeralPotencial().intValue()));
 				
 			}
@@ -226,6 +229,9 @@ public class AposentarJogadorService {
 		for (Jogador jogador : novosJogadores) {
 			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
 		}
+		
+		atualizarNumeroJogadoresService
+				.atualizarNumeroJogadores(novosJogadores.stream().collect(Collectors.groupingBy(Jogador::getClube)));
 		
 		jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(novosJogadores);

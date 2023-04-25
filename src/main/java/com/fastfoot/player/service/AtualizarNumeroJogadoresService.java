@@ -12,6 +12,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
@@ -21,7 +22,7 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 @Service
 public class AtualizarNumeroJogadoresService {
 	
-	private static final Integer[] NUM_ZAG = new Integer[] {3, 4, 13, 14, 24, 33, 43, 44, 53, 54};
+	/*private static final Integer[] NUM_ZAG = new Integer[] {3, 4, 13, 14, 24, 33, 43, 44, 53, 54};
 	
 	private static final Integer[] NUM_LAT = new Integer[] {2, 6, 16, 22, 26, 32, 36, 42, 46, 52};
 	
@@ -29,12 +30,106 @@ public class AtualizarNumeroJogadoresService {
 	
 	private static final Integer[] NUM_MEI = new Integer[] {7, 10, 17, 20, 27, 30, 37, 40, 47, 50};
 	
-	private static final Integer[] NUM_ATA = new Integer[] {9, 11, 19, 21, 29, 31, 39, 41, 49, 51};
+	private static final Integer[] NUM_ATA = new Integer[] {9, 11, 19, 21, 29, 31, 39, 41, 49, 51};*/
+	
+	protected static final Integer[] BASE_NUM_ZAG = new Integer[] {3, 4};
+	
+	protected static final Integer[] BASE_NUM_LAT = new Integer[] {2, 6};
+	
+	protected static final Integer[] BASE_NUM_VOL = new Integer[] {8, 5};
+	
+	protected static final Integer[] BASE_NUM_MEI = new Integer[] {7, 10};
+	
+	protected static final Integer[] BASE_NUM_ATA = new Integer[] {9, 11};
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
+	public void gerarNumeroJogadores(List<Jogador> jogadores) {
+		
+		List<Jogador> jogPosicao = null;
+		
+		jogPosicao = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
+		for (int i = 0; i < jogPosicao.size(); i++) {
+			jogPosicao.get(i).setNumero(i * 11 + 1);
+		}
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_ZAG);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_LAT);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_VOL);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_MEI);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_ATA);
+		
+	}
+	
+	private void gerarNumeroJogadores(List<Jogador> jogadores, Integer[] n) {
+		Integer[] numeros = gerarNumeros(jogadores.size(), n);
+		for (int i = 0; i < jogadores.size(); i++) {
+			jogadores.get(i).setNumero(numeros[i]);
+		}
+	}
+	
+	private void atualizarNumeroJogadoresClube(List<Jogador> jogadores) {
+		
+		List<Jogador> jogPosicao = null;
+		
+		jogPosicao = jogadores.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList());
+		for (int i = 0; i < jogPosicao.size(); i++) {
+			jogPosicao.get(i).setNumero(i * 11 + 1);
+		}
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_ZAG);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_LAT);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_VOL);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_MEI);
+		
+		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao()))
+				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_ATA);
+	}
+	
 	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> atualizarNumeroJogadores(Liga liga, boolean primeirosIds) {
+
+		List<Jogador> jogadores;
+		
+		if (primeirosIds) {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+		} else {
+			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+		}
+		
+		Map<Clube, List<Jogador>> jogClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
+		
+		for (Clube clube : jogClube.keySet()) {
+			atualizarNumeroJogadoresClube(jogClube.get(clube));
+		}
+		
+		jogadorRepository.saveAll(jogadores);
+		
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarNumeroJogadores(List<Clube> clubes) {
 		List<Jogador> jogadoresAtualizar = new ArrayList<Jogador>();
 		
@@ -45,10 +140,10 @@ public class AtualizarNumeroJogadoresService {
 		jogadorRepository.saveAll(jogadoresAtualizar);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 
-	public void atualizarNumeroJogadores(Clube c, List<Jogador> jogadoresAtualizar) {//TODO: tratar qdo numero de jog por posicao for maior que 10
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//TODO: otimizar
+	/*private void atualizarNumeroJogadores(Clube c, List<Jogador> jogadoresAtualizar) {
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
 		
 		List<Jogador> jogPosicao = null;
 		
@@ -94,28 +189,88 @@ public class AtualizarNumeroJogadoresService {
 		}
 		
 		jogadoresAtualizar.addAll(jogadores);
-	}
+	}*/
 	
 	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar) {
 		
 		List<Jogador> jogadoresNaoAtualizar;
 		
 		for (Clube c : jogadoresAtualizar.keySet()) {
-			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
+			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//TODO: otimizar
 			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar);
 		}
 	}
 	
-	protected Integer[] getNumerosPorPosicao(Posicao posicao) {
+	/*protected Integer[] getNumerosPorPosicao(Posicao posicao) {
 		if (Posicao.ZAGUEIRO.equals(posicao)) return NUM_ZAG;
 		if (Posicao.LATERAL.equals(posicao)) return NUM_LAT;
 		if (Posicao.VOLANTE.equals(posicao)) return NUM_VOL;
 		if (Posicao.MEIA.equals(posicao)) return NUM_MEI;
 		if (Posicao.ATACANTE.equals(posicao)) return NUM_ATA;
 		return null;
+	}*/
+	
+	protected void atualizarNumeroJogadoresClube(List<Jogador> jogadoresAtualizar,
+			List<Jogador> jogadoresNaoAtualizar) {
+		
+		atualizarNumeroJogadoresClubeGoleiro(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).collect(Collectors.toList()),
+				jogadoresNaoAtualizar);
+
+		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).collect(Collectors.toList()),
+				jogadoresNaoAtualizar, BASE_NUM_ZAG);
+
+		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.LATERAL.equals(j.getPosicao())).collect(Collectors.toList()),
+				jogadoresNaoAtualizar, BASE_NUM_LAT);
+
+		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).collect(Collectors.toList()),
+				jogadoresNaoAtualizar, BASE_NUM_VOL);
+
+		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.MEIA.equals(j.getPosicao())).collect(Collectors.toList()), jogadoresNaoAtualizar,
+				BASE_NUM_MEI);
+
+		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
+				.filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).collect(Collectors.toList()),
+				jogadoresNaoAtualizar, BASE_NUM_ATA);
+		
 	}
 	
-	protected void atualizarNumeroJogadoresClube(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar) {
+	protected void atualizarNumeroJogadoresClubeGoleiro(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar) {
+		
+		if (jogadoresAtualizar.isEmpty()) return;
+		
+		List<Integer> numeros = new ArrayList<Integer>();
+		
+		for (int i = 0; i < (jogadoresAtualizar.size() + jogadoresNaoAtualizar.size()); i++) {
+			numeros.add(i * 11 + 1);
+		}
+		
+		numeros.removeAll(jogadoresNaoAtualizar.stream().map(j -> j.getNumero()).collect(Collectors.toList()));
+		
+		for (int i = 0; i < jogadoresAtualizar.size(); i++) {
+			jogadoresAtualizar.get(i).setNumero(numeros.get(i));
+		}	
+		
+	}
+	
+	protected void atualizarNumeroJogadoresClubePosicao(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar, Integer[] n) {
+
+		if (jogadoresAtualizar.isEmpty()) return;
+		
+		List<Integer> numeros = new ArrayList<Integer>(Arrays.asList(gerarNumeros(jogadoresAtualizar.size() + jogadoresNaoAtualizar.size(), n)));
+		
+		numeros.removeAll(jogadoresNaoAtualizar.stream().map(j -> j.getNumero()).collect(Collectors.toList()));
+		
+		for (int i = 0; i < jogadoresAtualizar.size(); i++) {
+			jogadoresAtualizar.get(i).setNumero(numeros.get(i));
+		}		
+	}
+	
+	/*protected void atualizarNumeroJogadoresClube(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar) {
 		
 		List<Integer> numerosDisponiveis;
 		
@@ -132,7 +287,7 @@ public class AtualizarNumeroJogadoresService {
 			
 			numerosDisponiveis
 					.removeAll(jogadoresNaoAtualizar.stream()
-							/*.filter(j -> j.getPosicao().equals(jogador.getPosicao()))*/
+							/*.filter(j -> j.getPosicao().equals(jogador.getPosicao()))* /
 							.map(j -> j.getNumero()).collect(Collectors.toList()));
 			
 			if (numerosDisponiveis.isEmpty()) {
@@ -142,5 +297,32 @@ public class AtualizarNumeroJogadoresService {
 				jogadoresNaoAtualizar.add(jogador);
 			}
 		}
+	}*/
+	
+	protected Integer[] gerarNumeros(int qtde, Integer[] n) {
+		
+		Integer[] numerosGerados = new Integer[qtde];
+		
+		int passo = 10, numeroGerado, qtdeGerada = 0;
+		
+		//for (int i = 0; i < qtde; i++) {
+		int i = 0;
+		while (qtdeGerada < qtde) {
+			
+			if (i % 2 == 0) {
+				numeroGerado = n[0] + passo * (i / 2);
+			} else {
+				numeroGerado = n[1] + passo * (i / 2);
+			}
+			
+			if (numeroGerado % 11 != 1) {
+				numerosGerados[qtdeGerada] = numeroGerado;
+				qtdeGerada++;
+			}
+			
+			i++;
+		}
+		
+		return numerosGerados;
 	}
 }

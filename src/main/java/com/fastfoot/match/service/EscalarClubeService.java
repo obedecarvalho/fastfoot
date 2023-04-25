@@ -26,6 +26,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.service.util.ArraysUtil;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
@@ -95,7 +96,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 1);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 1);
 		}
 
 		if (jogPos.size() > 0) {
@@ -120,7 +121,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 2);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 2);
 		}
 		
 		if (jogPos.size() > 0) {
@@ -151,7 +152,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 2);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 2);
 		}
 		
 		if (jogPos.size() > 0) {
@@ -182,7 +183,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 2);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 2);
 		}
 		
 		if (jogPos.size() > 0) {
@@ -213,7 +214,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 2);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 2);
 		}
 		
 		if (jogPos.size() > 0) {
@@ -244,7 +245,7 @@ public class EscalarClubeService {
 		
 		if (partida.isAmistoso()) {
 			Collections.sort(jogPos, JogadorFactory.getComparatorForcaGeral());
-			jogPos = deslocarListNPosicoes(jogPos, 2);
+			jogPos = ArraysUtil.deslocarListNPosicoes(jogPos, 2);
 		}
 		
 		if (jogPos.size() > 0) {
@@ -293,20 +294,5 @@ public class EscalarClubeService {
 		
 		return escalacaoClubePartida;
 	}
-	
-	private <T> List<T> deslocarListNPosicoes(List<T> list, int n) {
 
-		if (list.size() <= n) return list;
-
-		List<T> novaLista = new ArrayList<T>();
-
-		int i = n;
-
-		for (int j = 0; j < list.size(); j++) {
-			novaLista.add(list.get(i));
-			i = (i + 1) % list.size();
-		}
-
-		return novaLista;
-	}
 }

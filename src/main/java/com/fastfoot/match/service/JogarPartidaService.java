@@ -29,6 +29,7 @@ import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
@@ -278,8 +279,8 @@ public class JogarPartidaService {
 		
 		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
-		int minutoSubstituicaoMandante = RoletaUtil.sortearIntervalo(60, 75);
-		int minutoSubstituicaoVisitante = RoletaUtil.sortearIntervalo(60, 75);
+		int minutoSubstituicaoMandante = RandomUtil.sortearIntervalo(60, 75);
+		int minutoSubstituicaoVisitante = RandomUtil.sortearIntervalo(60, 75);
 		
 		for (int minuto = 1; minuto <= MINUTOS; minuto++) {
 			

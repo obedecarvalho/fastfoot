@@ -17,6 +17,7 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.dto.JogadorAlvoDTO;
@@ -151,7 +152,7 @@ public class ProporTransferenciaService {
 			long jogadoresDispNeg = 0;
 			//double forcaBase = nc.getNivelAdequacaoMin().getPorcentagemMinima() + VAR_FORCA_BASE;
 			
-			boolean limiteEspecial = RoletaUtil.sortearProbabilidade(PROBABILIDADE_LIMITE_ESPECIAL);
+			boolean limiteEspecial = RandomUtil.sortearProbabilidade(PROBABILIDADE_LIMITE_ESPECIAL);
 			
 			while (diferencaForca < DIFERENCA_FORCA_PASSO_MAX //VAR_FORCA_BASE/2 //(forcaBase - nc.getNivelAdequacaoMin().getPorcentagemMinima()) 
 					//&& jogadoresEncontrados < NUM_MIN_JOGADORES

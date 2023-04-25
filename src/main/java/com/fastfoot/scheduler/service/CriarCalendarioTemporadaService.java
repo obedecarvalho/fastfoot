@@ -249,6 +249,12 @@ public class CriarCalendarioTemporadaService {
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
 			
+			/*inicio = stopWatch.getSplitTime();
+			atualizarNumeroJogadores();
+			stopWatch.split();
+			fim = stopWatch.getSplitTime();
+			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
+			
 			inicio = stopWatch.getSplitTime();
 			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 				calcularValorTransferenciaJogadoresSimplificado3();
@@ -911,7 +917,7 @@ public class CriarCalendarioTemporadaService {
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
-	private void atualizarNumeroJogadores() {
+	/*private void atualizarNumeroJogadores() {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		
 		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
@@ -928,6 +934,17 @@ public class CriarCalendarioTemporadaService {
 			}
 		}
 		
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}*/
+	
+	private void atualizarNumeroJogadores() {
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(liga, true));
+			desenvolverJogadorFuture.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(liga, false));
+		}
+
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 	

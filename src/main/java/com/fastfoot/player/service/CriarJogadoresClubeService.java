@@ -22,6 +22,7 @@ import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.service.CarregarParametroService;
+import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
@@ -53,6 +54,13 @@ public class CriarJogadoresClubeService {
 	
 	@Autowired
 	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
+
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
+	
+	private static final Integer NUM_JOGADORES_LINHA_POR_POSICAO = 4;
+	
+	private static final Integer NUM_JOGADORES_GOLEIRO = 3;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
@@ -103,21 +111,26 @@ public class CriarJogadoresClubeService {
 	protected CompletableFuture<Boolean> criarJogadoresClube(Clube clube, List<Jogador> jogadores) {
 
 		Jogador j = null;
+		List<Jogador> jogadoresClube = new ArrayList<Jogador>();
 
 		//Goleiro
 		
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 1);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 1);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 12);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO, 23);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_GOLEIRO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.GOLEIRO));
+		}
 		
 		//Zagueiro
 
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 3);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 3);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 4);
@@ -127,10 +140,14 @@ public class CriarJogadoresClubeService {
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO, 14);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.ZAGUEIRO));
+		}
 
 		//Lateral
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 2);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 2);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 6);
@@ -140,10 +157,14 @@ public class CriarJogadoresClubeService {
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL, 16);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.LATERAL));
+		}
 
 		//Volante
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 5);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 5);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 8);
@@ -153,10 +174,14 @@ public class CriarJogadoresClubeService {
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE, 18);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.VOLANTE));
+		}
 
 		//Meia
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 7);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 7);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 10);
@@ -166,10 +191,14 @@ public class CriarJogadoresClubeService {
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA, 20);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.MEIA));
+		}
 
 		//Atacante
-		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 9);
+		/*j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 9);
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 11);
@@ -179,20 +208,26 @@ public class CriarJogadoresClubeService {
 		jogadores.add(j);
 		
 		j = JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE, 21);
-		jogadores.add(j);
+		jogadores.add(j);*/
+		
+		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
+			jogadoresClube.add(JogadorFactory.getInstance().gerarJogador(clube, Posicao.ATACANTE));
+		}
 		
 		//Jogadores Adicionais
 		
-		int qtdeJogadoresAdicionais = RoletaUtil.sortearIntervalo(0, 4);
+		int qtdeJogadoresAdicionais = RandomUtil.sortearIntervalo(0, 4);
 		
 		Posicao p;
 		
 		for (int i = 0; i < qtdeJogadoresAdicionais; i++) {
 			p = RoletaUtil.sortearPesoUm(
 					Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
-			j = JogadorFactory.getInstance().gerarJogador(clube, p, 24 + i);
-			jogadores.add(j);
+			j = JogadorFactory.getInstance().gerarJogador(clube, p/*, 24 + i*/);
+			jogadoresClube.add(j);
 		}
+		
+		atualizarNumeroJogadoresService.gerarNumeroJogadores(jogadoresClube);
 
 		//
 		
@@ -210,6 +245,8 @@ public class CriarJogadoresClubeService {
 		for (Jogador jog : jogadores) {
 			habilidadeValorRepository.saveAll(jog.getHabilidades());
 		}*/
+		
+		jogadores.addAll(jogadoresClube);
 
 		return CompletableFuture.completedFuture(true);
 	}

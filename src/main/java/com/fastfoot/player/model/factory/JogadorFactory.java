@@ -26,6 +26,7 @@ import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.service.util.NomeUtil;
+import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 public abstract class JogadorFactory {
@@ -122,7 +123,7 @@ public abstract class JogadorFactory {
 
 	protected Double gerarValorHabilidade(Integer media, Double peso) {
 		return Math.max(Math.min(peso * (R.nextGaussian() * STDEV + media), VALOR_HABILIDADE_MAX),
-				VALOR_HABILIDADE_MIN);
+				VALOR_HABILIDADE_MIN);//TODO: usar RandomUtil.getNextGaussianByAvgAndStdDev
 	}
 
 	protected void addHabilidade(Jogador jogador, Habilidade habilidade, Integer valor, Double valorDecimal,
@@ -133,7 +134,8 @@ public abstract class JogadorFactory {
 	}
 
 	protected Integer sortearIdade() {
-		return IDADE_MIN + R.nextInt(IDADE_MAX - IDADE_MIN);
+		//return IDADE_MIN + R.nextInt(IDADE_MAX - IDADE_MIN);
+		return RandomUtil.sortearIntervalo(IDADE_MIN, IDADE_MAX);
 	}
 	
 	protected static Double getAjusteForca(ModoDesenvolvimentoJogador modoDesenvolvimentoJogador, Integer idade) {
@@ -169,7 +171,8 @@ public abstract class JogadorFactory {
 			Map<HabilidadeValor, HabilidadeValorEstatisticaGrupo> estatisticaGrupoMap);
 	
 	protected void sortearEletivas(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habEspecificas, List<Habilidade> habComuns) {
-		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesEspecificasEletivas().size(), estrategia.getNumHabEspEletivas());
+		//List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesEspecificasEletivas().size(), estrategia.getNumHabEspEletivas());
+		List<Integer> posicoesElet = RandomUtil.getRandomDistinctRangeValues(estrategia.getHabilidadesEspecificasEletivas().size(), estrategia.getNumHabEspEletivas());
 		
 		for (int i = 0; i < estrategia.getHabilidadesEspecificasEletivas().size(); i++) {
 			if (posicoesElet.contains(i)) {
@@ -181,8 +184,10 @@ public abstract class JogadorFactory {
 	}
 	
 	protected void sortearHabCoringa(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habEspecificas, List<Habilidade> habComuns, List<Habilidade> habOutros) {
-		List<Integer> posicoesEspecificas = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoEspecifica());
-		List<Integer> posicoesComuns = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoComum(), posicoesEspecificas);
+		//List<Integer> posicoesEspecificas = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoEspecifica());
+		//List<Integer> posicoesComuns = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoComum(), posicoesEspecificas);
+		List<Integer> posicoesEspecificas = RandomUtil.getRandomDistinctRangeValues(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoEspecifica());
+		List<Integer> posicoesComuns = RandomUtil.getRandomDistinctRangeValuesWithoutValues(estrategia.getHabilidadesCoringa().size(), estrategia.getNumHabCoringaSelecionadoComum(), posicoesEspecificas);
 		
 		for (int i = 0; i < estrategia.getHabilidadesCoringa().size(); i++) {
 			if (posicoesEspecificas.contains(i)) {
@@ -197,7 +202,8 @@ public abstract class JogadorFactory {
 	}
 	
 	protected void sortearHabComunsEletivas(EstrategiaHabilidadePosicaoJogador estrategia, List<Habilidade> habComuns, List<Habilidade> habOutros) {
-		List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesComunsEletivas().size(), estrategia.getNumHabComunsEletivas());
+		//List<Integer> posicoesElet = sortearPosicoesHabilidadesEletivas(estrategia.getHabilidadesComunsEletivas().size(), estrategia.getNumHabComunsEletivas());
+		List<Integer> posicoesElet = RandomUtil.getRandomDistinctRangeValues(estrategia.getHabilidadesComunsEletivas().size(), estrategia.getNumHabComunsEletivas());
 		
 		for (int i = 0; i < estrategia.getHabilidadesComunsEletivas().size(); i++) {
 			if (posicoesElet.contains(i)) {
@@ -208,7 +214,7 @@ public abstract class JogadorFactory {
 		}
 	}
 	
-	protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear) {
+	/*protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear) {//TO DO: usar RandomUtil.getRandomDistinctRangeValues
 
 		List<Integer> posicoes = new ArrayList<Integer>();
 		
@@ -230,7 +236,7 @@ public abstract class JogadorFactory {
 		return posicoes;
 	}
 	
-	protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear, List<Integer> outrosJaSorteados) {
+	protected List<Integer> sortearPosicoesHabilidadesEletivas(Integer qtdeHabTotal, Integer qtdeHabSortear, List<Integer> outrosJaSorteados) {//TO DO: usar RandomUtil.getRandomDistinctRangeValuesWithoutValues
 
 		List<Integer> posicoes = new ArrayList<Integer>();
 		
@@ -250,7 +256,7 @@ public abstract class JogadorFactory {
 		}
 		
 		return posicoes;
-	}
+	}*/
 	
 	//########	/SUPER CLASSE ABSTRACT	########################
 	
@@ -258,19 +264,23 @@ public abstract class JogadorFactory {
 		return JogadorFactoryImplDesenRegular.getInstance();//TODO
 	}
 
-	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {		
+	public Jogador gerarJogador(Clube clube, Posicao posicao) {
+		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, null, null, null);
+	}
+
+	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
 		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, null, null);
 	}
-	
+
 	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade) {
 		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, idade, null);
 	}
-	
+
 	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade, Integer forcaGeral) {
 		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, idade,
 				forcaGeral);
 	}
-	
+
 	public static EstrategiaHabilidadePosicaoJogador getEstrategiaPosicaoJogador(Posicao posicao) {
 		
 		if (Posicao.GOLEIRO.equals(posicao)) {
