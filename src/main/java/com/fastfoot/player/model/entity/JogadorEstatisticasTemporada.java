@@ -40,7 +40,7 @@ public class JogadorEstatisticasTemporada {
 	
 	private Integer numeroJogos;//Numero total de jogos
 	
-	private Integer numeroJogosTitular;//TODO: implementar lógica
+	private Integer numeroJogosTitular;
 	
 	private Integer numeroMinutosJogados;
 	

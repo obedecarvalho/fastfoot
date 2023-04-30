@@ -137,7 +137,7 @@ public class ConcluirTransferenciaJogadorService {
 
 		}
 		
-		atualizarNumeroJogadoresService.atualizarNumeroJogadores(jogadoresSalvar.stream().collect(Collectors.groupingBy(Jogador::getClube)));
+		atualizarNumeroJogadoresService.atualizarNumeroJogadores(jogadoresSalvar.stream().collect(Collectors.groupingBy(Jogador::getClube)), null);
 
 		//jogadorEstatisticasAmistososTemporadaRepository.saveAll(estatisticasAmistososSalvar);
 		//jogadorEstatisticasTemporadaRepository.saveAll(estatisticasSalvar);

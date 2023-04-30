@@ -27,6 +27,8 @@ public enum TipoMovimentacaoFinanceira {
 	SAIDA_PREMIACAO_JOGADORES,//17
 	
 	ENTRADA_INGRESSOS_AMISTOSOS,	//18
+	
+	ATIVO_VALOR_ELENCO, //19
 	;
 
 }

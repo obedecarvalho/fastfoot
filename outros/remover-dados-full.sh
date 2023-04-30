@@ -39,8 +39,8 @@ delete from trajetoria_forca_clube;
 delete from semana;
 delete from mudanca_clube_nivel;
 delete from temporada;
-select setval(sequence_schema || '.' || sequence_name, 1000)
-from information_schema.sequences
-where sequence_schema = 'public';
 ";
 
+#select setval(sequence_schema || '.' || sequence_name, 1000)
+#from information_schema.sequences
+#where sequence_schema = 'public';

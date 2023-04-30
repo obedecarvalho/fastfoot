@@ -230,8 +230,9 @@ public class AposentarJogadorService {
 			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
 		}
 		
-		atualizarNumeroJogadoresService
-				.atualizarNumeroJogadores(novosJogadores.stream().collect(Collectors.groupingBy(Jogador::getClube)));
+		atualizarNumeroJogadoresService.atualizarNumeroJogadores(
+				novosJogadores.stream().collect(Collectors.groupingBy(Jogador::getClube)),
+				jogadoresAposentar.stream().collect(Collectors.groupingBy(Jogador::getClube)));
 		
 		jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(novosJogadores);

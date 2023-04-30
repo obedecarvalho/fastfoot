@@ -13,6 +13,7 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.DemonstrativoFinanceiroTemporada;
 import com.fastfoot.financial.model.repository.DemonstrativoFinanceiroTemporadaRepository;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Service
@@ -23,8 +24,23 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 	
 	@Autowired
 	private DemonstrativoFinanceiroTemporadaRepository demonstrativoFinanceiroTemporadaRepository;
+
+	@Autowired
+	private JogadorRepository jogadorRepository;
 	
 	public void gerarDemonstrativoFinanceiroTemporada(Temporada temporada) {
+
+		List<DemonstrativoFinanceiroTemporada> demonstrativosFinanceiroTemporada = new ArrayList<DemonstrativoFinanceiroTemporada>();
+
+		demonstrativosFinanceiroTemporada.addAll(gerarDemonstrativoFinanceiroOperacionalTemporada(temporada));
+		demonstrativosFinanceiroTemporada.addAll(gerarDemonstrativoFinanceiroTemporadaCaixa(temporada));
+		demonstrativosFinanceiroTemporada.addAll(gerarDemonstrativoFinanceiroAtivosTemporada(temporada));
+
+		demonstrativoFinanceiroTemporadaRepository.saveAll(demonstrativosFinanceiroTemporada);
+
+	}
+	
+	protected List<DemonstrativoFinanceiroTemporada> gerarDemonstrativoFinanceiroOperacionalTemporada(Temporada temporada) {
 
 		List<DemonstrativoFinanceiroTemporada> demonstrativosFinanceiroTemporada = new ArrayList<DemonstrativoFinanceiroTemporada>();
 
@@ -45,10 +61,11 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 			demonstrativosFinanceiroTemporada.add(demonstrativoFinanceiroTemporada);
 		}
 
-		demonstrativoFinanceiroTemporadaRepository.saveAll(demonstrativosFinanceiroTemporada);
+		//demonstrativoFinanceiroTemporadaRepository.saveAll(demonstrativosFinanceiroTemporada);
+		return demonstrativosFinanceiroTemporada;
 	}
 	
-	public void gerarDemonstrativoFinanceiroTemporadaCaixa(Temporada temporada) {
+	protected List<DemonstrativoFinanceiroTemporada> gerarDemonstrativoFinanceiroTemporadaCaixa(Temporada temporada) {
 		List<Map<String, Object>> saldoAtual = movimentacaoFinanceiraRepository.findSaldoPorClube();
 		List<Map<String, Object>> saldoTemporadaAtual = movimentacaoFinanceiraRepository.findSaldoPorClube(temporada.getId());
 		
@@ -104,7 +121,35 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 			demonstrativosFinanceiroTemporada.add(demonstrativoFinanceiroTemporada);
 		}
 		
-		demonstrativoFinanceiroTemporadaRepository.saveAll(demonstrativosFinanceiroTemporada);
+		//demonstrativoFinanceiroTemporadaRepository.saveAll(demonstrativosFinanceiroTemporada);
+		return demonstrativosFinanceiroTemporada;
 	}
 
+	protected List<DemonstrativoFinanceiroTemporada> gerarDemonstrativoFinanceiroAtivosTemporada(Temporada temporada) {
+		
+		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+		
+		List<DemonstrativoFinanceiroTemporada> ativos = new ArrayList<DemonstrativoFinanceiroTemporada>();
+		
+		double valorElenco;
+		int idClube;
+		DemonstrativoFinanceiroTemporada demonstrativoFinanceiroTemporada;
+		
+		for (Map<String, Object> vtc : valorTransferenciaClubes) {
+			valorElenco = (double) vtc.get("valor_transferencia");
+			idClube = (int) vtc.get("id_clube");
+			
+			demonstrativoFinanceiroTemporada = new DemonstrativoFinanceiroTemporada();
+			
+			demonstrativoFinanceiroTemporada.setClube(new Clube(idClube));
+			demonstrativoFinanceiroTemporada.setTemporada(temporada);
+			demonstrativoFinanceiroTemporada.setTipoMovimentacao(TipoMovimentacaoFinanceira.ATIVO_VALOR_ELENCO);
+			demonstrativoFinanceiroTemporada.setValorMovimentacao(valorElenco);
+			
+			ativos.add(demonstrativoFinanceiroTemporada);
+			
+		}
+
+		return ativos;
+	}
 }

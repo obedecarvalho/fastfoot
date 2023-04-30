@@ -364,7 +364,6 @@ public class JogarPartidasSemanaService {
 		if (semana.getNumero() == Constantes.NUM_SEMANAS) {
 			inicio = stopWatch.getSplitTime();
 			gerarDemonstrativoFinanceiroTemporadaService.gerarDemonstrativoFinanceiroTemporada(temporada);
-			gerarDemonstrativoFinanceiroTemporadaService.gerarDemonstrativoFinanceiroTemporadaCaixa(temporada);
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#gerarDemonstrativoFinanceiroTemporada:" + (fim - inicio));

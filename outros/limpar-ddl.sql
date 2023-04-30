@@ -1,56 +1,50 @@
---old
-drop table if exists jogador_grupo_estatisticas;
-drop table if exists partida_resumo;
-drop table if exists partida_lance;
-drop table if exists clube_probabilidade_posicao;
-drop table if exists clube_ranking_posicao_probabilidade;
-drop table if exists pontuacao_probabilidade_posicao;
-drop table if exists pontuacao_probabilidade;
-drop table if exists adequacao_elenco_posicao;
 
---jogadores
-drop table if exists disponivel_negociacao;
-drop table if exists proposta_transferencia_jogador;
-drop table if exists necessidade_contratacao_clube;
-drop table if exists escalacao_jogador_posicao;
-drop table if exists grupo_desenvolvimento_jogador;
-drop table if exists habilidade_valor_estatistica_grupo;
-drop table if exists habilidade_valor_estatistica;
-drop table if exists habilidade_valor;
-drop table if exists jogador_estatistica_semana;
-drop table if exists jogador_estatisticas_temporada;
-drop table if exists partida_lance;
-drop table if exists jogador_energia;
-drop table if exists habilidade_grupo_valor;
-drop table if exists jogador;
-drop table if exists jogador_detalhe;
+--jogador
+drop table disponivel_negociacao;
+drop table habilidade_valor_estatistica;
+drop table habilidade_valor_estatistica_grupo;
+drop table habilidade_valor;
+drop table jogador_energia;
+drop table habilidade_grupo_valor;
+drop table escalacao_jogador_posicao;
+drop table escalacao_clube;
+drop table proposta_transferencia_jogador;
+drop table jogador_estatisticas_semana;
+drop table jogador_estatisticas_temporada;
+drop table partida_lance;
+drop table jogador;
+drop table jogador_detalhe;
 
-drop table if exists escalacao_clube;
-drop table if exists clube_saldo_semana;
-drop table if exists clube_resumo_temporada;
-drop table if exists partida_torcida;
-drop table if exists partida_probabilidade_resultado;
-drop table if exists trajetoria_forca_clube;
-drop table if exists mudanca_clube_nivel;
-drop table if exists movimentacao_financeira;
-drop table if exists clube_probabilidade;
-drop table if exists partida_amistosa_resultado;
-drop table if exists rodada_amistosa;
-drop table if exists partida_resultado;
-drop table if exists partida_eliminatoria_resultado;
-drop table if exists partida_estatisticas;
-drop table if exists rodada;
-drop table if exists rodada_eliminatoria;
-drop table if exists classificacao;
-drop table if exists grupo_campeonato;
-drop table if exists campeonato;
-drop table if exists campeonato_eliminatorio;
-drop table if exists campeonato_misto;
-drop table if exists clube_titulo_ranking;
-drop table if exists semana;
-drop table if exists parametro;
-drop table if exists demonstrativo_financeiro_temporada;
+--campeonato
+drop table campeonato_clube_probabilidade;
+drop table partida_probabilidade_resultado;
+drop table partida_torcida;
+drop table partida_amistosa_resultado;
+drop table partida_eliminatoria_resultado;
+drop table partida_resultado;
+drop table partida_estatisticas;
+drop table rodada;
+drop table rodada_amistosa;
+drop table rodada_eliminatoria;
+drop table classificacao;
+drop table grupo_campeonato;
+drop table campeonato;
+drop table campeonato_eliminatorio;
+drop table campeonato_misto;
 
-drop table if exists clube_ranking;
-drop table if exists clube;
-drop table if exists temporada;
+--clube
+drop table trajetoria_forca_clube;
+drop table demonstrativo_financeiro_temporada;
+drop table movimentacao_financeira;
+drop table mudanca_clube_nivel;
+drop table necessidade_contratacao_clube;
+drop table clube_saldo_semana;
+drop table clube_titulo_ranking;
+drop table clube_resumo_temporada;
+drop table clube_ranking;
+drop table clube;
+
+--temporada
+drop table parametro;
+drop table semana;
+drop table temporada;

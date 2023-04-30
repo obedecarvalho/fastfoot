@@ -79,7 +79,7 @@ public class AtualizarNumeroJogadoresService {
 		}
 	}
 	
-	private void atualizarNumeroJogadoresClube(List<Jogador> jogadores) {
+	/*private void atualizarNumeroJogadoresClube(List<Jogador> jogadores) {
 		
 		List<Jogador> jogPosicao = null;
 		
@@ -103,7 +103,7 @@ public class AtualizarNumeroJogadoresService {
 		
 		gerarNumeroJogadores(jogadores.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao()))
 				.sorted(JogadorFactory.getComparatorForcaGeral()).collect(Collectors.toList()), BASE_NUM_ATA);
-	}
+	}*/
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarNumeroJogadores(Liga liga, boolean primeirosIds) {
@@ -121,7 +121,7 @@ public class AtualizarNumeroJogadoresService {
 		Map<Clube, List<Jogador>> jogClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
 		
 		for (Clube clube : jogClube.keySet()) {
-			atualizarNumeroJogadoresClube(jogClube.get(clube));
+			gerarNumeroJogadores(jogClube.get(clube));
 		}
 		
 		jogadorRepository.saveAll(jogadores);
@@ -191,13 +191,26 @@ public class AtualizarNumeroJogadoresService {
 		jogadoresAtualizar.addAll(jogadores);
 	}*/
 	
-	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar) {
+	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar, Map<Clube, List<Jogador>> jogadoresNroDesconsiderar) {
 		
 		List<Jogador> jogadoresNaoAtualizar;
+		List<Integer> numeroJaUtilizadosClube;
+		List<Jogador> jogadoresNroDesconsiderarClube;
 		
 		for (Clube c : jogadoresAtualizar.keySet()) {
 			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//TODO: otimizar
-			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar);
+			
+			
+			numeroJaUtilizadosClube = jogadoresNaoAtualizar.stream().map(Jogador::getNumero).collect(Collectors.toList());
+			
+			if (jogadoresNroDesconsiderar != null) {
+				jogadoresNroDesconsiderarClube = jogadoresNroDesconsiderar.get(c);
+				
+				numeroJaUtilizadosClube.removeAll(jogadoresNroDesconsiderarClube.stream().map(Jogador::getNumero).collect(Collectors.toList()));
+			}
+			
+			
+			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar, numeroJaUtilizadosClube);
 		}
 	}
 	
@@ -211,45 +224,58 @@ public class AtualizarNumeroJogadoresService {
 	}*/
 	
 	protected void atualizarNumeroJogadoresClube(List<Jogador> jogadoresAtualizar,
-			List<Jogador> jogadoresNaoAtualizar) {
+			List<Jogador> jogadoresNaoAtualizar, List<Integer> numeroJaUtilizadosClube) {
 		
-		atualizarNumeroJogadoresClubeGoleiro(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).collect(Collectors.toList()),
-				jogadoresNaoAtualizar);
+		atualizarNumeroJogadoresClubeGoleiro(
+				jogadoresAtualizar.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.GOLEIRO.equals(j.getPosicao())).count());
 
-		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).collect(Collectors.toList()),
-				jogadoresNaoAtualizar, BASE_NUM_ZAG);
+		atualizarNumeroJogadoresClubePosicao(
+				jogadoresAtualizar.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube, BASE_NUM_ZAG,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.ZAGUEIRO.equals(j.getPosicao())).count());
 
-		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.LATERAL.equals(j.getPosicao())).collect(Collectors.toList()),
-				jogadoresNaoAtualizar, BASE_NUM_LAT);
+		atualizarNumeroJogadoresClubePosicao(
+				jogadoresAtualizar.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube, BASE_NUM_LAT,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.LATERAL.equals(j.getPosicao())).count());
 
-		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).collect(Collectors.toList()),
-				jogadoresNaoAtualizar, BASE_NUM_VOL);
+		atualizarNumeroJogadoresClubePosicao(
+				jogadoresAtualizar.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube, BASE_NUM_VOL,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.VOLANTE.equals(j.getPosicao())).count());
 
-		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.MEIA.equals(j.getPosicao())).collect(Collectors.toList()), jogadoresNaoAtualizar,
-				BASE_NUM_MEI);
+		atualizarNumeroJogadoresClubePosicao(
+				jogadoresAtualizar.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube, BASE_NUM_MEI,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.MEIA.equals(j.getPosicao())).count());
 
-		atualizarNumeroJogadoresClubePosicao(jogadoresAtualizar.stream()
-				.filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).collect(Collectors.toList()),
-				jogadoresNaoAtualizar, BASE_NUM_ATA);
+		atualizarNumeroJogadoresClubePosicao(
+				jogadoresAtualizar.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao()))
+						.collect(Collectors.toList()),
+				numeroJaUtilizadosClube, BASE_NUM_ATA,
+				(int) jogadoresNaoAtualizar.stream().filter(j -> Posicao.ATACANTE.equals(j.getPosicao())).count());
 		
 	}
 	
-	protected void atualizarNumeroJogadoresClubeGoleiro(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar) {
+	protected void atualizarNumeroJogadoresClubeGoleiro(List<Jogador> jogadoresAtualizar,
+			List<Integer> numeroJaUtilizadosClube, Integer qtdeJogadoresExistente) {
 		
 		if (jogadoresAtualizar.isEmpty()) return;
 		
 		List<Integer> numeros = new ArrayList<Integer>();
 		
-		for (int i = 0; i < (jogadoresAtualizar.size() + jogadoresNaoAtualizar.size()); i++) {
+		for (int i = 0; i < (jogadoresAtualizar.size() + qtdeJogadoresExistente); i++) {
 			numeros.add(i * 11 + 1);
 		}
 		
-		numeros.removeAll(jogadoresNaoAtualizar.stream().map(j -> j.getNumero()).collect(Collectors.toList()));
+		numeros.removeAll(numeroJaUtilizadosClube);
 		
 		for (int i = 0; i < jogadoresAtualizar.size(); i++) {
 			jogadoresAtualizar.get(i).setNumero(numeros.get(i));
@@ -257,13 +283,14 @@ public class AtualizarNumeroJogadoresService {
 		
 	}
 	
-	protected void atualizarNumeroJogadoresClubePosicao(List<Jogador> jogadoresAtualizar, List<Jogador> jogadoresNaoAtualizar, Integer[] n) {
+	protected void atualizarNumeroJogadoresClubePosicao(List<Jogador> jogadoresAtualizar,
+			List<Integer> numeroJaUtilizadosClube, Integer[] n, Integer qtdeJogadoresExistente) {
 
 		if (jogadoresAtualizar.isEmpty()) return;
 		
-		List<Integer> numeros = new ArrayList<Integer>(Arrays.asList(gerarNumeros(jogadoresAtualizar.size() + jogadoresNaoAtualizar.size(), n)));
+		List<Integer> numeros = new ArrayList<Integer>(Arrays.asList(gerarNumeros(jogadoresAtualizar.size() + qtdeJogadoresExistente, n)));
 		
-		numeros.removeAll(jogadoresNaoAtualizar.stream().map(j -> j.getNumero()).collect(Collectors.toList()));
+		numeros.removeAll(numeroJaUtilizadosClube);
 		
 		for (int i = 0; i < jogadoresAtualizar.size(); i++) {
 			jogadoresAtualizar.get(i).setNumero(numeros.get(i));
