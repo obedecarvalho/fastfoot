@@ -1,6 +1,7 @@
 package com.fastfoot.player.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -200,7 +201,26 @@ public class AposentarJogadorService {
 			quantitativoPosicaoClubeDTOs = quantitativoPosicaoPorClube.get(c);
 			
 			if (quantitativoPosicaoClubeDTOs.size() != (Posicao.values().length - 1)) {
-				throw new RuntimeException("Quantitativo de jogadores por posição diferente do esperado");
+
+				List<Posicao> posicoes = new ArrayList<Posicao>(Arrays.asList(Posicao.values()));
+
+				posicoes.removeAll(quantitativoPosicaoClubeDTOs.stream().map(QuantitativoPosicaoClubeDTO::getPosicao)
+						.collect(Collectors.toList()));
+
+				QuantitativoPosicaoClubeDTO quantitativoPosicaoClubeDTO;
+
+				for (Posicao posicao : posicoes) {
+					quantitativoPosicaoClubeDTO = new QuantitativoPosicaoClubeDTO();
+
+					quantitativoPosicaoClubeDTO.setClube(c);
+					quantitativoPosicaoClubeDTO.setPosicao(posicao);
+					quantitativoPosicaoClubeDTO.setQtde(0);
+
+					quantitativoPosicaoClubeDTOs.add(quantitativoPosicaoClubeDTO);
+				}
+				
+				//throw new RuntimeException(String.format("Quantitativo de jogadores por posição diferente do esperado [%d]", c.getId()));
+				System.err.println(String.format("Quantitativo de jogadores por posição diferente do esperado [%d]", c.getId()));
 			}
 
 			for (Jogador jogador : jogadoresClubeAposentar) {

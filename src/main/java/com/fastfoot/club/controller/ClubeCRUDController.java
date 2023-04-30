@@ -1,5 +1,7 @@
 package com.fastfoot.club.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,6 +73,15 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 			if (ValidatorUtil.isEmpty(clubes)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			//
+			Collections.sort(clubes, new Comparator<Clube>() {
+				@Override
+				public int compare(Clube o1, Clube o2) {
+					return o1.getNome().compareToIgnoreCase(o2.getNome());
+				}
+			});
+			//
 	
 			return ResponseEntity.ok(clubes);
 			

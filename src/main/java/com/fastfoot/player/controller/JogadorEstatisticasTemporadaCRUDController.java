@@ -1,5 +1,7 @@
 package com.fastfoot.player.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,6 +70,15 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 			if (ValidatorUtil.isEmpty(estatisticas)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			//
+			Collections.sort(estatisticas, new Comparator<JogadorEstatisticasTemporada>() {
+				@Override
+				public int compare(JogadorEstatisticasTemporada o1, JogadorEstatisticasTemporada o2) {
+					return o1.getJogador().getPosicao().compareTo(o2.getJogador().getPosicao());
+				}
+			});
+			//
 	
 			return ResponseEntity.ok(estatisticas);
 			

@@ -33,12 +33,9 @@ import com.fastfoot.transfer.service.ProporTransferenciaService;
 @Service
 public class GerarTransferenciasService {
 	
-	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = 3;
+	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = FastfootApplication.NUM_THREAD;
 	
 	//###	REPOSITORY	###
-	
-	/*@Autowired
-	private ClubeRepository clubeRepository;*/
 	
 	@Autowired
 	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
@@ -50,10 +47,7 @@ public class GerarTransferenciasService {
 	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
 	
 	//###	SERVICE	###
-	
-	/*@Autowired
-	private TemporadaCRUDService temporadaService;*/
-	
+
 	@Autowired
 	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;
 	
@@ -66,21 +60,12 @@ public class GerarTransferenciasService {
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
 	
-	/*@Autowired
-	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;*/
-	
 	public void gerarTransferencias(Temporada temporada) {
-		//Temporada temporada = temporadaService.getTemporadaAtual();
-		//List<Clube> clubes = clubeRepository.findAll();
 		gerarTransferencias(temporada, null);
-		//atualizarNumeroJogadores();
 	}
 	
 	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
-		//if (semana.getNumero() == 0, 1, 2, 3) {		
 
-		//int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		long inicio = 0, fim = 0;
@@ -92,15 +77,6 @@ public class GerarTransferenciasService {
 		List<CompletableFuture<Boolean>> transferenciasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
 		//Calcular necessidade contratacao
-		/*for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
-						.calcularNecessidadeContratacao(clubes.subList(i * offset, clubes.size())));
-			} else {
-				transferenciasFuture.add(avaliarNecessidadeContratacaoClubeService
-						.calcularNecessidadeContratacao(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}*/
 		
 		for (Liga liga : Liga.getAll()) {
 			transferenciasFuture
@@ -127,29 +103,12 @@ public class GerarTransferenciasService {
 						Collectors.groupingBy(NecessidadeContratacaoClube::getClube)));
 		
 		//Fazer propostas transferencia
-		//for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+
 		for (Integer i : necessidadeContratacaoClubeX.keySet()) {
 			transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
 					necessidadeContratacaoClubeX.get(i)));
 		}
-		
-		/*Map<Clube, List<NecessidadeContratacaoClube>> necessidadeContratacaoClube = necessidadeContratacao
-				.stream().collect(Collectors.groupingBy(NecessidadeContratacaoClube::getClube));
-		
-		clubes = new ArrayList<Clube>(necessidadeContratacaoClube.keySet());
-		offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		//Fazer propostas transferencia
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
-						clubes.subList(i * offset, clubes.size()), necessidadeContratacaoClube));
-			} else {
-				transferenciasFuture.add(proporTransferenciaService.gerarPropostaTransferencia(temporada,
-						clubes.subList(i * offset, (i + 1) * offset), necessidadeContratacaoClube));
-			}
-		}*/
-		
+
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
 		
 		stopWatch.split();
@@ -157,10 +116,9 @@ public class GerarTransferenciasService {
 		mensagens.add("\t#gerarPropostaTransferencia:" + (fim - inicio));
 
 		transferenciasFuture.clear();
-		
+
 		inicio = stopWatch.getSplitTime();
-		
-		//
+
 		List<PropostaTransferenciaJogador> propostas = propostaTransferenciaJogadorRepository
 				.findByTemporadaAndPropostaAceitaIsNull(temporada);
 
@@ -171,9 +129,9 @@ public class GerarTransferenciasService {
 		Set<Clube> clubesRefazerEscalacaoX = Collections.synchronizedSet(new HashSet<Clube>());
 		
 		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);//movimentacaoFinanceiraRepository.findSaldoPorClube();
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);
 		
-		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();//Collections.synchronizedList(new ArrayList<ClubeSaldo>());
+		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
 		
 		ClubeSaldo clubeSaldo = null;
 		
@@ -189,44 +147,15 @@ public class GerarTransferenciasService {
 			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
 		}
 		
-		//System.err.println(clubesSaldo.values());
-		
 		//Analisar propostas transferencia
-		//for (int i = 0; i < (FastfootApplication.NUM_THREAD / 2); i++) {
+
 		for (Integer i : propostasClubeX.keySet()) {
 			transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
 					propostasClubeX.get(i), clubesSaldo, clubesRefazerEscalacaoX));
 		}
-
-		/*Map<Clube, List<PropostaTransferenciaJogador>> propostasClube = propostas.stream()
-				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getClubeOrigem));
-		
-		clubes = new ArrayList<Clube>(propostasClube.keySet());
-		Integer nroThread = Math.min(FastfootApplication.NUM_THREAD, (clubes.size()/5) + 1);//pelo menos 5 clubes por thread
-		offset = clubes.size() / nroThread;
-		System.err.println("#propostasClube" + clubes.size() + ", #th:" + nroThread);
-		Set<Clube> clubesRefazerEscalacao = Collections.synchronizedSet(new HashSet<Clube>());*/
-		
-		//Analisar propostas transferencia
-		/*analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada, clubes, propostasClube,
-				clubesRefazerEscalacao);*/
-
-		//Analisar propostas transferencia
-		/*for (int i = 0; i < nroThread; i++) {
-			if ((i + 1) == nroThread) {
-				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
-						clubes.subList(i * offset, clubes.size()), propostasClube, clubesRefazerEscalacao));
-			} else {
-				transferenciasFuture.add(analisarPropostaTransferenciaService.analisarPropostaTransferencia(temporada,
-						clubes.subList(i * offset, (i + 1) * offset), propostasClube, clubesRefazerEscalacao));
-			}
-		}*/
 		
 		CompletableFuture.allOf(transferenciasFuture.toArray(new CompletableFuture<?>[0])).join();
-		//
-		
-		//System.err.println(clubesRefazerEscalacao);
-		
+
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#analisarPropostaTransferencia:" + (fim - inicio));
@@ -236,28 +165,7 @@ public class GerarTransferenciasService {
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
 		
 		System.err.println(mensagens);
-		
-		//}
+
 	}
-	
-	/*private void atualizarNumeroJogadores() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
-			} else {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}*/
 
 }

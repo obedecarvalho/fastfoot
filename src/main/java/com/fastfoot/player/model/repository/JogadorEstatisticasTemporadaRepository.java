@@ -10,18 +10,17 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Repository
 public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<JogadorEstatisticasTemporada, Long>{
 	
-	public List<JogadorEstatisticasTemporada> findByClube(Clube clube);
+	//public List<JogadorEstatisticasTemporada> findByClube(Clube clube);
 	
 	public List<JogadorEstatisticasTemporada> findByTemporada(Temporada temporada);
 
-	public List<JogadorEstatisticasTemporada> findByJogadorAndAmistoso(Jogador jogador, Boolean amistoso);
+	//public List<JogadorEstatisticasTemporada> findByJogadorAndAmistoso(Jogador jogador, Boolean amistoso);
 	
 	public List<JogadorEstatisticasTemporada> findByAmistoso(Boolean amistoso);
 	
@@ -31,10 +30,10 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndClube(Temporada temporada, Clube clube);
 	
-	public List<JogadorEstatisticasTemporada> findByTemporadaAndJogadorAndAmistoso(Temporada temporada, Jogador jogador,
-			Boolean amistoso);
+	//public List<JogadorEstatisticasTemporada> findByTemporadaAndJogadorAndAmistoso(Temporada temporada, Jogador jogador,
+	//		Boolean amistoso);
 	
-	@Transactional
+	/*@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
 			" insert into public.jogador_estatisticas_temporada" +
@@ -54,9 +53,9 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" from jogador j" +
 			" where status_jogador = 0;"//StatusJogador.ATIVO
 	)
-	public void criarJogadorEstatisticasTemporada(Long idTemporada, Boolean amistoso);
+	public void criarJogadorEstatisticasTemporada(Long idTemporada, Boolean amistoso);*/
 	
-	@Transactional
+	/*@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
 			" update jogador" +
@@ -66,9 +65,9 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	and jet.amistoso = false" +
 			" 	and jet.id_jogador = jogador.id;"
 	)
-	public void associarJogadorEstatistica(Long idTemporada);
+	public void associarJogadorEstatistica(Long idTemporada);*/
 	
-	@Transactional
+	/*@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
 			" update jogador" +
@@ -78,7 +77,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	and jet.amistoso = true" +
 			" 	and jet.id_jogador = jogador.id;"
 	)
-	public void associarJogadorEstatisticaAmistosos(Long idTemporada);
+	public void associarJogadorEstatisticaAmistosos(Long idTemporada);*/
 
 	@Query(nativeQuery = true, value =
 			" select id_clube," +

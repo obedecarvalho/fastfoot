@@ -35,18 +35,6 @@ public class HabilidadeValorEstatistica {
 	
 	private Boolean amistoso;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_partida_resultado")
-	private PartidaResultado partidaResultado;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_amistosa_resultado")
-	private PartidaAmistosaResultado partidaAmistosaResultado;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
-	
 	public HabilidadeValorEstatistica() {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
@@ -58,20 +46,12 @@ public class HabilidadeValorEstatistica {
 		this.habilidadeValor = habilidadeValor;
 	}
 	
-	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, Boolean amistoso/*, PartidaResultadoJogavel partidaResultado*/) {
+	public HabilidadeValorEstatistica(HabilidadeValor habilidadeValor, Semana semana, Boolean amistoso) {
 		quantidadeUso = 0;
 		quantidadeUsoVencedor = 0;
 		this.habilidadeValor = habilidadeValor;
 		this.semana = semana;
 		this.amistoso = amistoso;
-		
-		/*if (partidaResultado instanceof PartidaResultado) {
-			setPartidaResultado((PartidaResultado) partidaResultado);
-		} else if (partidaResultado instanceof PartidaAmistosaResultado) {
-			setPartidaAmistosaResultado((PartidaAmistosaResultado) partidaResultado);
-		} else if (partidaResultado instanceof PartidaEliminatoriaResultado) {
-			setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partidaResultado);
-		}*/
 	}
 
 	public Long getId() {
@@ -113,30 +93,6 @@ public class HabilidadeValorEstatistica {
 	public void incrementarQuantidadeUsoVencedor() {
 		this.quantidadeUsoVencedor++;
 	}
-
-	/*public PartidaResultado getPartidaResultado() {
-		return partidaResultado;
-	}
-
-	public void setPartidaResultado(PartidaResultado partidaResultado) {
-		this.partidaResultado = partidaResultado;
-	}
-
-	public PartidaAmistosaResultado getPartidaAmistosaResultado() {
-		return partidaAmistosaResultado;
-	}
-
-	public void setPartidaAmistosaResultado(PartidaAmistosaResultado partidaAmistosaResultado) {
-		this.partidaAmistosaResultado = partidaAmistosaResultado;
-	}
-
-	public PartidaEliminatoriaResultado getPartidaEliminatoriaResultado() {
-		return partidaEliminatoriaResultado;
-	}
-
-	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
-		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}*/
 
 	public Semana getSemana() {
 		return semana;

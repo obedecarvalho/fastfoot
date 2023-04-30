@@ -34,8 +34,6 @@ public class HabilidadeValorEstatisticaGrupo {
 	private Integer quantidadeUsoVencedor;
 	
 	private Boolean amistoso;
-	
-	//private Double porcAcerto;
 
 	public Long getId() {
 		return id;
@@ -89,12 +87,4 @@ public class HabilidadeValorEstatisticaGrupo {
 		this.amistoso = amistoso;
 	}
 
-	/*public Double getPorcAcerto() {
-		return porcAcerto;
-	}
-
-
-	public void setPorcAcerto(Double porcAcerto) {
-		this.porcAcerto = porcAcerto;
-	}*/
 }
