@@ -181,100 +181,90 @@ public class CriarCalendarioTemporadaService {
 	private GerarTransferenciasService gerarTransferenciasService;
 
 	public TemporadaDTO criarTemporada() {
-		
+
+		//Instanciar StopWatch
 		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
 		List<String> mensagens = new ArrayList<String>();
-		long inicio = 0, fim = 0;
+
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
 
 		Temporada temporada = null;
 		Integer ano = Constantes.ANO_INICIAL;
 		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
-		
-		stopWatch.split();
 
 		if (temporadaOpt.isPresent()) {
 			temporada = temporadaOpt.get();
-			
+
 			if (temporada.getSemanaAtual() < Constantes.NUM_SEMANAS) {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 
-			inicio = stopWatch.getSplitTime();
 			agruparHabilidadeValorEstatisticaService.agrupar2(temporada);//TODO: substituir pelo 2 comandos?
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (fim - inicio));
-			
-			inicio = stopWatch.getSplitTime();
-			//jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada(temporada.getId());
+			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();
-			//jogadorEstatisticaSemanaRepository.deleteByIdTemporada(temporada.getId());
 			jogadorEstatisticasSemanaRepository.deleteAllInBatch();
-			//jogadorEstatisticaSemanaRepository.deleteAll();
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (fim - inicio));
-			
+			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			temporada.setAtual(false);
 			temporadaRepository.save(temporada);
 			ano = temporada.getAno() + 1;
-			
-			inicio = stopWatch.getSplitTime();
+
 			jogadorRepository.incrementarIdade();
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#incrementarIdade:" + (fim - inicio));
-			
-			inicio = stopWatch.getSplitTime();
+			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			adequarModoDesenvolvimentoJogador(temporada);
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (fim - inicio));
+			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			//stopWatch.split();
-			inicio = stopWatch.getSplitTime();
 			/*if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
 				atualizarPassoDesenvolvimentoJogador();
 			} else {*/
-				atualizarPassoDesenvolvimentoJogadorOtimizado();
+			atualizarPassoDesenvolvimentoJogadorOtimizado();
 			//}
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (fim - inicio));
-			
-			inicio = stopWatch.getSplitTime();
+			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			aposentarJogadores2();
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#aposentarJogadores:" + (fim - inicio));
-			
+			mensagens.add("\t#aposentarJogadores:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			/*inicio = stopWatch.getSplitTime();
 			atualizarNumeroJogadores();
 			stopWatch.split();
 			fim = stopWatch.getSplitTime();
 			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
-			
-			inicio = stopWatch.getSplitTime();
+
 			if (parametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 				calcularValorTransferenciaJogadoresSimplificado3();
 			} else {
 				calcularValorTransferenciaJogadores2();
 			}
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (fim - inicio));
+			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 
 		} else {
 
-			inicio = stopWatch.getSplitTime();
 			preCarregarParametrosService.preCarregarParametros();
 			preCarregarService.preCarregarClubes();
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#preCarregar:" + (fim - inicio));
-			
-			inicio = stopWatch.getSplitTime();
+			mensagens.add("\t#preCarregar:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			if (jogadorRepository.count() == 0) {//TODO: usado em DEV
 				List<Clube> clubes = clubeRepository.findAll();
 				
@@ -295,10 +285,11 @@ public class CriarCalendarioTemporadaService {
 				CompletableFuture.allOf(criarJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 
 			}
+
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#criarJogadoresClube:" + (fim - inicio));
-			
+			mensagens.add("\t#criarJogadoresClube:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 			/*inicio = stopWatch.getSplitTime();
 			atualizarNumeroJogadores();
 			stopWatch.split();
@@ -315,64 +306,60 @@ public class CriarCalendarioTemporadaService {
 		List<CampeonatoEliminatorio> copasNacionais = new ArrayList<CampeonatoEliminatorio>();
 		List<RodadaAmistosa> rodadaAmistosaAutomaticas = new ArrayList<RodadaAmistosa>();
 
-		inicio = stopWatch.getSplitTime();
 		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#criarCampeonatos:" + (fim - inicio));
+		mensagens.add("\t#criarCampeonatos:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		inicio = stopWatch.getSplitTime();
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#salvar:" + (fim - inicio));
-		
-		inicio = stopWatch.getSplitTime();
-		calcularPartidaProbabilidadeResultado(temporada);
+		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		calcularPartidaProbabilidadeResultado(temporada);		
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (fim - inicio));
-		
-		inicio = stopWatch.getSplitTime();
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		distribuirPremiacaoCompeticoesService.distribuirPremiacaoCompeticoes(temporada);
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (fim - inicio));
-		
-		inicio = stopWatch.getSplitTime();
-		distribuirPatrocinioService.distribuirPatrocinio(temporada);
+		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		distribuirPatrocinioService.distribuirPatrocinio(temporada);		
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#distribuirPatrocinio:" + (fim - inicio));
-		
+		mensagens.add("\t#distribuirPatrocinio:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
-			inicio = stopWatch.getSplitTime();
+
 			gerarTransferenciasService.gerarTransferencias(temporada);
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#gerarTransferencias:" + (fim - inicio));
+			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		}
 		
 		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_MUDANCA_CLUBE_NIVEL)) {
-			inicio = stopWatch.getSplitTime();
+
 			gerarMudancaClubeNivel(temporada);
 			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#gerarMudancaClubeNivel:" + (fim - inicio));
+			mensagens.add("\t#gerarMudancaClubeNivel:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		}
-		
-		inicio = stopWatch.getSplitTime();
+
 		jogadorEnergiaRepository.deleteAllInBatch();
 		jogadorEnergiaRepository.inserirEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL);
 		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#inserirEnergiaTodosJogadores:" + (fim - inicio));
+		mensagens.add("\t#inserirEnergiaTodosJogadores:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+
 		System.err.println(mensagens);
-		
+
 		return TemporadaDTO.convertToDTO(temporada);
 	}
 	

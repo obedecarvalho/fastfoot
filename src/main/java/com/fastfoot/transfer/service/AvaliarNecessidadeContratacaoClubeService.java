@@ -59,6 +59,18 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	private double getPercentualForcaJogadorForcaClube(Integer forcaJogador, Integer forcaClube) {		
 		return (double) forcaJogador/forcaClube;
 	}
+	
+	public void calcularNecessidadeContratacaoEDisponivelNegociacao(
+			Temporada temporada,
+			Map<Clube, List<Jogador>> jogadoresClube,
+			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes, 
+			List<DisponivelNegociacao> disponivelNegociacao) {
+
+		for (Clube c : jogadoresClube.keySet()) {
+			calcularNecessidadeContratacaoClube(jogadoresClube.get(c), c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
+		}
+
+	}
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {

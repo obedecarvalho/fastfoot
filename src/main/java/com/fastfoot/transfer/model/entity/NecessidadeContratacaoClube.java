@@ -149,4 +149,11 @@ public class NecessidadeContratacaoClube {
 		this.necessidadePrioritaria = necessidadePrioritaria;
 	}
 
+	@Override
+	public String toString() {
+		return "NecessidadeContratacaoClube [clube=" + clube + ", posicao=" + posicao + ", nivelAdequacaoMin="
+				+ nivelAdequacaoMin + ", nivelAdequacaoMax=" + nivelAdequacaoMax + ", necessidadeSatisfeita="
+				+ necessidadeSatisfeita + ", necessidadePrioritaria=" + necessidadePrioritaria + "]";
+	}
+
 }

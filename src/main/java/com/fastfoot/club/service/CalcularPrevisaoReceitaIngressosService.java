@@ -1,8 +1,12 @@
 package com.fastfoot.club.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -60,5 +64,17 @@ public class CalcularPrevisaoReceitaIngressosService {
 		
 		return receita;
 
+	}
+
+	@Async("defaultExecutor")
+	public CompletableFuture<Map<Clube, Double>> calcularPrevisaoReceitaIngressos(List<Clube> clubes){
+
+		Map<Clube, Double> clubeReceita = new HashMap<Clube, Double>();
+
+		for (Clube clube : clubes) {
+			clubeReceita.put(clube, calcularPrevisaoReceitaIngressos(clube));
+		}
+
+		return CompletableFuture.completedFuture(clubeReceita);
 	}
 }

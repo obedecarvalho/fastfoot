@@ -99,4 +99,10 @@ public class DisponivelNegociacao {
 		this.ativo = ativo;
 	}
 
+	@Override
+	public String toString() {
+		return "DisponivelNegociacao [clube=" + clube + ", jogador=" + jogador + ", tipoNegociacao=" + tipoNegociacao
+				+ ", ativo=" + ativo + "]";
+	}
+
 }

@@ -64,6 +64,9 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	
 	@Transient
 	private Integer pesoN;
+	
+	@Transient
+	private DisponivelNegociacao disponivelNegociacao;
 
 	public Long getId() {
 		return id;
@@ -137,6 +140,14 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		this.necessidadeContratacaoClube = necessidadeContratacaoClube;
 	}
 
+	public DisponivelNegociacao getDisponivelNegociacao() {
+		return disponivelNegociacao;
+	}
+
+	public void setDisponivelNegociacao(DisponivelNegociacao disponivelNegociacao) {
+		this.disponivelNegociacao = disponivelNegociacao;
+	}
+
 	@Override
 	public Integer getValor() {
 		if (peso == null) {
@@ -180,6 +191,13 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 			return false;
 		PropostaTransferenciaJogador other = (PropostaTransferenciaJogador) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	@Override
+	public String toString() {
+		return "PropostaTransferenciaJogador [clubeOrigem=" + clubeOrigem + ", clubeDestino=" + clubeDestino
+				+ ", jogador=" + jogador + ", valorTransferencia=" + valorTransferencia + ", propostaAceita="
+				+ propostaAceita + "]";
 	}
 
 	/*public AdequacaoElencoPosicao getAdequacaoElencoPosicao() {

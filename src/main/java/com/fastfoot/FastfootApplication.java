@@ -36,6 +36,26 @@ public class FastfootApplication {
 		mensagens.add("#tempoTotal:" + stopWatch.getTime());
 	 */
 	
+	/*
+		//Instanciar StopWatch
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+		
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		//Finalizar
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+	 */
+	
 	public static final Integer NUM_THREAD = 8;
 
 	public static void main(String[] args) {
