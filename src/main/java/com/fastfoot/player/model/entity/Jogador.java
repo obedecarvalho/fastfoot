@@ -69,18 +69,25 @@ public class Jogador {
 	private List<HabilidadeGrupoValor> habilidadesGrupo;
 	
 	@JsonIgnore
-	@Transient
-	private List<HabilidadeValor> habilidadesAcaoFim;
-	
-	@JsonIgnore
-	@Transient
-	private List<HabilidadeValor> habilidadesAcaoMeioFim;
-	
-	@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_detalhe")
 	private JogadorDetalhe jogadorDetalhe;
 	
+	/*@ManyToOne
+	@JoinColumn(name = "id_contrato_atual")*/
+	@Transient
+	private Contrato contratoAtual;
+	
+	//###	TRANSIENT	###
+
+	@JsonIgnore
+	@Transient
+	private List<HabilidadeValor> habilidadesAcaoFim;
+
+	@JsonIgnore
+	@Transient
+	private List<HabilidadeValor> habilidadesAcaoMeioFim;
+
 	@Transient
 	private JogadorEstatisticasSemana jogadorEstatisticasSemana;
 
@@ -219,6 +226,14 @@ public class Jogador {
 
 	public void setHabilidadesGrupo(List<HabilidadeGrupoValor> habilidadesGrupo) {
 		this.habilidadesGrupo = habilidadesGrupo;
+	}
+
+	public Contrato getContratoAtual() {
+		return contratoAtual;
+	}
+
+	public void setContratoAtual(Contrato contratoAtual) {
+		this.contratoAtual = contratoAtual;
 	}
 
 	@JsonIgnore

@@ -59,7 +59,7 @@ public class ClubeRankingHistoricoDTO {
 
 	@Override
 	public String toString() {
-		return "ClubeRankingHistoricoDTO [clube=" + clube.getNome() + "(" + clube.getClubeNivel() + ")"
+		return "ClubeRankingHistoricoDTO [clube=" + clube.getNome() + "(" + clube.getNivelNacional() + ")"
 				+ ", posicaoGeralMedia=" + posicaoGeralMedia + ", posicaoNacionalMedia=" + posicaoNacionalMedia + "]";
 	}
 

@@ -71,7 +71,7 @@ public class PreCarregarClubeService {
 
 		for (Clube c : clubes) {
 			movimentacoesFinanceiras.add(new MovimentacaoFinanceira(c, null, TipoMovimentacaoFinanceira.CAIXA_INICIAL,
-					c.getClubeNivel().getCaixaInicial(), "Caixa Inicial"));
+					c.getNivelNacional().getCaixaInicial(), "Caixa Inicial"));
 		}
 
 		movimentacaoFinanceiraRepository.saveAll(movimentacoesFinanceiras);

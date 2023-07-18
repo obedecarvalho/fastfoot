@@ -27,9 +27,9 @@ public class Clube implements ElementoRoleta {
 
 	private Integer forcaGeralAtual;
 	
-	private ClubeNivel clubeNivel;
+	private ClubeNivel nivelNacional;
 	
-	private ClubeNivel clubeNivelInternacional;
+	private ClubeNivel nivelInternacional;
 	
 	private String logo;
 
@@ -54,14 +54,14 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}*/
 	
-	public Clube(Integer id, Liga liga, ClubeNivel clubeNivel, ClubeNivel clubeNivelInternacional, String nome, String logo) {
+	public Clube(Integer id, Liga liga, ClubeNivel nivelNacional, ClubeNivel nivelInternacional, String nome, String logo) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.clubeNivel = clubeNivel;
-		this.forcaGeral = clubeNivel.getForcaGeral();//TODO
+		this.nivelNacional = nivelNacional;
+		this.forcaGeral = nivelNacional.getForcaGeral();//TODO
 		this.liga = liga;
-		this.clubeNivelInternacional = clubeNivelInternacional;
+		this.nivelInternacional = nivelInternacional;
 		this.logo = logo;
 	}
 
@@ -97,12 +97,12 @@ public class Clube implements ElementoRoleta {
 		this.liga = liga;
 	}
 
-	public ClubeNivel getClubeNivel() {
-		return clubeNivel;
+	public ClubeNivel getNivelNacional() {
+		return nivelNacional;
 	}
 
-	public void setClubeNivel(ClubeNivel clubeNivel) {
-		this.clubeNivel = clubeNivel;
+	public void setNivelNacional(ClubeNivel nivelNacional) {
+		this.nivelNacional = nivelNacional;
 	}
 
 	public Integer getForcaGeralAtual() {
@@ -113,12 +113,12 @@ public class Clube implements ElementoRoleta {
 		this.forcaGeralAtual = forcaGeralAtual;
 	}
 
-	public ClubeNivel getClubeNivelInternacional() {
-		return clubeNivelInternacional;
+	public ClubeNivel getNivelInternacional() {
+		return nivelInternacional;
 	}
 
-	public void setClubeNivelInternacional(ClubeNivel clubeNivelInternacional) {
-		this.clubeNivelInternacional = clubeNivelInternacional;
+	public void setNivelInternacional(ClubeNivel nivelInternacional) {
+		this.nivelInternacional = nivelInternacional;
 	}
 
 	@Override

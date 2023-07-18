@@ -16,17 +16,23 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
+import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 
 @Service
 public class AposentarJogadorService {
+	
+	//###	REPOSITORY	###
 
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
@@ -36,15 +42,23 @@ public class AposentarJogadorService {
 	
 	@Autowired
 	private JogadorDetalheRepository jogadorDetalheRepository;
-	
-	@Autowired
-	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
-	
+
 	@Autowired
 	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
+
+	@Autowired
+	private ContratoRepository contratoRepository;
+	
+	//###	SERVICE	###
 	
 	@Autowired
 	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
+	
+	@Autowired
+	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
+
+	@Autowired
+	private SemanaCRUDService semanaCRUDService;
 
 	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
@@ -193,6 +207,8 @@ public class AposentarJogadorService {
 		
 		List<Jogador> jogadoresClubeAposentar = null;
 		List<QuantitativoPosicaoClubeDTO> quantitativoPosicaoClubeDTOs = null;
+		
+		Semana s = semanaCRUDService.getProximaSemana();
 
 		Posicao p = null;
 		
@@ -237,7 +253,7 @@ public class AposentarJogadorService {
 				
 				//substituto
 				novosJogadores.add(criarNovoJogadorSubsAposentado(jogador.getClube(), p, null,
-						jogador.getForcaGeralPotencial().intValue()));
+						/*jogador.getForcaGeralPotencial().intValue()*/ jogador.getClube().getForcaGeral(), s));
 				
 			}
 			
@@ -256,10 +272,13 @@ public class AposentarJogadorService {
 		
 		jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(novosJogadores);
-		List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();
+		contratoRepository.saveAll(novosJogadores.stream().map(j -> j.getContratoAtual()).collect(Collectors.toList()));
+		/*List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();
 		for (Jogador j : novosJogadores) {
 			jogHab.addAll(j.getHabilidades());
-		}
+		}*/
+		List<HabilidadeValor> jogHab = novosJogadores.stream().flatMap(j -> j.getHabilidades().stream())
+				.collect(Collectors.toList());
 		habilidadeValorRepository.saveAll(jogHab);
 		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 		
@@ -271,12 +290,16 @@ public class AposentarJogadorService {
 	}
 	
 	private Jogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
-			Integer forcaGeral) {
-		//TODO: conferir qual numero jogador ira usar de acordo com a posição
+			Integer potencial, Semana semanaInicioContrato) {
 
-		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(clube, posicao, numero,
-				JogadorFactory.IDADE_MIN);
+		//TODO: conferir qual numero jogador ira usar de acordo com a posição
 		//TODO: passar modo de desenvolvimento do jogador aposentado??
+		//TODO: sortear entre força jogador e força clube?
+
+		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(posicao, JogadorFactory.IDADE_MIN, potencial);
+		novoJogador.setClube(clube);
+		novoJogador.setNumero(numero);
+		novoJogador.setContratoAtual(new Contrato(clube, novoJogador, semanaInicioContrato, null, false));
 
 		return novoJogador;
 	}

@@ -12,6 +12,7 @@ drop table proposta_transferencia_jogador;
 drop table jogador_estatisticas_semana;
 drop table jogador_estatisticas_temporada;
 drop table partida_lance;
+drop table contrato;
 drop table jogador;
 drop table jogador_detalhe;
 

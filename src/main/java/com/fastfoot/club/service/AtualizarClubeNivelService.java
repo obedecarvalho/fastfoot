@@ -125,16 +125,16 @@ public class AtualizarClubeNivelService {
 		
 		for (ClubeNivel clubeNivel : ClubeNivel.values()) {
 			for (int i = clubeNivel.getClubeRankingMin(); i <= clubeNivel.getClubeRankingMax(); i++) {
-				if (!rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivel().equals(clubeNivel)) {
+				if (!rankingHistoricoDTOs.get(i - 1).getClube().getNivelNacional().equals(clubeNivel)) {
 					mudancaClubeNivel = new MudancaClubeNivel();
 					mudancaClubeNivel.setClube(rankingHistoricoDTOs.get(i - 1).getClube());
-					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivel());
+					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getNivelNacional());
 					mudancaClubeNivel.setClubeNivelNovo(clubeNivel);
 					mudancaClubeNivel.setTemporada(temporada);
 					mudancaClubeNivel.setInternacional(false);
 					mudancaClubeNivelList.add(mudancaClubeNivel);
 					
-					rankingHistoricoDTOs.get(i - 1).getClube().setClubeNivel(clubeNivel);
+					rankingHistoricoDTOs.get(i - 1).getClube().setNivelNacional(clubeNivel);
 					rankingHistoricoDTOs.get(i - 1).getClube().setForcaGeral(clubeNivel.getForcaGeral());
 					clubes.add(rankingHistoricoDTOs.get(i - 1).getClube());
 				}
@@ -196,16 +196,16 @@ public class AtualizarClubeNivelService {
 
 		for (ClubeNivel clubeNivel : ClubeNivel.values()) {
 			for (int i = ((clubeNivel.getClubeRankingMin() -1) * 4 + 1); i <= clubeNivel.getClubeRankingMax() * 4; i++) {
-				if (!rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivelInternacional().equals(clubeNivel)) {
+				if (!rankingHistoricoDTOs.get(i - 1).getClube().getNivelInternacional().equals(clubeNivel)) {
 					mudancaClubeNivel = new MudancaClubeNivel();
 					mudancaClubeNivel.setClube(rankingHistoricoDTOs.get(i - 1).getClube());
-					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getClubeNivelInternacional());
+					mudancaClubeNivel.setClubeNivelAntigo(rankingHistoricoDTOs.get(i - 1).getClube().getNivelInternacional());
 					mudancaClubeNivel.setClubeNivelNovo(clubeNivel);
 					mudancaClubeNivel.setTemporada(temporada);
 					mudancaClubeNivel.setInternacional(true);
 					mudancaClubeNivelList.add(mudancaClubeNivel);
 					
-					rankingHistoricoDTOs.get(i - 1).getClube().setClubeNivelInternacional(clubeNivel);
+					rankingHistoricoDTOs.get(i - 1).getClube().setNivelInternacional(clubeNivel);
 					/*rankingHistoricoDTOs.get(i - 1).getClube().setForcaGeral(clubeNivel.getForcaGeral());*/
 					clubes.add(rankingHistoricoDTOs.get(i - 1).getClube());
 				}

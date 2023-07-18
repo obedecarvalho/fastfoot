@@ -31,7 +31,7 @@ public class DistribuirPatrocinioService {
 		for (Clube c : clubes) {
 			entradas.add(criarMovimentacaoFinanceira(c,
 					temporada.getSemanas().stream().filter(s -> s.getNumero() == 1).findFirst().get(),
-					c.getClubeNivel().getCaixaInicial() * 0.5, "Patrocínio"));
+					c.getNivelNacional().getCaixaInicial() * 0.5, "Patrocínio"));
 		}
 		
 		movimentacaoFinanceiraRepository.saveAll(entradas);

@@ -264,22 +264,22 @@ public abstract class JogadorFactory {
 		return JogadorFactoryImplDesenRegular.getInstance();//TODO
 	}
 
-	public Jogador gerarJogador(Clube clube, Posicao posicao) {
-		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, null, null, null);
+	public Jogador gerarJogador(Posicao posicao, Integer potencial) {
+		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), posicao, null, potencial);
 	}
 
-	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
+	/*public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero) {
 		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, null, null);
+	}*/
+
+	public Jogador gerarJogador(Posicao posicao, Integer idade, Integer potencial) {
+		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), posicao, idade, potencial);
 	}
 
-	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade) {
-		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, idade, null);
-	}
-
-	public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade, Integer forcaGeral) {
+	/*public Jogador gerarJogador(Clube clube, Posicao posicao, Integer numero, Integer idade, Integer forcaGeral) {
 		return getInstance().gerarJogador(getEstrategiaPosicaoJogador(posicao), clube, posicao, numero, idade,
 				forcaGeral);
-	}
+	}*/
 
 	public static EstrategiaHabilidadePosicaoJogador getEstrategiaPosicaoJogador(Posicao posicao) {
 		
@@ -300,22 +300,22 @@ public abstract class JogadorFactory {
 		return null;
 	}
 
-	protected Jogador gerarJogador(EstrategiaHabilidadePosicaoJogador estrategia, Clube clube, Posicao posicao,
-			Integer numero, Integer idade, Integer forcaGeral) {
+	protected Jogador gerarJogador(EstrategiaHabilidadePosicaoJogador estrategia, /*Clube clube,*/ Posicao posicao,
+			/*Integer numero,*/ Integer idade, Integer potencial) {
 		Jogador jogador = new Jogador();
 		jogador.setJogadorDetalhe(new JogadorDetalhe());
 		
 		jogador.getJogadorDetalhe() //TODO: ter proporções diferentes
 				.setModoDesenvolvimentoJogador(RoletaUtil.sortearPesoUm(ModoDesenvolvimentoJogador.values()));
 
-		jogador.setNumero(numero);
+		//jogador.setNumero(numero);
 		jogador.setNome(NomeUtil.sortearNome());
-		jogador.setClube(clube);
+		//jogador.setClube(clube);
 		jogador.setPosicao(posicao);
 		jogador.setIdade(idade == null ? sortearIdade() : idade);
 		jogador.setStatusJogador(StatusJogador.ATIVO);
 
-		sortearHabilidadeValor(jogador, estrategia, forcaGeral == null ? clube.getForcaGeral() : forcaGeral);
+		sortearHabilidadeValor(jogador, estrategia, potencial);
 		
 		return jogador;
 	}
