@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Contrato;
@@ -140,7 +141,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_GOLEIRO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.GOLEIRO, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 		
@@ -148,7 +150,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.ZAGUEIRO, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 
@@ -156,7 +159,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.LATERAL, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 
@@ -164,7 +168,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.VOLANTE, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 
@@ -172,7 +177,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.MEIA, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 
@@ -180,7 +186,8 @@ public class CriarJogadoresClubeService {
 		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
 			j = JogadorFactory.getInstance().gerarJogador(Posicao.ATACANTE, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 		
@@ -192,7 +199,8 @@ public class CriarJogadoresClubeService {
 					Arrays.asList(Posicao.ZAGUEIRO, Posicao.LATERAL, Posicao.VOLANTE, Posicao.MEIA, Posicao.ATACANTE));
 			j = JogadorFactory.getInstance().gerarJogador(p, clube.getForcaGeral());
 			j.setClube(clube);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, null, false));//TODO: temporada final
+			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, RandomUtil.sortearIntervalo(
+					Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 			jogadoresClube.add(j);
 		}
 		

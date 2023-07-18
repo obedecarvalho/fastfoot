@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
@@ -28,6 +29,7 @@ import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
+import com.fastfoot.service.util.RandomUtil;
 
 @Service
 public class AposentarJogadorService {
@@ -292,14 +294,14 @@ public class AposentarJogadorService {
 	private Jogador criarNovoJogadorSubsAposentado(Clube clube, Posicao posicao, Integer numero,
 			Integer potencial, Semana semanaInicioContrato) {
 
-		//TODO: conferir qual numero jogador ira usar de acordo com a posição
 		//TODO: passar modo de desenvolvimento do jogador aposentado??
-		//TODO: sortear entre força jogador e força clube?
+		//TODO: potencial: sortear entre força jogador e força clube?
 
 		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(posicao, JogadorFactory.IDADE_MIN, potencial);
 		novoJogador.setClube(clube);
 		novoJogador.setNumero(numero);
-		novoJogador.setContratoAtual(new Contrato(clube, novoJogador, semanaInicioContrato, null, false));
+		novoJogador.setContratoAtual(new Contrato(clube, novoJogador, semanaInicioContrato, RandomUtil.sortearIntervalo(
+				Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
 
 		return novoJogador;
 	}

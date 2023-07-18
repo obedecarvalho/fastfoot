@@ -32,9 +32,9 @@ public class Contrato {
 	@JoinColumn(name = "id_semana_inicial")
 	private Semana semanaInicial;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_temporada_final")
-	private Temporada temporadaFinal;
+	private Temporada temporadaFinal;*/
 	
 	@ManyToOne
 	@JoinColumn(name = "id_semana_rescisao")
@@ -42,17 +42,26 @@ public class Contrato {
 	
 	private Boolean rescindido;
 	
+	/**
+	 * Numero de temporadas de duracao do contrato.
+	 * 
+	 * O contrato dura até a ultima semana da temporada de ano igual a:
+	 * 	- (semanaInicial.temporada.ano + numeroTemporadasDuracao - 1)
+	 */
+	private Integer numeroTemporadasDuracao;
+	
 	public Contrato() {
 
 	}
 
-	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Temporada temporadaFinal, Boolean rescindido) {
+	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Integer numeroTemporadasDuracao, Boolean rescindido) {
 		super();
 		this.clube = clube;
 		this.jogador = jogador;
 		this.semanaInicial = semanaInicial;
-		this.temporadaFinal = temporadaFinal;
+		//this.temporadaFinal = temporadaFinal;
 		this.rescindido = rescindido;
+		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
 	}
 
 	public Long getId() {
@@ -87,13 +96,13 @@ public class Contrato {
 		this.semanaInicial = semanaInicial;
 	}
 
-	public Temporada getTemporadaFinal() {
+	/*public Temporada getTemporadaFinal() {
 		return temporadaFinal;
 	}
 
 	public void setTemporadaFinal(Temporada temporadaFinal) {
 		this.temporadaFinal = temporadaFinal;
-	}
+	}*/
 
 	public Boolean getRescindido() {
 		return rescindido;
@@ -109,6 +118,24 @@ public class Contrato {
 
 	public void setSemanaRescisao(Semana semanaRescisao) {
 		this.semanaRescisao = semanaRescisao;
+	}
+
+	public Integer getNumeroTemporadasDuracao() {
+		return numeroTemporadasDuracao;
+	}
+
+	public void setNumeroTemporadasDuracao(Integer numeroTemporadasDuracao) {
+		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
+	}
+	
+	public Integer getAnoFinalContrato() {
+		return this.semanaInicial.getTemporada().getAno() + numeroTemporadasDuracao - 1;
+	}
+
+	@Override
+	public String toString() {
+		return "Contrato [semanaInicial=" + semanaInicial + ", numeroTemporadasDuracao=" + numeroTemporadasDuracao
+				+ ", getAnoFinalContrato()=" + getAnoFinalContrato() + "]";
 	}
 
 }

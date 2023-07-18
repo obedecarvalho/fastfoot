@@ -104,5 +104,9 @@ public class Constantes {
 	
 	//###	FINANCAS	###
 	public static final Double PORC_JUROS_BANCARIOS_SEMANAL = 0.0038;
-
+	
+	//###	CONTRATOS	###
+	public static final Integer NUMERO_ANO_MAX_CONTRATO_PADRAO = 3;
+	
+	public static final Integer NUMERO_ANO_MIN_CONTRATO_PADRAO = 1;
 }

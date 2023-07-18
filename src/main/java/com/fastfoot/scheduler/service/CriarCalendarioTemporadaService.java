@@ -191,18 +191,24 @@ public class CriarCalendarioTemporadaService {
 		stopWatch.split();
 		long inicio = stopWatch.getSplitTime();
 
-		Temporada temporada = null;
-		Integer ano = Constantes.ANO_INICIAL;
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
+		Temporada temporada = null, temporadaAtual = null;
+		//Integer ano = Constantes.ANO_INICIAL;
+		Optional<Temporada> temporadaAtualOpt = temporadaRepository.findFirstByAtual(true);
+		
+		//
+		temporada = TemporadaFactory.criarTemporada(
+				temporadaAtualOpt.isPresent() ? temporadaAtualOpt.get().getAno() : Constantes.ANO_INICIAL);
+		salvarTemporada(temporada);
+		//
 
-		if (temporadaOpt.isPresent()) {
-			temporada = temporadaOpt.get();
+		if (temporadaAtualOpt.isPresent()) {
+			temporadaAtual = temporadaAtualOpt.get();
 
-			if (temporada.getSemanaAtual() < Constantes.NUM_SEMANAS) {
+			if (temporadaAtual.getSemanaAtual() < Constantes.NUM_SEMANAS) {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 
-			agruparHabilidadeValorEstatisticaService.agrupar2(temporada);//TODO: substituir pelo 2 comandos?
+			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);//TODO: substituir pelo 2 comandos?
 			stopWatch.split();
 			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -213,16 +219,16 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			temporada.setAtual(false);
-			temporadaRepository.save(temporada);
-			ano = temporada.getAno() + 1;
+			temporadaAtual.setAtual(false);
+			temporadaRepository.save(temporadaAtual);
+			//ano = temporadaAtual.getAno() + 1;
 
 			jogadorRepository.incrementarIdade();
 			stopWatch.split();
 			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			adequarModoDesenvolvimentoJogador(temporada);
+			adequarModoDesenvolvimentoJogador(temporadaAtual);
 			stopWatch.split();
 			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -236,7 +242,7 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			aposentarJogadores2();
+			aposentarJogadores();
 			stopWatch.split();
 			mensagens.add("\t#aposentarJogadores:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -299,7 +305,7 @@ public class CriarCalendarioTemporadaService {
 
 		//stopWatch.split();
 
-		temporada = TemporadaFactory.criarTemporada(ano);
+		//temporada = TemporadaFactory.criarTemporada(ano);
 
 		List<Campeonato> campeonatosNacionais = new ArrayList<Campeonato>();
 		List<CampeonatoMisto> campeonatosContinentais = new ArrayList<CampeonatoMisto>();
@@ -523,7 +529,7 @@ public class CriarCalendarioTemporadaService {
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
-		salvarTemporada(temporada);
+		//salvarTemporada(temporada);
 
 		List<CompletableFuture<Boolean>> salvarCampeonatoFuture = new ArrayList<CompletableFuture<Boolean>>();
 
@@ -606,7 +612,7 @@ public class CriarCalendarioTemporadaService {
 		//}
 	}*/
 	
-	private void aposentarJogadores2() {
+	private void aposentarJogadores() {
 
 		List<Jogador> jogadores = jogadorRepository.findByIdadeAndStatusJogador(JogadorFactory.IDADE_MAX,
 				StatusJogador.ATIVO);
