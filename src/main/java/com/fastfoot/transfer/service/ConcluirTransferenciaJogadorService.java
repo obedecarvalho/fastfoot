@@ -10,13 +10,17 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorDetalhe;
+import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
+import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.transfer.model.dto.TransferenciaConcluidaDTO;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -54,6 +58,9 @@ public class ConcluirTransferenciaJogadorService {
 	@Autowired
 	private JogadorDetalheRepository jogadorDetalheRepository;
 	
+	@Autowired
+	private ContratoRepository contratoRepository;
+	
 	//###	SERVICE	###
 
 	@Autowired
@@ -76,6 +83,8 @@ public class ConcluirTransferenciaJogadorService {
 		List<NecessidadeContratacaoClube> necessidadeContratacaoSalvar = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelSalvar = new ArrayList<DisponivelNegociacao>();
 		List<JogadorDetalhe> detalheJogadoresSalvar = new ArrayList<JogadorDetalhe>();
+		List<Contrato> contratosInserir = new ArrayList<Contrato>();
+		List<Contrato> contratosAtualizar = new ArrayList<Contrato>();
 
 		List<MovimentacaoFinanceira> movimentacoesFinanceiras = new ArrayList<MovimentacaoFinanceira>();
 
@@ -96,6 +105,11 @@ public class ConcluirTransferenciaJogadorService {
 			transferenciaConcluidaDTO.getPropostaAceita().setPropostaAceita(true);
 			transferenciaConcluidaDTO.getPropostaAceita().setSemanaTransferencia(s);
 
+			contratosInserir.add(new Contrato(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino(),
+					transferenciaConcluidaDTO.getPropostaAceita().getJogador(), s,
+					RandomUtil.sortearIntervalo(Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO,
+							Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1),
+					false));
 			transferenciaConcluidaDTO.getPropostaAceita().getJogador()
 					.setClube(transferenciaConcluidaDTO.getPropostaAceita().getClubeDestino());
 			/*transferenciaConcluidaDTO.getPropostaAceita().getJogador().setJogadorEstatisticasTemporadaAtual(
@@ -150,6 +164,8 @@ public class ConcluirTransferenciaJogadorService {
 		disponivelNegociacaoRepository.saveAll(disponivelSalvar);
 
 		movimentacaoFinanceiraRepository.saveAll(movimentacoesFinanceiras);
+		
+		contratoRepository.saveAll(contratosInserir);
 
 	}
 }
