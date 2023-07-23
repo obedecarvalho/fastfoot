@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraAttributeConverter;
 import com.fastfoot.financial.model.entity.DemonstrativoFinanceiroTemporada;
 import com.fastfoot.financial.model.repository.DemonstrativoFinanceiroTemporadaRepository;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
@@ -54,8 +55,10 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 
 			demonstrativoFinanceiroTemporada.setClube(new Clube((Integer) mov.get("id_clube")));
 			demonstrativoFinanceiroTemporada.setTemporada(temporada);
-			demonstrativoFinanceiroTemporada
-					.setTipoMovimentacao(TipoMovimentacaoFinanceira.values()[(int) mov.get("tipo_movimentacao")]);
+			/*demonstrativoFinanceiroTemporada
+					.setTipoMovimentacao(TipoMovimentacaoFinanceira.values()[(int) mov.get("tipo_movimentacao")]);*/
+			demonstrativoFinanceiroTemporada.setTipoMovimentacao(TipoMovimentacaoFinanceiraAttributeConverter
+					.getInstance().convertToEntityAttribute((int) mov.get("tipo_movimentacao")));
 			demonstrativoFinanceiroTemporada.setValorMovimentacao((Double) mov.get("valor_movimentacao"));
 
 			demonstrativosFinanceiroTemporada.add(demonstrativoFinanceiroTemporada);

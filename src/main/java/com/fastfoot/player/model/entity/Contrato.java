@@ -10,7 +10,6 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.scheduler.model.entity.Semana;
-import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
 public class Contrato {
@@ -36,12 +35,14 @@ public class Contrato {
 	@JoinColumn(name = "id_temporada_final")
 	private Temporada temporadaFinal;*/
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_semana_rescisao")
-	private Semana semanaRescisao;
+	private Semana semanaRescisao;*/
 	
-	private Boolean rescindido;
-	
+	//private Boolean rescindido;
+
+	private Boolean ativo;
+
 	/**
 	 * Numero de temporadas de duracao do contrato.
 	 * 
@@ -49,19 +50,23 @@ public class Contrato {
 	 * 	- (semanaInicial.temporada.ano + numeroTemporadasDuracao - 1)
 	 */
 	private Integer numeroTemporadasDuracao;
+
+	private Double salario;
 	
 	public Contrato() {
 
 	}
 
-	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Integer numeroTemporadasDuracao, Boolean rescindido) {
+	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Integer numeroTemporadasDuracao, Boolean ativo, Double salario) {
 		super();
 		this.clube = clube;
 		this.jogador = jogador;
 		this.semanaInicial = semanaInicial;
 		//this.temporadaFinal = temporadaFinal;
-		this.rescindido = rescindido;
+		//this.rescindido = rescindido;
+		this.ativo = ativo;
 		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
+		this.salario = salario;
 	}
 
 	public Long getId() {
@@ -104,21 +109,29 @@ public class Contrato {
 		this.temporadaFinal = temporadaFinal;
 	}*/
 
-	public Boolean getRescindido() {
+	/*public Boolean getRescindido() {
 		return rescindido;
 	}
 
 	public void setRescindido(Boolean rescindido) {
 		this.rescindido = rescindido;
-	}
+	}*/
 
-	public Semana getSemanaRescisao() {
+	/*public Semana getSemanaRescisao() {
 		return semanaRescisao;
+	}*/
+
+	public Boolean getAtivo() {
+		return ativo;
 	}
 
-	public void setSemanaRescisao(Semana semanaRescisao) {
-		this.semanaRescisao = semanaRescisao;
+	public void setAtivo(Boolean ativo) {
+		this.ativo = ativo;
 	}
+
+	/*public void setSemanaRescisao(Semana semanaRescisao) {
+		this.semanaRescisao = semanaRescisao;
+	}*/
 
 	public Integer getNumeroTemporadasDuracao() {
 		return numeroTemporadasDuracao;
@@ -130,6 +143,14 @@ public class Contrato {
 	
 	public Integer getAnoFinalContrato() {
 		return this.semanaInicial.getTemporada().getAno() + numeroTemporadasDuracao - 1;
+	}
+
+	public Double getSalario() {
+		return salario;
+	}
+
+	public void setSalario(Double salario) {
+		this.salario = salario;
 	}
 
 	@Override

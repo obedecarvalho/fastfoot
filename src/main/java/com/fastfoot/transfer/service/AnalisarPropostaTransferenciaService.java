@@ -145,7 +145,7 @@ public class AnalisarPropostaTransferenciaService {
 			propostasJogTmp = new ArrayList<PropostaTransferenciaJogador>(propostasJog);
 			
 			Optional<DisponivelNegociacao> disNegJogOpt = disponivelNegociacaoRepository
-					.findFirstByTemporadaAndJogadorAndAtivo(temporada, j, true); 
+					.findFirstByTemporadaAndJogadorAndAtivo(temporada, j, true);//TODO: melhorar para não fazer consulta toda hora
 
 			if (disNegJogOpt.isPresent()) {
 				//propostaAceitar = RoletaUtil.sortearPesoUm(propostasJog);

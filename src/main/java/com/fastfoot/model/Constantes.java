@@ -74,7 +74,7 @@ public class Constantes {
 	/** Número de clubes por grupo */
 	public static final Integer NRO_CLUBES_GRUPOS_AMISTOSOS = 4;
 
-	//### ROLETA	###
+	//###	ROLETA	###
 	public static final Integer ROLETA_N_POWER = 2;
 
 	//###	TRANSFERENCIA	###
@@ -109,4 +109,18 @@ public class Constantes {
 	public static final Integer NUMERO_ANO_MAX_CONTRATO_PADRAO = 3;
 	
 	public static final Integer NUMERO_ANO_MIN_CONTRATO_PADRAO = 1;
+	
+	public static final Integer NUMERO_ANO_MAX_CONTRATO_PADRAO_JOGADOR_JOVEM = 5;
+	
+	//###	JOGADOR	###
+	public static final Integer IDADE_MAX_JOGADOR_JOVEM = 23;
+
+	//###	MOV FINANCEIRA	###
+	public static final Integer MOV_FINAN_ID_BASE_ENTRADA = 100;
+
+	public static final Integer MOV_FINAN_ID_BASE_SAIDA = 200;
+
+	public static final Integer MOV_FINAN_ID_BASE_CAIXA = 300;
+
+	public static final Integer MOV_FINAN_ID_BASE_ATIVO = 400;
 }

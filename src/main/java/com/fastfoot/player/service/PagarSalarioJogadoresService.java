@@ -12,6 +12,7 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 
@@ -24,6 +25,9 @@ public class PagarSalarioJogadoresService {
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
+	@Autowired
+	private ContratoRepository contratoRepository;
+
 	public void pagarSalarioJogadores(Semana semana) {
 		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
 
@@ -34,6 +38,26 @@ public class PagarSalarioJogadoresService {
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
 			
 			valorSalario = Math.round(((Double) vtc.get("valor_transferencia")) * porcentagemSalario) / 100d;//Arredondar
+			
+			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,
+					String.format("Salários (%d)", semana.getNumero())));
+		}
+
+		movimentacaoFinanceiraRepository.saveAll(saidas);
+	}
+
+	public void pagarSalarioJogadoresPorContrato(Semana semana) {
+		//List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+		List<Map<String, Object>> valorSalariosClubes = contratoRepository.findValorTotalSalariosPorClube();
+
+		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
+		
+		double valorSalario;
+
+		for (Map<String, Object> vtc : valorSalariosClubes) {
+			
+			valorSalario = (Double) vtc.get("total_salarios"); 
+					//Math.round(((Double) vtc.get("valor_transferencia")) * porcentagemSalario) / 100d;//Arredondar
 			
 			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,
 					String.format("Salários (%d)", semana.getNumero())));

@@ -60,12 +60,8 @@ public class GerarTransferenciasService {
 	
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
-	
+
 	public void gerarTransferencias(Temporada temporada) {
-		gerarTransferencias(temporada, null);
-	}
-	
-	private void gerarTransferencias(Temporada temporada, List<Clube> clubes) {
 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();

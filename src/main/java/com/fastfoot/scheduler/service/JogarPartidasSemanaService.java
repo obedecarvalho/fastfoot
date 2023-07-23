@@ -270,54 +270,47 @@ public class JogarPartidasSemanaService {
 		//calcular probabilidades
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24
 				&& parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
-
 			calcularProbabilidades(semana, temporada);
-			stopWatch.split();
-			mensagens.add("\t#calcularProbabilidades:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		}
 		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17)
 				&& parametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {//TODO: criar parametro ...PROBABILIDADE_COMPLETOS??
-
 			calcularProbabilidades(semana, temporada);
-			stopWatch.split();
-			mensagens.add("\t#calcularProbabilidades:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		}
+		stopWatch.split();
+		mensagens.add("\t#calcularProbabilidades:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
-
 			classificarClubesTemporadaService.classificarClubesTemporadaAtual();
-			stopWatch.split();
-			mensagens.add("\t#classificarClubesTemporadaAtual:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-			
-			gerarClubeResumoTemporada(temporada);			
-			stopWatch.split();
-			mensagens.add("\t#gerarClubeResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		}
+		stopWatch.split();
+		mensagens.add("\t#classificarClubesTemporadaAtual:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		if (semana.isUltimaSemana()) {
+			gerarClubeResumoTemporada(temporada);
+		}
+		stopWatch.split();
+		mensagens.add("\t#gerarClubeResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//Desenvolver jogadores
 		if (semana.getNumero() % 5 == 0) {
-
-				habilidadeValorRepository.desenvolverTodasHabilidades2();
-				jogadorRepository.calcularForcaGeral2();
-				stopWatch.split();
-				mensagens.add("\t#desenvolverTodasHabilidades:" + (stopWatch.getSplitTime() - inicio));
-				inicio = stopWatch.getSplitTime();//inicar outro bloco
-
-				calcularHabilidadeGrupoValor3();
-				stopWatch.split();
-				mensagens.add("\t#calcularHabilidadeGrupoValor:" + (stopWatch.getSplitTime() - inicio));
-				inicio = stopWatch.getSplitTime();//inicar outro bloco
-
+			habilidadeValorRepository.desenvolverTodasHabilidades2();
+			jogadorRepository.calcularForcaGeral2();
 		}
-		
+		stopWatch.split();
+		mensagens.add("\t#desenvolverTodasHabilidades:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		if (semana.getNumero() % 5 == 0) {
+			calcularHabilidadeGrupoValor3();
+		}
+		stopWatch.split();
+		mensagens.add("\t#calcularHabilidadeGrupoValor:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		//Bets
 		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
@@ -329,7 +322,8 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		pagarSalarioJogadoresService.pagarSalarioJogadores(semana);
+		//pagarSalarioJogadoresService.pagarSalarioJogadores(semana);
+		pagarSalarioJogadoresService.pagarSalarioJogadoresPorContrato(semana);
 		stopWatch.split();
 		mensagens.add("\t#pagarSalarioJogadores:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -346,13 +340,11 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		if (semana.getNumero() == Constantes.NUM_SEMANAS) {
-
 			gerarDemonstrativoFinanceiroTemporadaService.gerarDemonstrativoFinanceiroTemporada(temporada);
-			stopWatch.split();
-			mensagens.add("\t#gerarDemonstrativoFinanceiroTemporada:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		}
+		stopWatch.split();
+		mensagens.add("\t#gerarDemonstrativoFinanceiroTemporada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total

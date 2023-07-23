@@ -52,6 +52,7 @@ import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidad
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
 import com.fastfoot.player.service.GerarTransferenciasService;
+import com.fastfoot.player.service.RenovarContratosAutomaticamenteService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -82,6 +83,7 @@ import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.PreCarregarParametrosService;
 import com.fastfoot.service.util.ValidatorUtil;
+import com.fastfoot.transfer.service.ExecutarTransferenciasAutomaticamenteService;
 import com.fastfoot.service.PreCarregarClubeService;
 
 @Service
@@ -180,6 +182,12 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private GerarTransferenciasService gerarTransferenciasService;
 
+	@Autowired
+	private RenovarContratosAutomaticamenteService renovarContratosAutomaticamenteService;
+
+	@Autowired
+	private ExecutarTransferenciasAutomaticamenteService executarTransferenciasAutomaticamenteService;
+
 	public TemporadaDTO criarTemporada() {
 
 		//Instanciar StopWatch
@@ -197,7 +205,7 @@ public class CriarCalendarioTemporadaService {
 		
 		//
 		temporada = TemporadaFactory.criarTemporada(
-				temporadaAtualOpt.isPresent() ? temporadaAtualOpt.get().getAno() : Constantes.ANO_INICIAL);
+				temporadaAtualOpt.isPresent() ? (temporadaAtualOpt.get().getAno() + 1): Constantes.ANO_INICIAL);
 		salvarTemporada(temporada);
 		//
 
@@ -262,6 +270,10 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
+			renovarContratosAutomaticamente();
+			stopWatch.split();
+			mensagens.add("\t#renovarContratosAutomaticamente:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		} else {
 
@@ -322,7 +334,7 @@ public class CriarCalendarioTemporadaService {
 		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		calcularPartidaProbabilidadeResultado(temporada);		
+		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
 		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -332,7 +344,7 @@ public class CriarCalendarioTemporadaService {
 		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		distribuirPatrocinioService.distribuirPatrocinio(temporada);		
+		distribuirPatrocinioService.distribuirPatrocinio(temporada);
 		stopWatch.split();
 		mensagens.add("\t#distribuirPatrocinio:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -340,6 +352,7 @@ public class CriarCalendarioTemporadaService {
 		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
 
 			gerarTransferenciasService.gerarTransferencias(temporada);
+			//executarTransferenciasAutomaticamenteService.executarTransferenciasAutomaticamente2();//TODO: analisar e usar
 			stopWatch.split();
 			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -591,7 +604,7 @@ public class CriarCalendarioTemporadaService {
 		//if (semana.getNumero() == 25) {
 			
 		List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository
-				.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);		
+				.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);
 		Map<Integer, Map<Clube, List<GrupoDesenvolvimentoJogador>>> grupoDesenvolvimentoClube = gds.stream()
 				.collect(Collectors.groupingBy(
 						gd -> (gd.getJogador().getClube().getId() % FastfootApplication.NUM_THREAD),
@@ -953,6 +966,19 @@ public class CriarCalendarioTemporadaService {
 		
 		desenvolverJogadorFuture.clear();
 		desenvolverJogadorFuture.add(atualizarClubeNivelService.atualizarClubeNivelInternacional(temporada));
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+
+	private void renovarContratosAutomaticamente() {
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture
+					.add(renovarContratosAutomaticamenteService.renovarContratosAutomaticamente(liga, true));
+			desenvolverJogadorFuture
+					.add(renovarContratosAutomaticamenteService.renovarContratosAutomaticamente(liga, false));
+		}
+
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
 	}
 }

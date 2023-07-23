@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.EstrategiaHabilidadeAtacante;
 import com.fastfoot.player.model.EstrategiaHabilidadeGoleiro;

@@ -31,19 +31,19 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 	 */
 	//private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
 	
-	private static final Integer FORCA_N_POWER = 3;
+	public static final Integer FORCA_N_POWER = 3;
 	
 	/**
 	 * 
 	 * 
 	 * Calculado como: Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade())
 	 */
-	private static final Double[] TAXA_DESCONTO_TEMPO = new Double[] { 1.0, 1.25, 1.5625, 1.953125, 2.44140625,
+	public static final Double[] TAXA_DESCONTO_TEMPO = new Double[] { 1.0, 1.25, 1.5625, 1.953125, 2.44140625,
 			3.051757813, 3.814697266, 4.768371582, 5.960464478, 7.450580597, 9.313225746, 11.64153218, 14.55191523,
 			18.18989404, 22.73736754, 28.42170943, 35.52713679, 44.40892099, 55.51115123, 69.38893904, 86.7361738,
 			108.4202172 };
 	
-	private static final Map<Habilidade, ValorTransferenciaHabilidade> VALOR_TRANSFERENCIA_HABILIDADE;
+	public static final Map<Habilidade, ValorTransferenciaHabilidade> VALOR_TRANSFERENCIA_HABILIDADE;
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;

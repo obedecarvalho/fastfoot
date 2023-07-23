@@ -13,7 +13,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
@@ -29,7 +28,6 @@ import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
-import com.fastfoot.service.util.RandomUtil;
 
 @Service
 public class AposentarJogadorService {
@@ -61,6 +59,9 @@ public class AposentarJogadorService {
 
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
+
+	@Autowired
+	private CalcularSalarioContratoService calcularSalarioContratoService;
 
 	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(List<GrupoDesenvolvimentoJogador> gruposDesenvolvimento) {
@@ -300,8 +301,9 @@ public class AposentarJogadorService {
 		Jogador novoJogador = JogadorFactory.getInstance().gerarJogador(posicao, JogadorFactory.IDADE_MIN, potencial);
 		novoJogador.setClube(clube);
 		novoJogador.setNumero(numero);
-		novoJogador.setContratoAtual(new Contrato(clube, novoJogador, semanaInicioContrato, RandomUtil.sortearIntervalo(
-				Constantes.NUMERO_ANO_MIN_CONTRATO_PADRAO, Constantes.NUMERO_ANO_MAX_CONTRATO_PADRAO + 1), false));
+		int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(novoJogador.getIdade());
+		double salario = calcularSalarioContratoService.calcularSalarioContrato(novoJogador, tempoContrato);
+		novoJogador.setContratoAtual(new Contrato(clube, novoJogador, semanaInicioContrato, tempoContrato, true, salario));
 
 		return novoJogador;
 	}

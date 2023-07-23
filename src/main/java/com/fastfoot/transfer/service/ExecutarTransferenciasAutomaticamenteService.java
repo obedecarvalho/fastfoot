@@ -440,6 +440,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	private void concluirTransferenciaJogador(PropostaTransferenciaJogador propostaAceitar,
 			List<PropostaTransferenciaJogador> propostasRejeitar, Semana semana,
 			ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO) {
+		//TODO: tratar Contrato
 		
 		propostaAceitar.setPropostaAceita(true);
 		propostaAceitar.setSemanaTransferencia(semana);

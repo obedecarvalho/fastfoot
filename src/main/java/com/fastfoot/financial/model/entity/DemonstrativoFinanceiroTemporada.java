@@ -1,5 +1,6 @@
 package com.fastfoot.financial.model.entity;
 
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -10,6 +11,7 @@ import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceiraAttributeConverter;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Entity
@@ -28,6 +30,7 @@ public class DemonstrativoFinanceiroTemporada {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 	
+	@Convert(converter = TipoMovimentacaoFinanceiraAttributeConverter.class)
 	private TipoMovimentacaoFinanceira tipoMovimentacao;
 	
 	private Double valorMovimentacao;
