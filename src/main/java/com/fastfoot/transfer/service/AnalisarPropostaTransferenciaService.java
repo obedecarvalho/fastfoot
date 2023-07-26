@@ -23,6 +23,7 @@ import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 
+@Deprecated
 @Service
 public class AnalisarPropostaTransferenciaService {
 

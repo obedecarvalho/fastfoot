@@ -16,18 +16,14 @@ import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
-import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.dto.JogadorAlvoDTO;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
-//import com.fastfoot.transfer.model.entity.AdequacaoElencoPosicao;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
-import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
-//import com.fastfoot.transfer.model.repository.AdequacaoElencoPosicaoRepository;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
+@Deprecated
 @Service
 public class ProporTransferenciaService {
 	
@@ -65,18 +61,18 @@ public class ProporTransferenciaService {
 	@Autowired
 	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
 
-	@Autowired
-	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
+	/*@Autowired
+	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;*/
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
 
 	//###	SERVICE	###
 
-	@Autowired
-	private TemporadaCRUDService temporadaService;
+	/*@Autowired
+	private TemporadaCRUDService temporadaService;*/
 	
-	@Async("defaultExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada, List<Clube> clubes,
 			Map<Clube, List<NecessidadeContratacaoClube>> necessidadesContratacaoClube) {
 		
@@ -89,7 +85,7 @@ public class ProporTransferenciaService {
 		propostaTransferenciaJogadorRepository.saveAll(propostaTransferenciaJogadores);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(Temporada temporada,
@@ -107,7 +103,7 @@ public class ProporTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
-	@Async("defaultExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> gerarPropostaTransferencia(List<Clube> clubes) {
 		
 		Temporada temporada = temporadaService.getTemporadaAtual();
@@ -130,7 +126,7 @@ public class ProporTransferenciaService {
 		propostaTransferenciaJogadorRepository.saveAll(propostaTransferenciaJogadores);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 
 	/*
 	 * TODO: levar em conta no futuro:

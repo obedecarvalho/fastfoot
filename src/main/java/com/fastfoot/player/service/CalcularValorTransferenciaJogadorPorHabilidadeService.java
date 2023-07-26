@@ -146,7 +146,7 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService {
 		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
 
 			//double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
-			double ajuste = jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador().getValorAjuste()[i
+			double ajuste = jogador.getModoDesenvolvimentoJogador().getValorAjuste()[i
 					- JogadorFactory.IDADE_MIN];
 
 			for (HabilidadeValor habilidadeValor : jogador.getHabilidades()) {

@@ -58,9 +58,9 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" 		((hv.potencial_desenvolvimento * ?3) - (hv.valor_decimal))/?2 as novo_passo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
-			" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +
+			//" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +
 			" 	where j.idade = ?1 " +
-			"		AND jd.modo_desenvolvimento_jogador = ?4 " +
+			"		AND j.modo_desenvolvimento_jogador = ?4 " +
 			" ) as tmp " +
 			" where hv.id = tmp.id "
 	)
@@ -74,9 +74,9 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" WHERE id_jogador IN ( "+
 			" 	SELECT j.id "+
 			" 	FROM jogador j "+
-			" 	INNER JOIN jogador_detalhe jd ON jd.id = j.id_jogador_detalhe "+
+			//" 	INNER JOIN jogador_detalhe jd ON jd.id = j.id_jogador_detalhe "+
 			" 	WHERE j.idade = ?1 "+
-			" 		AND jd.modo_desenvolvimento_jogador = ?4 "+
+			" 		AND j.modo_desenvolvimento_jogador = ?4 "+
 			" ) "
 	)
 	public void atualizarPassoDesenvolvimento2(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);

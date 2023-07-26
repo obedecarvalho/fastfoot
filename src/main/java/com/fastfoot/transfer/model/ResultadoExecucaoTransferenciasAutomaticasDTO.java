@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
@@ -20,11 +21,17 @@ public class ResultadoExecucaoTransferenciasAutomaticasDTO {
 	private List<Jogador> jogadores;
 
 	private List<MovimentacaoFinanceira> movimentacoesFinanceiras;
+	
+	private List<Contrato> contratos;
+	
+	private List<Contrato> contratosInativar;
 
 	public ResultadoExecucaoTransferenciasAutomaticasDTO() {
 		this.jogadores = new ArrayList<Jogador>();
 		this.movimentacoesFinanceiras = new ArrayList<MovimentacaoFinanceira>();
 		this.propostaTransferenciaJogadores = new ArrayList<PropostaTransferenciaJogador>();
+		this.contratos = new ArrayList<Contrato>();
+		this.contratosInativar = new ArrayList<Contrato>();
 	}
 
 	public List<NecessidadeContratacaoClube> getNecessidadeContratacaoClubes() {
@@ -65,6 +72,22 @@ public class ResultadoExecucaoTransferenciasAutomaticasDTO {
 
 	public void setMovimentacoesFinanceiras(List<MovimentacaoFinanceira> movimentacoesFinanceiras) {
 		this.movimentacoesFinanceiras = movimentacoesFinanceiras;
+	}
+
+	public List<Contrato> getContratos() {
+		return contratos;
+	}
+
+	public void setContratos(List<Contrato> contratos) {
+		this.contratos = contratos;
+	}
+
+	public List<Contrato> getContratosInativar() {
+		return contratosInativar;
+	}
+
+	public void setContratosInativar(List<Contrato> contratosInativar) {
+		this.contratosInativar = contratosInativar;
 	}
 
 }

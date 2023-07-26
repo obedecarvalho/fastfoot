@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Parametro;
 import com.fastfoot.model.repository.ParametroRepository;
@@ -122,22 +123,22 @@ public class CarregarParametroService {
 	
 	public ClassificacaoNacional[] getClassificacaoNacionalNovoCampeonato(NivelCampeonato nivelCampeonato) {
 		
-		ClassificacaoNacional[] classificacao = new ClassificacaoNacional[16];
+		ClassificacaoNacional[] classificacao = new ClassificacaoNacional[Constantes.NRO_CLUBE_CAMP_NACIONAL];
 		
 		Integer nroClubesRebaixados = getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
 		
 		if (nivelCampeonato.isNacional()) {
-			System.arraycopy(ClassificacaoNacional.NACIONAL, 0, classificacao, 0, 16 - nroClubesRebaixados);
+			System.arraycopy(ClassificacaoNacional.NACIONAL, 0, classificacao, 0,
+					Constantes.NRO_CLUBE_CAMP_NACIONAL - nroClubesRebaixados);
 			System.arraycopy(ClassificacaoNacional.NACIONAL_II, 0, classificacao,
-					16 - nroClubesRebaixados, nroClubesRebaixados);
+					Constantes.NRO_CLUBE_CAMP_NACIONAL - nroClubesRebaixados, nroClubesRebaixados);
 		}
 		
 		if (nivelCampeonato.isNacionalII()) {
-			System.arraycopy(ClassificacaoNacional.NACIONAL, 16 - nroClubesRebaixados, classificacao, 0,
-					nroClubesRebaixados);
-			
-			System.arraycopy(ClassificacaoNacional.NACIONAL_II, nroClubesRebaixados, classificacao,
-					nroClubesRebaixados, 16 - nroClubesRebaixados);
+			System.arraycopy(ClassificacaoNacional.NACIONAL, Constantes.NRO_CLUBE_CAMP_NACIONAL - nroClubesRebaixados,
+					classificacao, 0, nroClubesRebaixados);
+			System.arraycopy(ClassificacaoNacional.NACIONAL_II, nroClubesRebaixados, classificacao, nroClubesRebaixados,
+					Constantes.NRO_CLUBE_CAMP_NACIONAL - nroClubesRebaixados);
 		}
 		
 		return classificacao;

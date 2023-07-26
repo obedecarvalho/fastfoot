@@ -20,8 +20,7 @@ public class CalcularSalarioContratoService {
 		
 		Integer idade = jogador.getIdade();
 		Double forcaGeralPotencial = jogador.getForcaGeralPotencial();
-		ModoDesenvolvimentoJogador modoDesenvolvimentoJogador = jogador.getJogadorDetalhe()
-				.getModoDesenvolvimentoJogador();
+		ModoDesenvolvimentoJogador modoDesenvolvimentoJogador = jogador.getModoDesenvolvimentoJogador();
 		
 		Double[] salarios = new Double[numeroTemporadasDuracao];
 		Double salario = 0.0;
@@ -83,7 +82,7 @@ public class CalcularSalarioContratoService {
 		
 		Integer idade = jogador.getIdade();
 		
-		ModoDesenvolvimentoJogador modoDesenvolvimentoJogador = jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador();
+		ModoDesenvolvimentoJogador modoDesenvolvimentoJogador = jogador.getModoDesenvolvimentoJogador();
 
 		for (int j = 0; j < numeroTemporadasDuracao; j++) {
 

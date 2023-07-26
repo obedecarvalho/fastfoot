@@ -1,12 +1,15 @@
 package com.fastfoot.player.model.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Liga;
@@ -50,5 +53,10 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 	public List<Map<String, Object>> findValorTotalSalariosPorClube();
 
 	@Query("SELECT c FROM Contrato c WHERE c.jogador IN :jogadores AND c.ativo = :ativo")
-	public List<Contrato> findByJogadoresAndAtivo(@Param("jogadores") List<Jogador> jogadores, @Param("ativo") Boolean ativo);
+	public List<Contrato> findByJogadoresAndAtivo(@Param("jogadores") Collection<Jogador> jogadores, @Param("ativo") Boolean ativo);
+
+	@Transactional
+	@Modifying
+	@Query("UPDATE Contrato c SET c.ativo = false WHERE c IN :contratos")
+	public void desativar(@Param("contratos") Collection<Contrato> contratos);
 }

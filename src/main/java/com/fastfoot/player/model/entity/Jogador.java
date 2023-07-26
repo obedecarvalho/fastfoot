@@ -16,7 +16,6 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -26,6 +25,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.StatusJogador;
@@ -68,17 +68,25 @@ public class Jogador {
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeGrupoValor> habilidadesGrupo;
 	
-	@JsonIgnore
+	/*@JsonIgnore
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_jogador_detalhe")
-	private JogadorDetalhe jogadorDetalhe;
+	private JogadorDetalhe jogadorDetalhe;*/
+	
+	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
+	
+	//###	TRANSIENT	###
+	
+	@Transient
+	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;
+	
+	@Transient
+	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
 	
 	/*@ManyToOne
 	@JoinColumn(name = "id_contrato_atual")*/
 	@Transient
 	private Contrato contratoAtual;
-	
-	//###	TRANSIENT	###
 
 	@JsonIgnore
 	@Transient
@@ -194,13 +202,13 @@ public class Jogador {
 		this.forcaGeralPotencial = forcaGeralPotencial;
 	}
 
-	public JogadorDetalhe getJogadorDetalhe() {
+	/*public JogadorDetalhe getJogadorDetalhe() {
 		return jogadorDetalhe;
 	}
 
 	public void setJogadorDetalhe(JogadorDetalhe jogadorDetalhe) {
 		this.jogadorDetalhe = jogadorDetalhe;
-	}
+	}*/
 
 	public JogadorEnergia getJogadorEnergia() {
 		return jogadorEnergia;
@@ -234,6 +242,30 @@ public class Jogador {
 
 	public void setContratoAtual(Contrato contratoAtual) {
 		this.contratoAtual = contratoAtual;
+	}
+
+	public ModoDesenvolvimentoJogador getModoDesenvolvimentoJogador() {
+		return modoDesenvolvimentoJogador;
+	}
+
+	public void setModoDesenvolvimentoJogador(ModoDesenvolvimentoJogador modoDesenvolvimentoJogador) {
+		this.modoDesenvolvimentoJogador = modoDesenvolvimentoJogador;
+	}
+
+	public JogadorEstatisticasTemporada getEstatisticasTemporadaAtual() {
+		return estatisticasTemporadaAtual;
+	}
+
+	public void setEstatisticasTemporadaAtual(JogadorEstatisticasTemporada estatisticasTemporadaAtual) {
+		this.estatisticasTemporadaAtual = estatisticasTemporadaAtual;
+	}
+
+	public JogadorEstatisticasTemporada getEstatisticasAmistososTemporadaAtual() {
+		return estatisticasAmistososTemporadaAtual;
+	}
+
+	public void setEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual) {
+		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
 	}
 
 	@JsonIgnore

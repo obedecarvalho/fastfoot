@@ -24,7 +24,6 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
-import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
@@ -40,8 +39,8 @@ public class AposentarJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;
+	/*@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;*/
 
 	@Autowired
 	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
@@ -273,7 +272,7 @@ public class AposentarJogadorService {
 				novosJogadores.stream().collect(Collectors.groupingBy(Jogador::getClube)),
 				jogadoresAposentar.stream().collect(Collectors.groupingBy(Jogador::getClube)));
 		
-		jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
+		//jogadorDetalheRepository.saveAll(novosJogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));
 		jogadorRepository.saveAll(novosJogadores);
 		contratoRepository.saveAll(novosJogadores.stream().map(j -> j.getContratoAtual()).collect(Collectors.toList()));
 		/*List<HabilidadeValor> jogHab = new ArrayList<HabilidadeValor>();

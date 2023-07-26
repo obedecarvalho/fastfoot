@@ -34,11 +34,9 @@ import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorDetalhe;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
-import com.fastfoot.player.model.repository.JogadorDetalheRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
@@ -51,7 +49,6 @@ import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidadeService;
 import com.fastfoot.player.service.CalcularValorTransferenciaService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
-import com.fastfoot.player.service.GerarTransferenciasService;
 import com.fastfoot.player.service.RenovarContratosAutomaticamenteService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.dto.TemporadaDTO;
@@ -90,6 +87,8 @@ import com.fastfoot.service.PreCarregarClubeService;
 public class CriarCalendarioTemporadaService {
 	
 	private static final Integer NUM_THREAD_ATUALIZAR_PASSO_DESEN = 7;
+
+	private static final Boolean SALVAR_HABILIDADE_VALOR_ESTATISTICAS = false;//#DEVEL
 	
 	//########	REPOSITORY	##########
 	
@@ -120,8 +119,8 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
 	
-	@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;
+	/*@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;*/
 
 	@Autowired
 	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
@@ -179,8 +178,8 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private AtualizarClubeNivelService atualizarClubeNivelService;
 	
-	@Autowired
-	private GerarTransferenciasService gerarTransferenciasService;
+	/*@Autowired
+	private GerarTransferenciasService gerarTransferenciasService;*/
 
 	@Autowired
 	private RenovarContratosAutomaticamenteService renovarContratosAutomaticamenteService;
@@ -216,10 +215,12 @@ public class CriarCalendarioTemporadaService {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 
+			if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
 			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);//TODO: substituir pelo 2 comandos?
 			stopWatch.split();
 			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			}
 
 			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();
 			jogadorEstatisticasSemanaRepository.deleteAllInBatch();
@@ -351,8 +352,8 @@ public class CriarCalendarioTemporadaService {
 
 		if (parametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
 
-			gerarTransferenciasService.gerarTransferencias(temporada);
-			//executarTransferenciasAutomaticamenteService.executarTransferenciasAutomaticamente2();//TODO: analisar e usar
+			//gerarTransferenciasService.gerarTransferencias(temporada);
+			executarTransferenciasAutomaticamenteService.executarTransferenciasAutomaticamente();
 			stopWatch.split();
 			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -875,9 +876,10 @@ public class CriarCalendarioTemporadaService {
 		}
 	}
 	
-	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {
+	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {//TODO: mover consulta para threads
 
-		List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
+		//List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
+		List<Jogador> jogadores = jogadorRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
 		
 		Map<Jogador, List<JogadorEstatisticasTemporada>> jogadorEstatisticas = jogadorEstatisticasTemporadaRepository
 				.findByTemporada(temporada).stream()
@@ -887,8 +889,8 @@ public class CriarCalendarioTemporadaService {
 		Optional<JogadorEstatisticasTemporada> jogadorEstatisticasTemporadaOpt = null;
 		Optional<JogadorEstatisticasTemporada> jogadorEstatisticasTemporadaAmistososOpt = null;
 
-		for (JogadorDetalhe jd : jogadores) {
-			estatisticasJogador = jogadorEstatisticas.get(jd.getJogador());
+		for (Jogador jd : jogadores) {
+			estatisticasJogador = jogadorEstatisticas.get(jd);
 			
 			if (!ValidatorUtil.isEmpty(estatisticasJogador)) {
 

@@ -9,23 +9,26 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
-import com.fastfoot.player.model.entity.JogadorDetalhe;
-import com.fastfoot.player.model.repository.JogadorDetalheRepository;
+import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
 public class AdequarModoDesenvolvimentoJogadorService {
 	
+	/*@Autowired
+	private JogadorDetalheRepository jogadorDetalheRepository;*/
+	
 	@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;
+	private JogadorRepository jogadorRepository;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(List<JogadorDetalhe> jogadores) {
+	public CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(List<Jogador> jogadores) {
 		
 		//List<Jogador> jogadores = jogadorRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
 		
-		List<JogadorDetalhe> detalheJogadoresSalvar = new ArrayList<JogadorDetalhe>();
+		List<Jogador> detalheJogadoresSalvar = new ArrayList<Jogador>();
 		
-		for (JogadorDetalhe j : jogadores) {
+		for (Jogador j : jogadores) {
 			
 			/*int totalMinutosJogados = j.getEstatisticasTemporadaAtual()
 					.getNumeroMinutosJogados()
@@ -39,7 +42,7 @@ public class AdequarModoDesenvolvimentoJogadorService {
 					: 0;
 			
 			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()
-					&& j.getJogador().getIdade() >= 21) {
+					&& j.getIdade() >= 21) {
 
 				if (ModoDesenvolvimentoJogador.TARDIO.equals(j.getModoDesenvolvimentoJogador())) {
 					//Não fazer nada
@@ -75,7 +78,7 @@ public class AdequarModoDesenvolvimentoJogadorService {
 			
 		}
 		
-		jogadorDetalheRepository.saveAll(detalheJogadoresSalvar);
+		jogadorRepository.saveAll(detalheJogadoresSalvar);
 		
 		//System.err.println(detalheJogadoresSalvar.size() + ":" + jogadores.size());
 		

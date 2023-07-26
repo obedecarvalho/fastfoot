@@ -26,7 +26,6 @@ import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.TipoNegociacao;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
-//import com.fastfoot.transfer.model.repository.AdequacaoJogadorRepository;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 
@@ -72,7 +71,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 
 	}
 
-	@Async("defaultExecutor")
+	/*@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {
 		Temporada temporada = temporadaService.getTemporadaAtual();
 		
@@ -113,8 +112,9 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
+	}*/
 	
+	@Deprecated
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(Liga liga, boolean primeirosIds) {
 		Temporada temporada = temporadaService.getTemporadaAtual();

@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -31,8 +30,9 @@ import com.fastfoot.transfer.service.AnalisarPropostaTransferenciaService;
 import com.fastfoot.transfer.service.AvaliarNecessidadeContratacaoClubeService;
 import com.fastfoot.transfer.service.ProporTransferenciaService;
 
+@Deprecated
 @Service
-public class GerarTransferenciasService {
+public class GerarTransferenciasService {//TODO: modulo transfer?
 	
 	private static final Integer NUM_THREAD_ANALISAR_PROPOSTA = FastfootApplication.NUM_THREAD;
 	
@@ -210,90 +210,5 @@ public class GerarTransferenciasService {
 
 		return clubesSaldo;
 	}
-	
-	public Map<Clube, ClubeSaldo> getClubeSaldo2() {
 
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
-
-		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);
-
-		stopWatch.split();
-		mensagens.add("\t#findSaldoProjetadoPorClube:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-		
-		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
-		
-		ClubeSaldo clubeSaldo = null;
-		
-		for (Map<String, Object> sc : saldoClubes) {
-			clubeSaldo = new ClubeSaldo();
-			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
-			clubeSaldo.setSaldo((Double) sc.get("saldo"));
-			clubeSaldo.setPrevisaoSaidaSalarios((Double) sc.get("salarios_projetado"));
-			/*clubeSaldo.setPrevisaoEntradaIngressos(
-					calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(clubeSaldo.getClube()));*/
-			clubeSaldo.setMovimentacoesTransferenciaCompra(0d);
-			clubeSaldo.setMovimentacoesTransferenciaVenda(0d);
-			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
-		}
-		
-		//
-		
-		List<Clube> clubes = new ArrayList<Clube>(clubesSaldo.keySet());
-		
-		List<CompletableFuture<Map<Clube, Double>>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Map<Clube, Double>>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
-						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, clubes.size())));
-			} else {
-				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
-						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		Map<Clube, Double> clubePrevReceita = new HashMap<Clube, Double>();
-		for (CompletableFuture<Map<Clube, Double>> completableFuture : desenvolverJogadorFuture) {
-			try {
-				clubePrevReceita.putAll(completableFuture.get());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
-		Double previsaoReceita;
-		
-		for (Clube clube : clubePrevReceita.keySet()) {
-			previsaoReceita = clubePrevReceita.get(clube);
-			clubesSaldo.get(clube).setPrevisaoEntradaIngressos(previsaoReceita);
-		}
-
-		//
-
-		stopWatch.split();
-		mensagens.add("\t#calcularPrevisaoReceitaIngressos:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
-
-		System.err.println(mensagens);
-
-		return clubesSaldo;
-	}
 }

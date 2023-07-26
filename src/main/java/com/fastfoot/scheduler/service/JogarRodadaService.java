@@ -88,6 +88,8 @@ public class JogarRodadaService {
 	private JogarPartidaService jogarPartidaService;
 
 	private static final Boolean SALVAR_LANCES = false;
+	
+	private static final Boolean SALVAR_HABILIDADE_VALOR_ESTATISTICAS = false;//#DEVEL
 
 	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
@@ -369,12 +371,14 @@ public class JogarRodadaService {
 		stopWatch.start();
 		long inicio, fim;
 
+		if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
 		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#habilidadeValorEstatisticaRepository:" + (fim - inicio));
+		}
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();

@@ -1,27 +1,34 @@
 package com.fastfoot.transfer.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
-import com.fastfoot.player.model.StatusJogador;
+import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
-import com.fastfoot.player.service.GerarTransferenciasService;
+import com.fastfoot.player.service.CalcularSalarioContratoService;
+import com.fastfoot.player.service.RenovarContratosAutomaticamenteService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
@@ -47,40 +54,53 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	
 	private static final Integer NUM_MAX_EXECUCOES = 5;
 	
-	@Autowired
-	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;
+	private static final Double RANGE = 0.1;
 	
-	@Autowired
-	private TemporadaCRUDService temporadaService;
-	
-	@Autowired
-	private GerarTransferenciasService gerarTransferenciasService;
-	
-	@Autowired
-	private SemanaCRUDService semanaCRUDService;
-	
-	@Autowired
-	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
-	
-	@Autowired
-	private PrepararDadosAnaliseTransferenciasService prepararDadosAnaliseTransferenciasService;
-	
+	//###	REPOSITORY	###
+
 	@Autowired
 	private JogadorRepository jogadorRepository;
-	
+
 	@Autowired
 	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
-	
+
 	@Autowired
 	private PropostaTransferenciaJogadorRepository propostaTransferenciaJogadorRepository;
-	
+
 	@Autowired
 	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
-	
+
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
-	private static final Double RANGE = 0.1;
+	@Autowired
+	private ContratoRepository contratoRepository;
+
+	//###	SERVICE	###
+
+	@Autowired
+	private TemporadaCRUDService temporadaService;
+
+	/*@Autowired
+	private GerarTransferenciasService gerarTransferenciasService;*/
+
+	@Autowired
+	private SemanaCRUDService semanaCRUDService;
+
+	@Autowired
+	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
+
+	@Autowired
+	private PrepararDadosAnaliseTransferenciasService prepararDadosAnaliseTransferenciasService;
+
+	@Autowired
+	private CalcularSalarioContratoService calcularSalarioContratoService;
+
+	@Autowired
+	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
+
+	/*@Autowired
+	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;*/
 	
 	/*private static final Comparator<NecessidadeContratacaoPossibilidades> COMPARATOR = new Comparator<ExecutarTransferenciasAutomaticamenteService.NecessidadeContratacaoPossibilidades>() {
 		@Override
@@ -89,7 +109,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		}
 	};*/
 	
-	public void executarTransferenciasAutomaticamente2() {
+	public void executarTransferenciasAutomaticamente() {
 		
 		StopWatch stopWatch = new StopWatch();
 		List<String> mensagens = new ArrayList<String>();
@@ -148,19 +168,15 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		elementosParaSalvarDTO.setDisponivelNegociacao(disponivelNegociacao);
 		elementosParaSalvarDTO.setNecessidadeContratacaoClubes(necessidadeContratacaoClubes);
 		
-		Map<Clube, ClubeSaldo> clubeSaldo = gerarTransferenciasService.getClubeSaldo2();//TODO: unificar com prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias
+		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo();//TODO: unificar com prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias
 		
 		stopWatch.split();
 		mensagens.add("\t#prepararDados:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();
 		
 		processar(temporada, s,
-				necessidadeContratacaoClubes
-						.stream().filter(ncc -> ncc.getNecessidadePrioritaria()).collect(Collectors.toList())
-						,
-				disponivelNegociacao
-						.stream().filter(dn -> TipoNegociacao.COMPRA_VENDA.equals(dn.getTipoNegociacao())).collect(Collectors.toList())
-						,
+				necessidadeContratacaoClubes.stream().filter(ncc -> ncc.getNecessidadePrioritaria()).collect(Collectors.toList()),
+				disponivelNegociacao.stream().filter(dn -> TipoNegociacao.COMPRA_VENDA.equals(dn.getTipoNegociacao())).collect(Collectors.toList()),
 				clubeSaldo,
 				elementosParaSalvarDTO);
 		
@@ -168,12 +184,13 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		mensagens.add("\t#processar:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();
 		
-		//atualizarNumeroJogadoresService. //TODO
+		atualizarNumeroJogadoresService.atualizarNumeroJogadores(
+				elementosParaSalvarDTO.getJogadores().stream().collect(Collectors.groupingBy(Jogador::getClube)), null);
 		stopWatch.split();
 		mensagens.add("\t#atualizarNumero:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
-		//salvar(elementosParaSalvarDTO);
+		salvar(elementosParaSalvarDTO);
 		stopWatch.split();
 		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -184,7 +201,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		System.err.println(mensagens);
 	}
 	
-	public void executarTransferenciasAutomaticamente() {
+	/*public void executarTransferenciasAutomaticamente() {
 		
 		StopWatch stopWatch = new StopWatch();
 		List<String> mensagens = new ArrayList<String>();
@@ -249,7 +266,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
 		
 		System.err.println(mensagens);
-	}
+	}*/
 	
 	private void processar(Temporada temporada, Semana semana,
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes,
@@ -328,7 +345,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 			i++;
 
-			System.err.println(qtdeTransferencia);
+			//System.err.println(qtdeTransferencia);
 		}
 		//
 		
@@ -337,7 +354,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
 		
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 	}
 	
 	private void analisarPropostasContratacaoPorClube(Clube clubeOrigem, List<PropostaTransferenciaJogador> propostas,
@@ -352,8 +369,12 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		PropostaTransferenciaJogador propostaAceitar = null;
 		ClubeSaldo clubeSaldo = null;		
 		Boolean haSaldo = null;
-		
+
 		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
+
+		//
+		consultarContratos(propostasPorJogadorMap.keySet());
+		//
 
 		for (Jogador j : propostasPorJogadorMap.keySet()) {
 
@@ -440,7 +461,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	private void concluirTransferenciaJogador(PropostaTransferenciaJogador propostaAceitar,
 			List<PropostaTransferenciaJogador> propostasRejeitar, Semana semana,
 			ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO) {
-		//TODO: tratar Contrato
 		
 		propostaAceitar.setPropostaAceita(true);
 		propostaAceitar.setSemanaTransferencia(semana);
@@ -448,7 +468,15 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		propostaAceitar.getNecessidadeContratacaoClube().setNecessidadeSatisfeita(true);		
 		propostaAceitar.getDisponivelNegociacao().setAtivo(false);		
 		propostasRejeitar.stream().forEach(p -> p.setPropostaAceita(false));
-		
+
+		//
+		elementosParaSalvarDTO.getContratosInativar().add(propostaAceitar.getJogador().getContratoAtual());
+		int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(propostaAceitar.getJogador().getIdade());
+		double salario = calcularSalarioContratoService.calcularSalarioContrato(propostaAceitar.getJogador(), tempoContrato);
+		elementosParaSalvarDTO.getContratos().add(new Contrato(propostaAceitar.getClubeDestino(),
+				propostaAceitar.getJogador(), semana, tempoContrato, true, salario));
+		//
+
 		elementosParaSalvarDTO.getJogadores().add(propostaAceitar.getJogador());
 		
 		elementosParaSalvarDTO.getMovimentacoesFinanceiras()
@@ -460,21 +488,119 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				.add(new MovimentacaoFinanceira(propostaAceitar.getClubeOrigem(), semana,
 						TipoMovimentacaoFinanceira.ENTRADA_VENDA_JOGADOR, propostaAceitar.getValorTransferencia(),
 						"Venda de Jogador"));
-		
-		//TODO
-		//atualizarNumeroJogadoresService.atualizarNumeroJogadores(jogadoresSalvar.stream().collect(Collectors.groupingBy(Jogador::getClube)), null);
+
 	}
 	
 	private void salvar(ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO) {
 
+		//UPDATE
 		jogadorRepository.saveAll(elementosParaSalvarDTO.getJogadores());
 
+		//INSERT
 		necessidadeContratacaoClubeRepository.saveAll(elementosParaSalvarDTO.getNecessidadeContratacaoClubes());
 		disponivelNegociacaoRepository.saveAll(elementosParaSalvarDTO.getDisponivelNegociacao());
 		propostaTransferenciaJogadorRepository.saveAll(elementosParaSalvarDTO.getPropostaTransferenciaJogadores());
 
 		movimentacaoFinanceiraRepository.saveAll(elementosParaSalvarDTO.getMovimentacoesFinanceiras());
-		
+		contratoRepository.saveAll(elementosParaSalvarDTO.getContratos());
+
+		//UPDATE
+		elementosParaSalvarDTO.getContratosInativar().stream().forEach(c -> c.setAtivo(false));
+		contratoRepository.desativar(elementosParaSalvarDTO.getContratosInativar());
 	}
 
+	private void consultarContratos(Collection<Jogador> jogadores) {
+		List<Contrato> contratos = contratoRepository.findByJogadoresAndAtivo(jogadores, true);
+
+		Map<Jogador, Contrato> jogadorContrato = contratos.stream()
+				.collect(Collectors.toMap(Contrato::getJogador, Function.identity()));
+
+		jogadores.stream().forEach(j -> j.setContratoAtual(jogadorContrato.get(j)));
+	}
+
+	private Map<Clube, ClubeSaldo> getClubeSaldo() {
+
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
+
+		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);
+
+		stopWatch.split();
+		mensagens.add("\t#findSaldoProjetadoPorClube:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
+		
+		ClubeSaldo clubeSaldo = null;
+		
+		for (Map<String, Object> sc : saldoClubes) {
+			clubeSaldo = new ClubeSaldo();
+			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
+			clubeSaldo.setSaldo((Double) sc.get("saldo"));
+			clubeSaldo.setPrevisaoSaidaSalarios((Double) sc.get("salarios_projetado"));
+			/*clubeSaldo.setPrevisaoEntradaIngressos(
+					calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(clubeSaldo.getClube()));*/
+			clubeSaldo.setMovimentacoesTransferenciaCompra(0d);
+			clubeSaldo.setMovimentacoesTransferenciaVenda(0d);
+			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
+		}
+		
+		//
+		
+		List<Clube> clubes = new ArrayList<Clube>(clubesSaldo.keySet());
+		
+		List<CompletableFuture<Map<Clube, Double>>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Map<Clube, Double>>>();
+		
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
+						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, clubes.size())));
+			} else {
+				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
+						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, (i + 1) * offset)));
+			}
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		Map<Clube, Double> clubePrevReceita = new HashMap<Clube, Double>();
+		for (CompletableFuture<Map<Clube, Double>> completableFuture : desenvolverJogadorFuture) {
+			try {
+				clubePrevReceita.putAll(completableFuture.get());
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		Double previsaoReceita;
+		
+		for (Clube clube : clubePrevReceita.keySet()) {
+			previsaoReceita = clubePrevReceita.get(clube);
+			clubesSaldo.get(clube).setPrevisaoEntradaIngressos(previsaoReceita);
+		}
+
+		//
+
+		stopWatch.split();
+		mensagens.add("\t#calcularPrevisaoReceitaIngressos:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+
+		//System.err.println(mensagens);
+
+		return clubesSaldo;
+	}
 }

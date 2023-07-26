@@ -14,7 +14,6 @@ drop table jogador_estatisticas_temporada;
 drop table partida_lance;
 drop table contrato;
 drop table jogador;
-drop table jogador_detalhe;
 
 --campeonato
 drop table campeonato_clube_probabilidade;

@@ -41,8 +41,8 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		sortearHabComunsEletivas(estrategia, habComuns, habOutros);
 		sortearHabCoringa(estrategia, habEspecificas, habComuns, habOutros);
 		
-		Double ajusteForca = getAjusteForca(jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador(), jogador.getIdade());
-		Double ajusteForcaProx = getAjusteForca(jogador.getJogadorDetalhe().getModoDesenvolvimentoJogador(), jogador.getIdade() + 1);
+		Double ajusteForca = getAjusteForca(jogador.getModoDesenvolvimentoJogador(), jogador.getIdade());
+		Double ajusteForcaProx = getAjusteForca(jogador.getModoDesenvolvimentoJogador(), jogador.getIdade() + 1);
 		Double potencialSorteado = null;
 		Double forca = null;
 		Double passoProx = null;
@@ -92,7 +92,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	
 	public void ajustarPassoDesenvolvimento(Jogador j) {
 
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getJogadorDetalhe().getModoDesenvolvimentoJogador(),
+		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getModoDesenvolvimentoJogador(),
 				j.getIdade() + 1);
 		Double passoProx = null;
 		
@@ -109,7 +109,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 
 		//TODO: Limitar desenvolvimento para não passar do MAXIMO (100)
 
-		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getJogadorDetalhe().getModoDesenvolvimentoJogador(),
+		Double ajusteForcaProx = JogadorFactory.getAjusteForca(j.getModoDesenvolvimentoJogador(),
 				j.getIdade() + 1);
 		Double passoProx = null, passo = null, peso = null;
 		
