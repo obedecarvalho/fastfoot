@@ -237,7 +237,7 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			adequarModoDesenvolvimentoJogador(temporadaAtual);
+			adequarModoDesenvolvimentoJogador2(temporadaAtual);
 			stopWatch.split();
 			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -876,7 +876,20 @@ public class CriarCalendarioTemporadaService {
 		}
 	}
 	
-	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {//TODO: mover consulta para threads
+	private void adequarModoDesenvolvimentoJogador2(Temporada temporada) {
+		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Liga liga : Liga.getAll()) {
+			desenvolverJogadorFuture.add(
+					adequarModoDesenvolvimentoJogadorService.adequarModoDesenvolvimentoJogador(temporada, liga, true));
+			desenvolverJogadorFuture.add(
+					adequarModoDesenvolvimentoJogadorService.adequarModoDesenvolvimentoJogador(temporada, liga, false));
+		}
+
+		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {
 
 		//List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
 		List<Jogador> jogadores = jogadorRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);

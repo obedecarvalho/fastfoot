@@ -599,7 +599,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
 
-		//System.err.println(mensagens);
+		System.err.println(mensagens);
 
 		return clubesSaldo;
 	}

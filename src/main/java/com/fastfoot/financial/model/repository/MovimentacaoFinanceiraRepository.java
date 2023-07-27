@@ -72,6 +72,6 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 			" 	group by id_clube" +
 			" ) as sal on sal.id_clube = c.id"
 	)
-	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual);
+	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual);//TODO: usar salario contrato
 
 }

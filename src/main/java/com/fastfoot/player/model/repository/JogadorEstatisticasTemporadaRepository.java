@@ -6,10 +6,12 @@ import java.util.Map;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -29,6 +31,13 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
 
 	public List<JogadorEstatisticasTemporada> findByTemporadaAndClube(Temporada temporada, Clube clube);
+	
+	@Query(" SELECT jet FROM JogadorEstatisticasTemporada jet WHERE "
+			+ " jet.jogador.clube.liga = :liga AND jet.jogador.clube.id BETWEEN :idClubeMin AND :idClubeMax "
+			+ " AND jet.jogador.idade BETWEEN :idadeMin AND :idadeMax ")
+	public List<JogadorEstatisticasTemporada> findByLigaClubeAndStatusJogadorAndIdadeBetween(@Param("liga") Liga liga,
+			@Param("idClubeMin") Integer idClubeMin, @Param("idClubeMax") Integer idClubeMax,
+			@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
 	
 	//public List<JogadorEstatisticasTemporada> findByTemporadaAndJogadorAndAmistoso(Temporada temporada, Jogador jogador,
 	//		Boolean amistoso);
