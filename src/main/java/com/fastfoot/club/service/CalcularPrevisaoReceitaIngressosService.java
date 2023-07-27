@@ -67,7 +67,7 @@ public class CalcularPrevisaoReceitaIngressosService {
 	}
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Map<Clube, Double>> calcularPrevisaoReceitaIngressos(List<Clube> clubes){
+	public CompletableFuture<Map<Clube, Double>> calcularPrevisaoReceitaIngressos(List<Clube> clubes){//TODO: reduzir consultas banco
 
 		Map<Clube, Double> clubeReceita = new HashMap<Clube, Double>();
 
