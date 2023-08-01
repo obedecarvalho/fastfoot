@@ -24,6 +24,10 @@ public interface PartidaAmistosaResultadoRepository extends JpaRepository<Partid
 	@Query("SELECT par FROM PartidaAmistosaResultado par WHERE par.rodada.semana.temporada = :temporada")
 	public List<PartidaAmistosaResultado> findByTemporada(@Param("temporada") Temporada temporada);
 
+	@Query("SELECT par FROM PartidaAmistosaResultado par WHERE par.rodada.semana.temporada = :temporada AND par.partidaJogada = :partidaJogada")
+	public List<PartidaAmistosaResultado> findByTemporadaAndPartidaJogada(@Param("temporada") Temporada temporada,
+			@Param("partidaJogada") Boolean partidaJogada);
+
 	public List<PartidaAmistosaResultado> findByClubeMandanteAndPartidaJogada(Clube clube, Boolean partidaJogada);
 
 	public List<PartidaAmistosaResultado> findByClubeVisitanteAndPartidaJogada(Clube clube, Boolean partidaJogada);

@@ -168,7 +168,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		elementosParaSalvarDTO.setDisponivelNegociacao(disponivelNegociacao);
 		elementosParaSalvarDTO.setNecessidadeContratacaoClubes(necessidadeContratacaoClubes);
 		
-		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo();//TODO: unificar com prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias
+		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo(temporada);//TODO: unificar com prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias
 		
 		stopWatch.split();
 		mensagens.add("\t#prepararDados:" + (stopWatch.getSplitTime() - inicio));
@@ -518,7 +518,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		jogadores.stream().forEach(j -> j.setContratoAtual(jogadorContrato.get(j)));
 	}
 
-	private Map<Clube, ClubeSaldo> getClubeSaldo() {
+	private Map<Clube, ClubeSaldo> getClubeSaldo(Temporada temporada) {
 
 		StopWatch stopWatch = new StopWatch();
 		List<String> mensagens = new ArrayList<String>();
@@ -552,7 +552,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		
 		//
 		
-		List<Clube> clubes = new ArrayList<Clube>(clubesSaldo.keySet());
+		/*List<Clube> clubes = new ArrayList<Clube>(clubesSaldo.keySet());
 		
 		List<CompletableFuture<Map<Clube, Double>>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Map<Clube, Double>>>();
 		
@@ -581,7 +581,9 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}
+		}*/
+		
+		Map<Clube, Double> clubePrevReceita = calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(temporada);
 		
 		Double previsaoReceita;
 		

@@ -26,6 +26,7 @@ import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.service.CarregarParametroService;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class CalcularTorcidaPartidaService {
@@ -342,7 +343,8 @@ public class CalcularTorcidaPartidaService {
 	}
 
 	public Double calcularPrevisaoEntradaIngressos(List<? extends PartidaResultadoJogavel> partidas, boolean mandante) {
-		
+		if (ValidatorUtil.isEmpty(partidas)) return 0.0d;
+
 		Double porcPublicoAlvo = null, renda = 0.0d;
 		Integer publicoClube = null, tamanhoEstadio = null;
 		
