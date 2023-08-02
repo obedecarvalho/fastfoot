@@ -19,7 +19,7 @@ public class DemonstrativoFinanceiroTemporada {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "demonstrativoFinanceiroTemporadaSequence")
-	@SequenceGenerator(name = "demonstrativoFinanceiroTemporadaSequence", sequenceName = "demonstrativo_financeiro_temporada_sequence")
+	@SequenceGenerator(name = "demonstrativoFinanceiroTemporadaSequence", sequenceName = "demonstrativo_financeiro_temporada_seq")
 	private Long id;
 	
 	@ManyToOne

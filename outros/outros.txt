@@ -11,3 +11,6 @@ pg_dump --dbname=fastfoot -U fastfoot --schema-only -W -h 127.0.0.1 --exclude-ta
 create user fastfoot@localhost identified by 'fastfoot_';
 create database fastfoot;
 GRANT ALL PRIVILEGES ON fastfoot.* TO fastfoot@localhost WITH GRANT OPTION;
+
+http://localhost:8081/swagger-ui/index.html
+http://localhost:8081/v3/api-docs
