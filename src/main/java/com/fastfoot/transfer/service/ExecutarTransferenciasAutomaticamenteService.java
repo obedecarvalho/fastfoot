@@ -14,7 +14,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.service.CalcularPrevisaoReceitaIngressosService;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
@@ -159,7 +158,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		//Map<Clube, List<Jogador>> jogadoresClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
 		
 		stopWatch.split();
-		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
+		mensagens.add("\t#prepararDadosAnaliseTransferencias:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();
 
 		/*avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacaoEDisponivelNegociacao(temporada,
@@ -168,10 +167,10 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		elementosParaSalvarDTO.setDisponivelNegociacao(disponivelNegociacao);
 		elementosParaSalvarDTO.setNecessidadeContratacaoClubes(necessidadeContratacaoClubes);
 		
-		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo(temporada);//TODO: unificar com prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias
+		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo(temporada);
 		
 		stopWatch.split();
-		mensagens.add("\t#prepararDados:" + (stopWatch.getSplitTime() - inicio));
+		mensagens.add("\t#getClubeSaldo:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();
 		
 		processar(temporada, s,
@@ -601,7 +600,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
 
-		System.err.println(mensagens);
+		//System.err.println(mensagens);
 
 		return clubesSaldo;
 	}

@@ -40,3 +40,5 @@ fastfoot_src
 
 fastfoot-*.zip
 outros/img/
+outros/teste-cobertura/report/*
+src/main/resources/static/*

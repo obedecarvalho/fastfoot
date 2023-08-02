@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,14 @@ public class PrepararDadosAnaliseTransferenciasService {
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<PrepararDadosAnaliseTransferenciasReturn> prepararDadosAnaliseTransferencias(Temporada temporada, Liga liga, boolean primeirosIds) {
+		//Instanciar StopWatch
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+		
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
 		
 		List<Jogador> jogadores;
 
@@ -43,11 +52,27 @@ public class PrepararDadosAnaliseTransferenciasService {
 		
 		Map<Clube, List<Jogador>> jogadoresClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
 		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#jogadorRepository:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
 		
 		avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacaoEDisponivelNegociacao(temporada,
 				jogadoresClube, necessidadeContratacaoClubes, disponivelNegociacao);
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#calcularNecessidadeContratacaoEDisponivelNegociacao:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		//Finalizar
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(new PrepararDadosAnaliseTransferenciasReturn(necessidadeContratacaoClubes, disponivelNegociacao));
 		
