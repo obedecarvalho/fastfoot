@@ -25,6 +25,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.HabilidadeGrupoAcao;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
@@ -94,7 +95,15 @@ public class Jogador {
 
 	@JsonIgnore
 	@Transient
+	private List<HabilidadeGrupoValor> habilidadesGrupoAcaoFim;
+
+	@JsonIgnore
+	@Transient
 	private List<HabilidadeValor> habilidadesAcaoMeioFim;
+
+	@JsonIgnore
+	@Transient
+	private List<HabilidadeGrupoValor> habilidadesGrupoAcaoMeioFim;
 
 	@Transient
 	private JogadorEstatisticasSemana jogadorEstatisticasSemana;
@@ -310,6 +319,11 @@ public class Jogador {
 	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
 		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
 	}
+
+	@JsonIgnore
+	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades) {
+		return getHabilidadesGrupo().stream().filter(hv -> habilidades.contains(hv.getHabilidadeGrupoAcao())).collect(Collectors.toList());
+	}
 	
 	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadeValorByHabilidade(List<Habilidade> habilidades) {
@@ -334,6 +348,15 @@ public class Jogador {
 		}
 		return habilidadesAcaoFim; 
 	}
+	
+	@JsonIgnore
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoFimValor() {
+		if (habilidadesGrupoAcaoFim == null) {
+			habilidadesGrupoAcaoFim = getHabilidadesGrupo(
+					Arrays.asList(HabilidadeGrupoAcao.CONCLUSAO, HabilidadeGrupoAcao.CRIACAO));
+		}
+		return habilidadesGrupoAcaoFim; 
+	}
 
 	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadesAcaoMeioFimValor() {
@@ -343,5 +366,14 @@ public class Jogador {
 							HabilidadeAcao.ARMACAO, HabilidadeAcao.VELOCIDADE, HabilidadeAcao.DRIBLE, HabilidadeAcao.FORCA));
 		}
 		return habilidadesAcaoMeioFim;
+	}
+
+	@JsonIgnore
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoMeioFimValor() {
+		if (habilidadesGrupoAcaoMeioFim == null) {
+			habilidadesGrupoAcaoMeioFim = getHabilidadesGrupo(Arrays.asList(HabilidadeGrupoAcao.QUEBRA_LINHA,
+					HabilidadeGrupoAcao.CONCLUSAO, HabilidadeGrupoAcao.CRIACAO));
+		}
+		return habilidadesGrupoAcaoMeioFim;
 	}
 }

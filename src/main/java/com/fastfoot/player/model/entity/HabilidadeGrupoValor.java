@@ -9,12 +9,17 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
+import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.HabilidadeGrupoAcao;
+import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class HabilidadeGrupoValor {
+public class HabilidadeGrupoValor implements ElementoRoleta {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeGrupoValorSequence")
@@ -27,7 +32,24 @@ public class HabilidadeGrupoValor {
 	
 	private HabilidadeGrupo habilidadeGrupo;
 
-	private Double valor;
+	private Integer valor;
+	
+	private Double valorTotal;
+
+	@Transient
+	private Integer valorN;
+
+	@Transient
+	private HabilidadeGrupoValorEstatistica habilidadeGrupoValorEstatistica;
+
+	public HabilidadeGrupoValor() {
+
+	}
+
+	public HabilidadeGrupoValor(HabilidadeGrupo habilidadeGrupo, Integer valor) {
+		this.habilidadeGrupo = habilidadeGrupo;
+		this.valor = valor;
+	}
 
 	public Long getId() {
 		return id;
@@ -53,12 +75,65 @@ public class HabilidadeGrupoValor {
 		this.habilidadeGrupo = habilidadeGrupo;
 	}
 
-	public Double getValor() {
+	@Override
+	public Integer getValor() {
 		return valor;
 	}
 
-	public void setValor(Double valor) {
+	public void setValor(Integer valor) {
 		this.valor = valor;
+	}
+
+	public Double getValorTotal() {
+		return valorTotal;
+	}
+
+	public void setValorTotal(Double valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+
+	@Override
+	public Integer getValorN() {
+		if (valorN == null) {
+			calcularValorN();
+		}
+		return valorN;
+	}
+
+	@Override
+	public Double getValorAsDouble() {
+		return valorTotal;
+	}
+
+	@Override
+	public Double getValorNAsDouble() {
+		if (valorN == null) {
+			calcularValorN();
+		}
+		return new Double(valorN);
+	}
+
+	public HabilidadeGrupoAcao getHabilidadeGrupoAcao() {
+		return HabilidadeGrupoAcao.HABILIDADE_GRUPO_ACAO.get(getHabilidadeGrupo());
+	}
+	
+	public void calcularValorN() {
+
+		if (ValidatorUtil.isEmpty(getJogador())) {
+			valorN = (int) Math.pow(valor, Constantes.ROLETA_N_POWER);
+		} else {
+			double energia = (getJogador().getJogadorEnergia().getEnergiaAtual() / 100.0);
+			if (energia > 1.0) throw new RuntimeException("Erro: energia jogador maior que 100%. [idJogador:" + getJogador() + "]");
+			valorN = Math.max((int) (Math.pow(valor, Constantes.ROLETA_N_POWER) * energia), 1);
+		}
+	}
+
+	public HabilidadeGrupoValorEstatistica getHabilidadeGrupoValorEstatistica() {
+		return habilidadeGrupoValorEstatistica;
+	}
+
+	public void setHabilidadeGrupoValorEstatistica(HabilidadeGrupoValorEstatistica habilidadeGrupoValorEstatistica) {
+		this.habilidadeGrupoValorEstatistica = habilidadeGrupoValorEstatistica;
 	}
 
 	@Override

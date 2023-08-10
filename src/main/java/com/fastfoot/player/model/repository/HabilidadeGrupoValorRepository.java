@@ -23,9 +23,9 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 	@Modifying
 	@Query(nativeQuery = true, value = 
 			" update habilidade_grupo_valor " +
-			" set valor = tmp.valor " +
+			" set valor_total = tmp.valor_total, valor = floor(tmp.valor_total) " +
 			" from ( " +
-			" 	select id_jogador as id_jog, avg(valor_decimal) as valor " +
+			" 	select id_jogador as id_jog, avg(valor_decimal) as valor_total " +
 			" 	from habilidade_valor " +
 			" 	where habilidade in (?2) " +
 			" 	group by id_jogador " +
@@ -39,8 +39,14 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 	@Modifying
 	@Query(nativeQuery = true, value = 
 			" update habilidade_grupo_valor hgv " +
-			" set valor = ( " +
+			" set valor_total = ( " +
 			" 	select avg(hv.valor_decimal) " +
+			" 	from habilidade_valor hv " +
+			" 	where hv.habilidade in (?2) " +
+			" 		and hv.id_jogador = hgv.id_jogador " +
+			" ), " +
+			" valor = ( " +
+			" 	select floor(avg(hv.valor_decimal)) " +
 			" 	from habilidade_valor hv " +
 			" 	where hv.habilidade in (?2) " +
 			" 		and hv.id_jogador = hgv.id_jogador " +

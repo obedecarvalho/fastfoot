@@ -1,5 +1,6 @@
 package com.fastfoot.player.model.repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,15 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube = :clube AND j.statusJogador = :status ")
 	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidades(@Param("clube") Clube clube, @Param("status") StatusJogador status);
+
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
+	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidades(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
+
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupo hv WHERE j.clube = :clube AND j.statusJogador = :status ")
+	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidadesGrupo(@Param("clube") Clube clube, @Param("status") StatusJogador status);
+
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupo hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
+	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidadesGrupo(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
 	
 	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidades hv WHERE j.clube.liga = :liga AND j.statusJogador = :status ")
 	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga, @Param("status") StatusJogador status);
@@ -91,6 +101,7 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	)
 	public void incrementarIdade();
 
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" SELECT j.id AS id_jogador, j.posicao, j.forca_geral as forca_geral_jog, j.id_clube AS id_clube, " +
 			" 	dn.id is not null as disponivel_negociacao, " +

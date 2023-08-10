@@ -1,8 +1,11 @@
 package com.fastfoot.scheduler.service;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -10,18 +13,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
 import com.fastfoot.match.service.CalcularTorcidaPartidaService;
+import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
 import com.fastfoot.match.service.JogarPartidaService;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.player.model.StatusJogador;
+import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.entity.JogadorEnergia;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
+import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
@@ -36,6 +47,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class JogarRodadaService {
@@ -77,6 +89,9 @@ public class JogarRodadaService {
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
 
+	@Autowired
+	private JogadorRepository jogadorRepository;
+
 	//###	SERVICE	###
 	/*@Autowired
 	private PartidaResultadoService partidaResultadoService;*/
@@ -86,6 +101,9 @@ public class JogarRodadaService {
 	
 	@Autowired
 	private JogarPartidaService jogarPartidaService;
+
+	@Autowired
+	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 
 	private static final Boolean SALVAR_LANCES = false;
 	
@@ -108,6 +126,13 @@ public class JogarRodadaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#carregarPartidas:" + (fim - inicio));
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		carregarEscalacao(rodada.getPartidas());
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#carregarEscalacao:" + (fim - inicio));
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
@@ -268,6 +293,13 @@ public class JogarRodadaService {
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#carregarPartidas:" + (fim - inicio));
+
+		stopWatch.split();
+		inicio = stopWatch.getSplitTime();
+		carregarEscalacao(rodada.getPartidas());
+		stopWatch.split();
+		fim = stopWatch.getSplitTime();
+		mensagens.add("\t#carregarEscalacao:" + (fim - inicio));
 		
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
@@ -350,6 +382,7 @@ public class JogarRodadaService {
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
+		carregarEscalacao(rodada.getPartidas());
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
 		salvarPartidas(rodada);
@@ -429,7 +462,7 @@ public class JogarRodadaService {
 	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
+			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
@@ -438,7 +471,7 @@ public class JogarRodadaService {
 	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
+			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 
 			if (p.getProximaPartida() != null) {
 				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
@@ -448,7 +481,66 @@ public class JogarRodadaService {
 
 	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, partidaJogadorEstatisticaDTO);
+			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 		}
+	}
+
+	private void carregarEscalacao(List<? extends PartidaResultadoJogavel> partidas) {
+
+		List<Clube> clubes = new ArrayList<Clube>();
+
+		clubes.addAll(partidas.stream().map(p -> p.getClubeMandante()).collect(Collectors.toList()));
+		clubes.addAll(partidas.stream().map(p -> p.getClubeVisitante()).collect(Collectors.toList()));
+
+		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidades(clubes,
+				StatusJogador.ATIVO);
+
+		carregarJogadorEnergia(jogadores);
+
+		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
+				.collect(Collectors.groupingBy(Jogador::getClube));
+
+		EscalacaoClube escalacaoClubeMandante, escalacaoClubeVisitante;
+
+		for (PartidaResultadoJogavel p : partidas) {
+			escalacaoClubeMandante = carregarEscalacaoJogadoresPartidaService
+					.carregarJogadoresPartida(p.getClubeMandante(), jogadoresPorClube.get(p.getClubeMandante()), p);
+			escalacaoClubeVisitante = carregarEscalacaoJogadoresPartidaService
+					.carregarJogadoresPartida(p.getClubeVisitante(), jogadoresPorClube.get(p.getClubeVisitante()), p);
+			p.setEscalacaoMandante(escalacaoClubeMandante);
+			p.setEscalacaoVisitante(escalacaoClubeVisitante);
+		}
+	}
+
+	private void carregarJogadorEnergia(List<Jogador> jogadores) {
+		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogador();
+
+		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
+				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
+
+		JogadorEnergia je = null;
+		Map<String, Object> jes = null;
+		Integer energia = null;
+
+		for (Jogador j : jogadores) {
+			je = new JogadorEnergia();
+			je.setJogador(j);
+			je.setEnergia(0);//Variacao de energia
+
+			jes = x.get(j);
+			if (!ValidatorUtil.isEmpty(jes)) {
+				energia = ((BigInteger) jes.get("energia")).intValue();
+				if (energia > Constantes.ENERGIA_INICIAL) {
+					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
+				} else {
+					je.setEnergiaInicial(energia);
+				}
+			} else {
+				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
+			}
+
+			j.setJogadorEnergia(je);
+		}
+
 	}
 }

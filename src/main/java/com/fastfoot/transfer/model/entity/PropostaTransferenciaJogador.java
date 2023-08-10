@@ -17,6 +17,8 @@ import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.service.util.FormatadorUtil;
+import com.fastfoot.transfer.model.TipoNegociacao;
 
 @Entity
 //@Table(indexes = { @Index(columnList = "id_jogador"), @Index(columnList = "id_clube_origem"), @Index(columnList = "id_clube_destino") })
@@ -58,6 +60,8 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	private Double valorTransferencia;
 	
 	private Boolean propostaAceita;
+
+	private TipoNegociacao tipoNegociacao;
 	
 	@Transient
 	private Integer peso;
@@ -148,6 +152,14 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		this.disponivelNegociacao = disponivelNegociacao;
 	}
 
+	public TipoNegociacao getTipoNegociacao() {
+		return tipoNegociacao;
+	}
+
+	public void setTipoNegociacao(TipoNegociacao tipoNegociacao) {
+		this.tipoNegociacao = tipoNegociacao;
+	}
+
 	@Override
 	public Integer getValor() {
 		if (peso == null) {
@@ -196,7 +208,7 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	@Override
 	public String toString() {
 		return "PropostaTransferenciaJogador [clubeOrigem=" + clubeOrigem + ", clubeDestino=" + clubeDestino
-				+ ", jogador=" + jogador + ", valorTransferencia=" + valorTransferencia + ", propostaAceita="
+				+ ", jogador=" + jogador + ", valorTransferencia=" + FormatadorUtil.formatarDecimal(valorTransferencia) + ", propostaAceita="
 				+ propostaAceita + "]";
 	}
 

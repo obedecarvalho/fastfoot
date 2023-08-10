@@ -70,7 +70,7 @@ public class CalcularHabilidadeGrupoValorService {
 
 		HabilidadeGrupoValor habilidadeGrupoValor;
 		
-		for (HabilidadeGrupo habilidadeGrupo : HabilidadeGrupo.values()) {
+		for (HabilidadeGrupo habilidadeGrupo : HabilidadeGrupo.getAll()) {
 			
 			habilidadeValores = jogador.getHabilidadeValorByHabilidade(Arrays.asList(habilidadeGrupo.getHabilidades()));
 
@@ -78,7 +78,8 @@ public class CalcularHabilidadeGrupoValorService {
 			
 			habilidadeGrupoValor.setJogador(jogador);
 			habilidadeGrupoValor.setHabilidadeGrupo(habilidadeGrupo);
-			habilidadeGrupoValor.setValor(habilidadeValores.stream().mapToDouble(HabilidadeValor::getValorTotal).average().getAsDouble());
+			habilidadeGrupoValor.setValorTotal(habilidadeValores.stream().mapToDouble(HabilidadeValor::getValorTotal).average().getAsDouble());
+			habilidadeGrupoValor.setValor(habilidadeGrupoValor.getValorTotal().intValue());
 			
 			habilidadeGrupoValores.add(habilidadeGrupoValor);
 

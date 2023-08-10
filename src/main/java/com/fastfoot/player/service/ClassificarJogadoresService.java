@@ -76,7 +76,7 @@ public class ClassificarJogadoresService {
 		for (int i = 0; i < habilidade.length; i++) {
 			int k = i;
 			jogadores.stream().forEach(j -> x.get(j)
-					.getAtributos()[k] = (j.getHabilidadeGrupoValorByHabilidade(habilidade[k]).getValor()
+					.getAtributos()[k] = (j.getHabilidadeGrupoValorByHabilidade(habilidade[k]).getValorTotal()
 							/ j.getForcaGeral()));
 		}
 		

@@ -18,6 +18,7 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
+import com.fastfoot.transfer.model.TipoNegociacao;
 import com.fastfoot.transfer.model.dto.JogadorAlvoDTO;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
@@ -223,6 +224,7 @@ public class ProporTransferenciaService {
 				proposta.setNecessidadeContratacaoClube(nc);
 				proposta.setTemporada(temporada);
 				proposta.setValorTransferencia(jogadorSelecionado.getValorTransferencia());
+				proposta.setTipoNegociacao(TipoNegociacao.COMPRA_VENDA);
 				
 				propostaTransferenciaJogadores.add(proposta);
 				//propostaTransferenciaJogadorRepository.save(proposta);

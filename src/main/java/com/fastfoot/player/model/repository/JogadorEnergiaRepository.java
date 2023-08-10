@@ -43,6 +43,15 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 			" group by id_jogador "
 	)
 	public List<Map<String, Object>> findEnergiaJogadorByIdClube(Integer idClube);
+
+	@Query(nativeQuery = true, value =
+			" select id_jogador, sum(energia) as energia " +
+			" from jogador_energia je " +
+			" inner join jogador j on j.id = je.id_jogador " +
+			//" where j.id_clube = ?1 " +
+			" group by id_jogador "
+	)
+	public List<Map<String, Object>> findEnergiaJogador();
 	
 	@Transactional
 	@Modifying

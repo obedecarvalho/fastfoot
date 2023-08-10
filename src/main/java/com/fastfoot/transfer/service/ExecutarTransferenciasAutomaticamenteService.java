@@ -3,8 +3,10 @@ package com.fastfoot.transfer.service;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -36,6 +38,7 @@ import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.NecessidadeContratacaoPossibilidades;
+import com.fastfoot.transfer.model.PossivelTrocaJogador;
 import com.fastfoot.transfer.model.ResultadoExecucaoTransferenciasAutomaticasDTO;
 import com.fastfoot.transfer.model.TipoNegociacao;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
@@ -53,7 +56,12 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	
 	private static final Integer NUM_MAX_EXECUCOES = 5;
 	
-	private static final Double RANGE = 0.1;
+	//private static final Double RANGE = 0.1;
+
+	/**
+	 * Valor percentual máximo que um clube pode ficar devendo ao fazer uma troca em relação ao jogador que está recebendo.
+	 */
+	private static final Double DIFF_PERC_MAX_SALDO_TROCA = 0.0;//0.25
 	
 	//###	REPOSITORY	###
 
@@ -305,7 +313,9 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				
 				possibilidades.setPossiveisContratacoes(disponivelNegociacao.stream().filter(dn -> match(necessidadeContratacaoClube, dn)).collect(Collectors.toList()));
 				
+				if (possibilidades.getPossiveisContratacoes().size() > 0) {
 				necessidadeContratacaoPossibilidades.add(possibilidades);
+				}
 			}
 			
 			stopWatch.split();
@@ -319,7 +329,8 @@ public class ExecutarTransferenciasAutomaticamenteService {
 			List<PropostaTransferenciaJogador> propostas = new ArrayList<PropostaTransferenciaJogador>();
 	
 			for (Clube c : possibilidadesClube.keySet()) {
-				propostas.addAll(analisarPossibilidadesContratacoesClube(temporada, c, possibilidadesClube.get(c), clubeSaldo.get(c)));
+				propostas.addAll(analisarPossibilidadesContratacoesClube(temporada, c, possibilidadesClube.get(c),
+						clubeSaldo.get(c), true, true));
 			}
 			
 			elementosParaSalvarDTO.getPropostaTransferenciaJogadores().addAll(propostas);
@@ -408,7 +419,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	
 	private List<PropostaTransferenciaJogador> analisarPossibilidadesContratacoesClube(Temporada temporada,
 			Clube clubeDestino, List<NecessidadeContratacaoPossibilidades> necessidadeContratacaoPossibilidades,
-			ClubeSaldo clubeSaldo) {
+			ClubeSaldo clubeSaldo, boolean filtrarSaldo, boolean propostaUnicaPorNecessidade) {
 		
 		List<PropostaTransferenciaJogador> propostas = new ArrayList<PropostaTransferenciaJogador>();
 
@@ -418,12 +429,17 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 		for (NecessidadeContratacaoPossibilidades possibilidades : necessidadeContratacaoPossibilidades) {
 
+			if (filtrarSaldo) {
 			possiveisContratacoes = possibilidades.getPossiveisContratacoes().stream()
 					.filter(dn -> dn.getJogador().getValorTransferencia() < clubeSaldo.getSaldoPrevisto())
 					.collect(Collectors.toList());
+			} else {
+				possiveisContratacoes = possibilidades.getPossiveisContratacoes();
+			}
 			
 			if (!ValidatorUtil.isEmpty(possiveisContratacoes)) {
 				
+				if (propostaUnicaPorNecessidade) {
 				disponivelNegociacao = RoletaUtil.sortearPesoUm(possiveisContratacoes);//TODO: criar peso para sorteio
 				
 				proposta = new PropostaTransferenciaJogador();
@@ -438,8 +454,30 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				proposta.setSemanaTransferencia(null);
 				proposta.setTemporada(temporada);
 				proposta.setDisponivelNegociacao(disponivelNegociacao);
+				proposta.setTipoNegociacao(TipoNegociacao.COMPRA_VENDA);
 				
 				propostas.add(proposta);
+				} else {
+					for (DisponivelNegociacao dn : possiveisContratacoes) {
+						
+						proposta = new PropostaTransferenciaJogador();
+						
+						proposta.setId(ID_TEMP--);
+						proposta.setClubeDestino(clubeDestino);
+						proposta.setClubeOrigem(dn.getClube());
+						proposta.setJogador(dn.getJogador());
+						proposta.setNecessidadeContratacaoClube(possibilidades.getNecessidadeContratacaoClube());
+						proposta.setValorTransferencia(dn.getJogador().getValorTransferencia());
+						proposta.setPropostaAceita(null);
+						proposta.setSemanaTransferencia(null);
+						proposta.setTemporada(temporada);
+						proposta.setDisponivelNegociacao(dn);
+						proposta.setTipoNegociacao(TipoNegociacao.COMPRA_VENDA);
+						
+						propostas.add(proposta);
+						
+					}
+				}
 
 			}
 		}
@@ -451,9 +489,10 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		return necessidadeContratacaoClube.getPosicao().equals(dn.getJogador().getPosicao())
 				&& !necessidadeContratacaoClube.getClube().equals(dn.getClube())
 				&& dn.getJogador().getForcaGeral() >= (necessidadeContratacaoClube.getClube().getForcaGeral() * necessidadeContratacaoClube.getNivelAdequacaoMin().getPorcentagemMinima())
-				&& dn.getJogador().getForcaGeral() < (necessidadeContratacaoClube.getClube().getForcaGeral() * (necessidadeContratacaoClube.getNivelAdequacaoMin().getPorcentagemMinima() + RANGE))
-				&& dn.getJogador().getForcaGeralPotencial() >= (necessidadeContratacaoClube.getClube().getForcaGeral() * 0.925)
-				&& dn.getJogador().getForcaGeralPotencial() < (necessidadeContratacaoClube.getClube().getForcaGeral() * 1.0725);
+				//&& dn.getJogador().getForcaGeral() < (necessidadeContratacaoClube.getClube().getForcaGeral() * (necessidadeContratacaoClube.getNivelAdequacaoMin().getPorcentagemMinima() + RANGE))
+				&& dn.getJogador().getForcaGeralPotencial() >= (necessidadeContratacaoClube.getClube().getForcaGeral() * 0.90)
+				//&& dn.getJogador().getForcaGeralPotencial() < (necessidadeContratacaoClube.getClube().getForcaGeral() * 1.10)
+				&& dn.getJogador().getIdade() <= necessidadeContratacaoClube.getNivelAdequacaoMin().getIdadeMaxContratar();
 	}
 
 	//É esperado que validações já tenham sido feitas: Elenco dos clubes, disponibilidade financeira, janela de transferencias
@@ -603,5 +642,84 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		//System.err.println(mensagens);
 
 		return clubesSaldo;
+	}
+
+	private void possiveisTrocas(List<PropostaTransferenciaJogador> propostas, Map<Clube, ClubeSaldo> clubeSaldo) {//TODO
+		
+		List<PropostaTransferenciaJogador> propostasPossiveisTrocas;
+		
+		Set<PossivelTrocaJogador> possiveisTrocas;
+		
+		List<PropostaTransferenciaJogador> propostasPossiveisTrocas2 = new ArrayList<PropostaTransferenciaJogador>();
+		
+		Set<PossivelTrocaJogador> possiveisTrocas2 = new HashSet<PossivelTrocaJogador>();
+
+		Map<Clube, Map<Jogador, List<PropostaTransferenciaJogador>>> xyz = propostas.stream()
+				.collect(Collectors.groupingBy(PropostaTransferenciaJogador::getClubeDestino,
+						Collectors.groupingBy(PropostaTransferenciaJogador::getJogador)));
+		
+		for (PropostaTransferenciaJogador ptj : propostas) {
+			propostasPossiveisTrocas = propostas.stream().filter(p -> matchTroca(clubeSaldo, ptj, p)).collect(Collectors.toList());
+			
+			possiveisTrocas = propostas.stream().filter(p -> matchTroca(clubeSaldo, ptj, p))
+					.map(p2 -> new PossivelTrocaJogador(ptj, p2)).collect(Collectors.toSet());
+			
+			if (propostasPossiveisTrocas.size() > 0) {
+				
+				/*System.err.println(propostasPossiveisTrocas.size());
+				System.err.println(possiveisTrocas.size());*/
+				
+				propostasPossiveisTrocas2.addAll(propostasPossiveisTrocas);
+				possiveisTrocas2.addAll(possiveisTrocas);
+
+				System.err.println("\t\tINICIO");
+				
+				System.err.println("CS:" + clubeSaldo.get(ptj.getClubeDestino()));
+				System.err.println("PTJ:" + ptj);
+				
+				for (PropostaTransferenciaJogador propostaTransferenciaJogador : propostasPossiveisTrocas) {
+					System.err.println("\tCS: " + propostaTransferenciaJogador);
+					System.err.println("\tPTJ: " + clubeSaldo.get(propostaTransferenciaJogador.getClubeDestino()));
+				}
+				
+				
+				System.err.println("\t\tFIM");
+			}
+		}
+		
+		System.err.println(propostasPossiveisTrocas2.size());
+		System.err.println(possiveisTrocas2.size());
+		
+		System.err.println(possiveisTrocas2);
+	}
+
+	private boolean matchTroca(Map<Clube, ClubeSaldo> clubeSaldo, PropostaTransferenciaJogador ptj,
+			PropostaTransferenciaJogador ptj2) {
+
+		if (!(ptj.getClubeOrigem() == ptj2.getClubeDestino() && ptj.getClubeDestino() == ptj2.getClubeOrigem()
+				/*&& (ptj.getNecessidadeContratacaoClube().getNecessidadePrioritaria()
+						|| ptj2.getNecessidadeContratacaoClube().getNecessidadePrioritaria())*/)) {
+			return false;
+		}
+
+		double diferencaValor = 0.0d;
+
+		if (ptj.getValorTransferencia() >= ptj2.getValorTransferencia()) {
+			diferencaValor = ptj.getValorTransferencia() - ptj2.getValorTransferencia();
+			if (clubeSaldo.get(ptj.getClubeDestino()).getSaldoPrevisto() > diferencaValor) {
+				return true;
+			} else {
+				return ((diferencaValor - clubeSaldo.get(ptj.getClubeDestino()).getSaldoPrevisto())
+						/ ptj.getValorTransferencia()) < DIFF_PERC_MAX_SALDO_TROCA;
+			}
+		} else {
+			diferencaValor = ptj2.getValorTransferencia() - ptj.getValorTransferencia();
+			if (clubeSaldo.get(ptj2.getClubeDestino()).getSaldoPrevisto() > diferencaValor) {
+				return true;
+			} else {
+				return ((diferencaValor - clubeSaldo.get(ptj2.getClubeDestino()).getSaldoPrevisto())
+						/ ptj2.getValorTransferencia()) < DIFF_PERC_MAX_SALDO_TROCA;
+			}
+		}
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.match.model.entity.PartidaLance;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValorEstatistica;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.JogadorEnergia;
 import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
@@ -18,11 +19,14 @@ public class PartidaJogadorEstatisticaDTO {
 	
 	private List<JogadorEnergia> jogadorEnergias;
 
+	private List<HabilidadeGrupoValorEstatistica> habilidadeGrupoValorEstatisticas;
+
 	public PartidaJogadorEstatisticaDTO() {
 		this.habilidadeValorEstatistica = new ArrayList<HabilidadeValorEstatistica>();
 		this.jogadorEstatisticasSemana = new ArrayList<JogadorEstatisticasSemana>();
 		this.partidaLances = new ArrayList<PartidaLance>();
 		this.jogadorEnergias = new ArrayList<JogadorEnergia>();
+		this.habilidadeGrupoValorEstatisticas = new ArrayList<HabilidadeGrupoValorEstatistica>();
 	}
 
 	public List<HabilidadeValorEstatistica> getHabilidadeValorEstatistica() {
@@ -55,5 +59,13 @@ public class PartidaJogadorEstatisticaDTO {
 
 	public void adicionarJogadorEnergias(List<JogadorEnergia> jogadorEstatisticaSemana) {
 		this.jogadorEnergias.addAll(jogadorEstatisticaSemana);
+	}
+
+	public List<HabilidadeGrupoValorEstatistica> getHabilidadeGrupoValorEstatisticas() {
+		return habilidadeGrupoValorEstatisticas;
+	}
+
+	public void adicionarHabilidadeGrupoValorEstatistica(List<HabilidadeGrupoValorEstatistica> habilidadeGrupoValorEstatisticas) {
+		this.habilidadeGrupoValorEstatisticas.addAll(habilidadeGrupoValorEstatisticas);
 	}
 }

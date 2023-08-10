@@ -9,9 +9,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -46,6 +48,12 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	@ManyToOne
 	@JoinColumn(name = "id_partida_estatisticas")
 	private PartidaEstatisticas partidaEstatisticas;
+
+	@Transient
+	private EscalacaoClube escalacaoMandante;
+
+	@Transient
+	private EscalacaoClube escalacaoVisitante;
 	
 	public PartidaResultado() {
 		this.golsMandante = 0;
@@ -126,6 +134,26 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 
 	public void setRodada(Rodada rodada) {
 		this.rodada = rodada;
+	}
+
+	@Override
+	public EscalacaoClube getEscalacaoMandante() {
+		return escalacaoMandante;
+	}
+
+	@Override
+	public void setEscalacaoMandante(EscalacaoClube escalacaoMandante) {
+		this.escalacaoMandante = escalacaoMandante;
+	}
+
+	@Override
+	public EscalacaoClube getEscalacaoVisitante() {
+		return escalacaoVisitante;
+	}
+
+	@Override
+	public void setEscalacaoVisitante(EscalacaoClube escalacaoVisitante) {
+		this.escalacaoVisitante = escalacaoVisitante;
 	}
 
 	@JsonIgnore

@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -27,6 +28,8 @@ public class PartidaLance {
 	private Jogador jogador;
 
 	private Habilidade habilidadeUsada;
+
+	private HabilidadeGrupo habilidadeGrupoUsada;
 	
 	private Boolean vencedor;
 
@@ -55,6 +58,14 @@ public class PartidaLance {
 	public PartidaLance(Jogador jogador, Habilidade habilidadeUsada, Boolean vencedor, Integer ordem, Boolean acao) {
 		this.jogador = jogador;
 		this.habilidadeUsada = habilidadeUsada;
+		this.vencedor = vencedor;
+		this.ordem = ordem;
+		this.acao = acao;
+	}
+	
+	public PartidaLance(Jogador jogador, HabilidadeGrupo habilidadeGrupoUsada, Boolean vencedor, Integer ordem, Boolean acao) {
+		this.jogador = jogador;
+		this.habilidadeGrupoUsada = habilidadeGrupoUsada;
 		this.vencedor = vencedor;
 		this.ordem = ordem;
 		this.acao = acao;
@@ -140,9 +151,18 @@ public class PartidaLance {
 		this.minuto = minuto;
 	}
 
+	public HabilidadeGrupo getHabilidadeGrupoUsada() {
+		return habilidadeGrupoUsada;
+	}
+
+	public void setHabilidadeGrupoUsada(HabilidadeGrupo habilidadeGrupoUsada) {
+		this.habilidadeGrupoUsada = habilidadeGrupoUsada;
+	}
+
 	@Override
 	public String toString() {
-		return "PartidaLance [jogador=" + jogador + ", habilidadeUsada=" + habilidadeUsada + ", vencedor=" + vencedor
+		return "PartidaLance [jogador=" + jogador + ", habilidadeUsada="
+				+ (habilidadeUsada != null ? habilidadeUsada : habilidadeGrupoUsada) + ", vencedor=" + vencedor
 				+ ", ordem=" + ordem + ", acao=" + acao + "]";
 	}
 

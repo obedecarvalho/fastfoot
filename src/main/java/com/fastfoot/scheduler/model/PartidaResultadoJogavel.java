@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.model;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 
 public interface PartidaResultadoJogavel {
@@ -54,4 +55,12 @@ public interface PartidaResultadoJogavel {
 	public PartidaEstatisticas getPartidaEstatisticas();
 	
 	public NivelCampeonato getNivelCampeonato();
+
+	public EscalacaoClube getEscalacaoMandante();
+
+	public EscalacaoClube getEscalacaoVisitante();
+
+	public void setEscalacaoMandante(EscalacaoClube escalacaoMandante);
+
+	public void setEscalacaoVisitante(EscalacaoClube escalacaoVisitante);
 }

@@ -14,6 +14,8 @@ import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.StatusJogador;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValorEstatistica;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
@@ -39,9 +41,21 @@ public class CarregarEscalacaoJogadoresPartidaService {
 
 	public EscalacaoClube carregarJogadoresPartida(Clube clube, PartidaResultadoJogavel partidaResultado) {
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogadorFetchHabilidades(clube,
-				StatusJogador.ATIVO);
+				StatusJogador.ATIVO);//TODO: reduzir numero de consultas
 		
 		carregarJogadorEnergia(clube, jogadores);
+
+		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
+
+		inicializarEstatisticasJogador(escalacao.getListEscalacaoJogadorPosicao(),
+				partidaResultado.getRodada().getSemana(), partidaResultado);
+
+		inicializarEstatisticas(jogadores, partidaResultado.getRodada().getSemana(), partidaResultado);
+
+		return escalacao;
+	}
+
+	public EscalacaoClube carregarJogadoresPartida(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
 
 		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
 
@@ -153,6 +167,32 @@ public class CarregarEscalacaoJogadoresPartidaService {
 			for (HabilidadeValor hv : j.getHabilidades()) {
 				hv.setHabilidadeValorEstatistica(
 						new HabilidadeValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
+			}
+		}
+	}
+
+	public EscalacaoClube carregarJogadoresHabilidadeGrupoPartida(Clube clube, PartidaResultadoJogavel partidaResultado) {
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogadorFetchHabilidadesGrupo(clube,
+				StatusJogador.ATIVO);//TODO: reduzir numero de consultas
+		
+		carregarJogadorEnergia(clube, jogadores);
+
+		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
+
+		inicializarEstatisticasJogador(escalacao.getListEscalacaoJogadorPosicao(),
+				partidaResultado.getRodada().getSemana(), partidaResultado);
+
+		inicializarEstatisticasHabilidadeGrupo(jogadores, partidaResultado.getRodada().getSemana(), partidaResultado);
+
+		return escalacao;
+	}
+
+	private void inicializarEstatisticasHabilidadeGrupo(List<Jogador> jogadores, Semana semana,
+			PartidaResultadoJogavel partidaResultado) {
+		for (Jogador j : jogadores) {
+			for (HabilidadeGrupoValor hv : j.getHabilidadesGrupo()) {
+				hv.setHabilidadeGrupoValorEstatistica(
+						new HabilidadeGrupoValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
 			}
 		}
 	}

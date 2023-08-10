@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeGrupoAcao;
+import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
@@ -79,11 +81,29 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoMeioFimJogadorPosicaoAtualPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupoAcaoMeioFimValor();
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoMeioFimValor();
+		}
+	}
+
+	@Override
 	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidades();
 		} else {
 			return posicaoAtual.getVisitante().getHabilidades();
+		}
+	}
+
+	@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupo();
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupo();
 		}
 	}
 
@@ -97,11 +117,29 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoFimJogadorPosicaoAtualPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupoAcaoFimValor();
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoFimValor();
+		}
+	}
+
+	@Override
 	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidades(habilidades);
 		} else {
 			return posicaoAtual.getVisitante().getHabilidades(habilidades);
+		}
+	}
+
+	@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
+		if (!posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
 		}
 	}
 
@@ -125,6 +163,15 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getMandante().getHabilidades(habilidades);
 		} else {
 			return posicaoAtual.getVisitante().getHabilidades(habilidades);
+		}
+	}
+
+	@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades) {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
 		}
 	}
 
