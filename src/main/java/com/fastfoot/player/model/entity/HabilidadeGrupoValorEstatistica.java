@@ -17,8 +17,8 @@ import com.fastfoot.scheduler.model.entity.Semana;
 public class HabilidadeGrupoValorEstatistica {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorEstatisticaSequence")
-	@SequenceGenerator(name = "habilidadeValorEstatisticaSequence", sequenceName = "habilidade_valor_estatistica_seq")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeGrupoValorEstatisticaSequence")
+	@SequenceGenerator(name = "habilidadeGrupoValorEstatisticaSequence", sequenceName = "habilidade_grupo_valor_estatistica_seq")
 	private Long id;
 
 	@ManyToOne

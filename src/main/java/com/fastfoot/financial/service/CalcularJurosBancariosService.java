@@ -14,6 +14,7 @@ import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.service.util.DatabaseUtil;
 import com.fastfoot.transfer.model.ClubeSaldo;
 
 @Service
@@ -31,7 +32,7 @@ public class CalcularJurosBancariosService {
 		for (Map<String, Object> sc : saldoClubes) {
 			clubeSaldo = new ClubeSaldo();
 			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
-			clubeSaldo.setSaldo((Double) sc.get("saldo"));
+			clubeSaldo.setSaldo(DatabaseUtil.getValueDecimal(sc.get("saldo")));
 			clubeSaldos.add(clubeSaldo);
 		}
 		

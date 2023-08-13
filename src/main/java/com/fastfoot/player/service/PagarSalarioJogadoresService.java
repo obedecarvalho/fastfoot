@@ -15,6 +15,7 @@ import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class PagarSalarioJogadoresService {
@@ -37,7 +38,7 @@ public class PagarSalarioJogadoresService {
 
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
 			
-			valorSalario = Math.round(((Double) vtc.get("valor_transferencia")) * porcentagemSalario) / 100d;//Arredondar
+			valorSalario = Math.round((DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia"))) * porcentagemSalario) / 100d;//Arredondar
 			
 			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,
 					String.format("Salários (%d)", semana.getNumero())));
@@ -56,7 +57,7 @@ public class PagarSalarioJogadoresService {
 
 		for (Map<String, Object> vtc : valorSalariosClubes) {
 			
-			valorSalario = (Double) vtc.get("total_salarios"); 
+			valorSalario = DatabaseUtil.getValueDecimal(vtc.get("total_salarios")); 
 					//Math.round(((Double) vtc.get("valor_transferencia")) * porcentagemSalario) / 100d;//Arredondar
 			
 			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,

@@ -34,6 +34,7 @@ import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.service.util.DatabaseUtil;
 import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.model.ClubeSaldo;
@@ -579,8 +580,8 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		for (Map<String, Object> sc : saldoClubes) {
 			clubeSaldo = new ClubeSaldo();
 			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
-			clubeSaldo.setSaldo((Double) sc.get("saldo"));
-			clubeSaldo.setPrevisaoSaidaSalarios((Double) sc.get("salarios_projetado"));
+			clubeSaldo.setSaldo(DatabaseUtil.getValueDecimal(sc.get("saldo")));
+			clubeSaldo.setPrevisaoSaidaSalarios(DatabaseUtil.getValueDecimal(sc.get("salarios_projetado")));
 			/*clubeSaldo.setPrevisaoEntradaIngressos(
 					calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(clubeSaldo.getClube()));*/
 			clubeSaldo.setMovimentacoesTransferenciaCompra(0d);

@@ -16,6 +16,7 @@ import com.fastfoot.financial.model.repository.DemonstrativoFinanceiroTemporadaR
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class GerarDemonstrativoFinanceiroTemporadaService {
@@ -59,7 +60,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 					.setTipoMovimentacao(TipoMovimentacaoFinanceira.values()[(int) mov.get("tipo_movimentacao")]);*/
 			demonstrativoFinanceiroTemporada.setTipoMovimentacao(TipoMovimentacaoFinanceiraAttributeConverter
 					.getInstance().convertToEntityAttribute((int) mov.get("tipo_movimentacao")));
-			demonstrativoFinanceiroTemporada.setValorMovimentacao((Double) mov.get("valor_movimentacao"));
+			demonstrativoFinanceiroTemporada.setValorMovimentacao(DatabaseUtil.getValueDecimal(mov.get("valor_movimentacao")));
 
 			demonstrativosFinanceiroTemporada.add(demonstrativoFinanceiroTemporada);
 		}
@@ -80,7 +81,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 		
 		for (Map<String, Object> s : saldoAtual) {
 			idClube = (Integer) s.get("id_clube");
-			saldo = (Double ) s.get("saldo");
+			saldo = DatabaseUtil.getValueDecimal(s.get("saldo"));
 			
 			saldoClube.put(idClube, new Double[3]);
 			saldoClube.get(idClube)[0] = saldo;
@@ -88,7 +89,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 		
 		for (Map<String, Object> s : saldoTemporadaAtual) {
 			idClube = (Integer) s.get("id_clube");
-			saldo = (Double ) s.get("saldo");
+			saldo = DatabaseUtil.getValueDecimal(s.get("saldo"));
 			
 			saldoClube.get(idClube)[1] = saldo;
 			
@@ -139,7 +140,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 		DemonstrativoFinanceiroTemporada demonstrativoFinanceiroTemporada;
 		
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
-			valorElenco = (double) vtc.get("valor_transferencia");
+			valorElenco = DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia"));
 			idClube = (int) vtc.get("id_clube");
 			
 			demonstrativoFinanceiroTemporada = new DemonstrativoFinanceiroTemporada();

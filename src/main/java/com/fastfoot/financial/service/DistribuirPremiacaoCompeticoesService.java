@@ -28,6 +28,7 @@ import com.fastfoot.scheduler.model.repository.ClassificacaoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 import com.fastfoot.service.CarregarParametroService;
+import com.fastfoot.service.util.DatabaseUtil;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
@@ -376,7 +377,7 @@ public class DistribuirPremiacaoCompeticoesService {
 		Map<Integer, Double> valorTransferenciaPorClube = new HashMap<Integer, Double>();
 
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
-			valorTransferenciaPorClube.put((Integer) vtc.get("id_clube"), (Double) vtc.get("valor_transferencia"));
+			valorTransferenciaPorClube.put((Integer) vtc.get("id_clube"), DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia")));
 		}
 		
 		for (Clube c : clubePremiacao.keySet()) {

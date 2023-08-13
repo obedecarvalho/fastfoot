@@ -15,6 +15,7 @@ import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class AgruparHabilidadeValorEstatisticaService {
@@ -113,9 +114,9 @@ public class AgruparHabilidadeValorEstatisticaService {
 					.setQuantidadeUsoVencedorQ2((Integer) estatisticas.get(0).get("quv_q2"));
 			habilidadeEstatisticaPercentil
 					.setQuantidadeUsoVencedorQ1((Integer) estatisticas.get(0).get("quv_q1"));
-			habilidadeEstatisticaPercentil.setPorcAcertoQ1((Double) estatisticas.get(0).get("pa_q1"));
-			habilidadeEstatisticaPercentil.setPorcAcertoQ2((Double) estatisticas.get(0).get("pa_q2"));
-			habilidadeEstatisticaPercentil.setPorcAcertoQ3((Double) estatisticas.get(0).get("pa_q3"));
+			habilidadeEstatisticaPercentil.setPorcAcertoQ1(DatabaseUtil.getValueDecimal(estatisticas.get(0).get("pa_q1")));
+			habilidadeEstatisticaPercentil.setPorcAcertoQ2(DatabaseUtil.getValueDecimal(estatisticas.get(0).get("pa_q2")));
+			habilidadeEstatisticaPercentil.setPorcAcertoQ3(DatabaseUtil.getValueDecimal(estatisticas.get(0).get("pa_q3")));
 		}
 		
 		return habilidadeEstatisticaPercentil;
