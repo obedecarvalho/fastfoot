@@ -73,13 +73,25 @@ public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<Camp
 		return clubeProbabilidadeRepository.findByCampeonatoAndSemana(campeonato, semana);
 	}
 	
-	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemanaAtual(Campeonato campeonato){
-		return getByCampeonatoAndSemana(campeonato, semanaCRUDService.getSemanaAtual());
+	public List<CampeonatoClubeProbabilidade> getByCampeonatoRodadaAtual(Campeonato campeonato){
+		return clubeProbabilidadeRepository.findByCampeonatoRodadaAtual(campeonato.getId());
 	}
 	
-	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemanaAtualComClassificacao(Campeonato campeonato){
+	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndRodadaAtualComClassificacao(Campeonato campeonato){
 		
-		List<CampeonatoClubeProbabilidade> probabilidades = getByCampeonatoAndSemana(campeonato, semanaCRUDService.getSemanaAtual());
+		Semana semanaAtual = semanaCRUDService.getSemanaAtual();
+
+		List<CampeonatoClubeProbabilidade> probabilidades;
+
+		/*
+		 * Ao fim da semana 22 as probabilidade são recalculadas para compreender probabilidade de classificação
+		 * continental e copa nacional, mesmo não tendo jogos na campeonato nacional.
+		 */
+		if (semanaAtual.getNumero() == 22) {
+			probabilidades = getByCampeonatoAndSemana(campeonato, semanaAtual);
+		} else {
+			probabilidades = getByCampeonatoRodadaAtual(campeonato);
+		}
 		
 		List<Classificacao> classificacoes = classificacaoRepository.findByCampeonato(campeonato);
 		

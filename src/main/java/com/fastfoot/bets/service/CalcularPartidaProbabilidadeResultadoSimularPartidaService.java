@@ -1,14 +1,11 @@
 package com.fastfoot.bets.service;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -16,21 +13,19 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
-import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
+import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
 import com.fastfoot.match.service.EscalarClubeService;
-import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEnergia;
-import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorRepository;
+import com.fastfoot.player.service.CarregarJogadorEnergiaService;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -41,7 +36,6 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
-import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
@@ -68,15 +62,30 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 	
 	@Autowired
 	private EscalarClubeService escalarClubeService;
-	
+
 	@Autowired
-	private JogadorEnergiaRepository jogadorEnergiaRepository;
+	private CarregarJogadorEnergiaService carregarJogadorEnergiaService;
+
+	@Autowired
+	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
+	
+	/*@Autowired
+	private JogadorEnergiaRepository jogadorEnergiaRepository;*/
 	
 	/*@Autowired
 	private ParametroService parametroService;*/
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> simularPartidas(RodadaJogavel rodada) {
+
+		//Instanciar StopWatch
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
 
 		List<PartidaProbabilidadeResultado> probabilidades = new ArrayList<PartidaProbabilidadeResultado>();
 		
@@ -88,11 +97,40 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
 		}
 
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(partidas);
+
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregarEscalacao:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(simularPartida(p));
+			probabilidades.add(simularPartida(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
+			//probabilidades.add(simularPartida(p));
 		}
 
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#simularPartida:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
 		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#partidaProbabilidadeResultadoRepository:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		//Finalizar
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 
@@ -104,22 +142,21 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeMandante(), StatusJogador.ATIVO);
 		List<Jogador> jogadoresVisitante = jogadorRepository
 				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
-
-		/*List<EscalacaoJogadorPosicao> escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, null);
-		List<EscalacaoJogadorPosicao> escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, null);*/
 		
-		carregarJogadorEnergia(partidaResultado.getClubeMandante(), jogadoresMandante);
-		carregarJogadorEnergia(partidaResultado.getClubeVisitante(), jogadoresVisitante);
+		carregarJogadorEnergiaService.carregarJogadorEnergia(partidaResultado.getClubeMandante(), jogadoresMandante);
+		carregarJogadorEnergiaService.carregarJogadorEnergia(partidaResultado.getClubeVisitante(), jogadoresVisitante);
 		
 		EscalacaoClube escalacaoMandante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
 		EscalacaoClube escalacaoVisitante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
+		
+		return simularPartida(partidaResultado, escalacaoMandante, escalacaoVisitante);
+	}
+	
+	private PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
-				//escalacaoMandante.getListEscalacaoJogadorPosicao(), escalacaoVisitante.getListEscalacaoJogadorPosicao(),
 				escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
@@ -240,6 +277,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 					habilidadeFora = new HabilidadeValor(Habilidade.FORA, (int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));
+					habilidadeFora.calcularValorN();
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
 					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
@@ -272,48 +310,29 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 							golVisitante++;
 						}
 						partidaResultado.incrementarGol(esquema.getPosseBolaMandante());
-						/*if (!partidaResultado.isAmistoso()) {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
-									.incrementarGolsMarcados();
-							if (jogadorAssistencia != null) {
-								jogadorAssistencia.getJogadorEstatisticasTemporadaAtual().incrementarAssistencias();
-							}
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasTemporadaAtual()
-									.incrementarGolsSofridos();
-						} else {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarGolsMarcados();
-							if (jogadorAssistencia != null) {
-								jogadorAssistencia.getJogadorEstatisticasAmistososTemporadaAtual()
-										.incrementarAssistencias();
-							}
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarGolsSofridos();
-						}*/
+						/*
+						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana().incrementarGolsMarcados();
+						if (jogadorAssistencia != null) {
+							jogadorAssistencia.getJogadorEstatisticasSemana().incrementarAssistencias();
+						}
+						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
+								.incrementarGolsSofridos();
+						*/
 					} else if (goleiroVenceu) {
 						//if (IMPRIMIR) System.err.println("\t\tGOLEIRO DEFENDEU");
 						//partidaResultado.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
-						/*if (!partidaResultado.isAmistoso()) {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
-									.incrementarFinalizacoesDefendidas();
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasTemporadaAtual()
-									.incrementarGoleiroFinalizacoesDefendidas();
-						} else {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarFinalizacoesDefendidas();
-							esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarGoleiroFinalizacoesDefendidas();
-						}*/
+						/*
+						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana()
+								.incrementarFinalizacoesDefendidas();
+						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
+								.incrementarGoleiroFinalizacoesDefendidas();
+						*/
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						//if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
 						//partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
-						/*if (!partidaResultado.isAmistoso()) {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasTemporadaAtual()
-									.incrementarFinalizacoesFora();
-						} else {
-							habilidadeValorAcao.getJogador().getJogadorEstatisticasAmistososTemporadaAtual()
-									.incrementarFinalizacoesFora();
-						}*/
+						/*
+						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana().incrementarFinalizacoesFora();
+						*/
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 					//jogadorAssistencia = null;
@@ -338,8 +357,6 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 			}
 		}
 
-		//JogadorAgruparGrupoEstatisticasUtil.agruparEstatisticas(lances);
-
 		//if (IMPRIMIR) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
 		
 		partidaResultado.setPartidaJogada(true);
@@ -361,7 +378,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 		return factory;
 	}*/
 
-	private void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
+	/*private void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
 		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
 
 		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
@@ -391,5 +408,5 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService {
 			j.setJogadorEnergia(je);
 		}
 
-	}
+	}*/
 }

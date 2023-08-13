@@ -201,6 +201,14 @@ public class CriarCalendarioTemporadaService {
 		Temporada temporada = null, temporadaAtual = null;
 		//Integer ano = Constantes.ANO_INICIAL;
 		Optional<Temporada> temporadaAtualOpt = temporadaRepository.findFirstByAtual(true);
+
+		//
+		if (temporadaAtualOpt.isPresent()) {
+			if (temporadaAtualOpt.get().getSemanaAtual() < Constantes.NUM_SEMANAS) {
+				throw new RuntimeException("Temporada ainda não terminada!");
+			}
+		}
+		//
 		
 		//
 		temporada = TemporadaFactory.criarTemporada(
@@ -211,9 +219,9 @@ public class CriarCalendarioTemporadaService {
 		if (temporadaAtualOpt.isPresent()) {
 			temporadaAtual = temporadaAtualOpt.get();
 
-			if (temporadaAtual.getSemanaAtual() < Constantes.NUM_SEMANAS) {
+			/*if (temporadaAtual.getSemanaAtual() < Constantes.NUM_SEMANAS) {
 				throw new RuntimeException("Temporada ainda não terminada!");
-			}
+			}*/
 
 			if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
 			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);//TODO: substituir pelo 2 comandos?

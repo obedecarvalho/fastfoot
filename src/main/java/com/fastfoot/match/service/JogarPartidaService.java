@@ -150,35 +150,7 @@ public class JogarPartidaService {
 		EscalacaoClube escalacaoVisitante = carregarJogadoresPartidaService
 				.carregarJogadoresPartida(partidaResultado.getClubeVisitante(), partidaResultado);
 
-		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
-				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
-				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()));
-		
-		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
-		List<PartidaLance> lances = jogar(esquema, partidaResultado);
-		
-		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
-			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
-		}
-		
-		//
-		calcularMinutosJogador(esquema);
-		//
-		
-		salvarEstatisticas(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		salvarEstatisticas(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		salvarEstatisticasJogador(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		salvarJogadorEnergia(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		salvarJogadorEnergia(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
-		
-		partidaJogadorEstatisticaDTO.adicionarPartidaLance(lances);
+		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO);
 	}
 
 	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {

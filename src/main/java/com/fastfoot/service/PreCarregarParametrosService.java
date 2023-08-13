@@ -58,7 +58,7 @@ public class PreCarregarParametrosService {
 			
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA, "true", "false, true"));
 			
-			parametros.add(new Parametro(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS, "false", "false, true"));
+			parametros.add(new Parametro(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS, "true", "false, true"));
 			
 			parametros.add(new Parametro(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA, "true", "false, true"));
 			

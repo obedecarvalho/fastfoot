@@ -69,7 +69,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		}
 	}
 	
-	@GetMapping("/campeonatoClubeProbabilidades/semanaAtual")
+	@GetMapping("/campeonatoClubeProbabilidades/rodadaAtual")
 	public ResponseEntity<List<CampeonatoClubeProbabilidade>> getBySemanaAtual(
 			@RequestParam(name = "idCampeonato", required = true) Long idCampeonato,
 			@RequestParam(name = "comClassificacao", required = false) Boolean comClassificacao) {
@@ -79,9 +79,9 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 			List<CampeonatoClubeProbabilidade> clubes = null;
 			
 			if (comClassificacao != null && comClassificacao) {
-				clubes = clubeCRUDService.getByCampeonatoAndSemanaAtualComClassificacao(new Campeonato(idCampeonato));
+				clubes = clubeCRUDService.getByCampeonatoAndRodadaAtualComClassificacao(new Campeonato(idCampeonato));
 			} else {
-				clubes = clubeCRUDService.getByCampeonatoAndSemanaAtual(new Campeonato(idCampeonato));
+				clubes = clubeCRUDService.getByCampeonatoRodadaAtual(new Campeonato(idCampeonato));
 			}
 
 			if (ValidatorUtil.isEmpty(clubes)) {

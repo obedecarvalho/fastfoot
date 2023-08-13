@@ -2,6 +2,7 @@ package com.fastfoot.scheduler.model.entity;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Convert;
 import javax.persistence.Entity;
@@ -29,14 +30,6 @@ public class RodadaAmistosa implements RodadaJogavel {
 	private Long id;
 	
 	private Integer numero;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_campeonato")
-	private Campeonato campeonato;*/
-
-	/*@ManyToOne
-	@JoinColumn(name = "id_grupo_campeonato")
-	private GrupoCampeonato grupoCampeonato;*/
 	
 	@ManyToOne
 	@JoinColumn(name = "id_semana")
@@ -90,22 +83,6 @@ public class RodadaAmistosa implements RodadaJogavel {
 		this.partidas.addAll(partidas);
 	}
 
-	/*public Campeonato getCampeonato() {
-		return campeonato;
-	}
-
-	public void setCampeonato(Campeonato campeonato) {
-		this.campeonato = campeonato;
-	}*/
-
-	/*public GrupoCampeonato getGrupoCampeonato() {
-		return grupoCampeonato;
-	}
-
-	public void setGrupoCampeonato(GrupoCampeonato grupoCampeonato) {
-		this.grupoCampeonato = grupoCampeonato;
-	}*/
-
 	@Override
 	public Semana getSemana() {
 		return semana;
@@ -151,5 +128,22 @@ public class RodadaAmistosa implements RodadaJogavel {
 	@Override
 	public String toString() {
 		return "RodadaAmistosa [sem=" + (semana != null ? semana.getNumero() : "") + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		RodadaAmistosa other = (RodadaAmistosa) obj;
+		return Objects.equals(id, other.id);
 	}
 }

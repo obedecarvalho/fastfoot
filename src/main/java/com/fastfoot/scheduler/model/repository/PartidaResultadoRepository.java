@@ -1,5 +1,6 @@
 package com.fastfoot.scheduler.model.repository;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -46,4 +47,7 @@ public interface PartidaResultadoRepository extends JpaRepository<PartidaResulta
 	
 	@Query("SELECT p FROM PartidaResultado p WHERE p.clubeMandante = :clube OR p.clubeVisitante = :clube")
 	public List<PartidaResultado> findByClube(@Param("clube") Clube clube);
+
+	@Query("SELECT p FROM PartidaResultado p WHERE p.rodada IN :rodadas")
+	public List<PartidaResultado> findByRodadas(@Param("rodadas") Collection<Rodada> rodadas);
 }

@@ -1,6 +1,7 @@
 package com.fastfoot.scheduler.model.entity;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -127,5 +128,22 @@ public class Rodada implements RodadaJogavel {
 	@Override
 	public String toString() {
 		return "Rodada [" + numero + ", sem=" + (semana != null ? semana.getNumero() : "") + (campeonato != null ? ", (NAC)" : ", (CONT)") + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Rodada other = (Rodada) obj;
+		return Objects.equals(id, other.id);
 	}
 }

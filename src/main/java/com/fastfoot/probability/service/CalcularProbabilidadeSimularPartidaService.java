@@ -123,14 +123,14 @@ public class CalcularProbabilidadeSimularPartidaService {
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
 
 		for (Rodada r : nacional.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));
+			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
 		}
 		
 		nacionalII.setClassificacao(classificacaoRepository.findByCampeonato(nacionalII));
 		nacionalII.setRodadas(rodadaRepository.findByCampeonato(nacionalII));
 
 		for (Rodada r : nacionalII.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));
+			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
 		}
 		
 		//
