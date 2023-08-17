@@ -15,21 +15,21 @@ import com.fastfoot.service.CRUDService;
 public class EscalacaoClubeCRUDService implements CRUDService<EscalacaoClube, Long> {
 	
 	@Autowired
-	private EscalacaoClubeRepository escalacaoClubePartidaRepository;
+	private EscalacaoClubeRepository escalacaoClubeRepository;
 
 	@Override
 	public List<EscalacaoClube> getAll() {
-		return escalacaoClubePartidaRepository.findAll();
+		return escalacaoClubeRepository.findAll();
 	}
 	
 	public List<EscalacaoClube> getByClube(Clube clube) {
 		//return escalacaoClubePartidaRepository.findByClube(clube);
-		return escalacaoClubePartidaRepository.findByClubeAndAtivoFetchEscalacaoJogadorPosicao(clube, true);
+		return escalacaoClubeRepository.findByClubeAndAtivoFetchEscalacaoJogadorPosicao(clube, true);
 	}
 
 	@Override
 	public EscalacaoClube getById(Long id) {
-		Optional<EscalacaoClube> escalacaoClubePartidaOpt = escalacaoClubePartidaRepository.findById(id);
+		Optional<EscalacaoClube> escalacaoClubePartidaOpt = escalacaoClubeRepository.findById(id);
 		if (escalacaoClubePartidaOpt.isPresent()) {
 			return escalacaoClubePartidaOpt.get();
 		}
@@ -38,21 +38,21 @@ public class EscalacaoClubeCRUDService implements CRUDService<EscalacaoClube, Lo
 
 	@Override
 	public void delete(Long id) {
-		escalacaoClubePartidaRepository.deleteById(id);
+		escalacaoClubeRepository.deleteById(id);
 	}
 
 	@Override
 	public void deleteAll() {
-		escalacaoClubePartidaRepository.deleteAll();
+		escalacaoClubeRepository.deleteAll();
 	}
 
 	@Override
 	public EscalacaoClube create(EscalacaoClube t) {
-		return escalacaoClubePartidaRepository.save(t);
+		return escalacaoClubeRepository.save(t);
 	}
 
 	@Override
 	public EscalacaoClube update(EscalacaoClube t) {
-		return escalacaoClubePartidaRepository.save(t);
+		return escalacaoClubeRepository.save(t);
 	}
 }

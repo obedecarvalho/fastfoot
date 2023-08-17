@@ -23,7 +23,7 @@ import com.fastfoot.service.CRUDService;
 public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<CampeonatoClubeProbabilidade, Long> {
 
 	@Autowired
-	private CampeonatoClubeProbabilidadeRepository clubeProbabilidadeRepository;
+	private CampeonatoClubeProbabilidadeRepository campeonatoClubeProbabilidadeRepository;
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
@@ -33,12 +33,12 @@ public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<Camp
 
 	@Override
 	public List<CampeonatoClubeProbabilidade> getAll() {
-		return clubeProbabilidadeRepository.findAll();
+		return campeonatoClubeProbabilidadeRepository.findAll();
 	}
 
 	@Override
 	public CampeonatoClubeProbabilidade getById(Long id) {
-		Optional<CampeonatoClubeProbabilidade> clubeOpt = clubeProbabilidadeRepository.findById(id);
+		Optional<CampeonatoClubeProbabilidade> clubeOpt = campeonatoClubeProbabilidadeRepository.findById(id);
 		if (clubeOpt.isPresent()) {
 			return clubeOpt.get();
 		}
@@ -47,34 +47,34 @@ public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<Camp
 
 	@Override
 	public void delete(Long id) {
-		clubeProbabilidadeRepository.deleteById(id);		
+		campeonatoClubeProbabilidadeRepository.deleteById(id);		
 	}
 
 	@Override
 	public void deleteAll() {
-		clubeProbabilidadeRepository.deleteAll();
+		campeonatoClubeProbabilidadeRepository.deleteAll();
 	}
 
 	@Override
 	public CampeonatoClubeProbabilidade create(CampeonatoClubeProbabilidade t) {
-		return clubeProbabilidadeRepository.save(t);
+		return campeonatoClubeProbabilidadeRepository.save(t);
 	}
 
 	@Override
 	public CampeonatoClubeProbabilidade update(CampeonatoClubeProbabilidade t) {
-		return clubeProbabilidadeRepository.save(t);
+		return campeonatoClubeProbabilidadeRepository.save(t);
 	}
 	
 	public List<CampeonatoClubeProbabilidade> getByCampeonato(Campeonato campeonato){
-		return clubeProbabilidadeRepository.findByCampeonato(campeonato);
+		return campeonatoClubeProbabilidadeRepository.findByCampeonato(campeonato);
 	}
 
 	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndSemana(Campeonato campeonato, Semana semana){
-		return clubeProbabilidadeRepository.findByCampeonatoAndSemana(campeonato, semana);
+		return campeonatoClubeProbabilidadeRepository.findByCampeonatoAndSemana(campeonato, semana);
 	}
 	
 	public List<CampeonatoClubeProbabilidade> getByCampeonatoRodadaAtual(Campeonato campeonato){
-		return clubeProbabilidadeRepository.findByCampeonatoRodadaAtual(campeonato.getId());
+		return campeonatoClubeProbabilidadeRepository.findByCampeonatoRodadaAtual(campeonato.getId());
 	}
 	
 	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndRodadaAtualComClassificacao(Campeonato campeonato){

@@ -29,6 +29,7 @@ import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
 
+@Deprecated
 @Service
 public class ConcluirTransferenciaJogadorService {
 	

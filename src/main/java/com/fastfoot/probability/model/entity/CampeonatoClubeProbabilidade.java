@@ -14,7 +14,7 @@ import javax.persistence.Transient;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
-import com.fastfoot.probability.model.TipoClubeProbabilidade;
+import com.fastfoot.probability.model.TipoCampeonatoClubeProbabilidade;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.Semana;
@@ -54,7 +54,7 @@ public class CampeonatoClubeProbabilidade {
 	
 	private Double probabilidadeClassificacaoCNI;
 	
-	private TipoClubeProbabilidade tipoClubeProbabilidade;
+	private TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade;
 
 	@Transient
 	private Map<Integer, CampeonatoClubeProbabilidadePosicao> clubeProbabilidadePosicao;//Key: posicao
@@ -216,11 +216,11 @@ public class CampeonatoClubeProbabilidade {
 		this.probabilidadeClassificacaoCNI = probabilidadeClassificacaoCNI;
 	}
 
-	public TipoClubeProbabilidade getTipoClubeProbabilidade() {
+	public TipoCampeonatoClubeProbabilidade getTipoClubeProbabilidade() {
 		return tipoClubeProbabilidade;
 	}
 
-	public void setTipoClubeProbabilidade(TipoClubeProbabilidade tipoClubeProbabilidade) {
+	public void setTipoClubeProbabilidade(TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
 		this.tipoClubeProbabilidade = tipoClubeProbabilidade;
 	}
 

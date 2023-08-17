@@ -65,11 +65,11 @@ public class AdequarModoDesenvolvimentoJogadorService {
 						.findFirst();
 	
 				if (jogadorEstatisticasTemporadaOpt.isPresent()) {
-					jd.setEstatisticasTemporadaAtual(jogadorEstatisticasTemporadaOpt.get());
+					jd.setJogadorEstatisticasTemporadaAtual(jogadorEstatisticasTemporadaOpt.get());
 				}
 	
 				if (jogadorEstatisticasTemporadaAmistososOpt.isPresent()) {
-					jd.setEstatisticasAmistososTemporadaAtual(jogadorEstatisticasTemporadaAmistososOpt.get());
+					jd.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasTemporadaAmistososOpt.get());
 				}
 			}
 		}
@@ -92,11 +92,11 @@ public class AdequarModoDesenvolvimentoJogadorService {
 					.getNumeroMinutosJogados()
 					+ j.getEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados();*/
 			
-			int totalMinutosJogados = j.getEstatisticasTemporadaAtual() != null
-					? j.getEstatisticasTemporadaAtual().getNumeroMinutosJogados()
+			int totalMinutosJogados = j.getJogadorEstatisticasTemporadaAtual() != null
+					? j.getJogadorEstatisticasTemporadaAtual().getNumeroMinutosJogados()
 					: 0;
-			totalMinutosJogados += j.getEstatisticasAmistososTemporadaAtual() != null
-					? j.getEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados()
+			totalMinutosJogados += j.getJogadorEstatisticasAmistososTemporadaAtual() != null
+					? j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados()
 					: 0;
 			
 			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()
@@ -136,7 +136,7 @@ public class AdequarModoDesenvolvimentoJogadorService {
 			
 		}
 		
-		System.err.println(detalheJogadoresSalvar.size());
+		//System.err.println(detalheJogadoresSalvar.size());
 		jogadorRepository.saveAll(detalheJogadoresSalvar);
 		
 		//System.err.println(detalheJogadoresSalvar.size() + ":" + jogadores.size());

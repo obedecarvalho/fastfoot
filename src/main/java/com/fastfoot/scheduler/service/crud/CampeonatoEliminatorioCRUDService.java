@@ -17,7 +17,7 @@ public class CampeonatoEliminatorioCRUDService implements CRUDService<Campeonato
 	private CampeonatoEliminatorioRepository campeonatoEliminatorioRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	public List<CampeonatoEliminatorio> getAll() {
@@ -54,6 +54,6 @@ public class CampeonatoEliminatorioCRUDService implements CRUDService<Campeonato
 	}
 
 	public List<CampeonatoEliminatorio> getAllTemporadaAtual() {
-		return campeonatoEliminatorioRepository.findByTemporada(temporadaService.getTemporadaAtual());
+		return campeonatoEliminatorioRepository.findByTemporada(temporadaCRUDService.getTemporadaAtual());
 	}
 }

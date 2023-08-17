@@ -19,12 +19,12 @@ import com.fastfoot.service.util.ValidatorUtil;
 public class ConsultarEscalacaoClubeController {
 	
 	@Autowired
-	private ConsultarEscalacaoClubeService escalarClubeService;
+	private ConsultarEscalacaoClubeService consultarEscalacaoClubeService;
 
 	@GetMapping("/consultarEscalacaoClube/{idClube}")
 	public ResponseEntity<EscalacaoClubeDTO> consultarEscalacaoClube(@PathVariable(name = "idClube") Integer idClube) {
 		Clube c = new Clube(idClube);
-		EscalacaoClubeDTO escalacaoDTO = escalarClubeService.consultarEscalacaoClube(c);		
+		EscalacaoClubeDTO escalacaoDTO = consultarEscalacaoClubeService.consultarEscalacaoClube(c);		
 		if (ValidatorUtil.isEmpty(escalacaoDTO)) {
 			return ResponseEntity.notFound().build();
 		}

@@ -17,8 +17,8 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
-public class CalcularValorTransferenciaService {
-	
+public class CalcularValorTransferenciaService implements ICalcularValorTransferenciaService {
+
 	/*
 	 * DESATUALIZADO
 	 * Taxa desconto: 33%, Max/Inicial: 103%
@@ -41,7 +41,7 @@ public class CalcularValorTransferenciaService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
-	
+
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularValorTransferencia2(List<Clube> clubes) {
 		StopWatch stopWatch = new StopWatch();
@@ -96,12 +96,12 @@ public class CalcularValorTransferenciaService {
 		stopWatch.start();
 		long inicio = 0, fim = 0;
 		List<String> mensagens = new ArrayList<String>();
-		
+
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		
+
 		List<Jogador> jogadores;
-		
+
 		if (primeirosIds) {
 			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
 					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
@@ -109,29 +109,29 @@ public class CalcularValorTransferenciaService {
 			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
 					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
 		}
-		
+
 		for (Jogador j : jogadores) {
 			calcularValorTransferencia(j);
 		}
-		
+
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#calcularValorTransferencia:" + (fim - inicio));
-		
+
 		stopWatch.split();
 		inicio = stopWatch.getSplitTime();
-		
+
 		jogadorRepository.saveAll(jogadores);
-		
+
 		stopWatch.split();
 		fim = stopWatch.getSplitTime();
 		mensagens.add("\t#saveAll:" + (fim - inicio));
 		
 		stopWatch.stop();
 		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		
+
 		//System.err.println(mensagens);
-		
+
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
@@ -171,24 +171,21 @@ public class CalcularValorTransferenciaService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
+	//@Override
 	public void calcularValorTransferencia(Jogador jogador) {
 
 		Double valor = 0d;
-		
+
 		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
-			
-			//double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
+
 			double ajuste = jogador.getModoDesenvolvimentoJogador().getValorAjuste()[i - JogadorFactory.IDADE_MIN];
-			
-			/*double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencialEfetiva()), FORCA_N_POWER)
-					/ Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());*/
-			
+
 			double valorAj = Math.pow((ajuste * jogador.getForcaGeralPotencial()), FORCA_N_POWER)
 					/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];
-			
+
 			valor += valorAj;
 		}
-		
+
 		//Tem que multiplicar o valor por
 		//	FORCA_N_POWER == 2: 1000
 		//	FORCA_N_POWER == 3: 10
@@ -197,48 +194,4 @@ public class CalcularValorTransferenciaService {
 
 	}
 
-	/*
-	public void calcularValorTransferencia(Jogador jogador) {
-
-		Double valor = 0d;
-		
-		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
-			
-			double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
-			
-			double valorAj = (ajuste * jogador.getForcaGeralPotencialEfetiva()) /  Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade());
-			
-			valor += valorAj;
-		}
-		
-		jogador.setValorTransferencia(valor);
-
-	}
-	*/
-	
-	/*private static final Double TAXA_DESCONTO_I = 0.33;
-	private static final Double TAXA_DESCONTO_II = 0.25;
-	
-	private static final List<Double> PESO = Arrays.asList(0.0d, 0.01d, 0.20d, 0.37d, 0.52d, 0.65d, 0.76d, 0.85d, 0.92d, 0.97d, 0.100d, 0.97d, 0.92d, 0.85d, 0.76d, 0.65d, 0.52d, 0.37d, 0.20d, 0.01d, 0.0d);
-	
-	public void calcularValorTransferencia(Jogador jogador, Boolean novo) {
-
-		Double valor = 0d;
-		
-		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
-			
-			double ajuste = JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN);
-			
-			double valorIAj = (ajuste * jogador.getForcaGeralPotencial()) /  Math.pow(1 + TAXA_DESCONTO_I, i - jogador.getIdade());
-			
-			double valorIIAj = (ajuste * jogador.getForcaGeralPotencial()) /  Math.pow(1 + TAXA_DESCONTO_II, i - jogador.getIdade());
-			
-			double p = PESO.get(i - JogadorFactory.IDADE_MIN);
-			
-			valor += valorIAj * (1 - p) + valorIIAj * p;
-		}
-		
-		jogador.setValorTransferencia(valor);
-
-	}*/
 }

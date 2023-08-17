@@ -29,7 +29,7 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 	private SemanaRepository semanaRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	public List<PartidaAmistosaResultado> getAll() {
@@ -74,14 +74,14 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 		}
 
 		List<PartidaAmistosaResultado> partidas = partidaAmistosaResultadoRepository
-				.findByTemporadaAndClube(temporadaService.getTemporadaAtual(), clubeOpt.get());
+				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(), clubeOpt.get());
 
 		return partidas;
 	}
 
 	public List<PartidaAmistosaResultado> getByNumeroSemana(Integer numeroSemana) {
 
-		Temporada temporadaAtual = temporadaService.getTemporadaAtual();
+		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual();
 
 		Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporadaAtual, numeroSemana);
 

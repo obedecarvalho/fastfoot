@@ -79,10 +79,10 @@ public class Jogador {
 	//###	TRANSIENT	###
 	
 	@Transient
-	private JogadorEstatisticasTemporada estatisticasTemporadaAtual;
+	private JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual;
 	
 	@Transient
-	private JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual;
+	private JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual;
 	
 	/*@ManyToOne
 	@JoinColumn(name = "id_contrato_atual")*/
@@ -261,20 +261,20 @@ public class Jogador {
 		this.modoDesenvolvimentoJogador = modoDesenvolvimentoJogador;
 	}
 
-	public JogadorEstatisticasTemporada getEstatisticasTemporadaAtual() {
-		return estatisticasTemporadaAtual;
+	public JogadorEstatisticasTemporada getJogadorEstatisticasTemporadaAtual() {
+		return jogadorEstatisticasTemporadaAtual;
 	}
 
-	public void setEstatisticasTemporadaAtual(JogadorEstatisticasTemporada estatisticasTemporadaAtual) {
-		this.estatisticasTemporadaAtual = estatisticasTemporadaAtual;
+	public void setJogadorEstatisticasTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasTemporadaAtual) {
+		this.jogadorEstatisticasTemporadaAtual = jogadorEstatisticasTemporadaAtual;
 	}
 
-	public JogadorEstatisticasTemporada getEstatisticasAmistososTemporadaAtual() {
-		return estatisticasAmistososTemporadaAtual;
+	public JogadorEstatisticasTemporada getJogadorEstatisticasAmistososTemporadaAtual() {
+		return jogadorEstatisticasAmistososTemporadaAtual;
 	}
 
-	public void setEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada estatisticasAmistososTemporadaAtual) {
-		this.estatisticasAmistososTemporadaAtual = estatisticasAmistososTemporadaAtual;
+	public void setJogadorEstatisticasAmistososTemporadaAtual(JogadorEstatisticasTemporada jogadorEstatisticasAmistososTemporadaAtual) {
+		this.jogadorEstatisticasAmistososTemporadaAtual = jogadorEstatisticasAmistososTemporadaAtual;
 	}
 
 	@JsonIgnore

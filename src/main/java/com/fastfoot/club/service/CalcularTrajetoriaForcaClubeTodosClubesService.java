@@ -33,21 +33,21 @@ public class CalcularTrajetoriaForcaClubeTodosClubesService {
 		List<Clube> clubes = clubeRepository.findAll(); 
 		Semana s = semanaCRUDService.getProximaSemana();
 
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
 		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
 		
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
+				completableFutures.add(calcularTrajetoriaForcaClubeService
 						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, clubes.size()), s));
 			} else {
-				desenvolverJogadorFuture.add(calcularTrajetoriaForcaClubeService
+				completableFutures.add(calcularTrajetoriaForcaClubeService
 						.calcularTrajetoriaForcaClube(clubes.subList(i * offset, (i + 1) * offset), s));
 			}
 		}
 		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 
 	}
 

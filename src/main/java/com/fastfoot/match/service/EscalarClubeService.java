@@ -42,7 +42,7 @@ public class EscalarClubeService {
 	private ClubeRepository clubeRepository;
 	
 	@Autowired
-	private EscalacaoClubeRepository escalacaoClubePartidaRepository;
+	private EscalacaoClubeRepository escalacaoClubeRepository;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
@@ -50,7 +50,7 @@ public class EscalarClubeService {
 		for (Clube c : clubes) {
 			escalarClube(c, escalacoes);
 		}
-		escalacaoClubePartidaRepository.saveAll(escalacoes);
+		escalacaoClubeRepository.saveAll(escalacoes);
 		escalacaoJogadorPosicaoRepository.saveAll(escalacoes.stream()
 				.flatMap(e -> e.getListEscalacaoJogadorPosicao().stream()).collect(Collectors.toList()));
 		clubeRepository.saveAll(clubes);

@@ -17,7 +17,7 @@ public class CampeonatoMistoCRUDService implements CRUDService<CampeonatoMisto, 
 	private CampeonatoMistoRepository campeonatoMistoRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	public List<CampeonatoMisto> getAll() {
@@ -54,6 +54,6 @@ public class CampeonatoMistoCRUDService implements CRUDService<CampeonatoMisto, 
 	}
 
 	public List<CampeonatoMisto> getAllTemporadaAtual() {
-		return campeonatoMistoRepository.findByTemporada(temporadaService.getTemporadaAtual());
+		return campeonatoMistoRepository.findByTemporada(temporadaCRUDService.getTemporadaAtual());
 	}
 }

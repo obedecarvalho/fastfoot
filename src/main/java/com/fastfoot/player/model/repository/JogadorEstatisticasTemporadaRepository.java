@@ -35,6 +35,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			@Param("idClubeMin") Integer idClubeMin, @Param("idClubeMax") Integer idClubeMax,
 			@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
 
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" select id_clube," +
 			" 	sum(gols_marcados/cast(numero_jogos as numeric)) as gols_partida," +
@@ -55,6 +56,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 	)
 	public List<Map<String, Object>> findEstatisticasFinalizacoesPorClube(Long idTemporada);
 	
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" select id_clube," +
 			" 	sum(cast(gols_sofridos as numeric))/sum(goleiro_finalizacoes_defendidas + gols_sofridos) as probabilidade_defesa" +

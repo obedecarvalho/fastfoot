@@ -33,7 +33,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	private ClubeRankingCRUDService clubeRankingCRUDService;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	@PostMapping("/clubeRankings")
@@ -73,7 +73,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 			
 			if (!ValidatorUtil.isEmpty(liga)) {
 				if (ValidatorUtil.isEmpty(ano)) {
-					Temporada temporada = temporadaService.getTemporadaAtual();
+					Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, temporada.getAno() - 1);
 				} else {
 					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, ano);

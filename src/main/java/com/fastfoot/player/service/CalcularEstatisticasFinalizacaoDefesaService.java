@@ -1,4 +1,4 @@
-package com.fastfoot.probability.service;
+package com.fastfoot.player.service;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -9,21 +9,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaRepository;
+import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.probability.model.ClubeProbabilidadeDefesa;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 @Service
-public class CalcularEstatisticasFinalizacaoDefesaService {//TODO: avaliar modulo
+public class CalcularEstatisticasFinalizacaoDefesaService {
 	
 	@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
+	private PartidaEstatisticasRepository partidaEstatisticasRepository;
 	
 	public Map<Clube, ClubeProbabilidadeFinalizacao> getEstatisticasFinalizacaoClube(Temporada temporada) {
 		
-		List<Map<String, Object>> estatisticasFinalizacoes = jogadorEstatisticasTemporadaRepository
-				.findEstatisticasFinalizacoesPorClube(temporada.getId());
+		List<Map<String, Object>> estatisticasFinalizacoes = partidaEstatisticasRepository
+				.findEstatisticasFinalizacoesClubePorTemporada(temporada.getId());
 		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = new HashMap<Clube, ClubeProbabilidadeFinalizacao>();
 		ClubeProbabilidadeFinalizacao clubeProbabilidadeFinalizacao = null;
 
@@ -47,8 +47,8 @@ public class CalcularEstatisticasFinalizacaoDefesaService {//TODO: avaliar modul
 	
 	public Map<Clube, ClubeProbabilidadeDefesa> getEstatisticasDefesaClube(Temporada temporada) {
 		
-		List<Map<String, Object>> estatisticasDefesa = jogadorEstatisticasTemporadaRepository
-				.findEstatisticasDefesaPorClube(temporada.getId());
+		List<Map<String, Object>> estatisticasDefesa = partidaEstatisticasRepository
+				.findEstatisticasDefesaClubePorTemporada(temporada.getId());
 		Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa = new HashMap<Clube, ClubeProbabilidadeDefesa>();
 		ClubeProbabilidadeDefesa clubeProbabilidadeDefesa = null;
 

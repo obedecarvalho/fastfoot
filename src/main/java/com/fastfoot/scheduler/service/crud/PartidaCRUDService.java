@@ -39,7 +39,7 @@ public class PartidaCRUDService implements CRUDService<PartidaResultado, Long>{
 	private CampeonatoMistoRepository campeonatoMistoRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	public List<PartidaResultado> getAll() {
@@ -84,7 +84,7 @@ public class PartidaCRUDService implements CRUDService<PartidaResultado, Long>{
 		}
 		
 		List<PartidaResultado> partidas = partidaResultadoRepository
-				.findByTemporadaAndClube(temporadaService.getTemporadaAtual(), clubeOpt.get());
+				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(), clubeOpt.get());
 		
 		return partidas;
 	}
@@ -111,7 +111,7 @@ public class PartidaCRUDService implements CRUDService<PartidaResultado, Long>{
 	
 	public List<PartidaResultado> getByNumeroSemana(Integer numeroSemana){
 		
-		Temporada temporadaAtual = temporadaService.getTemporadaAtual();
+		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual();
 		
 		Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporadaAtual, numeroSemana);
 		

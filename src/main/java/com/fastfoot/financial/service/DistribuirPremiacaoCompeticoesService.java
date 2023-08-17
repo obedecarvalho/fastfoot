@@ -51,7 +51,7 @@ public class DistribuirPremiacaoCompeticoesService {
 	//#######	SERVICE	#############
 	
 	@Autowired
-	private CarregarParametroService parametroService;
+	private CarregarParametroService carregarParametroService;
 
 	public void distribuirPremiacaoCompeticoes(Semana semana) {
 		/*
@@ -94,7 +94,7 @@ public class DistribuirPremiacaoCompeticoesService {
 			}
 		}
 		
-		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
 		
 		if (SemanaUtil.isSemanaCopaNacional(numRodadasCN, semana.getNumero())) {
 			distribuirPremiacaoCompeticoesCopaNacional(semana, numRodadasCN, partidasNivel, entradas, clubePremiacao);
@@ -270,9 +270,9 @@ public class DistribuirPremiacaoCompeticoesService {
 	}
 	
 	private Double getPremiacao(NivelCampeonato nivelCampeonato, int posicao) {
-		Boolean melhorEliminado = parametroService.isEstrategiaPromotorContinentalMelhorEliminado();
-		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
-		Boolean jogarCIII = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado();
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean jogarCIII = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
 		
 		if (!melhorEliminado && (posicao == 1 || posicao == 2)) {
 			return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
@@ -318,8 +318,8 @@ public class DistribuirPremiacaoCompeticoesService {
 	}
 	
 	private NivelCampeonato getNivelFinal(NivelCampeonato nivelCampeonato, int posicao) {
-		Boolean melhorEliminado = parametroService.isEstrategiaPromotorContinentalMelhorEliminado();
-		Boolean jogarCIII = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado();
+		Boolean jogarCIII = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
 		
 		if (melhorEliminado && nivelCampeonato.isContinental() && posicao == 3) return NivelCampeonato.CONTINENTAL_II;
 		

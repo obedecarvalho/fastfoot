@@ -5,6 +5,7 @@ drop table habilidade_valor_estatistica;
 drop table habilidade_valor_estatistica_grupo;
 drop table habilidade_valor;
 drop table jogador_energia;
+drop table habilidade_grupo_valor_estatistica;
 drop table habilidade_grupo_valor;
 drop table escalacao_jogador_posicao;
 drop table escalacao_clube;

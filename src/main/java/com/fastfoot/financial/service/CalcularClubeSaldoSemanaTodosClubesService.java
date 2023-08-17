@@ -61,13 +61,13 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,
 						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));
 		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
+		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			desenvolverJogadorFuture
+			completableFutures
 					.add(calcularClubeSaldoSemanaService.calcularClubeSaldoSemana(semanas, movimentacoesClube.get(i)));
 		}
 		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
+		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
 }

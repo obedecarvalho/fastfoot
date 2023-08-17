@@ -39,7 +39,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 	private CampeonatoEliminatorioRepository campeonatoEliminatorioRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 	
 	@Override
 	public List<PartidaEliminatoriaResultado> getAll() {
@@ -84,7 +84,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		}
 		
 		List<PartidaEliminatoriaResultado> partidas = partidaEliminatoriaResultadoRepository
-				.findByTemporadaAndClube(temporadaService.getTemporadaAtual(), clubeOpt.get());
+				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(), clubeOpt.get());
 		
 		return partidas;
 	}
@@ -111,7 +111,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 	
 	public List<PartidaEliminatoriaResultado> getByNumeroSemana(Integer numeroSemana){
 		
-		Temporada temporadaAtual = temporadaService.getTemporadaAtual();
+		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual();
 		
 		Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporadaAtual, numeroSemana);
 		

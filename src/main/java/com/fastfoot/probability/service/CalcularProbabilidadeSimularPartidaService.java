@@ -15,19 +15,20 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoSimularPartidaService;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.player.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
+import com.fastfoot.probability.model.ClubeProbabilidadeDefesa;
+import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
-import com.fastfoot.probability.model.TipoClubeProbabilidade;
+import com.fastfoot.probability.model.TipoCampeonatoClubeProbabilidade;
 import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
 import com.fastfoot.probability.model.repository.CampeonatoClubeProbabilidadeRepository;
 import com.fastfoot.probability.service.util.ClassificacaoProbabilidadeUtil;
@@ -51,7 +52,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.CarregarParametroService;
 
 @Service
-public class CalcularProbabilidadeSimularPartidaService {
+public class CalcularProbabilidadeSimularPartidaService implements ICalcularProbabilidadeService {
 	
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
 	
@@ -68,6 +69,8 @@ public class CalcularProbabilidadeSimularPartidaService {
 	private static final Random R = new Random();
 	
 	private static boolean imprimir = false;
+	
+	//###	REPOSITORY	###
 	
 	@Autowired
 	private ClassificacaoRepository classificacaoRepository;
@@ -91,102 +94,99 @@ public class CalcularProbabilidadeSimularPartidaService {
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
 	
 	@Autowired
-	private CarregarParametroService parametroService;
+	private CampeonatoClubeProbabilidadeRepository campeonatoClubeProbabilidadeRepository;
+	
+	//###	SERVICE	###
+	
+	@Autowired
+	private CarregarParametroService carregarParametroService;
 	
 	/*@Autowired
 	private ClubeRepository clubeRepository;*/
 	
 	@Autowired
-	private CampeonatoClubeProbabilidadeRepository clubeProbabilidadeRepository;
-
-	//TODO: avaliar quais dos metodos implementados deve ser usado
-	@Autowired
-	private CalcularPartidaProbabilidadeResultadoSimularPartidaService calcularPartidaProbabilidadeResultadoSimularPartidaService;
-	
-	@Autowired
-	private CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService;
-	
-	@Autowired
-	private CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService;
-	
-	@Autowired
-	private CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService;	
-	//
-	
-	@Autowired
 	private CalcularEstatisticasFinalizacaoDefesaService calcularEstatisticasFinalizacaoDefesaService;
 
+	@Autowired
+	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
+
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
+	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII,
+			TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
 
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
 
-		for (Rodada r : nacional.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
-		}
+		/*for (Rodada r : nacional.getRodadas()) {
+			r.setPartidas(partidaRepository.findByRodada(r));
+		}*/
 		
 		nacionalII.setClassificacao(classificacaoRepository.findByCampeonato(nacionalII));
 		nacionalII.setRodadas(rodadaRepository.findByCampeonato(nacionalII));
 
-		for (Rodada r : nacionalII.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
-		}
+		/*for (Rodada r : nacionalII.getRodadas()) {
+			r.setPartidas(partidaRepository.findByRodada(r));
+		}*/
+
+		List<Rodada> rodadas = new ArrayList<Rodada>();
+		rodadas.addAll(nacional.getRodadas());
+		rodadas.addAll(nacionalII.getRodadas());
+		carregarPartidas(rodadas, tipoClubeProbabilidade);
 		
 		//
 		Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade = new HashMap<PartidaResultado, PartidaProbabilidadeResultado>();
+		
+		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
+				.getEstatisticasFinalizacaoClube(semana.getTemporada());
+		Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa = calcularEstatisticasFinalizacaoDefesaService
+				.getEstatisticasDefesaClube(semana.getTemporada());
 
 		for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacional.getRodadas().get(r).getPartidas()) {
-				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartida(p));
-				/*partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada())));*/
-				/*partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada()),
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasDefesaClube(semana.getTemporada())));*/
-				partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada())));
+				partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(p,
+						clubeProbabilidadeFinalizacoes, clubesProbabilidadeDefesa, p.getEscalacaoMandante(),
+						p.getEscalacaoVisitante(), tipoClubeProbabilidade));
 			}
 		}
 		
+		/*clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
+				.getEstatisticasFinalizacaoClube(nacionalII);
+		clubesProbabilidadeDefesa = calcularEstatisticasFinalizacaoDefesaService.getEstatisticasDefesaClube(nacionalII);*/
+		
 		for (int r = nacionalII.getRodadaAtual(); r < nacionalII.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacionalII.getRodadas().get(r).getPartidas()) {
-				//partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoSimularPartidaService.simularPartida(p));
-				/*partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada())));*/
-				/*partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada()),
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasDefesaClube(semana.getTemporada())));*/
-				partidaProbabilidade.put(p,
-						calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService.simularPartida(p,
-								calcularEstatisticasFinalizacaoDefesaService
-										.getEstatisticasFinalizacaoClube(semana.getTemporada())));
+				partidaProbabilidade.put(p, calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(p,
+						clubeProbabilidadeFinalizacoes, clubesProbabilidadeDefesa, p.getEscalacaoMandante(),
+						p.getEscalacaoVisitante(), tipoClubeProbabilidade));
 			}
 		}
 		//
 		
 		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII,
-				partidaProbabilidade);
+				partidaProbabilidade, tipoClubeProbabilidade);
 		
 		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
 	}
+
+	private void carregarPartidas(List<Rodada> rodadas, TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
+		List<PartidaResultado> partidas = partidaRepository.findByRodadas(rodadas);
+		if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA.equals(tipoClubeProbabilidade)) {
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacao(partidas);
+		} else if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_HABILIDADE_GRUPO.equals(tipoClubeProbabilidade)) {
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(partidas);
+		}
+		Map<Rodada, List<PartidaResultado>> partidasRodada = partidas.stream()
+				.collect(Collectors.groupingBy(PartidaResultado::getRodada));
+		rodadas.stream().forEach(r -> r.setPartidas(partidasRodada.get(r)));
+	}
 	
 	private Collection<CampeonatoClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional,
-			Campeonato nacionalII, Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade) {
+			Campeonato nacionalII, Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade, TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
 		
 		Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, CampeonatoClubeProbabilidade>();
 		
@@ -194,9 +194,9 @@ public class CalcularProbabilidadeSimularPartidaService {
 		
 		List<Clube> clubesLigaII = nacionalII.getClassificacao().stream().map(c -> c.getClube()).collect(Collectors.toList());
 		
-		inicializarClubeProbabilidade(clubeProbabilidades, clubesLiga, semana, nacional);
+		inicializarClubeProbabilidade(clubeProbabilidades, clubesLiga, semana, nacional, tipoClubeProbabilidade);
 
-		inicializarClubeProbabilidade(clubeProbabilidades, clubesLigaII, semana, nacionalII);
+		inicializarClubeProbabilidade(clubeProbabilidades, clubesLigaII, semana, nacionalII, tipoClubeProbabilidade);
 		
 		clubesLiga.addAll(clubesLigaII);
 		
@@ -264,7 +264,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	
 	private void calcularProbabilidadesEspecificas(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades, Semana semana/*, NivelCampeonato nivelCampeonato*/) {
 		
-		Integer numeroRebaixados = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
+		Integer numeroRebaixados = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
 
 		CampeonatoClubeProbabilidadePosicao cpp = null;
 
@@ -423,7 +423,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	}
 	
 	private void inicializarClubeProbabilidade(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades,
-			List<Clube> clubes, Semana semana, Campeonato campeonato) {
+			List<Clube> clubes, Semana semana, Campeonato campeonato, TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
 		//if (clubeProbabilidades.isEmpty()) {
 		for (Clube clube : clubes) {
 			CampeonatoClubeProbabilidade clup = new CampeonatoClubeProbabilidade();
@@ -432,10 +432,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 			clup.setCampeonato(campeonato);
 			clup.setSemana(semana);
 			//clup.setCompleto(true);
-			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA);
-			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO);
-			//clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FIN_DEFESA);
-			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.SIMULAR_PARTIDA_EST_FINALIZACAO_POISSON);
+			clup.setTipoClubeProbabilidade(tipoClubeProbabilidade);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, CampeonatoClubeProbabilidadePosicao>());
 			
@@ -473,7 +470,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 		RodadaEliminatoria r = null;
 		List<PartidaEliminatoriaResultado> p = null;
 		
-		int numeroRodadas = parametroService.getNumeroRodadasCopaNacional();
+		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
 
 		for (CampeonatoEliminatorio c : copasNacionais) {
 			
@@ -507,7 +504,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	}
 	
 	private void salvarProbabilidades(Collection<CampeonatoClubeProbabilidade> probabilidades) {
-		clubeProbabilidadeRepository.saveAll(probabilidades);
+		campeonatoClubeProbabilidadeRepository.saveAll(probabilidades);
 	}
 
 	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
@@ -570,7 +567,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	
 	private Integer getPosicoesClassificamCIIIMin() {
 
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -581,9 +578,9 @@ public class CalcularProbabilidadeSimularPartidaService {
 
 	private Integer getPosicoesClassificamCIIIMax() {
 
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 
-		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -600,7 +597,7 @@ public class CalcularProbabilidadeSimularPartidaService {
 	
 	private Integer getPosicoesClassificamCNIMax() {
 		
-		return parametroService.getNumeroTimesParticipantesCopaNacional();
+		return carregarParametroService.getNumeroTimesParticipantesCopaNacional();
 	}
 	
 	//########	TESTE	##############

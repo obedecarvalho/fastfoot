@@ -23,7 +23,7 @@ import com.fastfoot.service.util.ValidatorUtil;
 public class ArtilhariaController {
 	
 	@Autowired
-	private CalcularArtilhariaService artilhariaService;
+	private CalcularArtilhariaService calcularArtilhariaService;
 	
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
@@ -33,7 +33,7 @@ public class ArtilhariaController {
 			@RequestParam(name = "amistoso", required = false, defaultValue = "false") Boolean amistoso) {
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getAll(amistoso);
+			List<ArtilhariaDTO> estatisticas = calcularArtilhariaService.getAll(amistoso);
 			
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {
@@ -52,7 +52,7 @@ public class ArtilhariaController {
 			@RequestParam(name = "amistoso", required = false, defaultValue = "false") Boolean amistoso) {
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getByTemporada(temporadaCRUDService.getTemporadaAtual(),
+			List<ArtilhariaDTO> estatisticas = calcularArtilhariaService.getByTemporada(temporadaCRUDService.getTemporadaAtual(),
 					amistoso);
 			
 	
@@ -71,7 +71,7 @@ public class ArtilhariaController {
 	public ResponseEntity<List<ArtilhariaDTO>> getByCampeonato(@PathVariable("id") Long idCampeonato){
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getByCampeonato(idCampeonato);
+			List<ArtilhariaDTO> estatisticas = calcularArtilhariaService.getByCampeonato(idCampeonato);
 			
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {
@@ -90,7 +90,7 @@ public class ArtilhariaController {
 			@RequestParam(name = "amistoso", required = false, defaultValue = "false") Boolean amistoso) {
 		try {
 
-			List<ArtilhariaDTO> estatisticas = artilhariaService.getByClube(new Clube(idClube), amistoso);
+			List<ArtilhariaDTO> estatisticas = calcularArtilhariaService.getByClube(new Clube(idClube), amistoso);
 			
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {

@@ -22,7 +22,7 @@ import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingProbabilidade;
-import com.fastfoot.probability.model.TipoClubeProbabilidade;
+import com.fastfoot.probability.model.TipoCampeonatoClubeProbabilidade;
 import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
 import com.fastfoot.probability.model.repository.CampeonatoClubeProbabilidadeRepository;
 import com.fastfoot.probability.service.util.ClassificacaoProbabilidadeUtil;
@@ -46,7 +46,7 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.service.CarregarParametroService;
 
 @Service
-public class CalcularProbabilidadeEstatisticasSimplesService {
+public class CalcularProbabilidadeEstatisticasSimplesService implements ICalcularProbabilidadeService {
 	
 	private static final Integer NUM_SIMULACOES_SEM_17 = 10000;
 	
@@ -86,13 +86,13 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	private PartidaEliminatoriaResultadoRepository partidaEliminatoriaResultadoRepository;
 	
 	@Autowired
-	private CarregarParametroService parametroService;
+	private CarregarParametroService carregarParametroService;
 	
 	/*@Autowired
 	private ClubeRepository clubeRepository;*/
 	
 	@Autowired
-	private CampeonatoClubeProbabilidadeRepository clubeProbabilidadeRepository;
+	private CampeonatoClubeProbabilidadeRepository campeonatoClubeProbabilidadeRepository;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII) {
@@ -100,22 +100,34 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
 
-		for (Rodada r : nacional.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
-		}
+		/*for (Rodada r : nacional.getRodadas()) {
+			r.setPartidas(partidaRepository.findByRodada(r));
+		}*/
 		
 		nacionalII.setClassificacao(classificacaoRepository.findByCampeonato(nacionalII));
 		nacionalII.setRodadas(rodadaRepository.findByCampeonato(nacionalII));
 
-		for (Rodada r : nacionalII.getRodadas()) {
-			r.setPartidas(partidaRepository.findByRodada(r));//TODO: reduzir acessos ao BD
-		}
+		/*for (Rodada r : nacionalII.getRodadas()) {
+			r.setPartidas(partidaRepository.findByRodada(r));
+		}*/
+		
+		List<Rodada> rodadas = new ArrayList<Rodada>();
+		rodadas.addAll(nacional.getRodadas());
+		rodadas.addAll(nacionalII.getRodadas());
+		carregarPartidas(rodadas);
 		
 		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional, nacionalII);
 		
 		salvarProbabilidades(probabilidades);
 		
 		return CompletableFuture.completedFuture(true);
+	}
+
+	private void carregarPartidas(List<Rodada> rodadas) {
+		List<PartidaResultado> partidas = partidaRepository.findByRodadas(rodadas);
+		Map<Rodada, List<PartidaResultado>> partidasRodada = partidas.stream()
+				.collect(Collectors.groupingBy(PartidaResultado::getRodada));
+		rodadas.stream().forEach(r -> r.setPartidas(partidasRodada.get(r)));
 	}
 	
 	private Collection<CampeonatoClubeProbabilidade> calcularClubeProbabilidade(Semana semana, Campeonato nacional, Campeonato nacionalII) {
@@ -196,7 +208,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	
 	private void calcularProbabilidadesEspecificas(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades, Semana semana/*, NivelCampeonato nivelCampeonato*/) {
 		
-		Integer numeroRebaixados = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
+		Integer numeroRebaixados = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
 
 		CampeonatoClubeProbabilidadePosicao cpp = null;
 
@@ -364,7 +376,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 			clup.setCampeonato(campeonato);
 			clup.setSemana(semana);
 			//clup.setCompleto(true);
-			clup.setTipoClubeProbabilidade(TipoClubeProbabilidade.ESTATISTICAS_SIMPLES);
+			clup.setTipoClubeProbabilidade(TipoCampeonatoClubeProbabilidade.ESTATISTICAS_SIMPLES);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, CampeonatoClubeProbabilidadePosicao>());
 			
@@ -402,7 +414,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 		RodadaEliminatoria r = null;
 		List<PartidaEliminatoriaResultado> p = null;
 		
-		int numeroRodadas = parametroService.getNumeroRodadasCopaNacional();
+		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
 
 		for (CampeonatoEliminatorio c : copasNacionais) {
 			
@@ -436,7 +448,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	}
 	
 	private void salvarProbabilidades(Collection<CampeonatoClubeProbabilidade> probabilidades) {
-		clubeProbabilidadeRepository.saveAll(probabilidades);
+		campeonatoClubeProbabilidadeRepository.saveAll(probabilidades);
 	}
 
 	private void jogarRodada(Rodada r, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades) {
@@ -499,7 +511,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	
 	private Integer getPosicoesClassificamCIIIMin() {
 
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -510,9 +522,9 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 
 	private Integer getPosicoesClassificamCIIIMax() {
 
-		Integer nroCompeticoesContinentais = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 
-		Boolean cIIIReduzido = parametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -529,7 +541,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService {
 	
 	private Integer getPosicoesClassificamCNIMax() {
 		
-		return parametroService.getNumeroTimesParticipantesCopaNacional();
+		return carregarParametroService.getNumeroTimesParticipantesCopaNacional();
 	}
 	
 	//########	TESTE	##############

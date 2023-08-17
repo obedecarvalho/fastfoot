@@ -28,14 +28,14 @@ import com.fastfoot.service.util.ValidatorUtil;
 public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClube, Long> {
 	
 	@Autowired
-	private EscalacaoClubeCRUDService escalacaoClubePartidaCRUDService;
+	private EscalacaoClubeCRUDService escalacaoClubeCRUDService;
 
 	@Override
 	@PostMapping("/escalacaoClube")
 	public ResponseEntity<EscalacaoClube> create(@RequestBody EscalacaoClube t) {
 		try {
 			
-			EscalacaoClube jogador = escalacaoClubePartidaCRUDService.create(t);
+			EscalacaoClube jogador = escalacaoClubeCRUDService.create(t);
 			
 			if (ValidatorUtil.isEmpty(jogador)) {
 				return ResponseEntity.internalServerError().build();
@@ -60,9 +60,9 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 			List<EscalacaoClube> jogadores;
 
 			if (ValidatorUtil.isEmpty(idClube)) {
-				jogadores = escalacaoClubePartidaCRUDService.getAll();
+				jogadores = escalacaoClubeCRUDService.getAll();
 			} else {
-				jogadores = escalacaoClubePartidaCRUDService.getByClube(new Clube(idClube));
+				jogadores = escalacaoClubeCRUDService.getByClube(new Clube(idClube));
 			}
 	
 			if (ValidatorUtil.isEmpty(jogadores)) {
@@ -82,7 +82,7 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 		
 		try {
 			
-			EscalacaoClube jogador = escalacaoClubePartidaCRUDService.getById(id);
+			EscalacaoClube jogador = escalacaoClubeCRUDService.getById(id);
 	
 			if (ValidatorUtil.isEmpty(jogador)) {
 				return ResponseEntity.notFound().build();
@@ -102,13 +102,13 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 	public ResponseEntity<EscalacaoClube> update(@PathVariable("id") Long id, @RequestBody EscalacaoClube t) {
 		try {
 			
-			EscalacaoClube jogador = escalacaoClubePartidaCRUDService.getById(id);
+			EscalacaoClube jogador = escalacaoClubeCRUDService.getById(id);
 			
 			if (ValidatorUtil.isEmpty(jogador)) {
 				return ResponseEntity.notFound().build();
 			}
 			
-			jogador = escalacaoClubePartidaCRUDService.update(t);
+			jogador = escalacaoClubeCRUDService.update(t);
 			
 			if (ValidatorUtil.isEmpty(jogador)) {
 				return ResponseEntity.internalServerError().build();
@@ -125,7 +125,7 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 	@DeleteMapping("/escalacaoClube/{id}")
 	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
-			escalacaoClubePartidaCRUDService.delete(id);
+			escalacaoClubeCRUDService.delete(id);
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -136,7 +136,7 @@ public class EscalacaoClubeCRUDController implements CRUDController<EscalacaoClu
 	@DeleteMapping("/escalacaoClube")
 	public ResponseEntity<HttpStatus> deleteAll() {
 		try {
-			escalacaoClubePartidaCRUDService.deleteAll();
+			escalacaoClubeCRUDService.deleteAll();
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();

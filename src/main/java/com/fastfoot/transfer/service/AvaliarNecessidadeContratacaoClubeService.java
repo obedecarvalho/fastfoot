@@ -53,7 +53,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	//###	SERVICE	###
 
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 	
 	private double getPercentualForcaJogadorForcaClube(Integer forcaJogador, Integer forcaClube) {		
 		return (double) forcaJogador/forcaClube;
@@ -117,7 +117,7 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	@Deprecated
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularNecessidadeContratacao(Liga liga, boolean primeirosIds) {
-		Temporada temporada = temporadaService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 		
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();

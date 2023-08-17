@@ -28,7 +28,7 @@ import com.fastfoot.service.util.ValidatorUtil;
 public class CampeonatoClubeProbabilidadeCRUDController implements CRUDController<CampeonatoClubeProbabilidade, Long> {
 
 	@Autowired
-	private CampeonatoClubeProbabilidadeCRUDService clubeCRUDService;
+	private CampeonatoClubeProbabilidadeCRUDService campeonatoClubeProbabilidadeCRUDService;
 
 	@Override
 	@PostMapping("/campeonatoClubeProbabilidades")
@@ -36,7 +36,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		
 		try {
 		
-			CampeonatoClubeProbabilidade clube = clubeCRUDService.create(t);
+			CampeonatoClubeProbabilidade clube = campeonatoClubeProbabilidadeCRUDService.create(t);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.internalServerError().build();
@@ -56,7 +56,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		
 		try {
 			
-			List<CampeonatoClubeProbabilidade> clubes = clubeCRUDService.getAll();
+			List<CampeonatoClubeProbabilidade> clubes = campeonatoClubeProbabilidadeCRUDService.getAll();
 			
 			if (ValidatorUtil.isEmpty(clubes)) {
 				return ResponseEntity.noContent().build();
@@ -79,9 +79,9 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 			List<CampeonatoClubeProbabilidade> clubes = null;
 			
 			if (comClassificacao != null && comClassificacao) {
-				clubes = clubeCRUDService.getByCampeonatoAndRodadaAtualComClassificacao(new Campeonato(idCampeonato));
+				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoAndRodadaAtualComClassificacao(new Campeonato(idCampeonato));
 			} else {
-				clubes = clubeCRUDService.getByCampeonatoRodadaAtual(new Campeonato(idCampeonato));
+				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoRodadaAtual(new Campeonato(idCampeonato));
 			}
 
 			if (ValidatorUtil.isEmpty(clubes)) {
@@ -101,7 +101,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		
 		try {
 		
-			CampeonatoClubeProbabilidade clube = clubeCRUDService.getById(id);
+			CampeonatoClubeProbabilidade clube = campeonatoClubeProbabilidadeCRUDService.getById(id);
 	
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
@@ -120,13 +120,13 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		
 		try {
 		
-			CampeonatoClubeProbabilidade clube = clubeCRUDService.getById(id);
+			CampeonatoClubeProbabilidade clube = campeonatoClubeProbabilidadeCRUDService.getById(id);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.notFound().build();
 			}
 			
-			clube = clubeCRUDService.update(t);
+			clube = campeonatoClubeProbabilidadeCRUDService.update(t);
 			
 			if (ValidatorUtil.isEmpty(clube)) {
 				return ResponseEntity.internalServerError().build();
@@ -143,7 +143,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 	@DeleteMapping("/campeonatoClubeProbabilidades/{id}")
 	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
-			clubeCRUDService.delete(id);
+			campeonatoClubeProbabilidadeCRUDService.delete(id);
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();
@@ -154,7 +154,7 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 	@DeleteMapping("/campeonatoClubeProbabilidades")
 	public ResponseEntity<HttpStatus> deleteAll() {
 		try {
-			clubeCRUDService.deleteAll();
+			campeonatoClubeProbabilidadeCRUDService.deleteAll();
 			return ResponseEntity.noContent().build();
 		} catch (Exception e) {
 			return ResponseEntity.internalServerError().build();

@@ -7,7 +7,6 @@ import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
@@ -38,7 +37,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService {
+public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService implements ICalcularPartidaProbabilidadeResultadoService {
 
 	private static final Integer NUM_SIMULACOES = 100;
 	
@@ -75,8 +74,8 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 	/*@Autowired
 	private ParametroService parametroService;*/
 
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> simularPartidas(RodadaJogavel rodada) {
+	//@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
 
 		//Instanciar StopWatch
 		StopWatch stopWatch = new StopWatch();
@@ -110,7 +109,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(simularPartida(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
+			probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
 			//probabilidades.add(simularPartida(p));
 		}
 
@@ -136,12 +135,12 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 
 	}
 
-	public PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado) {
+	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado) {
 		
 		List<Jogador> jogadoresMandante = jogadorRepository
-				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeMandante(), StatusJogador.ATIVO);
+				.findByClubeAndStatusJogadorFetchHabilidadesGrupo(partidaResultado.getClubeMandante(), StatusJogador.ATIVO);
 		List<Jogador> jogadoresVisitante = jogadorRepository
-				.findByClubeAndStatusJogadorFetchHabilidades(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
+				.findByClubeAndStatusJogadorFetchHabilidadesGrupo(partidaResultado.getClubeVisitante(), StatusJogador.ATIVO);
 		
 		carregarJogadorEnergiaService.carregarJogadorEnergia(partidaResultado.getClubeMandante(), jogadoresMandante);
 		carregarJogadorEnergiaService.carregarJogadorEnergia(partidaResultado.getClubeVisitante(), jogadoresVisitante);
@@ -151,10 +150,10 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		EscalacaoClube escalacaoVisitante = escalarClubeService
 				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
 		
-		return simularPartida(partidaResultado, escalacaoMandante, escalacaoVisitante);
+		return calcularPartidaProbabilidadeResultado(partidaResultado, escalacaoMandante, escalacaoVisitante);
 	}
-	
-	private PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante) {
+
+	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
 				escalacaoMandante, escalacaoVisitante,

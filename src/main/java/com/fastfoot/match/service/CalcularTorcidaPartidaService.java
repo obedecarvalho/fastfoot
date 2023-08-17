@@ -44,7 +44,7 @@ public class CalcularTorcidaPartidaService {
 	private static final Double PORC_STDEV = 0.05;
 	
 	@Autowired
-	private CarregarParametroService parametroService;
+	private CarregarParametroService carregarParametroService;
 
 	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
 		
@@ -179,7 +179,7 @@ public class CalcularTorcidaPartidaService {
 		
 		double renda = 0.0d;
 		
-		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
 
 		int tamanhoEstadio = partida.getClubeMandante().getNivelNacional().getTamanhoTorcida();
 
@@ -257,7 +257,7 @@ public class CalcularTorcidaPartidaService {
 
 		if (partida.getNivelCampeonato().isCopaNacional()) {
 			
-			Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
+			Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
 
 			if (partida.getRodada().getNumero() == numRodadasCN) {// Final
 				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
@@ -348,7 +348,7 @@ public class CalcularTorcidaPartidaService {
 		Double porcPublicoAlvo = null, renda = 0.0d;
 		Integer publicoClube = null, tamanhoEstadio = null;
 		
-		Integer numRodadasCN = parametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
 		
 		for (PartidaResultadoJogavel p : partidas) {
 			

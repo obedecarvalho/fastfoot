@@ -116,7 +116,7 @@ public class MarcarAmistososSemanalmenteService {
 				.flatMap(r -> r.getPartidas().stream()).collect(Collectors.toList()));
 	}
 	
-	private void criarPartidas(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa, RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
+	/*private void criarPartidas(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa, RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
 		
 		List<Clube> clubesA = null;
 		List<Clube> clubesB = null;
@@ -168,7 +168,7 @@ public class MarcarAmistososSemanalmenteService {
 
 		}
 		
-	}
+	}*/
 	
 	private List<RodadaAmistosa> criarPartidas(Semana semanaAmistoso, Map<Liga, List<Clube>> clubesLiga, int totalClubes) {
 		
@@ -260,7 +260,7 @@ public class MarcarAmistososSemanalmenteService {
 		
 	}
 	
-	private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB) {
+	/*private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB) {
 
 		//if (clubesB.size() > clubesA.size()) throw new RuntimeException("Comportamento Inesperado");
 
@@ -279,7 +279,7 @@ public class MarcarAmistososSemanalmenteService {
 			rodadaAmistosa.getPartidas().add(partida);
 		}
 		
-	}
+	}*/
 	
 	private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB, int qtdeJogos) {
 

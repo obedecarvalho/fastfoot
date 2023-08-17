@@ -33,7 +33,8 @@ import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class JogarPartidaHabilidadeGrupoService {
+public class JogarPartidaHabilidadeGrupoService implements IJogarPartidaService {
+
 	/*
 	 * TODO:
 	 * 
@@ -50,7 +51,7 @@ public class JogarPartidaHabilidadeGrupoService {
 	private DisputarPenaltsService disputarPenaltsService;
 	
 	@Autowired
-	private CarregarEscalacaoJogadoresPartidaService carregarJogadoresPartidaService;
+	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 	
 	@Autowired
 	private RealizarSubstituicoesJogadorPartidaService realizarSubstituicoesJogadorPartidaService;
@@ -142,12 +143,19 @@ public class JogarPartidaHabilidadeGrupoService {
 
 	}
 
+	@Override
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		
-		EscalacaoClube escalacaoMandante = carregarJogadoresPartidaService
+		EscalacaoClube escalacaoMandante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresHabilidadeGrupoPartida(partidaResultado.getClubeMandante(), partidaResultado);
-		EscalacaoClube escalacaoVisitante = carregarJogadoresPartidaService
+		EscalacaoClube escalacaoVisitante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresHabilidadeGrupoPartida(partidaResultado.getClubeVisitante(), partidaResultado);
+		
+		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO);
+	}
+
+	@Override
+	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),

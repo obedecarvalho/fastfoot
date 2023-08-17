@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Parametro;
 import com.fastfoot.model.repository.ParametroRepository;
+import com.fastfoot.probability.model.TipoCampeonatoClubeProbabilidade;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 
@@ -72,6 +74,42 @@ public class CarregarParametroService {
 		}
 		
 		return -1;
+	}
+
+	public TipoProbabilidadeResultadoPartida getTipoProbabilidadeResultadoPartida() {
+		String metodoCalculo = getParametroString(ParametroConstantes.METODO_CALCULO_PROBABILIDADE);
+		
+		if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_POISSON_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO_POISSON;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_DEFESA_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO_DEFESA;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO;
+		}
+
+		return TipoProbabilidadeResultadoPartida.ZERO;
+	}
+
+	public TipoCampeonatoClubeProbabilidade getTipoCampeonatoClubeProbabilidade() {
+		String metodoCalculo = getParametroString(ParametroConstantes.METODO_CALCULO_PROBABILIDADE);
+		
+		if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_POISSON_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO_POISSON;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_DEFESA_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO_DEFESA;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_HABILIDADE_GRUPO;
+		}
+
+		return TipoCampeonatoClubeProbabilidade.ZERO;
 	}
 
 	public Integer getNumeroTimesParticipantesCopaNacional() {

@@ -17,7 +17,7 @@ public class CampeonatoCRUDService implements CRUDService<Campeonato, Long> {
 	private CampeonatoRepository campeonatoRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	@Override
 	public List<Campeonato> getAll() {
@@ -54,6 +54,6 @@ public class CampeonatoCRUDService implements CRUDService<Campeonato, Long> {
 	}
 
 	public List<Campeonato> getAllTemporadaAtual() {
-		return campeonatoRepository.findByTemporada(temporadaService.getTemporadaAtual());
+		return campeonatoRepository.findByTemporada(temporadaCRUDService.getTemporadaAtual());
 	}
 }

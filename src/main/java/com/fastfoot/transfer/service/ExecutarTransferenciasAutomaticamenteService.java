@@ -87,7 +87,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	//###	SERVICE	###
 
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 
 	/*@Autowired
 	private GerarTransferenciasService gerarTransferenciasService;*/
@@ -128,7 +128,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		
 		ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO = new ResultadoExecucaoTransferenciasAutomaticasDTO();
 		
-		Temporada temporada = temporadaService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 		Semana s = semanaCRUDService.getProximaSemana();
 		
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();

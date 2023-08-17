@@ -33,8 +33,8 @@ import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class JogarPartidaService {
-	
+public class JogarPartidaService implements IJogarPartidaService {
+
 	/*
 	 * TODO:
 	 * 
@@ -51,7 +51,7 @@ public class JogarPartidaService {
 	private DisputarPenaltsService disputarPenaltsService;
 	
 	@Autowired
-	private CarregarEscalacaoJogadoresPartidaService carregarJogadoresPartidaService;
+	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 	
 	@Autowired
 	private RealizarSubstituicoesJogadorPartidaService realizarSubstituicoesJogadorPartidaService;
@@ -143,22 +143,19 @@ public class JogarPartidaService {
 
 	}
 
+	@Override
 	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		
-		EscalacaoClube escalacaoMandante = carregarJogadoresPartidaService
+		EscalacaoClube escalacaoMandante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresPartida(partidaResultado.getClubeMandante(), partidaResultado);
-		EscalacaoClube escalacaoVisitante = carregarJogadoresPartidaService
+		EscalacaoClube escalacaoVisitante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresPartida(partidaResultado.getClubeVisitante(), partidaResultado);
 
 		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO);
 	}
 
+	@Override
 	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		
-		/*EscalacaoClube escalacaoMandante = carregarJogadoresPartidaService
-				.carregarJogadoresPartida(partidaResultado.getClubeMandante(), partidaResultado);
-		EscalacaoClube escalacaoVisitante = carregarJogadoresPartidaService
-				.carregarJogadoresPartida(partidaResultado.getClubeVisitante(), partidaResultado);*/
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),

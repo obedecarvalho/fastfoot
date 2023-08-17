@@ -34,11 +34,11 @@ public class GerarClubeResumoTemporadaService {
 	private ClubeResumoTemporadaRepository clubeResumoTemporadaRepository;
 
 	@Autowired
-	private CarregarCampeonatoService campeonatoService;
+	private CarregarCampeonatoService carregarCampeonatoService;
 
 	public void gerarClubeResumoTemporada(Temporada temporada) {
 				
-		campeonatoService.carregarCampeonatosTemporada(temporada);
+		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		
 		List<ClubeResumoTemporada> clubesResumo = new ArrayList<ClubeResumoTemporada>();
 		

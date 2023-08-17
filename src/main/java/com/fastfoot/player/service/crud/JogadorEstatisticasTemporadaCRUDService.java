@@ -26,7 +26,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
 	@Autowired
-	private TemporadaCRUDService temporadaService;
+	private TemporadaCRUDService temporadaCRUDService;
 	
 	@Autowired
 	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
@@ -74,14 +74,14 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	public List<JogadorEstatisticasTemporada> getAgrupadoTemporadaAtualByClube(Clube clube, Boolean amistoso) {
 
 		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticasSemanaRepository
-				.findAgrupadoByTemporadaAndClube(temporadaService.getTemporadaAtual().getId(), clube.getId(), amistoso);
+				.findAgrupadoByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual().getId(), clube.getId(), amistoso);
 
 		return transformMapToObj(estatisticasAgrupada);
 
 	}
 	
 	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporadaAtual(Boolean amistoso) {
-		return getAgrupadoByTemporada(temporadaService.getTemporadaAtual(), amistoso);
+		return getAgrupadoByTemporada(temporadaCRUDService.getTemporadaAtual(), amistoso);
 	}
 	
 	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporada(Temporada temporada, Boolean amistoso) {

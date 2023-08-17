@@ -63,6 +63,15 @@ public class PreCarregarParametrosService {
 			parametros.add(new Parametro(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA, "true", "false, true"));
 			
 			parametros.add(new Parametro(ParametroConstantes.GERAR_MUDANCA_CLUBE_NIVEL, "true", "false, true"));
+			
+			parametros.add(new Parametro(ParametroConstantes.METODO_CALCULO_PROBABILIDADE,
+					ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM,
+					String.format("%s, %s, %s, %s, %s",
+							ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_POISSON_PARAM,
+							ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_PARAM,
+							ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_DEFESA_PARAM,
+							ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM,
+							ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_PARAM)));
 
 			/*parametros.add(
 					new Parametro(ParametroConstantes.ESCALACAO_PADRAO, ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132,

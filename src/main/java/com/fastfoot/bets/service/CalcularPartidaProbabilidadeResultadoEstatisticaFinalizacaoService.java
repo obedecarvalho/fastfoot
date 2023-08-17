@@ -7,15 +7,14 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.player.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
-import com.fastfoot.probability.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -26,7 +25,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService {
+public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService implements ICalcularPartidaProbabilidadeResultadoService {
 
 	private static final Integer NUM_SIMULACOES = 10000;
 
@@ -44,8 +43,8 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 	@Autowired
 	private CalcularEstatisticasFinalizacaoDefesaService calcularEstatisticasFinalizacaoDefesaService;
 
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> simularPartidas(RodadaJogavel rodada) {
+	//@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
 
 		List<PartidaProbabilidadeResultado> probabilidades = new ArrayList<PartidaProbabilidadeResultado>();
 		
@@ -61,7 +60,7 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 				.getEstatisticasFinalizacaoClube(rodada.getSemana().getTemporada());
 
 		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(simularPartida(p, clubeProbabilidadeFinalizacoes));
+			probabilidades.add(calcularPartidaProbabilidadeResultado(p, clubeProbabilidadeFinalizacoes));
 		}
 
 		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
@@ -70,7 +69,7 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService 
 
 	}
 
-	public PartidaProbabilidadeResultado simularPartida(PartidaResultadoJogavel partidaResultado,
+	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado,
 			Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes) {
 		
 		ClubeProbabilidadeFinalizacao probFinalizacaoMandante = clubeProbabilidadeFinalizacoes

@@ -28,14 +28,14 @@ public class ClassificarClubesTemporadaService {
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
 	@Autowired
-	private CarregarCampeonatoService campeonatoService;
+	private CarregarCampeonatoService carregarCampeonatoService;
 	
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
 
 	public void classificarClubesTemporadaAtual() {
 		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
-		campeonatoService.carregarCampeonatosTemporada(temporada);
+		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		List<ClubeRanking> rankings = ClubeRankingUtil.rankearClubesTemporada(temporada, clubeRepository.findAll());
 		List<ClubeTituloRanking> rankingsTitulos = clubeTituloRankingRepository.findAll();
 		ClubeTituloRankingUtil.atualizarRankingTitulos(rankings, rankingsTitulos);
