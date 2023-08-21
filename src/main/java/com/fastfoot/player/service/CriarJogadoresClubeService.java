@@ -39,16 +39,10 @@ public class CriarJogadoresClubeService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
-	
-	/*@Autowired
-	private ClubeRepository clubeRepository;*/
 
 	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
-	
-	/*@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;*/
-	
+
 	@Autowired
 	private HabilidadeGrupoValorRepository habilidadeGrupoValorRepository;
 	
@@ -61,7 +55,7 @@ public class CriarJogadoresClubeService {
 	private CarregarParametroService carregarParametroService;
 	
 	@Autowired
-	private CalcularValorTransferenciaService calcularValorTransferenciaService;
+	private CalcularValorTransferenciaJogadorForcaGeralService calcularValorTransferenciaJogadorForcaGeralService;
 	
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
@@ -72,9 +66,6 @@ public class CriarJogadoresClubeService {
 	@Autowired
 	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
 
-	/*@Autowired
-	private TemporadaCRUDService temporadaCRUDService;*/
-	
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
 	
@@ -105,8 +96,6 @@ public class CriarJogadoresClubeService {
 		
 		List<Contrato> contratos = jogadores.stream().map(j -> j.getContratoAtual()).collect(Collectors.toList());
 
-		/*jogadorDetalheRepository
-				.saveAll(jogadores.stream().map(Jogador::getJogadorDetalhe).collect(Collectors.toList()));*/
 		jogadorRepository.saveAll(jogadores);
 		contratoRepository.saveAll(contratos);
 		habilidadeValorRepository.saveAll(habilidades);
@@ -118,7 +107,7 @@ public class CriarJogadoresClubeService {
 	protected void calcularValorTransferencia(List<Jogador> jogadores) {
 		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 			for (Jogador jogador : jogadores) {
-				calcularValorTransferenciaService.calcularValorTransferencia(jogador);
+				calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(jogador);
 			}
 		} else {
 			for (Jogador jogador : jogadores) {
@@ -158,57 +147,7 @@ public class CriarJogadoresClubeService {
 				jogadoresClube.add(j);
 			}
 		}
-		
-		/*//Zagueiro
-		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
-			j = JogadorFactory.getInstance().gerarJogador(Posicao.ZAGUEIRO, clube.getForcaGeral());
-			j.setClube(clube);
-			int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(j.getIdade());
-			double salario = calcularSalarioContratoService.calcularSalarioContrato(j, tempoContrato);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, tempoContrato, true, salario));
-			jogadoresClube.add(j);
-		}
 
-		//Lateral
-		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
-			j = JogadorFactory.getInstance().gerarJogador(Posicao.LATERAL, clube.getForcaGeral());
-			j.setClube(clube);
-			int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(j.getIdade());
-			double salario = calcularSalarioContratoService.calcularSalarioContrato(j, tempoContrato);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, tempoContrato, true, salario));
-			jogadoresClube.add(j);
-		}
-
-		//Volante
-		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
-			j = JogadorFactory.getInstance().gerarJogador(Posicao.VOLANTE, clube.getForcaGeral());
-			j.setClube(clube);
-			int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(j.getIdade());
-			double salario = calcularSalarioContratoService.calcularSalarioContrato(j, tempoContrato);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, tempoContrato, true, salario));
-			jogadoresClube.add(j);
-		}
-
-		//Meia
-		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
-			j = JogadorFactory.getInstance().gerarJogador(Posicao.MEIA, clube.getForcaGeral());
-			j.setClube(clube);
-			int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(j.getIdade());
-			double salario = calcularSalarioContratoService.calcularSalarioContrato(j, tempoContrato);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, tempoContrato, true, salario));
-			jogadoresClube.add(j);
-		}
-
-		//Atacante
-		for (int i = 0; i < NUM_JOGADORES_LINHA_POR_POSICAO; i++) {
-			j = JogadorFactory.getInstance().gerarJogador(Posicao.ATACANTE, clube.getForcaGeral());
-			j.setClube(clube);
-			int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(j.getIdade());
-			double salario = calcularSalarioContratoService.calcularSalarioContrato(j, tempoContrato);
-			j.setContratoAtual(new Contrato(clube, j, semanaInicialContrato, tempoContrato, true, salario));
-			jogadoresClube.add(j);
-		}*/
-		
 		//Jogadores Adicionais
 		int qtdeJogadoresAdicionais = RandomUtil.sortearIntervalo(0, 4);
 		Posicao p;

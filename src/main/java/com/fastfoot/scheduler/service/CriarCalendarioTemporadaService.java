@@ -15,7 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
+import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeService;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
@@ -34,7 +35,6 @@ import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
@@ -44,10 +44,9 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.AdequarModoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.AgruparHabilidadeValorEstatisticaService;
 import com.fastfoot.player.service.AposentarJogadorService;
-import com.fastfoot.player.service.AtualizarNumeroJogadoresService;
 import com.fastfoot.player.service.AtualizarPassoDesenvolvimentoJogadorService;
 import com.fastfoot.player.service.CalcularValorTransferenciaJogadorPorHabilidadeService;
-import com.fastfoot.player.service.CalcularValorTransferenciaService;
+import com.fastfoot.player.service.CalcularValorTransferenciaJogadorForcaGeralService;
 import com.fastfoot.player.service.CriarJogadoresClubeService;
 import com.fastfoot.player.service.RenovarContratosAutomaticamenteService;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -79,7 +78,6 @@ import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.PreCarregarParametrosService;
-import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.service.ExecutarTransferenciasAutomaticamenteService;
 import com.fastfoot.service.PreCarregarClubeService;
 
@@ -118,9 +116,6 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private RodadaEliminatoriaRepository rodadaEliminatoriaRepository;
-	
-	/*@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;*/
 
 	@Autowired
 	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
@@ -143,7 +138,7 @@ public class CriarCalendarioTemporadaService {
 	private AposentarJogadorService aposentarJogadorService;
 	
 	@Autowired
-	private CalcularValorTransferenciaService calcularValorTransferenciaService;
+	private CalcularValorTransferenciaJogadorForcaGeralService calcularValorTransferenciaJogadorForcaGeralService;
 
 	@Autowired
 	private CriarJogadoresClubeService criarJogadoresClubeService;
@@ -158,7 +153,7 @@ public class CriarCalendarioTemporadaService {
 	private SalvarCampeonatosService salvarCampeonatosService;
 
 	@Autowired
-	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+	private CalcularPartidaProbabilidadeResultadoFacadeService calcularPartidaProbabilidadeResultadoFacadeService;
 
 	@Autowired
 	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
@@ -171,15 +166,9 @@ public class CriarCalendarioTemporadaService {
 
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
-	
-	@Autowired
-	private AtualizarNumeroJogadoresService atualizarNumeroJogadoresService;
-	
+
 	@Autowired
 	private AtualizarClubeNivelService atualizarClubeNivelService;
-	
-	/*@Autowired
-	private GerarTransferenciasService gerarTransferenciasService;*/
 
 	@Autowired
 	private RenovarContratosAutomaticamenteService renovarContratosAutomaticamenteService;
@@ -245,7 +234,7 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			adequarModoDesenvolvimentoJogador2(temporadaAtual);
+			adequarModoDesenvolvimentoJogador(temporadaAtual);
 			stopWatch.split();
 			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -271,9 +260,9 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
 
 			if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
-				calcularValorTransferenciaJogadoresSimplificado3();
+				calcularValorTransferenciaJogadoresSimplificado();
 			} else {
-				calcularValorTransferenciaJogadores2();
+				calcularValorTransferenciaJogadores();
 			}
 			stopWatch.split();
 			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (stopWatch.getSplitTime() - inicio));
@@ -586,54 +575,6 @@ public class CriarCalendarioTemporadaService {
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
 
-	/*private void aposentarJogadores() {
-
-		//if (semana.getNumero() == 25) {
-			
-		List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = gds.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, gds.size())));
-			} else {
-				desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(gds.subList(i * offset, (i+1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		//}
-	}*/
-	
-	/*private void aposentarJogadores() {
-
-		//if (semana.getNumero() == 25) {
-			
-		List<GrupoDesenvolvimentoJogador> gds = grupoDesenvolvimentoJogadorRepository
-				.findByAtivoAndIdadeJogador(Boolean.TRUE, JogadorFactory.IDADE_MAX);
-		Map<Integer, Map<Clube, List<GrupoDesenvolvimentoJogador>>> grupoDesenvolvimentoClube = gds.stream()
-				.collect(Collectors.groupingBy(
-						gd -> (gd.getJogador().getClube().getId() % FastfootApplication.NUM_THREAD),
-						Collectors.groupingBy(gd -> gd.getJogador().getClube())));
-		
-		Map<Integer, Map<Clube, List<QuantitativoPosicaoClubeDTO>>> quantitativoPosicaoPorClubeMap = getQuantitativoPosicaoClube()
-				.stream().collect(Collectors.groupingBy(q -> (q.getClube().getId() % FastfootApplication.NUM_THREAD),
-						Collectors.groupingBy(q -> q.getClube())));
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			desenvolverJogadorFuture.add(aposentarJogadorService.aposentarJogador(grupoDesenvolvimentoClube.get(i),
-					quantitativoPosicaoPorClubeMap.get(i)));
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		//}
-	}*/
-	
 	private void aposentarJogadores() {
 
 		List<Jogador> jogadores = jogadorRepository.findByIdadeAndStatusJogador(JogadorFactory.IDADE_MAX,
@@ -679,91 +620,18 @@ public class CriarCalendarioTemporadaService {
 	}
 
 	private void calcularValorTransferenciaJogadoresSimplificado() {
-		//if (semana.getNumero() == 1) {
-			
-		long inicio = System.currentTimeMillis();
-		
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-		
-		long fim = System.currentTimeMillis();
-		
-		System.err.println("\tcalcularValorTransferenciaJogadoresSimplificado#findByStatusJogador: " + (fim - inicio));
-		
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				completableFutures.add(calcularValorTransferenciaService
-						.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
-			} else {
-				completableFutures.add(calcularValorTransferenciaService
-						.calcularValorTransferencia(jogadores.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-		//}
-	}
-	
-	private void calcularValorTransferenciaJogadoresSimplificado3() {
 
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (Liga liga : Liga.getAll()) {
-			completableFutures.add(calcularValorTransferenciaService.calcularValorTransferencia(liga, true));
-			completableFutures.add(calcularValorTransferenciaService.calcularValorTransferencia(liga, false));
+			completableFutures.add(calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(liga, true));
+			completableFutures.add(calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(liga, false));
 		}
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
-	
-	private void calcularValorTransferenciaJogadoresSimplificado2() {
 
-		List<Clube> clubes = clubeRepository.findAll(); 
-
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				completableFutures.add(calcularValorTransferenciaService
-						.calcularValorTransferencia2(clubes.subList(i * offset, clubes.size())));
-			} else {
-				completableFutures.add(calcularValorTransferenciaService
-						.calcularValorTransferencia2(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-	}
-	
 	private void calcularValorTransferenciaJogadores() {
-		//if (semana.getNumero() == 1) {
-			
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
-		
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				completableFutures.add(calcularValorTransferenciaJogadorPorHabilidadeService
-						.calcularValorTransferencia(jogadores.subList(i * offset, jogadores.size())));
-			} else {
-				completableFutures.add(calcularValorTransferenciaJogadorPorHabilidadeService
-						.calcularValorTransferencia(jogadores.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-		//}
-	}
-	
-	private void calcularValorTransferenciaJogadores2() {
 		//if (semana.getNumero() == 1) {
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
@@ -855,7 +723,9 @@ public class CriarCalendarioTemporadaService {
 	
 	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
 		
-		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)) {
+		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS) &&
+				(carregarParametroService.getTipoProbabilidadeResultadoPartida().equals(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA) ||
+				carregarParametroService.getTipoProbabilidadeResultadoPartida().equals(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO))) {
 		
 			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
 			
@@ -873,13 +743,13 @@ public class CriarCalendarioTemporadaService {
 	
 			for (Rodada r : semana.getRodadas()) {
 				completableFutures
-						.add(calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(r,
+						.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
 								carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
 			}
 	
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
 				completableFutures
-						.add(calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(r,
+						.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
 								carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
 			}
 			
@@ -888,7 +758,7 @@ public class CriarCalendarioTemporadaService {
 		}
 	}
 	
-	private void adequarModoDesenvolvimentoJogador2(Temporada temporada) {
+	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (Liga liga : Liga.getAll()) {
@@ -900,87 +770,7 @@ public class CriarCalendarioTemporadaService {
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
-	
-	private void adequarModoDesenvolvimentoJogador(Temporada temporada) {
 
-		//List<JogadorDetalhe> jogadores = jogadorDetalheRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
-		List<Jogador> jogadores = jogadorRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
-		
-		Map<Jogador, List<JogadorEstatisticasTemporada>> jogadorEstatisticas = jogadorEstatisticasTemporadaRepository
-				.findByTemporada(temporada).stream()
-				.collect(Collectors.groupingBy(JogadorEstatisticasTemporada::getJogador));
-
-		List<JogadorEstatisticasTemporada> estatisticasJogador = null;
-		Optional<JogadorEstatisticasTemporada> jogadorEstatisticasTemporadaOpt = null;
-		Optional<JogadorEstatisticasTemporada> jogadorEstatisticasTemporadaAmistososOpt = null;
-
-		for (Jogador jd : jogadores) {
-			estatisticasJogador = jogadorEstatisticas.get(jd);
-			
-			if (!ValidatorUtil.isEmpty(estatisticasJogador)) {
-
-				jogadorEstatisticasTemporadaOpt = estatisticasJogador.stream().filter(e -> !e.getAmistoso()).findFirst();
-				jogadorEstatisticasTemporadaAmistososOpt = estatisticasJogador.stream().filter(e -> e.getAmistoso())
-						.findFirst();
-	
-				if (jogadorEstatisticasTemporadaOpt.isPresent()) {
-					jd.setJogadorEstatisticasTemporadaAtual(jogadorEstatisticasTemporadaOpt.get());
-				}
-	
-				if (jogadorEstatisticasTemporadaAmistososOpt.isPresent()) {
-					jd.setJogadorEstatisticasAmistososTemporadaAtual(jogadorEstatisticasTemporadaAmistososOpt.get());
-				}
-			}
-		}
-
-		int offset = jogadores.size() / FastfootApplication.NUM_THREAD;
-
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				completableFutures.add(adequarModoDesenvolvimentoJogadorService
-						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, jogadores.size())));
-			} else {
-				completableFutures.add(adequarModoDesenvolvimentoJogadorService
-						.adequarModoDesenvolvimentoJogador(jogadores.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-	}
-	
-	/*private void atualizarNumeroJogadores() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		
-		List<CompletableFuture<Boolean>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, clubes.size())));
-			} else {
-				desenvolverJogadorFuture.add(atualizarNumeroJogadoresService
-						.atualizarNumeroJogadores(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-	}*/
-	
-	private void atualizarNumeroJogadores() {
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-		
-		for (Liga liga : Liga.getAll()) {
-			completableFutures.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(liga, true));
-			completableFutures.add(atualizarNumeroJogadoresService.atualizarNumeroJogadores(liga, false));
-		}
-
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-	}
-	
 	private void gerarMudancaClubeNivel(Temporada temporada) {
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();

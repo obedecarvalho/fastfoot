@@ -26,7 +26,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService implements ICalcularPartidaProbabilidadeResultadoService {
+public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaService implements CalcularPartidaProbabilidadeResultadoService {
 
 	private static final Integer NUM_SIMULACOES = 10000;
 

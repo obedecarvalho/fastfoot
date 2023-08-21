@@ -1,7 +1,6 @@
 package com.fastfoot.player.model.repository;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -34,37 +33,6 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 	public List<JogadorEstatisticasTemporada> findByLigaClubeAndStatusJogadorAndIdadeBetween(@Param("liga") Liga liga,
 			@Param("idClubeMin") Integer idClubeMin, @Param("idClubeMax") Integer idClubeMax,
 			@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
-
-	@Deprecated
-	@Query(nativeQuery = true, value =
-			" select id_clube," +
-			" 	sum(gols_marcados/cast(numero_jogos as numeric)) as gols_partida," +
-			" 	sum((gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
-			" 		/cast(numero_jogos as numeric)) as finalizacoes_partidas," +
-			" sum((gols_marcados + finalizacoes_defendidas)/cast(numero_jogos as numeric))" +
-			" 	/sum((gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
-			" 	/cast(numero_jogos as numeric)) as probilidade_finalizacoes_no_gol," +
-			" 	sum(gols_marcados/cast(numero_jogos as numeric))/sum(" +
-			" 		(gols_marcados + finalizacoes_defendidas + finalizacoes_fora)" +
-			" 		/cast(numero_jogos as numeric)) as probilidade_gols" +
-			" from jogador_estatisticas_temporada" +
-			" where id_temporada = ?1" +
-			" 	and amistoso = false" +
-			" 	and numero_jogos > 0" +
-			" 	and (gols_marcados + finalizacoes_defendidas + finalizacoes_fora) > 0" +
-			" group by id_clube"
-	)
-	public List<Map<String, Object>> findEstatisticasFinalizacoesPorClube(Long idTemporada);
-	
-	@Deprecated
-	@Query(nativeQuery = true, value =
-			" select id_clube," +
-			" 	sum(cast(gols_sofridos as numeric))/sum(goleiro_finalizacoes_defendidas + gols_sofridos) as probabilidade_defesa" +
-			" from jogador_estatisticas_temporada jet" +
-			" where id_temporada = ?1" +
-			" group by id_clube"
-	)
-	public List<Map<String, Object>> findEstatisticasDefesaPorClube(Long idTemporada);
 
 	@Transactional
 	@Modifying

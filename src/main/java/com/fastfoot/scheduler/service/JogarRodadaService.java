@@ -18,7 +18,7 @@ import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
 import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
-import com.fastfoot.match.service.JogarPartidaService;
+import com.fastfoot.match.service.JogarPartidaHabilidadeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
@@ -60,9 +60,6 @@ public class JogarRodadaService {
 	@Autowired
 	private HabilidadeValorEstatisticaRepository habilidadeValorEstatisticaRepository;
 
-	/*@Autowired
-	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;*/
-	
 	@Autowired
 	private JogadorEstatisticasSemanaRepository jogadorEstatisticasSemanaRepository;
 	
@@ -78,18 +75,12 @@ public class JogarRodadaService {
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
 
-	/*@Autowired
-	private JogadorRepository jogadorRepository;*/
-
 	//###	SERVICE	###
-	/*@Autowired
-	private PartidaResultadoService partidaResultadoService;*/
-	
 	@Autowired
 	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
 	
 	@Autowired
-	private JogarPartidaService jogarPartidaService;
+	private JogarPartidaHabilidadeService jogarPartidaHabilidadeService;
 
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
@@ -451,7 +442,7 @@ public class JogarRodadaService {
 	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
@@ -460,7 +451,7 @@ public class JogarRodadaService {
 	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 
 			if (p.getProximaPartida() != null) {
 				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
@@ -470,66 +461,7 @@ public class JogarRodadaService {
 
 	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
-			jogarPartidaService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
 		}
 	}
-
-	/*private void carregarEscalacao(List<? extends PartidaResultadoJogavel> partidas) {
-
-		List<Clube> clubes = new ArrayList<Clube>();
-
-		clubes.addAll(partidas.stream().map(p -> p.getClubeMandante()).collect(Collectors.toList()));
-		clubes.addAll(partidas.stream().map(p -> p.getClubeVisitante()).collect(Collectors.toList()));
-
-		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidades(clubes,
-				StatusJogador.ATIVO);
-
-		carregarJogadorEnergia(jogadores);
-
-		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
-				.collect(Collectors.groupingBy(Jogador::getClube));
-
-		EscalacaoClube escalacaoClubeMandante, escalacaoClubeVisitante;
-
-		for (PartidaResultadoJogavel p : partidas) {
-			escalacaoClubeMandante = carregarEscalacaoJogadoresPartidaService
-					.carregarJogadoresPartida(p.getClubeMandante(), jogadoresPorClube.get(p.getClubeMandante()), p);
-			escalacaoClubeVisitante = carregarEscalacaoJogadoresPartidaService
-					.carregarJogadoresPartida(p.getClubeVisitante(), jogadoresPorClube.get(p.getClubeVisitante()), p);
-			p.setEscalacaoMandante(escalacaoClubeMandante);
-			p.setEscalacaoVisitante(escalacaoClubeVisitante);
-		}
-	}*/
-
-	/*private void carregarJogadorEnergia(List<Jogador> jogadores) {
-		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogador();
-
-		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
-				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
-
-		JogadorEnergia je = null;
-		Map<String, Object> jes = null;
-		Integer energia = null;
-
-		for (Jogador j : jogadores) {
-			je = new JogadorEnergia();
-			je.setJogador(j);
-			je.setEnergia(0);//Variacao de energia
-
-			jes = x.get(j);
-			if (!ValidatorUtil.isEmpty(jes)) {
-				energia = ((BigInteger) jes.get("energia")).intValue();
-				if (energia > Constantes.ENERGIA_INICIAL) {
-					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-				} else {
-					je.setEnergiaInicial(energia);
-				}
-			} else {
-				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-			}
-
-			j.setJogadorEnergia(je);
-		}
-
-	}*/
 }

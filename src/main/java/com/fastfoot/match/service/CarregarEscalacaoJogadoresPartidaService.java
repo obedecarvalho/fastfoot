@@ -34,6 +34,33 @@ public class CarregarEscalacaoJogadoresPartidaService {
 
 	@Autowired
 	private CarregarJogadorEnergiaService carregarJogadorEnergiaService;
+	
+	//###	HABILIDADE_VALOR	###
+	
+	public void carregarEscalacao(List<? extends PartidaResultadoJogavel> partidas) {
+
+		List<Clube> clubes = new ArrayList<Clube>();
+
+		clubes.addAll(partidas.stream().map(p -> p.getClubeMandante()).collect(Collectors.toList()));
+		clubes.addAll(partidas.stream().map(p -> p.getClubeVisitante()).collect(Collectors.toList()));
+
+		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidades(clubes,
+				StatusJogador.ATIVO);
+
+		carregarJogadorEnergiaService.carregarJogadorEnergia(jogadores);
+
+		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
+				.collect(Collectors.groupingBy(Jogador::getClube));
+
+		EscalacaoClube escalacaoClubeMandante, escalacaoClubeVisitante;
+
+		for (PartidaResultadoJogavel p : partidas) {
+			escalacaoClubeMandante = carregarJogadoresPartida(p.getClubeMandante(), jogadoresPorClube.get(p.getClubeMandante()), p);
+			escalacaoClubeVisitante = carregarJogadoresPartida(p.getClubeVisitante(), jogadoresPorClube.get(p.getClubeVisitante()), p);
+			p.setEscalacaoMandante(escalacaoClubeMandante);
+			p.setEscalacaoVisitante(escalacaoClubeVisitante);
+		}
+	}
 
 	public EscalacaoClube carregarJogadoresPartida(Clube clube, PartidaResultadoJogavel partidaResultado) {
 		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogadorFetchHabilidades(clube,
@@ -41,6 +68,11 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		
 		carregarJogadorEnergiaService.carregarJogadorEnergia(clube, jogadores);
 
+		return carregarJogadoresPartida(clube, jogadores, partidaResultado);
+	}
+
+	private EscalacaoClube carregarJogadoresPartida(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
+
 		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
 
 		inicializarEstatisticasJogador(escalacao.getListEscalacaoJogadorPosicao(),
@@ -49,112 +81,6 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		inicializarEstatisticas(jogadores, partidaResultado.getRodada().getSemana(), partidaResultado);
 
 		return escalacao;
-	}
-
-	public EscalacaoClube carregarJogadoresPartida(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
-
-		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
-
-		inicializarEstatisticasJogador(escalacao.getListEscalacaoJogadorPosicao(),
-				partidaResultado.getRodada().getSemana(), partidaResultado);
-
-		inicializarEstatisticas(jogadores, partidaResultado.getRodada().getSemana(), partidaResultado);
-
-		return escalacao;
-	}
-	
-	/*private void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
-		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
-
-		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
-				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
-
-		JogadorEnergia je = null;
-		Map<String, Object> jes = null;
-		Integer energia = null;
-
-		for (Jogador j : jogadores) {
-			je = new JogadorEnergia();
-			je.setJogador(j);
-			je.setEnergia(0);//Variacao de energia
-
-			jes = x.get(j);
-			if (!ValidatorUtil.isEmpty(jes)) {
-				energia = ((BigInteger) jes.get("energia")).intValue();
-				if (energia > Constantes.ENERGIA_INICIAL) {
-					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-				} else {
-					je.setEnergiaInicial(energia);
-				}
-			} else {
-				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-			}
-
-			j.setJogadorEnergia(je);
-		}
-
-	}*/
-	
-	/*private void carregarJogadorEnergia2(Clube clube, List<Jogador> jogadores) {
-		List<JogadorEnergia> jogadorEnergias = jogadorEnergiaRepository.findByClube(clube);
-		
-		Map<Jogador, List<JogadorEnergia>> x = jogadorEnergias.stream().sorted(new Comparator<JogadorEnergia>() {
-
-			@Override
-			public int compare(JogadorEnergia o1, JogadorEnergia o2) {
-				return o2.getId().compareTo(o1.getId());
-			}
-		}).collect(Collectors.groupingBy(JogadorEnergia::getJogador));
-		
-		List<JogadorEnergia> jes = null;
-		JogadorEnergia je = null;
-		
-		for (Jogador j : jogadores) {
-
-			je = new JogadorEnergia();
-			//je.setTemporada(temporada);
-			je.setJogador(j);
-
-			jes = x.get(j);
-			if (!ValidatorUtil.isEmpty(jes)) {
-				je.setEnergia(jes.get(0).getEnergia());
-			} else {
-				je.setEnergia(Constantes.ENERGIA_INICIAL);
-			}
-			
-			j.getJogadorDetalhe().setJogadorEnergia(je);
-		}
-	}*/
-	
-	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
-			PartidaResultadoJogavel partidaResultado) {
-
-
-		if (!partidaResultado.isAmistoso()) {// Partidas Oficiais
-
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.setJogadorEstatisticasSemana(
-							new JogadorEstatisticasSemana(j, semana, j.getClube(), partidaResultado, false)));
-
-		} else {
-
-			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-					.forEach(j -> j.setJogadorEstatisticasSemana(
-							new JogadorEstatisticasSemana(j, semana, j.getClube(), null, true)));
-
-		}
-
-		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogos(1));
-
-		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogosTitular(1));
-
-		/*escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticaSemana().setNumeroMinutosJogados(90));*/
-		
-		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticasSemana().setMinutoInicial(0));
 	}
 
 	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana,
@@ -167,32 +93,10 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		}
 	}
 
-	public EscalacaoClube carregarJogadoresHabilidadeGrupoPartida(Clube clube, PartidaResultadoJogavel partidaResultado) {
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogadorFetchHabilidadesGrupo(clube,
-				StatusJogador.ATIVO);//TODO: reduzir numero de consultas
-		
-		carregarJogadorEnergiaService.carregarJogadorEnergia(clube, jogadores);
-
-		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
-
-		inicializarEstatisticasJogador(escalacao.getListEscalacaoJogadorPosicao(),
-				partidaResultado.getRodada().getSemana(), partidaResultado);
-
-		inicializarEstatisticasHabilidadeGrupo(jogadores, partidaResultado.getRodada().getSemana(), partidaResultado);
-
-		return escalacao;
-	}
-
-	private void inicializarEstatisticasHabilidadeGrupo(List<Jogador> jogadores, Semana semana,
-			PartidaResultadoJogavel partidaResultado) {
-		for (Jogador j : jogadores) {
-			for (HabilidadeGrupoValor hv : j.getHabilidadesGrupo()) {
-				hv.setHabilidadeGrupoValorEstatistica(
-						new HabilidadeGrupoValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
-			}
-		}
-	}
-
+	//###	/HABILIDADE_VALOR	###
+	
+	//###	HABILIDADE_GRUPO_VALOR	###
+	
 	public void carregarEscalacaoHabilidadeGrupo(List<? extends PartidaResultadoJogavel> partidas) {
 
 		List<Clube> clubes = new ArrayList<Clube>();
@@ -218,7 +122,16 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		}
 	}
 
-	public EscalacaoClube carregarJogadoresHabilidadeGrupoPartida(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
+	public EscalacaoClube carregarJogadoresHabilidadeGrupoPartida(Clube clube, PartidaResultadoJogavel partidaResultado) {
+		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogadorFetchHabilidadesGrupo(clube,
+				StatusJogador.ATIVO);
+		
+		carregarJogadorEnergiaService.carregarJogadorEnergia(clube, jogadores);
+
+		return carregarJogadoresHabilidadeGrupoPartida(clube, jogadores, partidaResultado);
+	}
+
+	private EscalacaoClube carregarJogadoresHabilidadeGrupoPartida(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partidaResultado) {
 
 		EscalacaoClube escalacao = escalarClubeService.gerarEscalacaoInicial(clube, jogadores, partidaResultado);
 
@@ -230,28 +143,43 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		return escalacao;
 	}
 
-	public void carregarEscalacao(List<? extends PartidaResultadoJogavel> partidas) {
-
-		List<Clube> clubes = new ArrayList<Clube>();
-
-		clubes.addAll(partidas.stream().map(p -> p.getClubeMandante()).collect(Collectors.toList()));
-		clubes.addAll(partidas.stream().map(p -> p.getClubeVisitante()).collect(Collectors.toList()));
-
-		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidades(clubes,
-				StatusJogador.ATIVO);
-
-		carregarJogadorEnergiaService.carregarJogadorEnergia(jogadores);
-
-		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
-				.collect(Collectors.groupingBy(Jogador::getClube));
-
-		EscalacaoClube escalacaoClubeMandante, escalacaoClubeVisitante;
-
-		for (PartidaResultadoJogavel p : partidas) {
-			escalacaoClubeMandante = carregarJogadoresPartida(p.getClubeMandante(), jogadoresPorClube.get(p.getClubeMandante()), p);
-			escalacaoClubeVisitante = carregarJogadoresPartida(p.getClubeVisitante(), jogadoresPorClube.get(p.getClubeVisitante()), p);
-			p.setEscalacaoMandante(escalacaoClubeMandante);
-			p.setEscalacaoVisitante(escalacaoClubeVisitante);
+	private void inicializarEstatisticasHabilidadeGrupo(List<Jogador> jogadores, Semana semana,
+			PartidaResultadoJogavel partidaResultado) {
+		for (Jogador j : jogadores) {
+			for (HabilidadeGrupoValor hv : j.getHabilidadesGrupo()) {
+				hv.setHabilidadeGrupoValorEstatistica(
+						new HabilidadeGrupoValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
+			}
 		}
+	}
+
+	//###	/HABILIDADE_GRUPO_VALOR	###
+	
+	private void inicializarEstatisticasJogador(List<EscalacaoJogadorPosicao> escalacao, Semana semana,
+			PartidaResultadoJogavel partidaResultado) {
+
+
+		if (!partidaResultado.isAmistoso()) {// Partidas Oficiais
+
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(j, semana, j.getClube(), partidaResultado, false)));
+
+		} else {
+
+			escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+					.forEach(j -> j.setJogadorEstatisticasSemana(
+							new JogadorEstatisticasSemana(j, semana, j.getClube(), null, true)));
+
+		}
+
+		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogos(1));
+
+		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogosTitular(1));
+		
+		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
+				.forEach(j -> j.getJogadorEstatisticasSemana().setMinutoInicial(0));
 	}
 }

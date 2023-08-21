@@ -21,28 +21,8 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
-public class CalcularValorTransferenciaJogadorPorHabilidadeService implements ICalcularValorTransferenciaService {
+public class CalcularValorTransferenciaJogadorPorHabilidadeService extends CalcularValorTransferenciaJogadorService {
 
-	/*
-	 * DESATUALIZADO
-	 * Taxa desconto: 33%, Max/Inicial: 103%
-	 * Taxa desconto: 30%, Max/Inicial: 94%
-	 * Taxa desconto: 25%, Max/Inicial: 77%
-	 */
-	//private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
-	
-	public static final Integer FORCA_N_POWER = 3;
-
-	/**
-	 * 
-	 * 
-	 * Calculado como: Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade())
-	 */
-	public static final Double[] TAXA_DESCONTO_TEMPO = new Double[] { 1.0, 1.25, 1.5625, 1.953125, 2.44140625,
-			3.051757813, 3.814697266, 4.768371582, 5.960464478, 7.450580597, 9.313225746, 11.64153218, 14.55191523,
-			18.18989404, 22.73736754, 28.42170943, 35.52713679, 44.40892099, 55.51115123, 69.38893904, 86.7361738,
-			108.4202172 };
-	
 	public static final Map<Habilidade, ValorTransferenciaHabilidade> VALOR_TRANSFERENCIA_HABILIDADE;
 	
 	@Autowired
@@ -68,18 +48,6 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeService implements IC
 		VALOR_TRANSFERENCIA_HABILIDADE.put(Habilidade.JOGO_AEREO, ValorTransferenciaHabilidade.JOGO_AEREO);
 	}
 
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularValorTransferencia(List<Jogador> jogadores) {
-		
-		for (Jogador j : jogadores) {
-			calcularValorTransferencia(j);
-		}
-		
-		jogadorRepository.saveAll(jogadores);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
-	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularValorTransferencia(Liga liga, boolean primeirosIds) {
 		StopWatch stopWatch = new StopWatch();

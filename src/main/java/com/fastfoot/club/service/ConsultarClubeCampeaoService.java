@@ -1,17 +1,22 @@
 package com.fastfoot.club.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.dto.ClubeTituloAnoDTO;
+import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
+import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeUtil;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
@@ -106,16 +111,16 @@ public class ConsultarClubeCampeaoService {
 
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
 
-		List<CampeonatoEliminatorio> copasNacionais = null;
+		//List<CampeonatoEliminatorio> copasNacionais = null;
 
-		RodadaEliminatoria r = null;
-		List<PartidaEliminatoriaResultado> p = null;
+		//RodadaEliminatoria r = null;
+		//List<PartidaEliminatoriaResultado> p = null;
 
-		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
+		//int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
 
 		for (Liga liga : Liga.getAll()) {
 
-			copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
+			/*copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
 
 			for (CampeonatoEliminatorio c : copasNacionais) {
 
@@ -126,7 +131,34 @@ public class ConsultarClubeCampeaoService {
 				clubeTituloAnosList.add(new ClubeTituloAnoDTO(p.get(0).getClubeVencedor(),
 						c.getNivelCampeonato(), t.getAno()));
 
-			}
+			}*/
+			
+			clubeTituloAnosList.addAll(getCampeoesCopaNacional(t, liga));
+		}
+
+		return clubeTituloAnosList;
+	}
+
+	private List<ClubeTituloAnoDTO> getCampeoesCopaNacional(Temporada t, Liga liga) {
+
+		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
+
+		List<CampeonatoEliminatorio> copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
+
+		RodadaEliminatoria r = null;
+		List<PartidaEliminatoriaResultado> p = null;
+
+		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
+
+		for (CampeonatoEliminatorio c : copasNacionais) {
+
+			r = rodadaEliminatoriaRepository.findFirstByCampeonatoEliminatorioAndNumero(c,
+					c.getNivelCampeonato().isCopaNacional() ? numeroRodadas : 4).get();
+			p = partidaEliminatoriaResultadoRepository.findByRodada(r);
+
+			clubeTituloAnosList.add(new ClubeTituloAnoDTO(p.get(0).getClubeVencedor(),
+					c.getNivelCampeonato(), t.getAno()));
+
 		}
 
 		return clubeTituloAnosList;
@@ -181,4 +213,47 @@ public class ConsultarClubeCampeaoService {
 		return clubeTituloAnosList;
 	}
 	
+	public Map<Integer, Clube> getCampeoes(Temporada t, Liga liga) {
+		
+		Map<Integer, Clube> clubesCampeoes = new HashMap<Integer, Clube>();
+		
+		List<ClubeTituloAnoDTO> clubeTituloAnoDTOs = new ArrayList<ClubeTituloAnoDTO>();
+
+		clubeTituloAnoDTOs.addAll(getCampeoesContinentais(t));
+		clubeTituloAnoDTOs.addAll(getCampeoesCopaNacional(t, liga));
+		
+		Optional<ClubeTituloAnoDTO> clubeCampeao;
+		
+		clubeCampeao = clubeTituloAnoDTOs.stream()
+				.filter(ct -> NivelCampeonato.CONTINENTAL.equals(ct.getNivelCampeonato())).findFirst();
+		if (clubeCampeao.isPresent()) {
+			clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT, clubeCampeao.get().getClube());
+		}
+
+		clubeCampeao = clubeTituloAnoDTOs.stream()
+				.filter(ct -> NivelCampeonato.CONTINENTAL_II.equals(ct.getNivelCampeonato())).findFirst();
+		if (clubeCampeao.isPresent()) {
+			clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT_II, clubeCampeao.get().getClube());
+		}
+
+		clubeCampeao = clubeTituloAnoDTOs.stream()
+				.filter(ct -> NivelCampeonato.CONTINENTAL_III.equals(ct.getNivelCampeonato())).findFirst();
+		if (clubeCampeao.isPresent()) {
+			clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_CONT_III, clubeCampeao.get().getClube());
+		}
+		
+		clubeCampeao = clubeTituloAnoDTOs.stream()
+				.filter(ct -> NivelCampeonato.COPA_NACIONAL.equals(ct.getNivelCampeonato())).findFirst();
+		if (clubeCampeao.isPresent()) {
+			clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_COPA_NAC, clubeCampeao.get().getClube());
+		}
+		
+		clubeCampeao = clubeTituloAnoDTOs.stream()
+				.filter(ct -> NivelCampeonato.COPA_NACIONAL_II.equals(ct.getNivelCampeonato())).findFirst();
+		if (clubeCampeao.isPresent()) {
+			clubesCampeoes.put(ClubeRankingProbabilidadeUtil.CAMP_COPA_NAC_II, clubeCampeao.get().getClube());
+		}
+		
+		return clubesCampeoes;
+	}
 }

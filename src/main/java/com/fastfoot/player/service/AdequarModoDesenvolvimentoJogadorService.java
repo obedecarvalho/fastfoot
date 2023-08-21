@@ -24,9 +24,6 @@ import com.fastfoot.service.util.ValidatorUtil;
 @Service
 public class AdequarModoDesenvolvimentoJogadorService {
 	
-	/*@Autowired
-	private JogadorDetalheRepository jogadorDetalheRepository;*/
-	
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
@@ -79,10 +76,8 @@ public class AdequarModoDesenvolvimentoJogadorService {
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(List<Jogador> jogadores) {
-		
-		//List<Jogador> jogadores = jogadorRepository.findByIdadeBetween(JogadorFactory.IDADE_MIN, 23);
+	//@Async("defaultExecutor")
+	private CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(List<Jogador> jogadores) {
 		
 		List<Jogador> detalheJogadoresSalvar = new ArrayList<Jogador>();
 		

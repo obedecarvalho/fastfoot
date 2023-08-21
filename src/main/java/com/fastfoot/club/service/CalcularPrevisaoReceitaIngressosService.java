@@ -3,11 +3,9 @@ package com.fastfoot.club.service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -34,53 +32,6 @@ public class CalcularPrevisaoReceitaIngressosService {
 	
 	@Autowired
 	private CalcularTorcidaPartidaService calcularTorcidaPartidaService;
-
-	@Deprecated
-	public Double calcularPrevisaoReceitaIngressos(Clube clube) {
-		
-		Double receita = 0.0d;
-		
-		List<PartidaResultado> partidasMandante = partidaResultadoRepository.findByClubeMandanteAndPartidaJogada(clube,
-				false);
-
-		List<PartidaResultado> partidasVisitante = partidaResultadoRepository
-				.findByClubeVisitanteAndPartidaJogada(clube, false);
-
-		List<PartidaEliminatoriaResultado> partidasEliminatoriaMandante = partidaEliminatoriaResultadoRepository
-				.findByClubeMandanteAndPartidaJogada(clube, false);
-
-		List<PartidaEliminatoriaResultado> partidasEliminatoriaVisitante = partidaEliminatoriaResultadoRepository
-				.findByClubeVisitanteAndPartidaJogada(clube, false);
-
-		List<PartidaAmistosaResultado> partidasAmistosaMandante = partidaAmistosaResultadoRepository
-				.findByClubeMandanteAndPartidaJogada(clube, false);
-
-		List<PartidaAmistosaResultado> partidasAmistosaVisitante = partidaAmistosaResultadoRepository
-				.findByClubeVisitanteAndPartidaJogada(clube, false);
-		
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasMandante, true);
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasVisitante, false);
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasEliminatoriaMandante, true);
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasEliminatoriaVisitante, false);
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasAmistosaMandante, true);
-		receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasAmistosaVisitante, false);
-		
-		return receita;
-
-	}
-
-	@Deprecated
-	@Async("defaultExecutor")
-	public CompletableFuture<Map<Clube, Double>> calcularPrevisaoReceitaIngressos(List<Clube> clubes){
-
-		Map<Clube, Double> clubeReceita = new HashMap<Clube, Double>();
-
-		for (Clube clube : clubes) {
-			clubeReceita.put(clube, calcularPrevisaoReceitaIngressos(clube));
-		}
-
-		return CompletableFuture.completedFuture(clubeReceita);
-	}
 
 	public Map<Clube, Double> calcularPrevisaoReceitaIngressos(Temporada temporada){
 		

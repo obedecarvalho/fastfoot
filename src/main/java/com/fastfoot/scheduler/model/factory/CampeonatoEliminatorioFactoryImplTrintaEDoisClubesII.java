@@ -21,6 +21,32 @@ public class CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII extends Campeo
 	 */
 
 	@Override
+	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
+		campeonato.setLiga(liga);
+		campeonato.setRodadaAtual(0);
+		campeonato.setTemporada(temporada);
+		campeonato.setNivelCampeonato(nivelCampeonato);
+		
+		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacionalII(clubes, campeonato);
+		
+		campeonato.setRodadas(rodadas);
+		
+		SemanaUtil.associarRodadaCopaNacionalQuatroRodadasSemana(campeonato);
+
+		return campeonato;
+	}
+
+	private List<RodadaEliminatoria> gerarRodadasCopaNacionalII(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonato) {
+		int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II);
+		int numJogos = numeroRodadas*2;
+
+		List<RodadaEliminatoria> rodadas = gerarRodadas(1, 4, numJogos,	null, null, campeonato, null);
+
+		return rodadas;
+	}
+
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -74,23 +100,9 @@ public class CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII extends Campeo
 		
 		partidasRodadaAnterior = partidasRodada;
 		rodadaAnterior = rodadaEliminatoria;
-		
+
 		//Fase 2
 		//12 Clubes
-		
-		/*rodadaEliminatoria = gerarRodadas(2, 2, nroJogos2Fase, partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null).get(0);
-		rodadas.add(rodadaEliminatoria);
-		
-		//
-		for (PartidaEliminatoriaResultado p : rodadaEliminatoria.getPartidas()) {
-			p.setClassificaAMandante(false);
-		}
-		//
-
-		rodadaAnterior.setProximaRodada(rodadaEliminatoria);
-		partidasRodadaAnterior = rodadaEliminatoria.getPartidas();
-		rodadaAnterior = rodadaEliminatoria;*/
-
 		rodadaEliminatoria = new RodadaEliminatoria();
 		rodadaEliminatoria.setNumero(2);
 		rodadaEliminatoria.setCampeonatoEliminatorio(campeonatoEliminatorio);
@@ -149,32 +161,6 @@ public class CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII extends Campeo
 		int numJogos = nroJogos3Fase/2;
 		
 		rodadas.addAll(gerarRodadas(4, Constantes.NRO_RODADAS_CP_NAC, numJogos, partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null));
-
-		return rodadas;
-	}
-
-	@Override
-	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
-		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
-		campeonato.setLiga(liga);
-		campeonato.setRodadaAtual(0);
-		campeonato.setTemporada(temporada);
-		campeonato.setNivelCampeonato(nivelCampeonato);
-		
-		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacionalII(campeonato);
-		
-		campeonato.setRodadas(rodadas);
-		
-		SemanaUtil.associarRodadaCopaNacionalQuatroRodadasSemana(campeonato);
-
-		return campeonato;
-	}
-
-	private List<RodadaEliminatoria> gerarRodadasCopaNacionalII(CampeonatoEliminatorio campeonato) {
-		int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II);
-		int numJogos = numeroRodadas*2;
-
-		List<RodadaEliminatoria> rodadas = gerarRodadas(1, 4, numJogos,	null, null, campeonato, null);
 
 		return rodadas;
 	}

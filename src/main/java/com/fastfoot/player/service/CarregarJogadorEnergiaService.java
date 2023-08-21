@@ -26,6 +26,17 @@ public class CarregarJogadorEnergiaService {
 	public void carregarJogadorEnergia(List<Jogador> jogadores) {
 		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogador();
 
+		carregarJogadorEnergia(jogadores, jogEnergia);
+	}
+
+	public void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
+		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
+
+		carregarJogadorEnergia(jogadores, jogEnergia);
+	}
+
+	private void carregarJogadorEnergia(List<Jogador> jogadores, List<Map<String, Object>> jogEnergia) {
+
 		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
 				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
 
@@ -40,7 +51,6 @@ public class CarregarJogadorEnergiaService {
 
 			jes = x.get(j);
 			if (!ValidatorUtil.isEmpty(jes)) {
-				//energia = ((BigInteger) jes.get("energia")).intValue();
 				energia = DatabaseUtil.getValueInteger(jes.get("energia"));
 				if (energia > Constantes.ENERGIA_INICIAL) {
 					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
@@ -53,38 +63,5 @@ public class CarregarJogadorEnergiaService {
 
 			j.setJogadorEnergia(je);
 		}
-
-	}
-
-	public void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
-		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
-
-		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
-				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
-
-		JogadorEnergia je = null;
-		Map<String, Object> jes = null;
-		Integer energia = null;
-
-		for (Jogador j : jogadores) {
-			je = new JogadorEnergia();
-			je.setJogador(j);
-			je.setEnergia(0);//Variacao de energia
-
-			jes = x.get(j);
-			if (!ValidatorUtil.isEmpty(jes)) {
-				energia = ((BigInteger) jes.get("energia")).intValue();
-				if (energia > Constantes.ENERGIA_INICIAL) {
-					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-				} else {
-					je.setEnergiaInicial(energia);
-				}
-			} else {
-				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-			}
-
-			j.setJogadorEnergia(je);
-		}
-
 	}
 }

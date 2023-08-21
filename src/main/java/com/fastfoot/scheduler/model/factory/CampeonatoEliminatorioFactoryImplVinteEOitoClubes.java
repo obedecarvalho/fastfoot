@@ -14,17 +14,13 @@ import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 
-/**
- * 
- * @author obede
- *
- */
 public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends CampeonatoEliminatorioFactory {
 	
 	/*
 	 * CN: 16 -> 8 -> (4' + 12) -> 8 -> 4 -> 2 [6 RODADAS]
 	 */
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -78,10 +74,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		
 		partidasRodadaAnterior = partidasRodada;
 		rodadaAnterior = rodadaEliminatoria;
-		//
-		
-		//int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II);
-		//int numJogos = numeroRodadas*2;
+
 		int numJogos = nroJogos2Fase;
 
 		rodadas.addAll(gerarRodadas(2, 4, numJogos,	partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null));
@@ -89,6 +82,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		return rodadas;
 	}
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -140,7 +134,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		
 		partidasRodadaAnterior = partidasRodada;
 		rodadaAnterior = rodadaEliminatoria;
-		
+
 		//Fase 2
 		//8 Clubes
 		
@@ -156,27 +150,6 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		rodadaAnterior.setProximaRodada(rodadaEliminatoria);
 		partidasRodadaAnterior = rodadaEliminatoria.getPartidas();
 		rodadaAnterior = rodadaEliminatoria;
-
-		/*rodadaEliminatoria = new RodadaEliminatoria();
-		rodadaEliminatoria.setNumero(2);
-		rodadaEliminatoria.setCampeonatoEliminatorio(campeonatoEliminatorio);
-		partidasRodada = new ArrayList<PartidaEliminatoriaResultado>();
-		
-		for (int i = 0; i < nroJogos2Fase; i++) {
-			partidaEliminatoria = new PartidaEliminatoriaResultado();
-			partidaEliminatoria.setRodada(rodadaEliminatoria);
-			partidaEliminatoria.setClassificaAMandante(i < (nroJogos2Fase/2));
-			partidaEliminatoria.setClubeMandante(clubes2Fase.get(i).getClube());
-			partidasRodadaAnterior.get(nroJogos1Fase - i - 1).setProximaPartida(partidaEliminatoria);
-			partidasRodada.add(partidaEliminatoria);
-		}
-		
-		rodadaEliminatoria.setPartidas(partidasRodada);
-		rodadas.add(rodadaEliminatoria);
-		
-		rodadaAnterior.setProximaRodada(rodadaEliminatoria);
-		partidasRodadaAnterior = partidasRodada;
-		rodadaAnterior = rodadaEliminatoria;*/
 
 		//Fase 3
 		//16 Clubes

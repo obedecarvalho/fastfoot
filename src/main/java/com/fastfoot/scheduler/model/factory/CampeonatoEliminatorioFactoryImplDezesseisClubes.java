@@ -12,6 +12,7 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends CampeonatoEliminatorioFactory {
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		//17 a 32
 		List<ClubeRanking> clubes1Fase =  clubes.stream().filter(c -> c.getPosicaoGeral() > 16 && c.getPosicaoGeral() <= 32).collect(Collectors.toList());
@@ -23,6 +24,7 @@ public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends Campeonato
 		return campeonato;
 	}
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		//1 a 16
 		List<ClubeRanking> clubes1Fase =  clubes.stream().filter(c -> c.getPosicaoGeral() > 0 && c.getPosicaoGeral() <= 16).collect(Collectors.toList());

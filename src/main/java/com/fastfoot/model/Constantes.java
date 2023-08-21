@@ -90,12 +90,20 @@ public class Constantes {
 	
 	//###	ENERGIA JOGADOR	###
 	public static final Integer ENERGIA_INICIAL = 100;
-
-	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA = 4;
 	
-	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO = 7;
+	public static final Integer CONSUMO_PARCIAL_ENERGIA_FIXA = 6;
 
-	public static final Integer REPOSICAO_ENERGIA_SEMANAL = 19;
+	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA = 2;
+	
+	public static final Integer CONSUMO_PARCIAL_ENERGIA_PARTIDA_GOLEIRO = 3;
+
+	public static final Integer RECUPERACAO_ENERGIA_SEMANAL = 12;
+	
+	public static final Integer RECUPERACAO_ENERGIA_SEMANAL_ATE_23 = RECUPERACAO_ENERGIA_SEMANAL + 10;
+	
+	public static final Integer RECUPERACAO_ENERGIA_SEMANAL_24_A_32 = RECUPERACAO_ENERGIA_SEMANAL + 7;
+	
+	public static final Integer RECUPERACAO_ENERGIA_SEMANAL_APOS_33 = RECUPERACAO_ENERGIA_SEMANAL + 4;
 	
 	public static final Integer ENERGIA_MINIMA_JOGAR = 30;
 	

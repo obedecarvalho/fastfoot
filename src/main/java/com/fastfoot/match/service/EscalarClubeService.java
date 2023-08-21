@@ -5,80 +5,29 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.match.model.EscalacaoPosicao;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
-import com.fastfoot.match.model.repository.EscalacaoClubeRepository;
-import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Posicao;
-import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
-import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.service.util.ArraysUtil;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class EscalarClubeService {
-	
-	@Autowired
-	private JogadorRepository jogadorRepository;
-	
-	@Autowired
-	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
-	
-	@Autowired
-	private ClubeRepository clubeRepository;
-	
-	@Autowired
-	private EscalacaoClubeRepository escalacaoClubeRepository;
-
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> escalarClubes(List<Clube> clubes) {
-		List<EscalacaoClube> escalacoes = new ArrayList<EscalacaoClube>();
-		for (Clube c : clubes) {
-			escalarClube(c, escalacoes);
-		}
-		escalacaoClubeRepository.saveAll(escalacoes);
-		escalacaoJogadorPosicaoRepository.saveAll(escalacoes.stream()
-				.flatMap(e -> e.getListEscalacaoJogadorPosicao().stream()).collect(Collectors.toList()));
-		clubeRepository.saveAll(clubes);
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}
-	
-	private void escalarClube(Clube clube, List<EscalacaoClube> escalacoes) {
-
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);//TODO: otimizar
-		
-		//List<EscalacaoJogadorPosicao> escalacao = gerarEscalacaoInicial(clube, jogadores, null);
-		EscalacaoClube escalacaoClube = gerarEscalacaoInicial(clube, jogadores, null);
-		
-		//
-		clube.setForcaGeralAtual(new Double(escalacaoClube.getListEscalacaoJogadorPosicao().stream()
-				.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
-				.mapToDouble(e -> e.getJogador().getForcaGeral()).average().getAsDouble()).intValue());
-		//
-
-		escalacoes.add(escalacaoClube);
-	}
 
 	public EscalacaoClube gerarEscalacaoInicial(Clube clube, List<Jogador> jogadores, PartidaResultadoJogavel partida) {
 		
 		EscalacaoClube escalacaoClubePartida = new EscalacaoClube(clube, partida, true);
-		
-		//Comparator<Jogador> comparator = JogadorFactory.getComparator();
-		
+
 		List <EscalacaoJogadorPosicao> escalacao = new ArrayList<EscalacaoJogadorPosicao>();
 		
 		List<Jogador> jogPos = null;
@@ -105,14 +54,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_GOL);
 		}
 		
-		if (jogPos.size() > 1) {
+		/*if (jogPos.size() > 1) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_1, jogPos.get(1), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_1);
-		}
+		//}
 		
-		if (jogPos.size() > 2) {
-			jogadoresSuplentes.put(Posicao.GOLEIRO, jogPos.subList(2, jogPos.size()));
+		if (jogPos.size() > 1) {
+			jogadoresSuplentes.put(Posicao.GOLEIRO, jogPos.subList(1, jogPos.size()));
 		}
 		
 		//Zag
@@ -136,14 +85,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_ZE);
 		}
 		
-		if (jogPos.size() > 2) {
+		/*if (jogPos.size() > 2) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_2, jogPos.get(2), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_2);
-		}
+		//}
 		
-		if (jogPos.size() > 3) {
-			jogadoresSuplentes.put(Posicao.ZAGUEIRO, jogPos.subList(3, jogPos.size()));
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.ZAGUEIRO, jogPos.subList(2, jogPos.size()));
 		}
 		
 		//Lateral
@@ -167,14 +116,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_LE);
 		}
 		
-		if (jogPos.size() > 2) {
+		/*if (jogPos.size() > 2) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_4, jogPos.get(2), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_4);
-		}
+		//}
 
-		if (jogPos.size() > 3) {
-			jogadoresSuplentes.put(Posicao.LATERAL, jogPos.subList(3, jogPos.size()));
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.LATERAL, jogPos.subList(2, jogPos.size()));
 		}
 		
 		//Vol
@@ -198,14 +147,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_VE);
 		}
 		
-		if (jogPos.size() > 2) {
+		/*if (jogPos.size() > 2) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_3, jogPos.get(2), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_3);
-		}
+		//}
 		
-		if (jogPos.size() > 3) {
-			jogadoresSuplentes.put(Posicao.VOLANTE, jogPos.subList(3, jogPos.size()));
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.VOLANTE, jogPos.subList(2, jogPos.size()));
 		}
 		
 		//Meia
@@ -229,14 +178,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_ME);
 		}
 		
-		if (jogPos.size() > 2) {
+		/*if (jogPos.size() > 2) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_5, jogPos.get(2), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_5);
-		}
+		//}
 
-		if (jogPos.size() > 3) {
-			jogadoresSuplentes.put(Posicao.MEIA, jogPos.subList(3, jogPos.size()));
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.MEIA, jogPos.subList(2, jogPos.size()));
 		}
 		
 		//Ata
@@ -260,14 +209,14 @@ public class EscalarClubeService {
 			posicoesVazias.add(EscalacaoPosicao.P_AE);
 		}
 		
-		if (jogPos.size() > 2) {
+		/*if (jogPos.size() > 2) {
 			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_RES_6, jogPos.get(2), true));
-		} else {
+		} else {*/
 			posicoesVazias.add(EscalacaoPosicao.P_RES_6);
-		}
+		//}
 
-		if (jogPos.size() > 3) {
-			jogadoresSuplentes.put(Posicao.ATACANTE, jogPos.subList(3, jogPos.size()));
+		if (jogPos.size() > 2) {
+			jogadoresSuplentes.put(Posicao.ATACANTE, jogPos.subList(2, jogPos.size()));
 		}
 		
 		Collections.sort(posicoesVazias);
@@ -275,7 +224,7 @@ public class EscalarClubeService {
 		List<Jogador> possiveisJogadores = null;
 		for (EscalacaoPosicao ep : posicoesVazias) {
 			boolean naoPreenchido = true;
-			int i = 1;
+			int i = 0;
 			
 			while (naoPreenchido && i < ep.getOrdemPosicaoParaEscalar().length) {
 				possiveisJogadores = jogadoresSuplentes.get(ep.getOrdemPosicaoParaEscalar()[i]);
@@ -287,7 +236,7 @@ public class EscalarClubeService {
 				i++;
 			}
 			
-			if (naoPreenchido) throw new RuntimeException("Erro ao escalar clube");
+			if (naoPreenchido && ep.isTitular()) throw new RuntimeException("Erro ao escalar clube:" + clube.getId());
 		}
 		
 		escalacaoClubePartida.setListEscalacaoJogadorPosicao(escalacao);

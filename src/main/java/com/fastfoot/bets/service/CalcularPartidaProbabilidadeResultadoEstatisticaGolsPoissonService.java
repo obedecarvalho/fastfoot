@@ -27,7 +27,7 @@ import com.fastfoot.service.util.DistribuicaoPoissonUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService implements ICalcularPartidaProbabilidadeResultadoService {
+public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService implements CalcularPartidaProbabilidadeResultadoService {
 	
 	private static final Integer NUM_SIMULACOES = 10000;
 	

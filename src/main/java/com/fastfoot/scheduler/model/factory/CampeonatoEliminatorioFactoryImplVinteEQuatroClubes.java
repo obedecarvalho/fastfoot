@@ -19,6 +19,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEQuatroClubes extends Campeon
 	 * CN: 16 -> (8' + 8) -> 8 -> 4 -> 2 [5 RODADAS]
 	 */
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -76,6 +77,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEQuatroClubes extends Campeon
 		return rodadas;
 	}
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -159,4 +161,5 @@ public class CampeonatoEliminatorioFactoryImplVinteEQuatroClubes extends Campeon
 
 		return rodadas;
 	}
+
 }

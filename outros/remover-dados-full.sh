@@ -13,7 +13,7 @@ delete from habilidade_valor;
 delete from escalacao_jogador_posicao;
 delete from escalacao_clube;
 delete from contrato;
-delete from jogador_energia;
+truncate table jogador_energia;
 delete from jogador;
 delete from campeonato_clube_probabilidade;
 delete from partida_probabilidade_resultado;

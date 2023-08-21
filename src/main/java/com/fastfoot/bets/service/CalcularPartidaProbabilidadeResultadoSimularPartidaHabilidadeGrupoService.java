@@ -37,7 +37,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService implements ICalcularPartidaProbabilidadeResultadoService {
+public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService implements CalcularPartidaProbabilidadeResultadoService {
 
 	private static final Integer NUM_SIMULACOES = 100;
 	
@@ -67,12 +67,6 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
-	
-	/*@Autowired
-	private JogadorEnergiaRepository jogadorEnergiaRepository;*/
-	
-	/*@Autowired
-	private ParametroService parametroService;*/
 
 	//@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
@@ -146,9 +140,9 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		carregarJogadorEnergiaService.carregarJogadorEnergia(partidaResultado.getClubeVisitante(), jogadoresVisitante);
 		
 		EscalacaoClube escalacaoMandante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);
+				.gerarEscalacaoInicial(partidaResultado.getClubeMandante(), jogadoresMandante, partidaResultado);//TODO: jogadores estão com energia alterada após jogar partidas? considerar 'recuperacao'?
 		EscalacaoClube escalacaoVisitante = escalarClubeService
-				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);
+				.gerarEscalacaoInicial(partidaResultado.getClubeVisitante(), jogadoresVisitante, partidaResultado);//TODO: jogadores estão com energia alterada após jogar partidas? considerar 'recuperacao'?
 		
 		return calcularPartidaProbabilidadeResultado(partidaResultado, escalacaoMandante, escalacaoVisitante);
 	}
@@ -360,52 +354,5 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		
 		partidaResultado.setPartidaJogada(true);
 	}
-	
-	/*private EsquemaFactory getEsquemaFactory() {
 
-		EsquemaFactory factory = null;
-		String formacao = parametroService.getParametroString(ParametroConstantes.ESCALACAO_PADRAO);
-
-		if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_41212.equals(formacao)) {
-			factory = new EsquemaFactoryImplQuatroUmDoisUmDois();
-		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4222.equals(formacao)) {
-			factory = new EsquemaFactoryImplQuatroDoisDoisDois();
-		} else if (ParametroConstantes.ESCALACAO_PADRAO_PARAM_4132.equals(formacao)) {
-			factory = new EsquemaFactoryImplDoisTresTresDois();
-		}
-
-		return factory;
-	}*/
-
-	/*private void carregarJogadorEnergia(Clube clube, List<Jogador> jogadores) {
-		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogadorByIdClube(clube.getId());
-
-		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
-				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
-
-		JogadorEnergia je = null;
-		Map<String, Object> jes = null;
-		Integer energia = null;
-
-		for (Jogador j : jogadores) {
-			je = new JogadorEnergia();
-			je.setJogador(j);
-			je.setEnergia(0);//Variacao de energia
-
-			jes = x.get(j);
-			if (!ValidatorUtil.isEmpty(jes)) {
-				energia = ((BigInteger) jes.get("energia")).intValue();
-				if (energia > Constantes.ENERGIA_INICIAL) {
-					je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-				} else {
-					je.setEnergiaInicial(energia);
-				}
-			} else {
-				je.setEnergiaInicial(Constantes.ENERGIA_INICIAL);
-			}
-
-			j.setJogadorEnergia(je);
-		}
-
-	}*/
 }

@@ -88,9 +88,11 @@ public class RealizarSubstituicoesJogadorPartidaService {
 		List<Jogador> jogadoresTitularesPosicao;
 		Jogador jogadorSubstituir;
 		//
+		
+		numeroSubstituicoes = Math.min(numeroSubstituicoes, jogadoresReservas.size());
 
 		int i = 0, pos = 0;
-		while (i < numeroSubstituicoes) {
+		while (i < numeroSubstituicoes && pos < jogadoresReservas.size()) {
 			
 			Jogador jogadorSubstituto = jogadoresReservas.get(pos);
 			

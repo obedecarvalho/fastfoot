@@ -14,21 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
-import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoService;
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeService;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
 import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.financial.service.GerarDemonstrativoFinanceiroTemporadaService;
-import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
-import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
@@ -121,14 +118,8 @@ public class JogarPartidasSemanaService {
 	private JogadorRepository jogadorRepository;
 
 	@Autowired
-	private ClubeRepository clubeRepository;
-
-	@Autowired
 	private HabilidadeValorRepository habilidadeValorRepository;
-	
-	@Autowired
-	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
-	
+
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
 
@@ -153,10 +144,7 @@ public class JogarPartidasSemanaService {
 	private CalcularProbabilidadeSimularPartidaService calcularProbabilidadeSimularPartidaService;
 
 	@Autowired
-	private EscalarClubeService escalarClubeService;
-
-	@Autowired
-	private CalcularPartidaProbabilidadeResultadoService calcularPartidaProbabilidadeResultadoService;
+	private CalcularPartidaProbabilidadeResultadoFacadeService calcularPartidaProbabilidadeResultadoFacadeService;
 
 	@Autowired
 	private DistribuirPremiacaoCompeticoesService distribuirPremiacaoCompeticoesService;
@@ -333,7 +321,8 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//TODO: recuperação especifica por idade jogador
-		jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);
+		//jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);
+		recuperarEnergiaJogadores();
 		stopWatch.split();
 		mensagens.add("\t#recuperarEnergia:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -359,9 +348,19 @@ public class JogarPartidasSemanaService {
 		return SemanaDTO.convertToDTO(semana);
 	}
 	
+	private void recuperarEnergiaJogadores() {
+		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_ATE_23, JogadorFactory.IDADE_MIN, Constantes.IDADE_MAX_JOGADOR_JOVEM);
+		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_24_A_32, Constantes.IDADE_MAX_JOGADOR_JOVEM + 1, 32);
+		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_APOS_33, 33, JogadorFactory.IDADE_MAX);
+	}
+	
 	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
 		
-		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)) {
+		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)
+				&& temporada.getSemanaAtual() > 1) {
 		
 			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
 			
@@ -378,12 +377,12 @@ public class JogarPartidasSemanaService {
 			List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 	
 			for (Rodada r : semana.getRodadas()) {
-				completableFutures.add(calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(r,
+				completableFutures.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
 						carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
 			}
 	
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-				completableFutures.add(calcularPartidaProbabilidadeResultadoService.calcularPartidaProbabilidadeResultado(r,
+				completableFutures.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
 						carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
 			}
 			
@@ -413,29 +412,7 @@ public class JogarPartidasSemanaService {
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 
 	}
-	
-	private void escalarClubes(Semana semana) {
-		//if (semana.getNumero() % 5 == 0) {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		
-		escalacaoJogadorPosicaoRepository.desativarTodas();//TODO: transformar em delete
-		
-		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				completableFutures.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, clubes.size())));
-			} else {
-				completableFutures.add(escalarClubeService.escalarClubes(clubes.subList(i * offset, (i+1) * offset)));
-			}
-		}
-		
-		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-		//}
-	}
-	
+
 	private void calcularHabilidadeGrupoValor2() {
 		for (HabilidadeGrupo hg : HabilidadeGrupo.getAll()) {
 			habilidadeGrupoValorRepository.calcular(hg.ordinal(), hg.getHabilidadesOrdinal());
@@ -486,34 +463,6 @@ public class JogarPartidasSemanaService {
 		}
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-	}
-
-	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias, boolean old) {
-
-		Set<Campeonato> camps1 = new HashSet<Campeonato>();
-		Set<CampeonatoEliminatorio> camps2 = new HashSet<CampeonatoEliminatorio>();
-		Set<CampeonatoMisto> camps3 = new HashSet<CampeonatoMisto>();
-
-		camps1.addAll(rodadas.stream().filter(r -> r.getCampeonato() != null).map(r -> r.getCampeonato()).collect(Collectors.toSet()));
-		camps2.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoEliminatorio() != null).map(r -> r.getCampeonatoEliminatorio()).collect(Collectors.toSet()));
-		camps3.addAll(rodadas.stream().filter(r -> r.getGrupoCampeonato() != null).map(r -> r.getGrupoCampeonato().getCampeonato()).collect(Collectors.toSet()));
-		camps3.addAll(rodadaEliminatorias.stream().filter(r -> r.getCampeonatoMisto() != null).map(r -> r.getCampeonatoMisto()).collect(Collectors.toSet()));
-
-		for (Campeonato c : camps1) {
-			c.setRodadaAtual(c.getRodadaAtual() + 1);
-		}
-
-		for (CampeonatoEliminatorio c : camps2) {
-			c.setRodadaAtual(c.getRodadaAtual() + 1);
-		}
-
-		for (CampeonatoMisto c : camps3) {
-			c.setRodadaAtual(c.getRodadaAtual() + 1);
-		}
-
-		campeonatoRepository.saveAllAndFlush(camps1);
-		campeonatoEliminatorioRepository.saveAllAndFlush(camps2);
-		campeonatoMistoRepository.saveAllAndFlush(camps3);
 	}
 	
 	private void incrementarRodadaAtualCampeonato(List<Rodada> rodadas, List<RodadaEliminatoria> rodadaEliminatorias) {

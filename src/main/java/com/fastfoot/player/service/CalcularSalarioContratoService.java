@@ -37,8 +37,8 @@ public class CalcularSalarioContratoService {
 				double ajuste = modoDesenvolvimentoJogador.getValorAjuste()[i - JogadorFactory.IDADE_MIN];
 
 				double valorAj = Math.pow((ajuste * forcaGeralPotencial),
-						CalcularValorTransferenciaService.FORCA_N_POWER)
-						/ CalcularValorTransferenciaService.TAXA_DESCONTO_TEMPO[i - idade];
+						CalcularValorTransferenciaJogadorService.FORCA_N_POWER)
+						/ CalcularValorTransferenciaJogadorService.TAXA_DESCONTO_TEMPO[i - idade];
 
 				valor += valorAj;
 			}

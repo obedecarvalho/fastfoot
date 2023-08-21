@@ -20,6 +20,7 @@ public class CampeonatoEliminatorioFactoryImplTrintaClubes extends CampeonatoEli
 	 * CN: 16 -> (8' + 4) -> (6' + 10) -> 8 -> 4 -> 2 [6 RODADAS]
 	 */
 
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -73,10 +74,7 @@ public class CampeonatoEliminatorioFactoryImplTrintaClubes extends CampeonatoEli
 		
 		partidasRodadaAnterior = partidasRodada;
 		rodadaAnterior = rodadaEliminatoria;
-		//
-		
-		//int numeroRodadas = numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II);
-		//int numJogos = numeroRodadas*2;
+
 		int numJogos = nroJogos2Fase;
 
 		rodadas.addAll(gerarRodadas(2, 4, numJogos,	partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null));
@@ -90,6 +88,7 @@ public class CampeonatoEliminatorioFactoryImplTrintaClubes extends CampeonatoEli
 	 * F3: A(6) + 10 = 16
 	 * 
 	 */
+	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -143,23 +142,9 @@ public class CampeonatoEliminatorioFactoryImplTrintaClubes extends CampeonatoEli
 		
 		partidasRodadaAnterior = partidasRodada;
 		rodadaAnterior = rodadaEliminatoria;
-		
+
 		//Fase 2
 		//12 Clubes
-		
-		/*rodadaEliminatoria = gerarRodadas(2, 2, nroJogos2Fase, partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null).get(0);
-		rodadas.add(rodadaEliminatoria);
-		
-		//
-		for (PartidaEliminatoriaResultado p : rodadaEliminatoria.getPartidas()) {
-			p.setClassificaAMandante(false);
-		}
-		//
-
-		rodadaAnterior.setProximaRodada(rodadaEliminatoria);
-		partidasRodadaAnterior = rodadaEliminatoria.getPartidas();
-		rodadaAnterior = rodadaEliminatoria;*/
-
 		rodadaEliminatoria = new RodadaEliminatoria();
 		rodadaEliminatoria.setNumero(2);
 		rodadaEliminatoria.setCampeonatoEliminatorio(campeonatoEliminatorio);

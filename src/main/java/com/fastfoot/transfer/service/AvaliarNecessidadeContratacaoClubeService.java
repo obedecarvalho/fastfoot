@@ -5,29 +5,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.time.StopWatch;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.Posicao;
-import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
-import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.transfer.model.AdequacaoJogadorDTO;
 import com.fastfoot.transfer.model.NivelAdequacao;
 import com.fastfoot.transfer.model.TipoNegociacao;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
 import com.fastfoot.transfer.model.entity.NecessidadeContratacaoClube;
-import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
-import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 
 @Service
 public class AvaliarNecessidadeContratacaoClubeService {
@@ -35,25 +25,6 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	private static final Integer IDADE_MAX_EMPRESTAR = 22;
 	
 	private static Comparator<AdequacaoJogadorDTO> COMPARATOR;
-	
-	//###	REPOSITORY	###
-	
-	@Autowired
-	private JogadorRepository jogadorRepository;
-	
-	/*@Autowired
-	private AdequacaoJogadorRepository adequacaoJogadorRepository;*/
-	
-	@Autowired
-	private NecessidadeContratacaoClubeRepository necessidadeContratacaoClubeRepository;
-	
-	@Autowired
-	private DisponivelNegociacaoRepository disponivelNegociacaoRepository;
-	
-	//###	SERVICE	###
-
-	@Autowired
-	private TemporadaCRUDService temporadaCRUDService;
 	
 	private double getPercentualForcaJogadorForcaClube(Integer forcaJogador, Integer forcaClube) {		
 		return (double) forcaJogador/forcaClube;
@@ -69,107 +40,6 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			calcularNecessidadeContratacaoClube(jogadoresClube.get(c), c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
 		}
 
-	}
-
-	/*@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularNecessidadeContratacao(List<Clube> clubes) {
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		
-		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
-		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
-		
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		long inicio = 0, fim = 0;
-		List<String> mensagens = new ArrayList<String>();
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		
-		List<Jogador> jogs;
-		for (Clube c : clubes) {
-			jogs = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
-			calcularNecessidadeContratacaoClube(jogs, c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
-		}
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularNecessidadeContratacaoClube:" + (fim - inicio));
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		
-		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubes);
-		disponivelNegociacaoRepository.saveAll(disponivelNegociacao);
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#saveAll:" + (fim - inicio));
-		
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		
-		//System.err.println(mensagens);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
-	
-	@Deprecated
-	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularNecessidadeContratacao(Liga liga, boolean primeirosIds) {
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
-		
-		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
-		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
-		
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		long inicio = 0, fim = 0;
-		List<String> mensagens = new ArrayList<String>();
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		
-		List<Jogador> jogs;
-		
-		if (primeirosIds) {
-			jogs = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO, liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
-		} else {
-			jogs = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO, liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
-		}
-		Map<Clube, List<Jogador>> jogClube = jogs.stream().collect(Collectors.groupingBy(Jogador::getClube));
-
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#findByLigaClubeAndStatusJogador:" + (fim - inicio));
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		
-		for (Clube c : jogClube.keySet()) {
-			calcularNecessidadeContratacaoClube(jogClube.get(c), c, temporada, disponivelNegociacao, necessidadeContratacaoClubes);
-		}
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#calcularNecessidadeContratacaoClube:" + (fim - inicio));
-		
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		
-		necessidadeContratacaoClubeRepository.saveAll(necessidadeContratacaoClubes);
-		disponivelNegociacaoRepository.saveAll(disponivelNegociacao);
-		
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#saveAll:" + (fim - inicio));
-		
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());
-		
-		//System.err.println(mensagens);
-		
-		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
 	private void calcularNecessidadeContratacaoClube(List<Jogador> jogs, Clube clube, Temporada temporada,
