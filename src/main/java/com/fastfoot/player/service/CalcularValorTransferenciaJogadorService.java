@@ -2,19 +2,9 @@ package com.fastfoot.player.service;
 
 public abstract class CalcularValorTransferenciaJogadorService {
 
-	/*
-	 * DESATUALIZADO
-	 * Taxa desconto: 33%, Max/Inicial: 103%
-	 * Taxa desconto: 30%, Max/Inicial: 94%
-	 * Taxa desconto: 25%, Max/Inicial: 77%
-	 */
-	//private static final Double TAXA_DESCONTO = 0.25;//0.25, 0.30, 0.33
-	
 	public static final Integer FORCA_N_POWER = 3;
 
-	/**
-	 * 
-	 * 
+	/* 
 	 * Calculado como: Math.pow(1 + TAXA_DESCONTO, i - jogador.getIdade())
 	 */
 	/*public static final Double[] TAXA_DESCONTO_TEMPO = new Double[] { 1.0, 1.25, 1.5625, 1.953125, 2.44140625,

@@ -30,8 +30,5 @@ public interface TemporadaRepository extends JpaRepository<Temporada, Long>{
 	@Query("SELECT t FROM Temporada t WHERE t.ano = ( SELECT t2.ano - 1 FROM Temporada t2 WHERE t2.atual = TRUE) ORDER BY t.ano DESC ")
 	public Optional<Temporada> findFirstAnteriorAtual();
 	
-	/*@Query("SELECT t FROM Temporada t ORDER BY t.ano DESC LIMIT 1")
-	public Optional<Temporada> findFirstMaisAtual();*/
-	
 	public Optional<Temporada> findFirstByOrderByAnoDesc();
 }

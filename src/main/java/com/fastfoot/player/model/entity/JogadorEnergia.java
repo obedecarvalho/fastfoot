@@ -27,11 +27,6 @@ public class JogadorEnergia {
 	@JoinColumn(name = "id_jogador")
 	private Jogador jogador;
 
-	/*@JsonIgnore
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_temporada")
-	private Temporada temporada;*/
-	
 	private Integer energia;//Variação de energia
 	
 	@Transient
@@ -52,14 +47,6 @@ public class JogadorEnergia {
 	public void setJogador(Jogador jogador) {
 		this.jogador = jogador;
 	}
-
-	/*public Temporada getTemporada() {
-		return temporada;
-	}
-
-	public void setTemporada(Temporada temporada) {
-		this.temporada = temporada;
-	}*/
 
 	public Integer getEnergia() {
 		return energia;

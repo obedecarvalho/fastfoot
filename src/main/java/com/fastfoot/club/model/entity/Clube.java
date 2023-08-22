@@ -13,7 +13,6 @@ import com.fastfoot.model.Liga;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
-//@Table(indexes = { @Index(columnList = "liga") })
 public class Clube implements ElementoRoleta {
 	
 	@Id
@@ -46,14 +45,6 @@ public class Clube implements ElementoRoleta {
 		this.id = id;
 	}
 
-	/*public Clube(Integer id, Liga liga, Integer forcaGeral, String nome) {
-		super();
-		this.id = id;
-		this.nome = nome;
-		this.forcaGeral = forcaGeral;
-		this.liga = liga;
-	}*/
-	
 	public Clube(Integer id, Liga liga, ClubeNivel nivelNacional, ClubeNivel nivelInternacional, String nome, String logo) {
 		super();
 		this.id = id;

@@ -30,16 +30,6 @@ public class Contrato {
 	@ManyToOne
 	@JoinColumn(name = "id_semana_inicial")
 	private Semana semanaInicial;
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_temporada_final")
-	private Temporada temporadaFinal;*/
-	
-	/*@ManyToOne
-	@JoinColumn(name = "id_semana_rescisao")
-	private Semana semanaRescisao;*/
-	
-	//private Boolean rescindido;
 
 	private Boolean ativo;
 
@@ -62,8 +52,6 @@ public class Contrato {
 		this.clube = clube;
 		this.jogador = jogador;
 		this.semanaInicial = semanaInicial;
-		//this.temporadaFinal = temporadaFinal;
-		//this.rescindido = rescindido;
 		this.ativo = ativo;
 		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
 		this.salario = salario;
@@ -101,26 +89,6 @@ public class Contrato {
 		this.semanaInicial = semanaInicial;
 	}
 
-	/*public Temporada getTemporadaFinal() {
-		return temporadaFinal;
-	}
-
-	public void setTemporadaFinal(Temporada temporadaFinal) {
-		this.temporadaFinal = temporadaFinal;
-	}*/
-
-	/*public Boolean getRescindido() {
-		return rescindido;
-	}
-
-	public void setRescindido(Boolean rescindido) {
-		this.rescindido = rescindido;
-	}*/
-
-	/*public Semana getSemanaRescisao() {
-		return semanaRescisao;
-	}*/
-
 	public Boolean getAtivo() {
 		return ativo;
 	}
@@ -128,10 +96,6 @@ public class Contrato {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-
-	/*public void setSemanaRescisao(Semana semanaRescisao) {
-		this.semanaRescisao = semanaRescisao;
-	}*/
 
 	public Integer getNumeroTemporadasDuracao() {
 		return numeroTemporadasDuracao;

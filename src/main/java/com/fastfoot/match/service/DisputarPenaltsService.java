@@ -19,7 +19,7 @@ import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class DisputarPenaltsService {
+public class DisputarPenaltsService {//TODO: Penalty e Penalties
 	
 	private static final Comparator<Jogador> COMPARATOR_FINALIZACAO;
 
@@ -48,7 +48,6 @@ public class DisputarPenaltsService {
 	}
 
 	public void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
-		//TODO: criar penalt para fora
 
 		List<Jogador> jogadoresMandantes = esquema.getPosicoes().stream().map(EsquemaPosicao::getMandante).filter(j -> j != null)
 				.collect(Collectors.toList());
@@ -64,79 +63,27 @@ public class DisputarPenaltsService {
 		Collections.sort(jogadoresMandantes, COMPARATOR_FINALIZACAO);
 		Collections.sort(jogadoresVisitantes, COMPARATOR_FINALIZACAO);
 
-		HabilidadeValor hvJogLinha = null, hvGoleiro = null;
 		int penaltsCertosMandantes = 0, penaltsCertosVisitante = 0;
 		for (int i = 0; i < NUMERO_PENALTS_DISPUTAR; i++) {
-			
 			//Mandante
-			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
-			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
-			
-			jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenalty(jogadoresMandantes.get(i), goleiroVisitante)) {
 				penaltsCertosMandantes++;
-				
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
-
 			//Visitante
-			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
-			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
-			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenalty(jogadoresVisitantes.get(i), goleiroMandante)) {
 				penaltsCertosVisitante++;
-				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
 		}
 		
 		int i = NUMERO_PENALTS_DISPUTAR;
 		while (penaltsCertosMandantes == penaltsCertosVisitante) {
 			//Mandante
-			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
-			hvGoleiro = goleiroVisitante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
-			
-			jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenalty(jogadoresMandantes.get(i), goleiroVisitante)) {
 				penaltsCertosMandantes++;
-				
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
-
 			//Visitante
-			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
-			hvGoleiro = goleiroMandante.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
-			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenalty(jogadoresVisitantes.get(i), goleiroMandante)) {
 				penaltsCertosVisitante++;
-				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
 			
 			i = (i + 1) % 11;
@@ -147,8 +94,28 @@ public class DisputarPenaltsService {
 
 	}
 
+	private Boolean disputarPenalty(Jogador batedor, Jogador goleiro) {//TODO: criar penalt para fora
+		HabilidadeValor hvJogLinha = batedor.getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO);
+		HabilidadeValor hvGoleiro = goleiro.getHabilidadeValorByHabilidade(Habilidade.REFLEXO);
+
+		batedor.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
+		goleiro.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
+
+		boolean acertou = false;
+		if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			acertou = true;//penaltsCertosMandantes++;
+			
+			batedor.getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
+			goleiro.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
+		} else {
+			batedor.getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
+			goleiro.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
+		}
+		
+		return acertou;
+	}
+
 	public void disputarPenaltsHabilidadeGrupo(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
-		//TODO: criar penalt para fora
 
 		List<Jogador> jogadoresMandantes = esquema.getPosicoes().stream().map(EsquemaPosicao::getMandante).filter(j -> j != null)
 				.collect(Collectors.toList());
@@ -164,86 +131,55 @@ public class DisputarPenaltsService {
 		Collections.sort(jogadoresMandantes, COMPARATOR_CONCLUSAO);
 		Collections.sort(jogadoresVisitantes, COMPARATOR_CONCLUSAO);
 
-		HabilidadeGrupoValor hvJogLinha = null, hvGoleiro = null;
 		int penaltsCertosMandantes = 0, penaltsCertosVisitante = 0;
 		for (int i = 0; i < NUMERO_PENALTS_DISPUTAR; i++) {
-			
 			//Mandante
-			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO);
-			hvGoleiro = goleiroVisitante.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.GOLEIRO);
-			
-			jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenaltyHabilidadeGrupo(jogadoresMandantes.get(i), goleiroVisitante)) {
 				penaltsCertosMandantes++;
-				
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
-
 			//Visitante
-			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO);
-			hvGoleiro = goleiroMandante.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.GOLEIRO);
-			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenaltyHabilidadeGrupo(jogadoresVisitantes.get(i), goleiroMandante)) {
 				penaltsCertosVisitante++;
-				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
 		}
 		
 		int i = NUMERO_PENALTS_DISPUTAR;
 		while (penaltsCertosMandantes == penaltsCertosVisitante) {
 			//Mandante
-			hvJogLinha = jogadoresMandantes.get(i).getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO);
-			hvGoleiro = goleiroVisitante.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.GOLEIRO);
-			
-			jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroVisitante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenaltyHabilidadeGrupo(jogadoresMandantes.get(i), goleiroVisitante)) {
 				penaltsCertosMandantes++;
-				
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresMandantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroVisitante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
-
 			//Visitante
-			hvJogLinha = jogadoresVisitantes.get(i).getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO);
-			hvGoleiro = goleiroMandante.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.GOLEIRO);
-			
-			jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-			goleiroMandante.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
-
-			if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			if (disputarPenaltyHabilidadeGrupo(jogadoresVisitantes.get(i), goleiroMandante)) {
 				penaltsCertosVisitante++;
-				
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
-			} else {
-				jogadoresVisitantes.get(i).getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
-				goleiroMandante.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
 			}
-			
+
 			i = (i + 1) % 11;
 		}
 
 		((PartidaEliminatoriaResultado) partidaResultado).setGolsMandantePenalts(penaltsCertosMandantes);
 		((PartidaEliminatoriaResultado) partidaResultado).setGolsVisitantePenalts(penaltsCertosVisitante);
 
+	}
+	
+	private Boolean disputarPenaltyHabilidadeGrupo(Jogador batedor, Jogador goleiro) {//TODO: criar penalt para fora
+		HabilidadeGrupoValor hvJogLinha = batedor.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO);
+		HabilidadeGrupoValor hvGoleiro = goleiro.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.GOLEIRO);
+		
+		batedor.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
+		goleiro.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalt();
+
+		boolean acertou = false;
+		if (RoletaUtil.isPrimeiroVencedorN(hvJogLinha, hvGoleiro)) {
+			acertou = true;//penaltsCertosMandantes++;
+			
+			batedor.getJogadorEstatisticasSemana().incrementarGolsDisputaPenalt();
+			goleiro.getJogadorEstatisticasSemana().incrementarGolsSofridosDisputaPenalt();
+		} else {
+			batedor.getJogadorEstatisticasSemana().incrementarGolsPerdidosDisputaPenalt();
+			goleiro.getJogadorEstatisticasSemana().incrementarDefesasDisputaPenalt();
+		}
+
+		return acertou;
 	}
 }

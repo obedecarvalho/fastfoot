@@ -28,6 +28,17 @@ import com.fastfoot.service.util.ValidatorUtil;
 @RequestMapping("/api")
 @CrossOrigin("*")
 public class JogadorEstatisticasTemporadaCRUDController implements CRUDController<JogadorEstatisticasTemporada, Long> {
+	
+	private static final Comparator<JogadorEstatisticasTemporada> COMPARATOR;
+
+	static {
+		COMPARATOR = new Comparator<JogadorEstatisticasTemporada>() {
+			@Override
+			public int compare(JogadorEstatisticasTemporada o1, JogadorEstatisticasTemporada o2) {
+				return o1.getJogador().getPosicao().compareTo(o2.getJogador().getPosicao());
+			}
+		};
+	}
 
 	@Autowired
 	private JogadorEstatisticasTemporadaCRUDService jogadorEstatisticasTemporadaCRUDService;
@@ -72,12 +83,7 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 			}
 			
 			//
-			Collections.sort(estatisticas, new Comparator<JogadorEstatisticasTemporada>() {
-				@Override
-				public int compare(JogadorEstatisticasTemporada o1, JogadorEstatisticasTemporada o2) {
-					return o1.getJogador().getPosicao().compareTo(o2.getJogador().getPosicao());
-				}
-			});
+			Collections.sort(estatisticas, COMPARATOR);
 			//
 	
 			return ResponseEntity.ok(estatisticas);

@@ -36,18 +36,6 @@ public class JogadorEstatisticasSemana {
 	@JoinColumn(name = "id_semana")
 	private Semana semana;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_campeonato")
-	private Campeonato campeonato;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_campeonato_eliminatorio")
-	private CampeonatoEliminatorio campeonatoEliminatorio;
-
-	@ManyToOne
-	@JoinColumn(name = "id_campeonato_misto")
-	private CampeonatoMisto campeonatoMisto;*/
-	
 	@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
 	private PartidaResultado partidaResultado;
@@ -98,14 +86,11 @@ public class JogadorEstatisticasSemana {
 
 	private Integer golsSofridosDisputaPenalt;
 	
-	
-	//
 	@Transient
 	private Integer minutoInicial;
 	
 	@Transient
 	private Integer minutoFinal;
-	//
 
 	public JogadorEstatisticasSemana() {
 		
@@ -115,12 +100,6 @@ public class JogadorEstatisticasSemana {
 		this.jogador = jogador;
 		this.semana = semana;
 		this.clube = clube;
-		/*if (campeonato instanceof Campeonato)
-			this.campeonato = (Campeonato) campeonato;
-		if (campeonato instanceof CampeonatoEliminatorio)
-			this.campeonatoEliminatorio = (CampeonatoEliminatorio) campeonato;
-		if (campeonato instanceof CampeonatoMisto)
-			this.campeonatoMisto = (CampeonatoMisto) campeonato;*/
 		if (partida instanceof PartidaResultado) {
 			this.partidaResultado = (PartidaResultado) partida;
 		} else if (partida instanceof PartidaEliminatoriaResultado) {
@@ -378,30 +357,6 @@ public class JogadorEstatisticasSemana {
 	public void setNumeroMinutosJogados(Integer numeroMinutosJogados) {
 		this.numeroMinutosJogados = numeroMinutosJogados;
 	}
-
-	/*public Campeonato getCampeonato() {
-		return campeonato;
-	}
-
-	public void setCampeonato(Campeonato campeonato) {
-		this.campeonato = campeonato;
-	}
-
-	public CampeonatoEliminatorio getCampeonatoEliminatorio() {
-		return campeonatoEliminatorio;
-	}
-
-	public void setCampeonatoEliminatorio(CampeonatoEliminatorio campeonatoEliminatorio) {
-		this.campeonatoEliminatorio = campeonatoEliminatorio;
-	}
-
-	public CampeonatoMisto getCampeonatoMisto() {
-		return campeonatoMisto;
-	}
-
-	public void setCampeonatoMisto(CampeonatoMisto campeonatoMisto) {
-		this.campeonatoMisto = campeonatoMisto;
-	}*/
 
 	public PartidaResultado getPartidaResultado() {
 		return partidaResultado;

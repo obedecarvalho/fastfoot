@@ -94,20 +94,12 @@ public class RodadaAmistosa implements RodadaJogavel {
 
 	@Override
 	public boolean isUltimaRodadaPontosCorridos() {
-		/*if(getCampeonato() != null && getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
-			return true;
-		}
-		if (getGrupoCampeonato() != null && getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
-			return true;
-		}*/
 		return false;
 	}
 	
 	@JsonIgnore
 	@Override
 	public CampeonatoJogavel getCampeonatoJogavel() {
-		/*if (campeonato != null) return campeonato;
-		if (grupoCampeonato != null) return grupoCampeonato.getCampeonato();*/
 		return null;
 	}
 	

@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -68,17 +67,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService implemen
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 
-	//@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
-
-		//Instanciar StopWatch
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-
-		//Iniciar primeiro bloco
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
 
 		List<PartidaProbabilidadeResultado> probabilidades = new ArrayList<PartidaProbabilidadeResultado>();
 		
@@ -90,41 +79,15 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaService implemen
 			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
 		}
 
-		//Finalizar bloco e já iniciar outro
-		stopWatch.split();
-		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(partidas);
-
-		//Finalizar bloco e já iniciar outro
-		stopWatch.split();
-		mensagens.add("\t#carregarEscalacao:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		for (PartidaResultadoJogavel p : partidas) {
 			probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
 			//probabilidades.add(simularPartida(p));
 		}
 
-		//Finalizar bloco e já iniciar outro
-		stopWatch.split();
-		mensagens.add("\t#simularPartida:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-
 		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
 
-		//Finalizar bloco e já iniciar outro
-		stopWatch.split();
-		mensagens.add("\t#partidaProbabilidadeResultadoRepository:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-
-		//Finalizar
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
-
-		//System.err.println(mensagens);
-		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 
 	}

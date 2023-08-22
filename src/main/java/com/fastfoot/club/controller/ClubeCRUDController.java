@@ -28,6 +28,13 @@ import com.fastfoot.service.util.ValidatorUtil;
 @CrossOrigin("*")
 public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 	
+	private static final Comparator<Clube> COMPARATOR = new Comparator<Clube>() {
+		@Override
+		public int compare(Clube o1, Clube o2) {
+			return o1.getNome().compareToIgnoreCase(o2.getNome());
+		}
+	};
+	
 	@Autowired
 	private ClubeCRUDService clubeCRUDService;
 
@@ -75,12 +82,7 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 			}
 			
 			//
-			Collections.sort(clubes, new Comparator<Clube>() {
-				@Override
-				public int compare(Clube o1, Clube o2) {
-					return o1.getNome().compareToIgnoreCase(o2.getNome());
-				}
-			});
+			Collections.sort(clubes, COMPARATOR);
 			//
 	
 			return ResponseEntity.ok(clubes);

@@ -14,13 +14,6 @@ import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 @Repository
 public interface HabilidadeValorEstatisticaRepository extends JpaRepository<HabilidadeValorEstatistica, Long> {
 	
-	//public List<HabilidadeValorEstatistica> findByHabilidadeValor(HabilidadeValor habilidadeValor);
-	
-	/*@Query(" SELECT hve FROM HabilidadeValorEstatistica hve WHERE hve.semana.temporada = :temporada ")
-	public List<HabilidadeValorEstatistica> findByTemporada(@Param("temporada") Temporada temporada);*/
-	
-	//public List<HabilidadeValorEstatistica> findBySemana(Semana semana);
-	
 	@Query(nativeQuery = true, value = " SELECT hve.id_habilidade_valor, "
 			+ " SUM(hve.quantidade_uso) AS quantidade_uso, SUM(hve.quantidade_uso_vencedor) AS quantidade_uso_vencedor, hve.amistoso "
 			+ " FROM habilidade_valor_estatistica hve " + " INNER JOIN semana s ON hve.id_semana = s.id "

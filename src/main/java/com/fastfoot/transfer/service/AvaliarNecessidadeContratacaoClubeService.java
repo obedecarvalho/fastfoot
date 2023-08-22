@@ -24,7 +24,24 @@ public class AvaliarNecessidadeContratacaoClubeService {
 	
 	private static final Integer IDADE_MAX_EMPRESTAR = 22;
 	
-	private static Comparator<AdequacaoJogadorDTO> COMPARATOR;
+	private static final Comparator<AdequacaoJogadorDTO> COMPARATOR;
+	
+	static {
+		COMPARATOR = new Comparator<AdequacaoJogadorDTO>() {
+			
+			@Override
+			public int compare(AdequacaoJogadorDTO o1, AdequacaoJogadorDTO o2) {
+
+				int compare = o2.getJogador().getForcaGeral().compareTo(o1.getJogador().getForcaGeral());//reverse
+
+				if (compare == 0) {
+					o1.getJogador().getIdade().compareTo(o2.getJogador().getIdade());
+				}
+
+				return compare;
+			}
+		};
+	}
 	
 	private double getPercentualForcaJogadorForcaClube(Integer forcaJogador, Integer forcaClube) {		
 		return (double) forcaJogador/forcaClube;
@@ -47,8 +64,6 @@ public class AvaliarNecessidadeContratacaoClubeService {
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes) {
 		//TODO: fazer validação de Constantes.NUMERO_MINIMO_JOGADORES_LINHA e Constantes.NUMERO_MINIMO_GOLEIROS
 
-		//List<Jogador> jogs = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
-		
 		List<AdequacaoJogadorDTO> jogsAdq = new ArrayList<AdequacaoJogadorDTO>();
 		
 		jogsAdq.addAll(jogs.stream()
@@ -89,11 +104,6 @@ public class AvaliarNecessidadeContratacaoClubeService {
 						clube.getForcaGeral())) < NivelAdequacao.E.getPorcentagemMinima())
 				.map(j -> new AdequacaoJogadorDTO(clube, j, NivelAdequacao.F)).collect(Collectors.toList()));
 
-		//adequacaoJogadorRepository.saveAll(jogsAdq);
-		
-		/*List<NecessidadeContratacaoClube> contratacoes = new ArrayList<NecessidadeContratacaoClube>(); 
-		List<DisponivelNegociacao> negociaveis = new ArrayList<DisponivelNegociacao>();*/
-		
 		calcularNegociacaoesGoleiro(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isGoleiro()).collect(Collectors.toList()),
 				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube);
@@ -117,29 +127,10 @@ public class AvaliarNecessidadeContratacaoClubeService {
 		calcularNegociacaoes(
 				jogsAdq.stream().filter(ja -> ja.getJogador().getPosicao().isAtacante()).collect(Collectors.toList()),
 				necessidadeContratacaoClubes, disponivelNegociacao, temporada, clube, Posicao.ATACANTE);
-		
-		/*necessidadeContratacaoClubeRepository.saveAll(contratacoes);
-		disponivelNegociacaoRepository.saveAll(negociaveis);*/
 
 	}
 	
 	private static Comparator<AdequacaoJogadorDTO> getComparator() {
-		if (COMPARATOR == null) {
-			COMPARATOR = new Comparator<AdequacaoJogadorDTO>() {
-	
-				@Override
-				public int compare(AdequacaoJogadorDTO o1, AdequacaoJogadorDTO o2) {
-
-					int compare = o2.getJogador().getForcaGeral().compareTo(o1.getJogador().getForcaGeral());//reverse
-
-					if (compare == 0) {
-						o1.getJogador().getIdade().compareTo(o2.getJogador().getIdade());
-					}
-
-					return compare;
-				}
-			};
-		}
 		return COMPARATOR;
 	}
 	

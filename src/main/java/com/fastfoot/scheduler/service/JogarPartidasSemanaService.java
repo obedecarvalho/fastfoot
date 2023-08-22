@@ -191,22 +191,6 @@ public class JogarPartidasSemanaService {
 		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
-		
-		/*stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		mensagens.add("\t#carregar:" + (fim - inicio));
-
-		inicio = stopWatch.getSplitTime();*/
-		
-		//Escalar clubes
-		/*if (semana.getNumero() % 5 == 1) {
-			escalarClubes(semana);
-
-			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("#escalarClubes:" + (fim - inicio));
-			inicio = stopWatch.getSplitTime();
-		}*/
 
 		List<Rodada> rodadas = rodadaRepository.findBySemana(semana);
 		List<RodadaEliminatoria> rodadaEliminatorias = rodadaEliminatoriaRepository.findBySemana(semana);
@@ -320,7 +304,6 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#pagarSalarioJogadores:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		//TODO: recuperação especifica por idade jogador
 		//jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);
 		recuperarEnergiaJogadores();
 		stopWatch.split();
@@ -391,8 +374,6 @@ public class JogarPartidasSemanaService {
 		}
 	}
 
-	//private static final Integer NUM_SPLITS_GRUPO_DESENVOLVIMENTO = FastfootApplication.NUM_THREAD; 
-	
 	private void desenvolverJogadores() {
 
 		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
@@ -503,18 +484,13 @@ public class JogarPartidasSemanaService {
 			}
 
 			getPromotorContinental().promover(campeonatosMisto);
-			/*for (CampeonatoMisto c : campeonatosMisto) {
-				partidaEliminatoriaRepository.saveAll(c.getPrimeiraRodadaEliminatoria().getPartidas());
-			}*/
 			partidaEliminatoriaRepository.saveAll(
 					campeonatosMisto.stream().flatMap(c -> c.getPrimeiraRodadaEliminatoria().getPartidas().stream())
 							.collect(Collectors.toList()));
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
 
-			//String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 			Boolean jogarCopaNacII = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-			//Integer nroCompeticoes = parametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 			
 			if (jogarCopaNacII) {
 				List<CampeonatoEliminatorio> campeonatos = semana.getRodadasEliminatorias().stream()
@@ -539,11 +515,9 @@ public class JogarPartidasSemanaService {
 					rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
 					rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
 	
-					//PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(numeroRodadasCopaNacional, nroCompeticoes);
 					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria();
 					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
 					
-					//partidaEliminatoriaRepository.saveAll(rodadaCNII.getPartidas());
 					partidasSalvar.addAll(rodadaCNII.getPartidas());
 				}
 

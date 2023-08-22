@@ -55,7 +55,6 @@ public class KMeansUtil {
 		int rodada = 1;
 		boolean alterado = true;
 		
-		//for (int rodada = 0; rodada < 100; rodada++) {
 		while (rodada <= NUMERO_MAX_ITERACOES && alterado) {
 			
 			for (ClusterKMeans c : clusters) {
@@ -89,8 +88,6 @@ public class KMeansUtil {
 			rodada++;
 		}
 		
-		//System.err.println(rodada);
-
 		return clusters;
 	}
 	
@@ -142,7 +139,6 @@ public class KMeansUtil {
 		boolean equals = true;
 		
 		for (int i = 0; i < a.length; i++) {
-			//if (a[i] != b[i]) {
 			if (Math.abs(a[i] - b[i]) > DIFF_MAX) {
 				equals = false;
 			}

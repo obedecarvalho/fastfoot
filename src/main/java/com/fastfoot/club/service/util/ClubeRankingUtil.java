@@ -27,6 +27,14 @@ import com.fastfoot.service.util.ValidatorUtil;
 
 public class ClubeRankingUtil {
 	
+	private static final Comparator<CampeonatoMisto> COMPARATOR = new Comparator<CampeonatoMisto>() {
+
+		@Override
+		public int compare(CampeonatoMisto o1, CampeonatoMisto o2) {
+			return o1.getNivelCampeonato().compareTo(o2.getNivelCampeonato());
+		}
+	};
+	
 	public static List<ClubeRanking> rankearClubesTemporada(Temporada temporada, List<Clube> clubes) {
 		List<ClubeRanking> rankings =  gerarClubeRankingInicial(clubes, temporada);
 
@@ -37,13 +45,7 @@ public class ClubeRankingUtil {
 		List<CampeonatoEliminatorio> copasNacionaisII = temporada.getCampeonatosCopasNacionais().stream()
 				.filter(c -> c.getNivelCampeonato().isCopaNacionalII()).collect(Collectors.toList());
 		
-		Collections.sort(temporada.getCampeonatosContinentais(), new Comparator<CampeonatoMisto>() {
-
-			@Override
-			public int compare(CampeonatoMisto o1, CampeonatoMisto o2) {
-				return o1.getNivelCampeonato().compareTo(o2.getNivelCampeonato());
-			}
-		});
+		Collections.sort(temporada.getCampeonatosContinentais(), COMPARATOR);
 
 		rankearCampeonatoNacional(clubeRankings, temporada.getCampeonatosNacionais());
 		rankearCopaNacional(clubeRankings, copasNacionais);
@@ -217,160 +219,6 @@ public class ClubeRankingUtil {
 		}
 
 	}
-
-	/*public static void gerarPosicaoGeralLiga(List<ClubeRanking> rankingsLiga) {
-		
-		//C1, N1, N2, N3, CII1, CN1, N4
-		
-		//CII1, CN1, N4, CNII1, N5, N6, N7, N8
-		
-		Optional<ClubeRanking> tmp = null;
-		List<ClubeRanking> tmps = null;
-		int posFinal = 1, qtdeAtualizada = 0;
-		
-		//Campeão Continental
-		tmp = findClassificacaoContinental(rankingsLiga, ClassificacaoContinentalFinal.C_CAMPEAO);
-		if (tmp.isPresent()) {
-			tmp.get().setPosicaoGeral(posFinal);
-			posFinal++;
-		}
-		
-		//Nacional 1, 2 e 3
-		for (ClassificacaoNacionalFinal n : Arrays.asList(ClassificacaoNacionalFinal.N_1, ClassificacaoNacionalFinal.N_2, ClassificacaoNacionalFinal.N_3)) {
-			tmps = findClassificacaoNacional(rankingsLiga, n);
-			qtdeAtualizada = 0;
-			for (ClubeRanking cr : tmps) {
-				if (!cr.isCampeaoContinental()) {
-					cr.setPosicaoGeral(posFinal);
-					qtdeAtualizada++;
-				}
-			}
-			posFinal += qtdeAtualizada;
-		}
-		
-		//Campeão Continental II
-		tmp = findClassificacaoContinental(rankingsLiga, ClassificacaoContinentalFinal.CII_CAMPEAO);
-		if (tmp.isPresent() 
-				&& !ClassificacaoNacionalFinal.isN1N2N3(tmp.get().getClassificacaoNacional())) {
-			tmp.get().setPosicaoGeral(posFinal);
-			posFinal++;
-		}
-		
-		//Campeão Copa Nacional
-		tmp = findClassificacaoCopaNacional(rankingsLiga, ClassificacaoCopaNacionalFinal.CN_CAMPEAO);
-		if (tmp.isPresent() 
-				&& !ClassificacaoNacionalFinal.isN1N2N3(tmp.get().getClassificacaoNacional())
-				&& !tmp.get().isCampeaoContinental() 
-				&& !tmp.get().isCampeaoContinentalII()) {
-			tmp.get().setPosicaoGeral(posFinal);
-			posFinal++;
-		}
-		
-		//Nacional 4
-		tmps = findClassificacaoNacional(rankingsLiga, ClassificacaoNacionalFinal.N_4);
-		qtdeAtualizada = 0;
-		for (ClubeRanking cr : tmps) {
-			if (!cr.isCampeaoContinental()
-					&& !cr.isCampeaoContinentalII()
-					&& !cr.isCampeaoCopaNacional()) {
-				cr.setPosicaoGeral(posFinal);
-				qtdeAtualizada++;
-			}
-		}
-		posFinal += qtdeAtualizada;
-
-		//Campeão Copa Nacional II
-		tmp = findClassificacaoCopaNacional(rankingsLiga, ClassificacaoCopaNacionalFinal.CNII_CAMPEAO);
-		if (tmp.isPresent() 
-				&& !ClassificacaoNacionalFinal.isN1N2N3(tmp.get().getClassificacaoNacional())
-				&& !tmp.get().isCampeaoCopaNacional()
-				&& !tmp.get().isCampeaoContinental() 
-				&& !tmp.get().isCampeaoContinentalII()
-				&& !tmp.get().getClassificacaoNacional().equals(ClassificacaoNacionalFinal.N_4)) {
-			tmp.get().setPosicaoGeral(posFinal);
-			posFinal++;
-		}
-
-		//Nacional 5 a 13
-		for (ClassificacaoNacionalFinal n : ClassificacaoNacionalFinal.getAllNacional5a13()) {
-			tmps = findClassificacaoNacional(rankingsLiga, n);
-			qtdeAtualizada = 0;
-			for (ClubeRanking cr : tmps) {
-				if (!cr.isCampeaoContinental()
-						&& !cr.isCampeaoContinentalII()
-						&& !cr.isCampeaoCopaNacional()
-						&& !cr.isCampeaoCopaNacionalII()) {
-					cr.setPosicaoGeral(posFinal);
-					qtdeAtualizada++;
-				}
-			}
-			posFinal += qtdeAtualizada;
-		}
-
-		//Nacional II 1 a 3
-		for (ClassificacaoNacionalFinal n : ClassificacaoNacionalFinal.getAllNacionalII1a3()) {
-			tmps = findClassificacaoNacional(rankingsLiga, n);
-			qtdeAtualizada = 0;
-			for (ClubeRanking cr : tmps) {
-				if (!cr.isCampeaoContinental()
-						&& !cr.isCampeaoContinentalII()
-						&& !cr.isCampeaoCopaNacional()
-						&& !cr.isCampeaoCopaNacionalII()) {
-					cr.setPosicaoGeral(posFinal);
-					qtdeAtualizada++;
-				}
-			}
-			posFinal += qtdeAtualizada;
-		}
-		
-		//Nacional 14 a 16
-		for (ClassificacaoNacionalFinal n : ClassificacaoNacionalFinal.getAllNacional14a16()) {
-			tmps = findClassificacaoNacional(rankingsLiga, n);
-			qtdeAtualizada = 0;
-			for (ClubeRanking cr : tmps) {
-				if (!cr.isCampeaoContinental()
-						&& !cr.isCampeaoContinentalII()
-						&& !cr.isCampeaoCopaNacional()
-						&& !cr.isCampeaoCopaNacionalII()) {
-					cr.setPosicaoGeral(posFinal);
-					qtdeAtualizada++;
-				}
-			}
-			posFinal += qtdeAtualizada;
-		}
-	
-		//Nacional II 4 a 16
-		for (ClassificacaoNacionalFinal n : ClassificacaoNacionalFinal.getAllNacionalII4a16()) {
-			tmps = findClassificacaoNacional(rankingsLiga, n);
-			qtdeAtualizada = 0;
-			for (ClubeRanking cr : tmps) {
-				if (!cr.isCampeaoContinental()
-						&& !cr.isCampeaoContinentalII()
-						&& !cr.isCampeaoCopaNacional()
-						&& !cr.isCampeaoCopaNacionalII()) {
-					cr.setPosicaoGeral(posFinal);
-					qtdeAtualizada++;
-				}
-			}
-			posFinal += qtdeAtualizada;
-		}
-	}*/
-
-	/*private static List<ClubeRanking> findClassificacaoNacional(List<ClubeRanking> rankingsLiga, ClassificacaoNacionalFinal clasNac) {
-		return rankingsLiga.stream().filter(r -> clasNac.equals(r.getClassificacaoNacional())).collect(Collectors.toList());
-	}
-	
-	private static Optional<ClubeRanking> findClassificacaoNacionalX(List<ClubeRanking> rankingsLiga, ClassificacaoNacionalFinal clasNac) {
-		return rankingsLiga.stream().filter(r -> clasNac.equals(r.getClassificacaoNacional())).findFirst();
-	}
-
-	private static Optional<ClubeRanking> findClassificacaoCopaNacional(List<ClubeRanking> rankingsLiga, ClassificacaoCopaNacionalFinal clasCopaNac) {
-		return rankingsLiga.stream().filter(r -> clasCopaNac.equals(r.getClassificacaoCopaNacional())).findFirst();
-	}
-
-	private static Optional<ClubeRanking> findClassificacaoContinental(List<ClubeRanking> rankingsLiga, ClassificacaoContinentalFinal clasCont) {
-		return rankingsLiga.stream().filter(r -> clasCont.equals(r.getClassificacaoContinental())).findFirst();
-	}*/
 
 	protected static List<ClubeRanking> gerarClubeRankingInicial(List<Clube> clubes, Temporada temporada) {
 		List<ClubeRanking> rankings = new ArrayList<ClubeRanking>();

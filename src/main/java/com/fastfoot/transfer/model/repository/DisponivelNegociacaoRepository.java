@@ -16,14 +16,10 @@ public interface DisponivelNegociacaoRepository extends JpaRepository<Disponivel
 
 	public List<DisponivelNegociacao> findByClubeAndTemporadaAndAtivo(Clube clube, Temporada temporada, Boolean ativo);
 	
-	//public List<DisponivelNegociacao> findByClube(Clube clube);
-	
 	public List<DisponivelNegociacao> findByTemporadaAndAtivo(Temporada temporada, Boolean ativo);
 	
 	public List<DisponivelNegociacao> findByTemporadaAndJogadorAndAtivo(Temporada temporada, Jogador jogador, Boolean ativo);
 	
 	public Optional<DisponivelNegociacao> findFirstByTemporadaAndJogadorAndAtivo(Temporada temporada, Jogador jogador, Boolean ativo);
 	
-	//public List<DisponivelNegociacao> findByJogador(Jogador jogador);
-
 }

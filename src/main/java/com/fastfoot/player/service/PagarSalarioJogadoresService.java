@@ -48,7 +48,6 @@ public class PagarSalarioJogadoresService {
 	}
 
 	public void pagarSalarioJogadoresPorContrato(Semana semana) {
-		//List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
 		List<Map<String, Object>> valorSalariosClubes = contratoRepository.findValorTotalSalariosPorClube();
 
 		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
@@ -66,31 +65,6 @@ public class PagarSalarioJogadoresService {
 
 		movimentacaoFinanceiraRepository.saveAll(saidas);
 	}
-
-	/*public void pagarSalarioJogadores(Semana semana) {
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-
-		List<Jogador> jogadoresClube = null;
-
-		Double valorTransferenciaClube;
-
-		Map<Clube, List<Jogador>> jogadoresClubeMap = jogadores.stream()
-				.collect(Collectors.groupingBy(Jogador::getClube));
-
-		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
-
-		for (Clube c : jogadoresClubeMap.keySet()) {
-
-			jogadoresClube = jogadoresClubeMap.get(c);
-
-			valorTransferenciaClube = jogadoresClube.stream().mapToDouble(j -> j.getValorTransferencia()).sum();
-
-			saidas.add(criarMovimentacaoFinanceira(c, semana, valorTransferenciaClube * PORC_VALOR_JOG_SALARIO_SEMANAL,
-					String.format("Salários (%d)", semana.getNumero())));
-		}
-
-		movimentacaoFinanceiraSaidaRepository.saveAll(saidas);
-	}*/
 	
 	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,
 			Double valorMovimentacao, String descricao) {

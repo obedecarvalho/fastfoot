@@ -20,10 +20,6 @@ public interface PartidaResultadoJogavel {
 	
 	public RodadaJogavel getRodada();
 
-	//public PartidaResumo getPartidaResumo();
-
-	//public void setPartidaResumo(PartidaResumo partidaResumo);
-
 	public void incrementarLance(boolean posseBolaMandante);
 	
 	public void incrementarFinalizacaoDefendida(boolean posseBolaMandante);

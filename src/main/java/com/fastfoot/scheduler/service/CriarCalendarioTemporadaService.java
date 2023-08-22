@@ -188,29 +188,20 @@ public class CriarCalendarioTemporadaService {
 		long inicio = stopWatch.getSplitTime();
 
 		Temporada temporada = null, temporadaAtual = null;
-		//Integer ano = Constantes.ANO_INICIAL;
 		Optional<Temporada> temporadaAtualOpt = temporadaRepository.findFirstByAtual(true);
 
-		//
 		if (temporadaAtualOpt.isPresent()) {
 			if (temporadaAtualOpt.get().getSemanaAtual() < Constantes.NUM_SEMANAS) {
 				throw new RuntimeException("Temporada ainda não terminada!");
 			}
 		}
-		//
 		
-		//
 		temporada = TemporadaFactory.criarTemporada(
 				temporadaAtualOpt.isPresent() ? (temporadaAtualOpt.get().getAno() + 1): Constantes.ANO_INICIAL);
 		salvarTemporada(temporada);
-		//
 
 		if (temporadaAtualOpt.isPresent()) {
 			temporadaAtual = temporadaAtualOpt.get();
-
-			/*if (temporadaAtual.getSemanaAtual() < Constantes.NUM_SEMANAS) {
-				throw new RuntimeException("Temporada ainda não terminada!");
-			}*/
 
 			if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
 			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);//TODO: substituir pelo 2 comandos?
@@ -227,7 +218,6 @@ public class CriarCalendarioTemporadaService {
 
 			temporadaAtual.setAtual(false);
 			temporadaRepository.save(temporadaAtual);
-			//ano = temporadaAtual.getAno() + 1;
 
 			jogadorRepository.incrementarIdade();
 			stopWatch.split();
@@ -252,12 +242,6 @@ public class CriarCalendarioTemporadaService {
 			stopWatch.split();
 			mensagens.add("\t#aposentarJogadores:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
-
-			/*inicio = stopWatch.getSplitTime();
-			atualizarNumeroJogadores();
-			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
 
 			if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 				calcularValorTransferenciaJogadoresSimplificado();
@@ -306,16 +290,7 @@ public class CriarCalendarioTemporadaService {
 			mensagens.add("\t#criarJogadoresClube:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-			/*inicio = stopWatch.getSplitTime();
-			atualizarNumeroJogadores();
-			stopWatch.split();
-			fim = stopWatch.getSplitTime();
-			mensagens.add("\t#atualizarNumeroJogadores:" + (fim - inicio));*/
 		}
-
-		//stopWatch.split();
-
-		//temporada = TemporadaFactory.criarTemporada(ano);
 
 		List<Campeonato> campeonatosNacionais = new ArrayList<Campeonato>();
 		List<CampeonatoMisto> campeonatosContinentais = new ArrayList<CampeonatoMisto>();
@@ -349,7 +324,6 @@ public class CriarCalendarioTemporadaService {
 
 		if (carregarParametroService.getParametroBoolean(ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
 
-			//gerarTransferenciasService.gerarTransferencias(temporada);
 			executarTransferenciasAutomaticamenteService.executarTransferenciasAutomaticamente();
 			stopWatch.split();
 			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitTime() - inicio));
@@ -385,17 +359,14 @@ public class CriarCalendarioTemporadaService {
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
 
 		Boolean jogarCopaNacII = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
-		//String numeroRodadasCopaNacional = parametroService.getParametroString(ParametroConstantes.NUMERO_RODADAS_COPA_NACIONAL);
 
 		Integer nroCompeticoes = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
-		//String estrategiaPromotorCont = parametroService.getParametroString(ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL);
 
 		Boolean marcarAmistosos = carregarParametroService.isMarcarAmistososAutomaticamenteInicioTemporada()
 				|| carregarParametroService.isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana(); 
 		
 
-		//CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(numeroRodadasCopaNacional, nroCompeticoes);
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory();
 
 		Integer ano = temporada.getAno();
@@ -409,10 +380,6 @@ public class CriarCalendarioTemporadaService {
 
 			//Nacional I e II
 			for (int i = 0; i < Constantes.NRO_DIVISOES; i++) {
-				
-				/*clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1,
-						(i == 0 ? ClassificacaoNacional.getAllNacionalNovoCampeonato()
-								: ClassificacaoNacional.getAllNacionalIINovoCampeonato()));*/
 				
 				clubes = clubeRepository.findByLigaAndAnoAndClassificacaoNacionalBetween(liga, ano - 1, (i == 0
 						? carregarParametroService.getClassificacaoNacionalNovoCampeonato(NivelCampeonato.NACIONAL)
@@ -452,7 +419,6 @@ public class CriarCalendarioTemporadaService {
 			
 			if (i == 2 //CIII
 					&& cIIIReduzido 
-					//&& ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategiaPromotorCont)
 					&& carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 					) {
 				posFinal = 10;
@@ -475,11 +441,9 @@ public class CriarCalendarioTemporadaService {
 			int posFinal = 32;
 			
 			if (nroCompeticoes == 3 && cIIIReduzido
-					//&& ParametroConstantes.ESTRATEGIA_PROMOTOR_CONTINENTAL_PARAM_ELI.equals(estrategiaPromotorCont)
 					&& carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado()
 					) {
 				posInicial = 11;
-				//posFinal = 30;
 			}
 
 			for (Liga liga : Liga.getAll()) {
@@ -539,8 +503,6 @@ public class CriarCalendarioTemporadaService {
 	private void salvar(Temporada temporada, List<Campeonato> campeonatosNacionais,
 			List<CampeonatoMisto> campeonatosContinentais, List<CampeonatoEliminatorio> copasNacionais,
 			List<RodadaAmistosa> rodadaAmistosaAutomaticas) {
-
-		//salvarTemporada(temporada);
 
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 
@@ -632,7 +594,6 @@ public class CriarCalendarioTemporadaService {
 	}
 
 	private void calcularValorTransferenciaJogadores() {
-		//if (semana.getNumero() == 1) {
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -644,7 +605,6 @@ public class CriarCalendarioTemporadaService {
 		}
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-		//}
 	}
 
 	private void atualizarPassoDesenvolvimentoJogador() {
@@ -689,7 +649,6 @@ public class CriarCalendarioTemporadaService {
 	}
 
 	private void atualizarPassoDesenvolvimentoJogador2() {
-		//if (semana.getNumero() == 1) {
 
 		Temporada temporada = null;
 		temporada = temporadaRepository.findFirstByOrderByAnoDesc().get();
@@ -718,7 +677,6 @@ public class CriarCalendarioTemporadaService {
 		}
 		
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
-		//}
 	}
 	
 	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {

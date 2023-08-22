@@ -69,11 +69,6 @@ public class Jogador {
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
 	private List<HabilidadeGrupoValor> habilidadesGrupo;
 	
-	/*@JsonIgnore
-	@OneToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "id_jogador_detalhe")
-	private JogadorDetalhe jogadorDetalhe;*/
-	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 	
 	//###	TRANSIENT	###
@@ -210,14 +205,6 @@ public class Jogador {
 	public void setForcaGeralPotencial(Double forcaGeralPotencial) {
 		this.forcaGeralPotencial = forcaGeralPotencial;
 	}
-
-	/*public JogadorDetalhe getJogadorDetalhe() {
-		return jogadorDetalhe;
-	}
-
-	public void setJogadorDetalhe(JogadorDetalhe jogadorDetalhe) {
-		this.jogadorDetalhe = jogadorDetalhe;
-	}*/
 
 	public JogadorEnergia getJogadorEnergia() {
 		return jogadorEnergia;

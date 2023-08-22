@@ -42,9 +42,6 @@ public class CalcularArtilhariaService {
 
 		estatisticas.addAll(jogadorEstatisticasTemporadaRepository.findByAmistoso(amistoso));
 
-		/*estatisticas = estatisticas.stream().filter(e -> !e.getAmistoso() && e.getGolsMarcados() > 0)
-				.collect(Collectors.toList());*/
-
 		return agruparEstatisticas(estatisticas, 100);
 		
 	}
@@ -88,18 +85,12 @@ public class CalcularArtilhariaService {
 
 		estatisticas.addAll(jogadorEstatisticasTemporadaRepository.findByTemporadaAndAmistoso(temporada, amistoso));
 
-		/*estatisticas = estatisticas.stream().filter(e -> !e.getAmistoso() && e.getGolsMarcados() > 0)
-				.collect(Collectors.toList());*/
-
 		return agruparEstatisticas(estatisticas, 100);
 	}
 
 	public List<ArtilhariaDTO> getByCampeonato(Long idCampeonato) {
 		List<JogadorEstatisticasTemporada> estatisticas = jogadorEstatisticasTemporadaCRUDService
 				.getAgrupadoByIdCampeonato(idCampeonato);
-
-		/*estatisticas = estatisticas.stream().filter(e -> !e.getAmistoso() && e.getGolsMarcados() > 0)
-				.collect(Collectors.toList());*/
 
 		return agruparEstatisticas(estatisticas, 100);
 	}
@@ -109,9 +100,6 @@ public class CalcularArtilhariaService {
 				.getAgrupadoTemporadaAtualByClube(clube, amistoso);
 
 		estatisticas.addAll(jogadorEstatisticasTemporadaRepository.findByClubeAndAmistoso(clube, amistoso));
-
-		/*estatisticas = estatisticas.stream().filter(e -> !e.getAmistoso() && e.getGolsMarcados() > 0)
-				.collect(Collectors.toList());*/
 
 		return agruparEstatisticas(estatisticas, 100);
 	}

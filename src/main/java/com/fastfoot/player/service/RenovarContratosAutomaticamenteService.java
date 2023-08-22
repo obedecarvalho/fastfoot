@@ -52,11 +52,6 @@ public class RenovarContratosAutomaticamenteService {
 					liga.getIdBaseLiga() + 32, temporada.getAno()/*, StatusJogador.ATIVO*/);
 		}
 
-		/*List<Contrato> contratosNovos = contratos
-				.stream().filter(c -> c.getJogador().isJogadorAtivo()).map(c -> new Contrato(c.getClube(),
-						c.getJogador(), s, sortearTempoContrato(c.getJogador().getIdade()), true, -1d))
-				.collect(Collectors.toList());*/
-
 		List<Contrato> contratosNovos = new ArrayList<Contrato>();
 		for (Contrato c : contratos.stream().filter(c -> c.getJogador().isJogadorAtivo())
 				.collect(Collectors.toList())) {

@@ -26,18 +26,6 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
-
-	/*@Async("defaultExecutor")
-	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax){
-
-		for (int i = idadeMin; i < idadeMax; i++) {
-			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
-					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
-					JogadorFactory.VALOR_AJUSTE.get(i - JogadorFactory.IDADE_MIN + 1));
-		}
-
-		return CompletableFuture.completedFuture(Boolean.TRUE);
-	}*/
 	
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax) {

@@ -135,9 +135,7 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 		inserirConsumoEnergiaFixo(escalacaoMandante);
 		inserirConsumoEnergiaFixo(escalacaoVisitante);
 		
-		//
 		calcularMinutosJogador(esquema);
-		//
 		
 		salvarEstatisticas(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
 				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
@@ -219,7 +217,6 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 						estrategia, partidaResultado, false, minuto);
 			}
 
-			//
 			for (int j = 0; j < NUM_LANCES_POR_MINUTO; j++) {
 			
 			do {
@@ -246,9 +243,7 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 				
 				partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
 				
-				//
 				if (IMPRIMIR) print(esquema, habilidadeValorAcao, habilidadeValorReacao, jogadorAcaoVenceu);
-				//
 				
 				if (jogadorAcaoVenceu) {
 					habilidadeVencedorAnterior = habilidadeValorAcao;
@@ -291,7 +286,6 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					//System.err.println("\t\tFORA!!!!");
 					
-					//
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(),
 							habilidadeValorAcao.getHabilidadeGrupo(), jogadorAcaoVenceu, ordemJogada, true, minuto);
 					atualizarEstatisticasHabilidadeGrupo(habilidadeValorAcao, jogadorAcaoVenceu);
@@ -303,9 +297,7 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 					
 					partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
 
-					//
 					if (IMPRIMIR) print(esquema, habilidadeValorAcao, habilidadeValorReacao, jogadorAcaoVenceu);
-					//
 					
 					if (jogadorAcaoVenceu) {
 						if (IMPRIMIR) System.err.println("\t\tGOLLL");
@@ -356,7 +348,6 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 			}
 			
 			}
-			//
 		}
 
 		if (IMPRIMIR) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));

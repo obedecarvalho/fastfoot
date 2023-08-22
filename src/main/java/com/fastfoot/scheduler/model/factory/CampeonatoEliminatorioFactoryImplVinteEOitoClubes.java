@@ -141,11 +141,9 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		rodadaEliminatoria = gerarRodadas(2, 2, nroJogos2Fase, partidasRodadaAnterior, rodadaAnterior, campeonatoEliminatorio, null).get(0);
 		rodadas.add(rodadaEliminatoria);
 		
-		//
 		for (PartidaEliminatoriaResultado p : rodadaEliminatoria.getPartidas()) {
 			p.setClassificaAMandante(false);
 		}
-		//
 
 		rodadaAnterior.setProximaRodada(rodadaEliminatoria);
 		partidasRodadaAnterior = rodadaEliminatoria.getPartidas();

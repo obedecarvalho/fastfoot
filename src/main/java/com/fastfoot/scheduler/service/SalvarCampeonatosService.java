@@ -36,6 +36,14 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 @Service
 public class SalvarCampeonatosService {
 	
+	private static final Comparator<RodadaEliminatoria> COMPARATOR = new Comparator<RodadaEliminatoria>() {
+
+		@Override
+		public int compare(RodadaEliminatoria o1, RodadaEliminatoria o2) {
+			return o2.getNumero().compareTo(o1.getNumero());
+		}
+	};
+	
 	@Autowired
 	private PartidaAmistosaResultadoRepository partidaAmistosaResultadoRepository;
 	
@@ -122,15 +130,7 @@ public class SalvarCampeonatosService {
 		}
 		
 		//tem que ordenar por causa da referencia de 'proximaRodada'
-		//
-		Collections.sort(rodadas, new Comparator<RodadaEliminatoria>() {
-
-			@Override
-			public int compare(RodadaEliminatoria o1, RodadaEliminatoria o2) {
-				return o2.getNumero().compareTo(o1.getNumero());
-			}
-		});
-		//
+		Collections.sort(rodadas, COMPARATOR);
 		
 		campeonatoEliminatorioRepository.saveAll(campeonatos);
 		rodadaEliminatoriaRepository.saveAll(rodadas);
@@ -173,15 +173,7 @@ public class SalvarCampeonatosService {
 		}
 
 		//tem que ordenar por causa da referencia de 'proximaRodada'
-		//
-		Collections.sort(rodadasFinal, new Comparator<RodadaEliminatoria>() {
-
-			@Override
-			public int compare(RodadaEliminatoria o1, RodadaEliminatoria o2) {
-				return o2.getNumero().compareTo(o1.getNumero());
-			}
-		});
-		//
+		Collections.sort(rodadasFinal, COMPARATOR);
 
 		campeonatoMistoRepository.saveAll(campeonatos);
 

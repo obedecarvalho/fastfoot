@@ -12,7 +12,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +39,7 @@ import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.model.ClubeSaldo;
 import com.fastfoot.transfer.model.NecessidadeContratacaoPossibilidades;
 import com.fastfoot.transfer.model.PossivelTrocaJogador;
+import com.fastfoot.transfer.model.PrepararDadosAnaliseTransferenciasReturn;
 import com.fastfoot.transfer.model.ResultadoExecucaoTransferenciasAutomaticasDTO;
 import com.fastfoot.transfer.model.TipoNegociacao;
 import com.fastfoot.transfer.model.entity.DisponivelNegociacao;
@@ -48,7 +48,6 @@ import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.DisponivelNegociacaoRepository;
 import com.fastfoot.transfer.model.repository.NecessidadeContratacaoClubeRepository;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
-import com.fastfoot.transfer.service.PrepararDadosAnaliseTransferenciasService.PrepararDadosAnaliseTransferenciasReturn;
 
 @Service
 public class ExecutarTransferenciasAutomaticamenteService {
@@ -89,9 +88,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
 
-	/*@Autowired
-	private GerarTransferenciasService gerarTransferenciasService;*/
-
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
 
@@ -107,24 +103,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
 
-	/*@Autowired
-	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;*/
-	
-	/*private static final Comparator<NecessidadeContratacaoPossibilidades> COMPARATOR = new Comparator<ExecutarTransferenciasAutomaticamenteService.NecessidadeContratacaoPossibilidades>() {
-		@Override
-		public int compare(NecessidadeContratacaoPossibilidades o1, NecessidadeContratacaoPossibilidades o2) {
-			return o1.getNecessidadeContratacaoClube().getNivelAdequacaoMax().compareTo(o2.getNecessidadeContratacaoClube().getNivelAdequacaoMax());
-		}
-	};*/
-	
 	public void executarTransferenciasAutomaticamente() {
-		
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-		
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
 		
 		ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO = new ResultadoExecucaoTransferenciasAutomaticasDTO();
 		
@@ -134,7 +113,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
 		
-		//
 		List<CompletableFuture<PrepararDadosAnaliseTransferenciasReturn>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<PrepararDadosAnaliseTransferenciasReturn>>();
 		
 		for (Liga liga : Liga.getAll()) {
@@ -145,9 +123,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		}
 
 		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		//
 		
-		//
 		for (CompletableFuture<PrepararDadosAnaliseTransferenciasReturn> completableFuture : desenvolverJogadorFuture) {
 			try {
 				disponivelNegociacao.addAll(completableFuture.get().getDisponivelNegociacao());
@@ -160,15 +136,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				e.printStackTrace();
 			}
 		}
-		//
-		
-		//List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-		
-		//Map<Clube, List<Jogador>> jogadoresClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
-		
-		stopWatch.split();
-		mensagens.add("\t#prepararDadosAnaliseTransferencias:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
 
 		/*avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacaoEDisponivelNegociacao(temporada,
 				jogadoresClube, necessidadeContratacaoClubes, disponivelNegociacao);*/
@@ -178,119 +145,24 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		
 		Map<Clube, ClubeSaldo> clubeSaldo = getClubeSaldo(temporada);
 		
-		stopWatch.split();
-		mensagens.add("\t#getClubeSaldo:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
-		
 		processar(temporada, s,
 				necessidadeContratacaoClubes.stream().filter(ncc -> ncc.getNecessidadePrioritaria()).collect(Collectors.toList()),
 				disponivelNegociacao.stream().filter(dn -> TipoNegociacao.COMPRA_VENDA.equals(dn.getTipoNegociacao())).collect(Collectors.toList()),
 				clubeSaldo,
 				elementosParaSalvarDTO);
 		
-		stopWatch.split();
-		mensagens.add("\t#processar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
-		
 		atualizarNumeroJogadoresService.atualizarNumeroJogadores(
 				elementosParaSalvarDTO.getJogadores().stream().collect(Collectors.groupingBy(Jogador::getClube)), null);
-		stopWatch.split();
-		mensagens.add("\t#atualizarNumero:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
 		salvar(elementosParaSalvarDTO);
-		stopWatch.split();
-		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
-		
-		System.err.println(mensagens);
 	}
-	
-	/*public void executarTransferenciasAutomaticamente() {
-		
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-		
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
-		
-		ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO = new ResultadoExecucaoTransferenciasAutomaticasDTO();
-		
-		Temporada temporada = temporadaService.getTemporadaAtual();
-		Semana s = semanaCRUDService.getProximaSemana();
-		
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
-		
-		Map<Clube, List<Jogador>> jogadoresClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));
-		
-		stopWatch.split();
-		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
-		
-		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
-		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
-		
-		avaliarNecessidadeContratacaoClubeService.calcularNecessidadeContratacaoEDisponivelNegociacao(temporada,
-				jogadoresClube, necessidadeContratacaoClubes, disponivelNegociacao);
-		
-		elementosParaSalvarDTO.setDisponivelNegociacao(disponivelNegociacao);
-		elementosParaSalvarDTO.setNecessidadeContratacaoClubes(necessidadeContratacaoClubes);
-		
-		Map<Clube, ClubeSaldo> clubeSaldo = gerarTransferenciasService.getClubeSaldo();
-		
-		stopWatch.split();
-		mensagens.add("\t#prepararDados:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
-		
-		processar(temporada, s,
-				necessidadeContratacaoClubes
-						.stream().filter(ncc -> ncc.getNecessidadePrioritaria()).collect(Collectors.toList())
-						,
-				disponivelNegociacao
-						.stream().filter(dn -> TipoNegociacao.COMPRA_VENDA.equals(dn.getTipoNegociacao())).collect(Collectors.toList())
-						,
-				clubeSaldo,
-				elementosParaSalvarDTO);
-		
-		stopWatch.split();
-		mensagens.add("\t#processar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();
-		
-		//atualizarNumeroJogadoresService. //TODO
-		stopWatch.split();
-		mensagens.add("\t#atualizarNumero:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-		
-		//salvar(elementosParaSalvarDTO);
-		stopWatch.split();
-		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-		
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
-		
-		System.err.println(mensagens);
-	}*/
 	
 	private void processar(Temporada temporada, Semana semana,
 			List<NecessidadeContratacaoClube> necessidadeContratacaoClubes,
 			List<DisponivelNegociacao> disponivelNegociacao, Map<Clube, ClubeSaldo> clubeSaldo,
 			ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO) {
 		
-		//Instanciar StopWatch
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-		
-		//Iniciar primeiro bloco
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
-		
-		//
 		long qtdeTransferencia = 0, qtdeTransferenciaAnterior = -1;
 		int i = 0;
 		
@@ -318,10 +190,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 				necessidadeContratacaoPossibilidades.add(possibilidades);
 				}
 			}
-			
-			stopWatch.split();
-			mensagens.add(String.format("\t#associar[%d]:%d", i + 1, (stopWatch.getSplitTime() - inicio)));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
 	
 			//Criar propostas de transferencia
 			Map<Clube, List<NecessidadeContratacaoPossibilidades>> possibilidadesClube = necessidadeContratacaoPossibilidades
@@ -336,36 +204,22 @@ public class ExecutarTransferenciasAutomaticamenteService {
 			
 			elementosParaSalvarDTO.getPropostaTransferenciaJogadores().addAll(propostas);
 			
-			stopWatch.split();
-			mensagens.add(String.format("\t#criarPropostas[%d]:%d", i + 1, (stopWatch.getSplitTime() - inicio)));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
-			
 			//Analisar propostas
 			Map<Clube, List<PropostaTransferenciaJogador>> propostasPorClube = propostas.stream().collect(Collectors.groupingBy(p -> p.getClubeOrigem()));
 			
 			for (Clube c : propostasPorClube.keySet()) {
 				analisarPropostasContratacaoPorClube(c, propostasPorClube.get(c), clubeSaldo, semana, elementosParaSalvarDTO);
 			}
-	
-			stopWatch.split();
-			mensagens.add(String.format("\t#analisarPropostas[%d]:%d", i + 1, (stopWatch.getSplitTime() - inicio)));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
 			
 			qtdeTransferencia = elementosParaSalvarDTO.getPropostaTransferenciaJogadores().stream()
 					.filter(ptj -> ptj.getPropostaAceita() != null && ptj.getPropostaAceita()).count();
 
 			i++;
 
-			//System.err.println(qtdeTransferencia);
 		}
-		//
 		
 		elementosParaSalvarDTO.getPropostaTransferenciaJogadores().stream().forEach(p -> p.setId(0l));
-
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
 		
-		//System.err.println(mensagens);
 	}
 	
 	private void analisarPropostasContratacaoPorClube(Clube clubeOrigem, List<PropostaTransferenciaJogador> propostas,
@@ -383,9 +237,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
 
-		//
 		consultarContratos(propostasPorJogadorMap.keySet());
-		//
 
 		for (Jogador j : propostasPorJogadorMap.keySet()) {
 
@@ -508,13 +360,11 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		propostaAceitar.getDisponivelNegociacao().setAtivo(false);		
 		propostasRejeitar.stream().forEach(p -> p.setPropostaAceita(false));
 
-		//
 		elementosParaSalvarDTO.getContratosInativar().add(propostaAceitar.getJogador().getContratoAtual());
 		int tempoContrato = RenovarContratosAutomaticamenteService.sortearTempoContrato(propostaAceitar.getJogador().getIdade());
 		double salario = calcularSalarioContratoService.calcularSalarioContrato(propostaAceitar.getJogador(), tempoContrato);
 		elementosParaSalvarDTO.getContratos().add(new Contrato(propostaAceitar.getClubeDestino(),
 				propostaAceitar.getJogador(), semana, tempoContrato, true, salario));
-		//
 
 		elementosParaSalvarDTO.getJogadores().add(propostaAceitar.getJogador());
 		
@@ -559,19 +409,8 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 	private Map<Clube, ClubeSaldo> getClubeSaldo(Temporada temporada) {
 
-		StopWatch stopWatch = new StopWatch();
-		List<String> mensagens = new ArrayList<String>();
-
-		stopWatch.start();
-		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
-
 		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
 		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);
-
-		stopWatch.split();
-		mensagens.add("\t#findSaldoProjetadoPorClube:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
 		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
 		
@@ -589,39 +428,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 			clubesSaldo.put(clubeSaldo.getClube(), clubeSaldo);
 		}
 		
-		//
-		
-		/*List<Clube> clubes = new ArrayList<Clube>(clubesSaldo.keySet());
-		
-		List<CompletableFuture<Map<Clube, Double>>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<Map<Clube, Double>>>();
-		
-		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
-
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
-			if ((i + 1) == FastfootApplication.NUM_THREAD) {
-				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
-						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, clubes.size())));
-			} else {
-				desenvolverJogadorFuture.add(calcularPrevisaoReceitaIngressosService
-						.calcularPrevisaoReceitaIngressos(clubes.subList(i * offset, (i + 1) * offset)));
-			}
-		}
-
-		CompletableFuture.allOf(desenvolverJogadorFuture.toArray(new CompletableFuture<?>[0])).join();
-		
-		Map<Clube, Double> clubePrevReceita = new HashMap<Clube, Double>();
-		for (CompletableFuture<Map<Clube, Double>> completableFuture : desenvolverJogadorFuture) {
-			try {
-				clubePrevReceita.putAll(completableFuture.get());
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}*/
-		
 		Map<Clube, Double> clubePrevReceita = calcularPrevisaoReceitaIngressosService.calcularPrevisaoReceitaIngressos(temporada);
 		
 		Double previsaoReceita;
@@ -630,17 +436,6 @@ public class ExecutarTransferenciasAutomaticamenteService {
 			previsaoReceita = clubePrevReceita.get(clube);
 			clubesSaldo.get(clube).setPrevisaoEntradaIngressos(previsaoReceita);
 		}
-
-		//
-
-		stopWatch.split();
-		mensagens.add("\t#calcularPrevisaoReceitaIngressos:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
-
-		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
-
-		//System.err.println(mensagens);
 
 		return clubesSaldo;
 	}

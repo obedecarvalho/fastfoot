@@ -22,7 +22,6 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
  */
 
 @Entity
-//@Table(indexes = { @Index(columnList = "id_temporada") })
 public class Semana {
 
 	@Id
@@ -35,11 +34,6 @@ public class Semana {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 
-	/**
-	 * Controle da execucao assincrona
-	 */
-	//private Boolean emExecucao;
-	
 	@Transient
 	private List<Rodada> rodadas;
 	
@@ -88,14 +82,6 @@ public class Semana {
 	public void setRodadasEliminatorias(List<RodadaEliminatoria> rodadasEliminatorias) {
 		this.rodadasEliminatorias = rodadasEliminatorias;
 	}
-
-	/*public Boolean getEmExecucao() {
-		return emExecucao;
-	}
-
-	public void setEmExecucao(Boolean emExecucao) {
-		this.emExecucao = emExecucao;
-	}*/
 
 	public List<RodadaAmistosa> getRodadasAmistosas() {
 		return rodadasAmistosas;

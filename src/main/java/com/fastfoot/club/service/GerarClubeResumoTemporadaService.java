@@ -1,6 +1,7 @@
 package com.fastfoot.club.service;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -273,11 +274,7 @@ public class GerarClubeResumoTemporadaService {
 	
 	private List<ClubeResumoTemporada> gerarClubeResumoTemporadaAmistosos(Temporada temporada) {
 		
-		Map<Clube, ClubeResumoTemporada> clubesResumo = new HashMap<Clube, ClubeResumoTemporada>();		
-		ClubeResumoTemporada clubeResumoTemporadaMandante = null;
-		ClubeResumoTemporada clubeResumoTemporadaVisitante = null;		
 		List<ClubeResumoTemporada> resumo = new ArrayList<ClubeResumoTemporada>();
-		
 		
 		List<RodadaAmistosa> rodadasNacional = temporada.getRodadasAmistosas().stream()
 				.filter(r -> NivelCampeonato.AMISTOSO_NACIONAL.equals(r.getNivelCampeonato()))
@@ -287,110 +284,67 @@ public class GerarClubeResumoTemporadaService {
 				.filter(r -> NivelCampeonato.AMISTOSO_INTERNACIONAL.equals(r.getNivelCampeonato()))
 				.collect(Collectors.toList());
 		
+		resumo.addAll(gerarClubeResumoTemporadaAmistosos(temporada, rodadasNacional));
 
-		for (RodadaAmistosa r : rodadasNacional) {
-			
-			for (PartidaAmistosaResultado p : r.getPartidas()) {
-				
-				clubeResumoTemporadaMandante = clubesResumo.get(p.getClubeMandante());
-				if (clubeResumoTemporadaMandante == null) {
-					clubeResumoTemporadaMandante = new ClubeResumoTemporada();
-					
-					clubeResumoTemporadaMandante.setClube(p.getClubeMandante());
-					clubeResumoTemporadaMandante.setTemporada(temporada);
-					clubeResumoTemporadaMandante.setNivelCampeonato(r.getNivelCampeonato());
-					
-					clubesResumo.put(p.getClubeMandante(), clubeResumoTemporadaMandante);
-				}
-				
-				clubeResumoTemporadaVisitante = clubesResumo.get(p.getClubeVisitante());
-				if (clubeResumoTemporadaVisitante == null) {
-					clubeResumoTemporadaVisitante = new ClubeResumoTemporada();
-					
-					clubeResumoTemporadaVisitante.setClube(p.getClubeVisitante());
-					clubeResumoTemporadaVisitante.setTemporada(temporada);
-					clubeResumoTemporadaVisitante.setNivelCampeonato(r.getNivelCampeonato());
-					
-					clubesResumo.put(p.getClubeVisitante(), clubeResumoTemporadaVisitante);
-				}
-				
-				
-				clubeResumoTemporadaMandante.setJogos(clubeResumoTemporadaMandante.getJogos() + 1);
-				if (p.isResultadoEmpatado()) {
-					clubeResumoTemporadaMandante.setEmpates(clubeResumoTemporadaMandante.getEmpates() + 1);
-				} else if (p.isMandanteVencedor()) {
-					clubeResumoTemporadaMandante.setVitorias(clubeResumoTemporadaMandante.getVitorias() + 1);
-				}
-				clubeResumoTemporadaMandante.setGolsPro(clubeResumoTemporadaMandante.getGolsPro() + p.getGolsMandante());
-				clubeResumoTemporadaMandante.setGolsContra(clubeResumoTemporadaMandante.getGolsContra() + p.getGolsVisitante());
-				
-				
-				clubeResumoTemporadaVisitante.setJogos(clubeResumoTemporadaVisitante.getJogos() + 1);
-				if (p.isResultadoEmpatado()) {
-					clubeResumoTemporadaVisitante.setEmpates(clubeResumoTemporadaVisitante.getEmpates() + 1);
-				} else if (p.isVisitanteVencedor()) {
-					clubeResumoTemporadaVisitante.setVitorias(clubeResumoTemporadaVisitante.getVitorias() + 1);
-				}
-				clubeResumoTemporadaVisitante.setGolsPro(clubeResumoTemporadaVisitante.getGolsPro() + p.getGolsVisitante());
-				clubeResumoTemporadaVisitante.setGolsContra(clubeResumoTemporadaVisitante.getGolsContra() + p.getGolsMandante());
-			}
-			
-		}
-		
-		
-		resumo.addAll(clubesResumo.values());		
-		clubesResumo = new HashMap<Clube, ClubeResumoTemporada>();
-		
-		for (RodadaAmistosa r : rodadasInternacional) {
-			
-			for (PartidaAmistosaResultado p : r.getPartidas()) {
-				
-				clubeResumoTemporadaMandante = clubesResumo.get(p.getClubeMandante());
-				if (clubeResumoTemporadaMandante == null) {
-					clubeResumoTemporadaMandante = new ClubeResumoTemporada();
-					
-					clubeResumoTemporadaMandante.setClube(p.getClubeMandante());
-					clubeResumoTemporadaMandante.setTemporada(temporada);
-					clubeResumoTemporadaMandante.setNivelCampeonato(r.getNivelCampeonato());
-					
-					clubesResumo.put(p.getClubeMandante(), clubeResumoTemporadaMandante);
-				}
-				
-				clubeResumoTemporadaVisitante = clubesResumo.get(p.getClubeVisitante());
-				if (clubeResumoTemporadaVisitante == null) {
-					clubeResumoTemporadaVisitante = new ClubeResumoTemporada();
-					
-					clubeResumoTemporadaVisitante.setClube(p.getClubeVisitante());
-					clubeResumoTemporadaVisitante.setTemporada(temporada);
-					clubeResumoTemporadaVisitante.setNivelCampeonato(r.getNivelCampeonato());
-					
-					clubesResumo.put(p.getClubeVisitante(), clubeResumoTemporadaVisitante);
-				}
-				
-				
-				clubeResumoTemporadaMandante.setJogos(clubeResumoTemporadaMandante.getJogos() + 1);
-				if (p.isResultadoEmpatado()) {
-					clubeResumoTemporadaMandante.setEmpates(clubeResumoTemporadaMandante.getEmpates() + 1);
-				} else if (p.isMandanteVencedor()) {
-					clubeResumoTemporadaMandante.setVitorias(clubeResumoTemporadaMandante.getVitorias() + 1);
-				}
-				clubeResumoTemporadaMandante.setGolsPro(clubeResumoTemporadaMandante.getGolsPro() + p.getGolsMandante());
-				clubeResumoTemporadaMandante.setGolsContra(clubeResumoTemporadaMandante.getGolsContra() + p.getGolsVisitante());
-				
-				
-				clubeResumoTemporadaVisitante.setJogos(clubeResumoTemporadaVisitante.getJogos() + 1);
-				if (p.isResultadoEmpatado()) {
-					clubeResumoTemporadaVisitante.setEmpates(clubeResumoTemporadaVisitante.getEmpates() + 1);
-				} else if (p.isVisitanteVencedor()) {
-					clubeResumoTemporadaVisitante.setVitorias(clubeResumoTemporadaVisitante.getVitorias() + 1);
-				}
-				clubeResumoTemporadaVisitante.setGolsPro(clubeResumoTemporadaVisitante.getGolsPro() + p.getGolsVisitante());
-				clubeResumoTemporadaVisitante.setGolsContra(clubeResumoTemporadaVisitante.getGolsContra() + p.getGolsMandante());
-			}
-		}
-		
-		resumo.addAll(clubesResumo.values());
+		resumo.addAll(gerarClubeResumoTemporadaAmistosos(temporada, rodadasInternacional));
 		
 		return resumo;
+	}
+	
+	private Collection<ClubeResumoTemporada> gerarClubeResumoTemporadaAmistosos(Temporada temporada, List<RodadaAmistosa> rodadas) {
+		
+		Map<Clube, ClubeResumoTemporada> clubesResumo = new HashMap<Clube, ClubeResumoTemporada>();		
+		ClubeResumoTemporada clubeResumoTemporadaMandante = null;
+		ClubeResumoTemporada clubeResumoTemporadaVisitante = null;		
+		
+		for (RodadaAmistosa r : rodadas) {
+			
+			for (PartidaAmistosaResultado p : r.getPartidas()) {
+				
+				clubeResumoTemporadaMandante = clubesResumo.get(p.getClubeMandante());
+				if (clubeResumoTemporadaMandante == null) {
+					clubeResumoTemporadaMandante = new ClubeResumoTemporada();
+					
+					clubeResumoTemporadaMandante.setClube(p.getClubeMandante());
+					clubeResumoTemporadaMandante.setTemporada(temporada);
+					clubeResumoTemporadaMandante.setNivelCampeonato(r.getNivelCampeonato());
+					
+					clubesResumo.put(p.getClubeMandante(), clubeResumoTemporadaMandante);
+				}
+				
+				clubeResumoTemporadaVisitante = clubesResumo.get(p.getClubeVisitante());
+				if (clubeResumoTemporadaVisitante == null) {
+					clubeResumoTemporadaVisitante = new ClubeResumoTemporada();
+					
+					clubeResumoTemporadaVisitante.setClube(p.getClubeVisitante());
+					clubeResumoTemporadaVisitante.setTemporada(temporada);
+					clubeResumoTemporadaVisitante.setNivelCampeonato(r.getNivelCampeonato());
+					
+					clubesResumo.put(p.getClubeVisitante(), clubeResumoTemporadaVisitante);
+				}
+				
+				
+				clubeResumoTemporadaMandante.setJogos(clubeResumoTemporadaMandante.getJogos() + 1);
+				if (p.isResultadoEmpatado()) {
+					clubeResumoTemporadaMandante.setEmpates(clubeResumoTemporadaMandante.getEmpates() + 1);
+				} else if (p.isMandanteVencedor()) {
+					clubeResumoTemporadaMandante.setVitorias(clubeResumoTemporadaMandante.getVitorias() + 1);
+				}
+				clubeResumoTemporadaMandante.setGolsPro(clubeResumoTemporadaMandante.getGolsPro() + p.getGolsMandante());
+				clubeResumoTemporadaMandante.setGolsContra(clubeResumoTemporadaMandante.getGolsContra() + p.getGolsVisitante());
+				
+				
+				clubeResumoTemporadaVisitante.setJogos(clubeResumoTemporadaVisitante.getJogos() + 1);
+				if (p.isResultadoEmpatado()) {
+					clubeResumoTemporadaVisitante.setEmpates(clubeResumoTemporadaVisitante.getEmpates() + 1);
+				} else if (p.isVisitanteVencedor()) {
+					clubeResumoTemporadaVisitante.setVitorias(clubeResumoTemporadaVisitante.getVitorias() + 1);
+				}
+				clubeResumoTemporadaVisitante.setGolsPro(clubeResumoTemporadaVisitante.getGolsPro() + p.getGolsVisitante());
+				clubeResumoTemporadaVisitante.setGolsContra(clubeResumoTemporadaVisitante.getGolsContra() + p.getGolsMandante());
+			}
+		}
+		
+		return clubesResumo.values();
 	}
 }

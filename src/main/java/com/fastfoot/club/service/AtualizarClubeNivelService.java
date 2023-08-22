@@ -48,11 +48,6 @@ public class AtualizarClubeNivelService {
 	@Autowired
 	private ClubeRepository clubeRepository;
 	
-	//###	SERVICE	###
-	
-	/*@Autowired
-	private TemporadaService temporadaService;*/
-	
 	static {
 		COMPARATOR = new Comparator<ClubeRankingHistoricoDTO>() {
 			

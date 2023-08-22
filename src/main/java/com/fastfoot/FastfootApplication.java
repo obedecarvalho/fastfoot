@@ -13,30 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 public class FastfootApplication {
 	
 	/*
-		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
-		long inicio = 0, fim = 0;
-		List<String> mensagens = new ArrayList<String>();
-		
-		--1ro
-		stopWatch.split();
-		inicio = stopWatch.getSplitTime();
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		
-		--outros
-		inicio = stopWatch.getSplitTime();
-		stopWatch.split();
-		fim = stopWatch.getSplitTime();
-		
-		mensagens.add("#gerarPropostaTransferencia:" + (fim - inicio));
-		
-		stopWatch.stop();
-		stopWatch.getTime());--Tempo total
-		mensagens.add("#tempoTotal:" + stopWatch.getTime());
-	 */
-	
-	/*
 		//Instanciar StopWatch
 		StopWatch stopWatch = new StopWatch();
 		List<String> mensagens = new ArrayList<String>();
@@ -62,50 +38,6 @@ public class FastfootApplication {
 		SpringApplication.run(FastfootApplication.class, args);
 	}
 
-	/*@Bean(name = "partidaExecutor")
-	public Executor asyncPartidaExecutor() {
-		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(NUM_THREAD);
-		//executor.setMaxPoolSize(8);
-		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("partidaExecutor-");
-		executor.initialize();
-		return executor;
-    }*/
-	
-	/*@Bean(name = "jogadorServiceExecutor")
-	public Executor asyncJogadorServiceExecutor() {
-		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(NUM_THREAD);
-		//executor.setMaxPoolSize(8);
-		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("jogadorServiceExecutor-");
-		executor.initialize();
-		return executor;
-    }*/
-	
-	/*@Bean(name = "probabilidadeExecutor")
-	public Executor asyncProbabilidadeExecutor() {
-		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(NUM_THREAD);
-		//executor.setMaxPoolSize(8);
-		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("probabilidadeExecutor-");
-		executor.initialize();
-		return executor;
-    }*/
-	
-	/*@Bean(name = "transferenciaExecutor")
-	public Executor asyncTransferenciaExecutor() {
-		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-		executor.setCorePoolSize(NUM_THREAD);
-		//executor.setMaxPoolSize(8);
-		//executor.setQueueCapacity(32);
-		executor.setThreadNamePrefix("transferenciaExecutor-");
-		executor.initialize();
-		return executor;
-    }*/
-	
 	@Bean(name = "defaultExecutor")
 	public Executor asyncDefaultExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();

@@ -50,11 +50,7 @@ public enum NivelCampeonato {
 	public boolean isContinentalIII() {//CampeonatoMisto
 		return CONTINENTAL_III.equals(this);
 	}
-	
-	/*public boolean isContinentalContinentalII() {//CampeonatoMisto
-		return isContinental() || isContinentalII();
-	}*/
-	
+
 	public boolean isCIOuCIIOuCIII() {//CampeonatoMisto
 		return isContinental() || isContinentalII() || isContinentalIII();
 	}

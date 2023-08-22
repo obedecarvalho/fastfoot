@@ -10,12 +10,6 @@ public class CampeonatoClubeProbabilidadePosicao {
 	
 	private Integer probabilidade;
 
-	//private Integer pontuacaoMaxima;
-	
-	//private Double pontuacaoMedia;
-	
-	//private Integer pontuacaoMinima;
-
 	public CampeonatoClubeProbabilidade getClubeProbabilidade() {
 		return clubeProbabilidade;
 	}
@@ -40,27 +34,4 @@ public class CampeonatoClubeProbabilidadePosicao {
 		this.probabilidade = probabilidade;
 	}
 
-	/*public Integer getPontuacaoMaxima() {
-		return pontuacaoMaxima;
-	}
-
-	public void setPontuacaoMaxima(Integer pontuacaoMaxima) {
-		this.pontuacaoMaxima = pontuacaoMaxima;
-	}
-
-	public Double getPontuacaoMedia() {
-		return pontuacaoMedia;
-	}
-
-	public void setPontuacaoMedia(Double pontuacaoMedia) {
-		this.pontuacaoMedia = pontuacaoMedia;
-	}
-
-	public Integer getPontuacaoMinima() {
-		return pontuacaoMinima;
-	}
-
-	public void setPontuacaoMinima(Integer pontuacaoMinima) {
-		this.pontuacaoMinima = pontuacaoMinima;
-	}*/
 }

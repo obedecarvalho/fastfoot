@@ -16,10 +16,6 @@ public class CampeonatoClubeProbabilidadeDTO {
 	
 	private String probabilidadeAcesso;
 
-	//private String probabilidadeClassificacaoContinental;
-	
-	//private String probabilidadeClassificacaoCopaNacional;
-	
 	private String probabilidadeClassificacaoCI;
 	
 	private String probabilidadeClassificacaoCII;
@@ -61,22 +57,6 @@ public class CampeonatoClubeProbabilidadeDTO {
 	public void setProbabilidadeAcesso(String probabilidadeAcesso) {
 		this.probabilidadeAcesso = probabilidadeAcesso;
 	}
-
-	/*public String getProbabilidadeClassificacaoContinental() {
-		return probabilidadeClassificacaoContinental;
-	}
-
-	public void setProbabilidadeClassificacaoContinental(String probabilidadeClassificacaoContinental) {
-		this.probabilidadeClassificacaoContinental = probabilidadeClassificacaoContinental;
-	}*/
-
-	/*public String getProbabilidadeClassificacaoCopaNacional() {
-		return probabilidadeClassificacaoCopaNacional;
-	}
-
-	public void setProbabilidadeClassificacaoCopaNacional(String probabilidadeClassificacaoCopaNacional) {
-		this.probabilidadeClassificacaoCopaNacional = probabilidadeClassificacaoCopaNacional;
-	}*/
 
 	public ClassificacaoDTO getClassificacao() {
 		return classificacao;
@@ -130,10 +110,6 @@ public class CampeonatoClubeProbabilidadeDTO {
 		dto.setProbabilidadeAcesso(cp.getProbabilidadeAcessoDescricao());
 		
 		dto.setProbabilidadeCampeao(cp.getProbabilidadeCampeaoDescricao());
-		
-		//dto.setProbabilidadeClassificacaoContinental(cp.getProbabilidadeClassificacaoContinentalDescricao());
-		
-		//dto.setProbabilidadeClassificacaoCopaNacional(cp.getProbabilidadeClassificacaoCopaNacionalDescricao());
 		
 		dto.setProbabilidadeClassificacaoCI(cp.getProbabilidadeClassificacaoCIDescricao());
 		

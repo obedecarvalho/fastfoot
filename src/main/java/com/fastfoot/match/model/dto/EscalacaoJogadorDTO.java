@@ -14,62 +14,10 @@ public class EscalacaoJogadorDTO {
 	
 	private ClubeDTO clube;
 	
-	//private Long idJogador;
-	
-	//private String jogadorNome;
-	
-	//private String jogadorPosicao;
-	
-	//private Integer jogadorForcaGeral;
-	
-	//private Integer escalacaoOrdinal;
-	
 	private Integer escalacao;
 	
 	private String escalacaoDesc;
-	
-	//private Integer idClube;
 
-	/*public Long getIdJogador() {
-		return idJogador;
-	}
-
-	public void setIdJogador(Long idJogador) {
-		this.idJogador = idJogador;
-	}
-
-	public String getJogadorNome() {
-		return jogadorNome;
-	}
-
-	public void setJogadorNome(String jogadorNome) {
-		this.jogadorNome = jogadorNome;
-	}
-
-	public String getJogadorPosicao() {
-		return jogadorPosicao;
-	}
-
-	public void setJogadorPosicao(String jogadorPosicao) {
-		this.jogadorPosicao = jogadorPosicao;
-	}*/
-
-	/*public Integer getEscalacaoOrdinal() {
-		return escalacaoOrdinal;
-	}
-
-	public void setEscalacaoOrdinal(Integer escalacaoOrdinal) {
-		this.escalacaoOrdinal = escalacaoOrdinal;
-	}*/
-
-	/*public Integer getIdClube() {
-		return idClube;
-	}
-
-	public void setIdClube(Integer idClube) {
-		this.idClube = idClube;
-	}*/
-	
 	public EscalacaoJogadorDTO() {
 
 	}
@@ -88,14 +36,6 @@ public class EscalacaoJogadorDTO {
 	public void setEscalacao(Integer escalacao) {
 		this.escalacao = escalacao;
 	}
-
-	/*public Integer getJogadorForcaGeral() {
-		return jogadorForcaGeral;
-	}
-
-	public void setJogadorForcaGeral(Integer jogadorForcaGeral) {
-		this.jogadorForcaGeral = jogadorForcaGeral;
-	}*/
 
 	public JogadorDTO getJogador() {
 		return jogador;
@@ -130,11 +70,6 @@ public class EscalacaoJogadorDTO {
 		
 		dto.setJogador(JogadorDTO.convertToDTO(escalacaoJogador.getJogador()));
 		dto.setClube(ClubeDTO.convertToDTO(escalacaoJogador.getClube()));
-		/*dto.setIdJogador(escalacaoJogador.getJogador().getId());
-		dto.setJogadorNome(escalacaoJogador.getJogador().getNome());
-		dto.setJogadorPosicao(escalacaoJogador.getJogador().getPosicao().name());
-		dto.setJogadorForcaGeral(escalacaoJogador.getJogador().getForcaGeral());*/
-		//dto.setIdClube(escalacaoJogador.getJogador().getClube().getId());
 		dto.setEscalacao(escalacaoJogador.getEscalacaoPosicao().ordinal());
 		dto.setEscalacaoDesc(escalacaoJogador.getEscalacaoPosicao().getDescricao());
 

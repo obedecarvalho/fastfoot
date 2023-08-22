@@ -14,10 +14,18 @@ import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 public class ClassificacaoUtil {
+	
+	private static final Comparator<Classificacao> COMPARATOR;
+	
+	static {
+		COMPARATOR = new Comparator<Classificacao>() {
 
-	/*public static void ordernarClassificacao(List<Classificacao> classificacao) {
-		ordernarClassificacao(classificacao, null, true);
-	}*/
+			@Override
+			public int compare(Classificacao o1, Classificacao o2) {
+				return o1.compareTo(o2);
+			}
+		};
+	}
 
 	public static void ordernarClassificacao(List<Classificacao> classificacao, boolean desempatar) {
 		ordernarClassificacao(classificacao, null, desempatar);
@@ -30,13 +38,7 @@ public class ClassificacaoUtil {
 	public static void ordernarClassificacao(List<Classificacao> classificacao, List<PartidaResultado> partidas,
 			boolean desempatar) throws RuntimeException {
 
-		Collections.sort(classificacao, new Comparator<Classificacao>() {
-
-			@Override
-			public int compare(Classificacao o1, Classificacao o2) {
-				return o1.compareTo(o2);
-			}
-		});
+		Collections.sort(classificacao, COMPARATOR);
 		
 		//Setar posicao inicial
 		for (int i = 0; i < classificacao.size(); i++) {

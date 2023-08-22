@@ -20,13 +20,6 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class SemanaUtil {
 	
-	/*private static final Map<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_6_RODADAS = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_4_RODADAS = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_5_RODADAS = new HashMap<Integer, Integer>();
-	private static final Map<Integer, Integer> RODADA_SEMANA_AMISTOSOS_AUTOMATICOS = new HashMap<Integer, Integer>();*/
-	
 	private static final BidiMap<Integer, Integer> RODADA_SEMANA_CAMPEONATO_NACIONAL = new DualHashBidiMap<Integer, Integer>();
 	private static final BidiMap<Integer, Integer> RODADA_SEMANA_COPA_NACIONAL_6_RODADAS = new DualHashBidiMap<Integer, Integer>();
 	private static final BidiMap<Integer, Integer> RODADA_SEMANA_CONTINENTAL = new DualHashBidiMap<Integer, Integer>();

@@ -50,14 +50,6 @@ public class MarcarAmistososSemanalmenteService {
 
 		//TODO: dar um shuffle na lista OU fazer heuristica para evitar muitos amistosos entre os mesmos dois clubes 
 		
-		/*RodadaAmistosa rodadaAmistosa = new RodadaAmistosa(100 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_INTERNACIONAL);
-		RodadaAmistosa rodadaAmistosaNacional = new RodadaAmistosa(200 + semanaAmistoso.getNumero(), NivelCampeonato.AMISTOSO_NACIONAL);
-		
-		rodadaAmistosa.setPartidas(new ArrayList<PartidaAmistosaResultado>());
-		rodadaAmistosaNacional.setPartidas(new ArrayList<PartidaAmistosaResultado>());
-		rodadaAmistosa.setSemana(semanaAmistoso);
-		rodadaAmistosaNacional.setSemana(semanaAmistoso);*/
-
 		List<Clube> clubes = clubeRepository.findAll();
 
 		List<PartidaResultado> partidas = partidaResultadoRepository.findBySemana(semanaAmistoso);
@@ -89,25 +81,7 @@ public class MarcarAmistososSemanalmenteService {
 		
 		Map<Liga, List<Clube>> clubesLiga = clubes.stream().collect(Collectors.groupingBy(Clube::getLiga));
 		
-		/*System.err.println(semanaAmistoso.getNumero() + ":" + clubes.size());
-		System.err.println("\tG:" + clubesLiga.get(Liga.GENEBE).size());
-		System.err.println("\tE:" + clubesLiga.get(Liga.ENGLND).size());
-		System.err.println("\tS:" + clubesLiga.get(Liga.SPAPOR).size());
-		System.err.println("\tI:" + clubesLiga.get(Liga.ITAFRA).size());*/
-		
 		List<RodadaAmistosa> rodadas = criarPartidas(semanaAmistoso, clubesLiga, clubes.size());
-		
-		//System.err.println(rodadaAmistosa.getPartidas());
-
-		/*if (!ValidatorUtil.isEmpty(rodadaAmistosa.getPartidas())) {
-			rodadaAmistoraRepository.save(rodadaAmistosa);
-			partidaAmistosaResultadoRepository.saveAll(rodadaAmistosa.getPartidas());
-		}
-		
-		if (!ValidatorUtil.isEmpty(rodadaAmistosaNacional.getPartidas())) {
-			rodadaAmistoraRepository.save(rodadaAmistosaNacional);
-			partidaAmistosaResultadoRepository.saveAll(rodadaAmistosaNacional.getPartidas());
-		}*/
 		
 		rodadaAmistoraRepository
 				.saveAll(rodadas.stream().filter(r -> r.getPartidas().size() > 0).collect(Collectors.toList()));
@@ -115,61 +89,7 @@ public class MarcarAmistososSemanalmenteService {
 		partidaAmistosaResultadoRepository.saveAll(rodadas.stream().filter(r -> r.getPartidas().size() > 0)
 				.flatMap(r -> r.getPartidas().stream()).collect(Collectors.toList()));
 	}
-	
-	/*private void criarPartidas(Map<Liga, List<Clube>> clubesLiga, RodadaAmistosa rodadaAmistosa, RodadaAmistosa rodadaAmistosaNacional, int totalClubes) {
-		
-		List<Clube> clubesA = null;
-		List<Clube> clubesB = null;
-		Liga ligaA = null;
-		Liga ligaB = null;
-		
-		while (totalClubes > 0) {
-			
-			List<Liga> ligas = Liga.getAll();
-			Collections.shuffle(ligas);
-			
-			for (Liga l : ligas) {
-				if (clubesA == null || clubesLiga.get(l).size() > clubesA.size()) {
-					clubesA = clubesLiga.get(l);
-					ligaA = l;
-				}
-			}
-			
-			for (Liga l : ligas) {
-				if (!ligaA.equals(l) && (clubesB == null || clubesLiga.get(l).size() > clubesB.size())) {
-					clubesB = clubesLiga.get(l);
-					ligaB = l;
-				}
-			}
-			
-			if (clubesB.size() > 0) {
-				
-				Collections.shuffle(clubesA);
-				Collections.shuffle(clubesB);
 
-				criarPartidas(rodadaAmistosa, clubesA, clubesB);
-				
-				totalClubes -= (clubesB.size() * 2);
-				
-				clubesLiga.get(ligaA).removeAll(clubesA.subList(0, clubesB.size()));
-				clubesLiga.get(ligaB).removeAll(clubesB);
-
-			} else if (clubesA.size() > 0 && clubesB.size() == 0) {
-
-				criarAmistososNacionais(rodadaAmistosaNacional, clubesA);
-				totalClubes = 0;//encerra loop
-
-			}
-
-			clubesA = null;
-			clubesB = null;
-			ligaA = null;
-			ligaB = null;
-
-		}
-		
-	}*/
-	
 	private List<RodadaAmistosa> criarPartidas(Semana semanaAmistoso, Map<Liga, List<Clube>> clubesLiga, int totalClubes) {
 		
 		List<Clube> clubesA = null;
@@ -260,30 +180,7 @@ public class MarcarAmistososSemanalmenteService {
 		
 	}
 	
-	/*private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB) {
-
-		//if (clubesB.size() > clubesA.size()) throw new RuntimeException("Comportamento Inesperado");
-
-		PartidaAmistosaResultado partida;
-
-		for (int i = 0; i < clubesB.size(); i++) {
-			partida = new PartidaAmistosaResultado();
-			if (RANDOM.nextBoolean()) {
-				partida.setClubeMandante(clubesA.get(i));
-				partida.setClubeVisitante(clubesB.get(i));
-			} else {
-				partida.setClubeVisitante(clubesA.get(i));
-				partida.setClubeMandante(clubesB.get(i));
-			}
-			partida.setRodada(rodadaAmistosa);
-			rodadaAmistosa.getPartidas().add(partida);
-		}
-		
-	}*/
-	
 	private void criarPartidas(RodadaAmistosa rodadaAmistosa, List<Clube> clubesA, List<Clube> clubesB, int qtdeJogos) {
-
-		//if (clubesB.size() > clubesA.size()) throw new RuntimeException("Comportamento Inesperado");
 
 		PartidaAmistosaResultado partida;
 

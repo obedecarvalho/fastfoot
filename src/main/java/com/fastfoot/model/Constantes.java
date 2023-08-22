@@ -13,9 +13,6 @@ public class Constantes {
 	public static final Integer PTOS_VITORIA = 3;
 	public static final Integer PTOS_EMPATE = 1;
 	
-	//public static final Integer NRO_JOGADAS_ELIMINATORIA = 5;
-	//public static final Integer NRO_JOGADAS_PARTIDA = 6;
-	
 	//###	LIGAS	###
 	
 	public static final Integer NRO_LIGAS = 4;
@@ -26,9 +23,6 @@ public class Constantes {
 	
 	/** Numero de clubes que disputam o campeonato nacional por divisao */
 	public static final Integer NRO_CLUBE_CAMP_NACIONAL = 16;
-	
-	/** Numero de clubes que conquistam o acesso a 1ra divisao */
-	//public static final Integer NRO_CLUBE_ACESSO_CAMP_NACIONAL = 3;
 	
 	/** Numero divisoes campeonato nacional */
 	public static final Integer NRO_DIVISOES = 2;
@@ -63,9 +57,6 @@ public class Constantes {
 	public static final Integer NRO_CLUBES_GRUPOS = 4;
 	
 	public static final Integer NRO_PARTIDAS_FASE_GRUPOS = 3;
-	
-	/** Numero de competicoes Continental */
-	//public static final Integer NRO_COMPETICOES_CONT = 2;
 	
 	//###	AMISTOSOS	###
 	/** Numero de grupos */

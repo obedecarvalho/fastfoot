@@ -49,10 +49,6 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	@JoinColumn(name = "id_semana_transferencia")
 	private Semana semanaTransferencia;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_adequacao_elenco_posicao")
-	private AdequacaoElencoPosicao adequacaoElencoPosicao;*/
-	
 	@ManyToOne
 	@JoinColumn(name = "id_necessidade_contratacao_clube")
 	private NecessidadeContratacaoClube necessidadeContratacaoClube;
@@ -211,13 +207,5 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 				+ ", jogador=" + jogador + ", valorTransferencia=" + FormatadorUtil.formatarDecimal(valorTransferencia) + ", propostaAceita="
 				+ propostaAceita + "]";
 	}
-
-	/*public AdequacaoElencoPosicao getAdequacaoElencoPosicao() {
-		return adequacaoElencoPosicao;
-	}
-
-	public void setAdequacaoElencoPosicao(AdequacaoElencoPosicao adequacaoElencoPosicao) {
-		this.adequacaoElencoPosicao = adequacaoElencoPosicao;
-	}*/
 
 }

@@ -31,7 +31,6 @@ public abstract class EsquemaFactory {
 	
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_ATA = 1.10d;
 	
-	
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_2 = 1.50d;
 	
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_3 = 1.50d;
@@ -39,10 +38,6 @@ public abstract class EsquemaFactory {
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_4 = 1.10d;
 	
 	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_5 = 1.10d;
-	
-	/*public abstract Esquema gerarEsquemaEscalacao(List<EscalacaoJogadorPosicao> mandantes,
-			List<EscalacaoJogadorPosicao> visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
-			JogadorApoioCriacao jogadorApoioCriacaoVisitante);*/
 	
 	public abstract Esquema gerarEsquemaEscalacao(EscalacaoClube mandantes,
 			EscalacaoClube visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,
@@ -59,7 +54,6 @@ public abstract class EsquemaFactory {
 	}
 	
 	synchronized protected static void print(List<EsquemaPosicao> x) {
-		//
 		System.err.println("----------------------------------------------");
 		for (EsquemaPosicao ep : x) {
 
@@ -84,6 +78,5 @@ public abstract class EsquemaFactory {
 						et.getPosFinal().getVisitante().getPosicao(), 13 - et.getPosFinal().getNumero(), et.getPeso()));
 			}
 		}
-		//
 	}
 }

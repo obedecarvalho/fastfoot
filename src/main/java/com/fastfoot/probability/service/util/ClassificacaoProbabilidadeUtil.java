@@ -9,15 +9,21 @@ import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 
 public class ClassificacaoProbabilidadeUtil {
 
-	public static void ordernarClassificacao(List<ClassificacaoProbabilidade> classificacao, boolean desempatar) throws RuntimeException {
+	private static final Comparator<ClassificacaoProbabilidade> COMPARATOR;
 
-		Collections.sort(classificacao, new Comparator<ClassificacaoProbabilidade>() {
+	static {
+		COMPARATOR = new Comparator<ClassificacaoProbabilidade>() {
 
 			@Override
 			public int compare(ClassificacaoProbabilidade o1, ClassificacaoProbabilidade o2) {
 				return o1.compareTo(o2);
 			}
-		});
+		};
+	}
+
+	public static void ordernarClassificacao(List<ClassificacaoProbabilidade> classificacao, boolean desempatar) throws RuntimeException {
+
+		Collections.sort(classificacao, COMPARATOR);
 		
 		//Setar posicao inicial
 		for (int i = 0; i < classificacao.size(); i++) {

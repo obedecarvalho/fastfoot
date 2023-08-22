@@ -35,15 +35,6 @@ public class EsquemaPosicao {
 		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
 		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
 	}
-
-	/*public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante) {
-		super();
-		this.mandante = mandante;
-		this.visitante = visitante;
-		this.numero = numero;
-		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
-		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
-	}*/
 	
 	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante, Double probabilidadeArremateForaMandante,
 			Double probabilidadeArremateForaVisitante) {
@@ -130,16 +121,10 @@ public class EsquemaPosicao {
 	}
 
 	public void addTransicaoMandante(EsquemaTransicao esquemaTransicao) {
-		/*if (transicoesMandante == null) {
-			transicoesMandante = new ArrayList<EsquemaTransicao>();
-		}*/
 		transicoesMandante.add(esquemaTransicao);
 	}
 
 	public void addTransicaoVisitante(EsquemaTransicao esquemaTransicao) {
-		/*if (transicoesVisitante == null) {
-			transicoesVisitante = new ArrayList<EsquemaTransicao>();
-		}*/
 		transicoesVisitante.add(esquemaTransicao);
 	}
 

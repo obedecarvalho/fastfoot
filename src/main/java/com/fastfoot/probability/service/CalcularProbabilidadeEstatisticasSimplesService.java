@@ -103,7 +103,6 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 	}
 
 	protected Integer getNumeroSimulacoes(Semana semana) {
-		//return 100;
 
 		if (semana.getNumero() == 17)
 			return NUM_SIMULACOES_SEM_17;

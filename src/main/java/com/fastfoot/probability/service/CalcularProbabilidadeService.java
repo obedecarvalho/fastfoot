@@ -116,14 +116,12 @@ public abstract class CalcularProbabilidadeService {
 
 	protected void inicializarClubeProbabilidade(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades,
 			List<Clube> clubes, Semana semana, Campeonato campeonato, TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
-		//if (clubeProbabilidades.isEmpty()) {
 		for (Clube clube : clubes) {
 			CampeonatoClubeProbabilidade clup = new CampeonatoClubeProbabilidade();
 			
 			clup.setClube(clube);
 			clup.setCampeonato(campeonato);
 			clup.setSemana(semana);
-			//clup.setCompleto(true);
 			clup.setTipoClubeProbabilidade(tipoClubeProbabilidade);
 
 			clup.setClubeProbabilidadePosicao(new HashMap<Integer, CampeonatoClubeProbabilidadePosicao>());
@@ -132,7 +130,6 @@ public abstract class CalcularProbabilidadeService {
 			
 			clubeProbabilidades.put(clube, clup);
 		}
-		//}
 	}
 
 	protected void calcularProbabilidadesEspecificas(Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades, Semana semana, Integer numeroRebaixados) {
@@ -254,12 +251,6 @@ public abstract class CalcularProbabilidadeService {
 		
 		clubesLiga.addAll(clubesLigaII);
 		
-		/*Map<Integer, Clube> clubesCampeoes = new HashMap<Integer, Clube>();
-		
-		getCampeoesContinentais(semana.getTemporada(), clubesCampeoes);
-		
-		getCampeoesCopaNacional(semana.getTemporada(), clubesCampeoes, nacional.getLiga());*/
-		
 		//Map<Integer, Clube> clubesCampeoes = consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLiga());
 
 		for (int i = 0; i < getNumeroSimulacoes(semana); i++) {
@@ -304,8 +295,6 @@ public abstract class CalcularProbabilidadeService {
 			
 			agruparClubeRankingProbabilidade(clubeProbabilidades, ranking);
 			
-			//System.err.println("==>" + ranking);
-
 		}
 
 		calcularProbabilidadesEspecificas(clubeProbabilidades, semana, numeroRebaixados);
