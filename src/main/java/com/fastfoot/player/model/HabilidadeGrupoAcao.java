@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class HabilidadeGrupoAcao {
+public class HabilidadeGrupoAcao implements HabilidadeAcaoJogavel {
 	
 	public static final HabilidadeGrupoAcao DEFESA = new HabilidadeGrupoAcao(HabilidadeGrupo.DEFESA);
 	
@@ -69,6 +69,7 @@ public class HabilidadeGrupoAcao {
 	 * public String getDescricao() { return habilidade.getDescricao(); }
 	 */
 
+	@Override
 	public List<HabilidadeGrupoAcao> getPossiveisReacoes() {
 		return possiveisReacoes;
 	}
@@ -77,6 +78,7 @@ public class HabilidadeGrupoAcao {
 		this.possiveisReacoes = possiveisReacoes;
 	}
 
+	@Override
 	public List<HabilidadeGrupoAcao> getAcoesSubsequentes() {
 		return acoesSubsequentes;
 	}
@@ -85,6 +87,7 @@ public class HabilidadeGrupoAcao {
 		this.acoesSubsequentes = acoesSubsequentes;
 	}
 
+	@Override
 	public HabilidadeGrupoAcao getReacaoGoleiro() {
 		return reacaoGoleiro;
 	}
@@ -93,38 +96,47 @@ public class HabilidadeGrupoAcao {
 		this.reacaoGoleiro = reacaoGoleiro;
 	}
 
+	@Override
 	public boolean contemAcoesSubsequentes() {
 		return acoesSubsequentes != null;
 	}
 
+	@Override
 	public boolean isExigeGoleiro() {
 		return reacaoGoleiro != null;
 	}
 
+	@Override
 	public boolean isAcaoFim() {
 		return habilidadeGrupo.isAcaoFim();
 	}
 
+	@Override
 	public boolean isAcaoMeio() {
 		return habilidadeGrupo.isAcaoMeio();
 	}
 
+	@Override
 	public boolean isAcaoInicial() {
 		return habilidadeGrupo.isAcaoInicial();
 	}
 
+	@Override
 	public boolean isReacao() {
 		return habilidadeGrupo.isReacao();
 	}
 
+	@Override
 	public boolean isReacaoGoleiro() {
 		return habilidadeGrupo.isReacaoGoleiro();
 	}
 
+	@Override
 	public boolean isAcaoInicioFim() {
 		return habilidadeGrupo.isAcaoInicioFim();
 	}
 
+	@Override
 	public boolean isAcaoInicioMeio() {
 		return habilidadeGrupo.isAcaoInicioMeio();
 	}

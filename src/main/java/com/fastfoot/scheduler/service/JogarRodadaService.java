@@ -16,6 +16,7 @@ import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
 import com.fastfoot.match.service.CalcularTorcidaPartidaService;
 import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
+import com.fastfoot.match.service.JogarPartidaHabilidadeGrupoService;
 import com.fastfoot.match.service.JogarPartidaHabilidadeService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaRepository;
@@ -79,6 +80,9 @@ public class JogarRodadaService {
 	
 	@Autowired
 	private JogarPartidaHabilidadeService jogarPartidaHabilidadeService;
+	
+	@Autowired
+	private JogarPartidaHabilidadeGrupoService jogarPartidaHabilidadeGrupoService;
 
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
@@ -88,18 +92,22 @@ public class JogarRodadaService {
 	private static final Boolean SALVAR_HABILIDADE_VALOR_ESTATISTICAS = false;//#DEVEL
 
 	@Async("defaultExecutor")
-	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada) {
+	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada, Boolean agrupado) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
 
+		if (agrupado) {
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+		} else {
 		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		}
 		
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		
-		jogarPartidas(rodada, partidaJogadorEstatisticaDTO);
+		jogarPartidas(rodada, partidaJogadorEstatisticaDTO, agrupado);
 		
 		salvarPartidas(rodada);
 
@@ -120,17 +128,17 @@ public class JogarRodadaService {
 		return CompletableFuture.completedFuture(rodada);
 	}
 
-	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
 		if(rodada.getCampeonato() != null) {
 			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
-					rodada.getCampeonato().getClassificacao());
+					rodada.getCampeonato().getClassificacao(), agrupado);
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getCampeonato().getClassificacao(), false);
 			}
 		} else if (rodada.getGrupoCampeonato() != null) {
 			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
-					rodada.getGrupoCampeonato().getClassificacao());
+					rodada.getGrupoCampeonato().getClassificacao(), agrupado);
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getGrupoCampeonato().getClassificacao(), false);
@@ -202,18 +210,22 @@ public class JogarRodadaService {
 	}
 
 	@Async("defaultExecutor")
-	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada) {
+	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada, Boolean agrupado) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
 
+		if (agrupado) {
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+		} else {
 		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		}
 		
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		
-		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO, agrupado);
 		
 		salvarPartidas(rodada);
 		
@@ -245,15 +257,19 @@ public class JogarRodadaService {
 	}
 
 	@Async("defaultExecutor")
-	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada) {
+	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada, Boolean agrupado) {
 		
 		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
 		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
 
 		carregarPartidas(rodada);
+		if (agrupado) {
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+		} else {
 		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		}
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
-		jogarRodada(rodada, partidaJogadorEstatisticaDTO);
+		jogarRodada(rodada, partidaJogadorEstatisticaDTO, agrupado);
 		salvarPartidas(rodada);
 
 		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
@@ -297,19 +313,27 @@ public class JogarRodadaService {
 		movimentacaoFinanceiraRepository.saveAll(dto.getMovimentacaoFinanceira());
 	}
 
-	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao) {
+	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao, Boolean agrupado) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
+			if (agrupado) {
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			} else {
 			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			}
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
 	}
 
-	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
+			if (agrupado) {
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);	
+			} else {
 			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			}
 
 			if (p.getProximaPartida() != null) {
 				PromotorEliminatoria.promoverProximaPartidaEliminatoria(p);
@@ -317,9 +341,13 @@ public class JogarRodadaService {
 		}
 	}
 
-	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
+			if (agrupado) {
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			} else {
 			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+			}
 		}
 	}
 }

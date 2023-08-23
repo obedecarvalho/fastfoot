@@ -206,17 +206,19 @@ public class JogarPartidasSemanaService {
 
 		//Jogar Rodada
 		List<CompletableFuture<RodadaJogavel>> rodadasFuture = new ArrayList<CompletableFuture<RodadaJogavel>>();
+		
+		boolean agrupado = false;
 
 		for (Rodada r : semana.getRodadas()) {
-			rodadasFuture.add(jogarRodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r, agrupado));
 		}
 
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-			rodadasFuture.add(jogarRodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r, agrupado));
 		}
 		
 		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
-			rodadasFuture.add(jogarRodadaService.executarRodada(r));
+			rodadasFuture.add(jogarRodadaService.executarRodada(r, agrupado));
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();

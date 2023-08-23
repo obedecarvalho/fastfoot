@@ -10,11 +10,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fastfoot.player.model.HabilidadeValorJogavelEstatistica;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_semana, id_habilidade_valor") })
-public class HabilidadeValorEstatistica {
+public class HabilidadeValorEstatistica implements HabilidadeValorJogavelEstatistica {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorEstatisticaSequence")
@@ -86,10 +87,12 @@ public class HabilidadeValorEstatistica {
 		this.quantidadeUsoVencedor = quantidadeUsoVencedor;
 	}
 	
+	@Override
 	public void incrementarQuantidadeUso() {
 		this.quantidadeUso++;
 	}
 
+	@Override
 	public void incrementarQuantidadeUsoVencedor() {
 		this.quantidadeUsoVencedor++;
 	}

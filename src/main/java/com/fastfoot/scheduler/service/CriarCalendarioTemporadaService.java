@@ -204,13 +204,13 @@ public class CriarCalendarioTemporadaService {
 			temporadaAtual = temporadaAtualOpt.get();
 
 			if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
-			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);//TODO: substituir pelo 2 comandos?
+			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);
 			stopWatch.split();
 			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 			}
 
-			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();
+			jogadorEstatisticasTemporadaRepository.agruparJogadorEstatisticasTemporada();//TODO: criar service
 			jogadorEstatisticasSemanaRepository.deleteAllInBatch();
 			stopWatch.split();
 			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (stopWatch.getSplitTime() - inicio));

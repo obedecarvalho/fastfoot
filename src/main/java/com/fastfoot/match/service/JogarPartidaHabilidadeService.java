@@ -1,7 +1,6 @@
 package com.fastfoot.match.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,28 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
-import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.EstrategiaSubstituicao;
-import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
-import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
-import com.fastfoot.match.model.entity.PartidaEstatisticas;
-import com.fastfoot.match.model.entity.PartidaLance;
-import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
-import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
-import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
-import com.fastfoot.service.util.ElementoRoleta;
-import com.fastfoot.service.util.RandomUtil;
-import com.fastfoot.service.util.RoletaUtil;
 
 @Service
 public class JogarPartidaHabilidadeService extends JogarPartidaService {
@@ -45,9 +31,6 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 	 */
 
 	@Autowired
-	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
-	
-	@Autowired
 	private DisputarPenaltsService disputarPenaltsService;
 	
 	@Autowired
@@ -56,7 +39,7 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 	@Autowired
 	private RealizarSubstituicoesJogadorPartidaService realizarSubstituicoesJogadorPartidaService;
 
-	private static final Double NUM_LANCES_POR_MINUTO = 1d;
+	/*private static final Double NUM_LANCES_POR_MINUTO = 1d;
 
 	private static final Integer MINUTOS = 90;
 
@@ -64,9 +47,9 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 
 	private static final Boolean IMPRIMIR = false;
 	
-	private static final Boolean LANCE_A_LANCE = true;
+	private static final Boolean LANCE_A_LANCE = true;*/
 
-	private PartidaLance criarPartidaLance(List<PartidaLance> lances, PartidaResultadoJogavel partida, Jogador jogador,
+	/*private PartidaLance criarPartidaLance(List<PartidaLance> lances, PartidaResultadoJogavel partida, Jogador jogador,
 			Habilidade habilidade, Boolean vencedor, Integer ordem, Boolean acao, Integer minuto) {
 		PartidaLance pl = new PartidaLance();
 		if (partida instanceof PartidaResultado) {
@@ -84,16 +67,16 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 		pl.setMinuto(minuto);
 		lances.add(pl);
 		return pl;
-	}
+	}*/
 	
-	private void atualizarEstatisticasHabilidade(HabilidadeValor habilidadeValor, Boolean vencedor) {
+	/*private void atualizarEstatisticasHabilidade(HabilidadeValor habilidadeValor, Boolean vencedor) {
 		habilidadeValor.getHabilidadeValorEstatistica().incrementarQuantidadeUso();
 		if (vencedor) {
 			habilidadeValor.getHabilidadeValorEstatistica().incrementarQuantidadeUsoVencedor();
 		}
-	}
+	}*/
 	
-	private void salvarEstatisticas(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	protected void salvarEstatisticas(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 		List<HabilidadeValorEstatistica> estatisticas = new ArrayList<HabilidadeValorEstatistica>();
 		
 		for (Jogador j : jogadores) {
@@ -116,6 +99,17 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 	}
 
 	@Override
+	protected void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
+		disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
+	}
+	
+	@Override
+	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
+			EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO, false);
+	}
+
+	/*@Override
 	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
@@ -126,7 +120,7 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 		inserirConsumoEnergiaFixo(escalacaoVisitante);
 		
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
-		List<PartidaLance> lances = jogar(esquema, partidaResultado);
+		List<PartidaLance> lances = jogar(esquema, partidaResultado, false);
 		
 		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
 			disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
@@ -151,9 +145,14 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
 		
 		partidaJogadorEstatisticaDTO.adicionarPartidaLance(lances);
+	}*/
+	
+	@Override
+	protected HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor) {
+		return new HabilidadeValor(Habilidade.FORA, valor);
 	}
 
-	private List<PartidaLance> jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
+	/*private List<PartidaLance> jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
 		List<PartidaLance> lances = new ArrayList<PartidaLance>();
 		Integer ordemJogada = 1;
@@ -236,9 +235,9 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
 
 				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true, minuto);
-				atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
+				atualizarEstatisticasHabilidadeValorJogavel(habilidadeValorAcao, jogadorAcaoVenceu);
 				if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorSemPosse(), habilidadeValorReacao.getHabilidade(), !jogadorAcaoVenceu, ordemJogada, false, minuto);
-				atualizarEstatisticasHabilidade(habilidadeValorReacao, !jogadorAcaoVenceu);
+				atualizarEstatisticasHabilidadeValorJogavel(habilidadeValorReacao, !jogadorAcaoVenceu);
 				ordemJogada++;
 				
 				partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
@@ -260,7 +259,7 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 					if (IMPRIMIR) System.err.println(String.format("\t\t-> %s", habilidadeValorAcao.getHabilidade().getDescricao()));
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
 						if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(), habilidadeValorAcao.getHabilidade(), true, ordemJogada, true, minuto);
-						atualizarEstatisticasHabilidade(habilidadeValorAcao, true);
+						atualizarEstatisticasHabilidadeValorJogavel(habilidadeValorAcao, true);
 					}
 					ordemJogada++;
 					partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
@@ -288,11 +287,11 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 					
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(),
 							habilidadeValorAcao.getHabilidade(), jogadorAcaoVenceu, ordemJogada, true, minuto);
-					atualizarEstatisticasHabilidade(habilidadeValorAcao, jogadorAcaoVenceu);
+					atualizarEstatisticasHabilidadeValorJogavel(habilidadeValorAcao, jogadorAcaoVenceu);
 					
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getGoleiroSemPosse().getGoleiro(),
 							habilidadeValorReacao.getHabilidade(), goleiroVenceu, ordemJogada, false, minuto);
-					atualizarEstatisticasHabilidade(habilidadeValorReacao, goleiroVenceu);
+					atualizarEstatisticasHabilidadeValorJogavel(habilidadeValorReacao, goleiroVenceu);
 					ordemJogada++;
 					
 					partidaResultado.incrementarLance(esquema.getPosseBolaMandante());
@@ -355,15 +354,21 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 		partidaResultado.setPartidaJogada(true);
 		
 		return lances;
+	}*/
+	
+	protected void realizarSubstituicoesJogadorPartida(Esquema esquema, EstrategiaSubstituicao estrategiaSubstituicao,
+			PartidaResultadoJogavel partidaResultado, boolean mandante, int minutoSubstituicao) {
+		realizarSubstituicoesJogadorPartidaService.realizarSubstituicoesJogadorPartida(esquema,
+				estrategiaSubstituicao, partidaResultado, mandante, minutoSubstituicao);
 	}
 	
 	//###	TESTE	###
 	
-	public void print(Esquema esquema, HabilidadeValor habilidadeValorAcao, HabilidadeValor habilidadeValorReacao, boolean jogadorAcaoVenceu) {
+	/*public void print(Esquema esquema, HabilidadeValor habilidadeValorAcao, HabilidadeValor habilidadeValorReacao, boolean jogadorAcaoVenceu) {
 		System.err.println(String.format("\t\t%s (%d) x %s (%d) [%s] [%s] [%s]", habilidadeValorAcao.getHabilidade().getDescricao(),
 				habilidadeValorAcao.getValor(), habilidadeValorReacao.getHabilidade().getDescricao(),
 				habilidadeValorReacao.getValor(), esquema.getPosseBolaMandante() ? "M" : "V",
 				jogadorAcaoVenceu ? "Venceu" : "Perdeu", habilidadeValorAcao.getJogador().getNumero()));
-	}
+	}*/
 
 }

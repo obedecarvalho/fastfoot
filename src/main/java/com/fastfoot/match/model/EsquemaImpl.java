@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeAcaoJogavel;
 import com.fastfoot.player.model.HabilidadeGrupoAcao;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -88,6 +90,16 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoMeioFimValor();
 		}
 	}
+	
+	@Override
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoMeioFimJogadorPosicaoAtualPosse(
+			Boolean agrupado) {
+		if (agrupado) {
+			return getHabilidadesGrupoAcaoMeioFimJogadorPosicaoAtualPosse();
+		} else {
+			return getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse();
+		}
+	}
 
 	@Override
 	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse() {
@@ -124,6 +136,15 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoFimValor();
 		}
 	}
+	
+	@Override
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoFimJogadorPosicaoAtualPosse(Boolean agrupado) {
+		if (agrupado) {
+			return getHabilidadesGrupoAcaoFimJogadorPosicaoAtualPosse();
+		} else {
+			return getHabilidadesAcaoFimJogadorPosicaoAtualPosse();
+		}
+	}
 
 	@Override
 	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
@@ -140,6 +161,21 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
 		} else {
 			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
+		}
+	}
+	
+	@Override
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelJogadorPosicaoAtualSemPosse(Boolean agrupado,
+			List<? extends HabilidadeAcaoJogavel> habilidades) {
+		/*if (agrupado) {
+			return getHabilidadesGrupoJogadorPosicaoAtualSemPosse((List<HabilidadeGrupoAcao>) habilidades);
+		} else {
+			return getHabilidadesJogadorPosicaoAtualSemPosse((List<HabilidadeAcao>) habilidades);
+		}*/
+		if (!posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesValorJogavel(agrupado, habilidades);
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesValorJogavel(agrupado, habilidades);
 		}
 	}
 
@@ -172,6 +208,21 @@ public class EsquemaImpl implements Esquema {
 			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
 		} else {
 			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
+		}
+	}
+	
+	@Override
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado,
+			List<? extends HabilidadeAcaoJogavel> habilidades) {
+		/*if (agrupado) {
+			return getHabilidadesGrupo((List<HabilidadeGrupoAcao>) habilidades);
+		} else {
+			return getHabilidades((List<HabilidadeAcao>) habilidades);
+		}*/
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesValorJogavel(agrupado, habilidades);
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesValorJogavel(agrupado, habilidades);
 		}
 	}
 

@@ -3,7 +3,7 @@ package com.fastfoot.player.model;
 import java.util.Arrays;
 import java.util.List;
 
-public enum Habilidade {
+public enum Habilidade implements HabilidadeJogavel {
 	
 	/**
 	 	create table habilidade_descricao (
@@ -62,6 +62,7 @@ public enum Habilidade {
 		this.tipoHabilidade = tipoHabilidade;
 	}
 
+	@Override
 	public String getDescricao() {
 		return descricao;
 	}

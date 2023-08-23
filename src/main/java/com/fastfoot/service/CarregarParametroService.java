@@ -85,7 +85,7 @@ public class CarregarParametroService {
 			return TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_DEFESA_PARAM.equals(metodoCalculo)) {
 			return TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO_DEFESA;
-		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_PARAM.equals(metodoCalculo)) {
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_PARAM.equals(metodoCalculo)) {
 			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
 			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO;
@@ -103,7 +103,7 @@ public class CarregarParametroService {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_ESTATISTICA_FINALIZACAO_DEFESA_PARAM.equals(metodoCalculo)) {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO_DEFESA;
-		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_PARAM.equals(metodoCalculo)) {
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_PARAM.equals(metodoCalculo)) {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_HABILIDADE_GRUPO;

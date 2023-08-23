@@ -14,12 +14,13 @@ import javax.persistence.Transient;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.HabilidadeGrupoAcao;
-import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
+import com.fastfoot.player.model.HabilidadeValorJogavelEstatistica;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class HabilidadeGrupoValor implements ElementoRoleta {
+public class HabilidadeGrupoValor implements HabilidadeValorJogavel {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeGrupoValorSequence")
@@ -59,6 +60,7 @@ public class HabilidadeGrupoValor implements ElementoRoleta {
 		this.id = id;
 	}
 
+	@Override
 	public Jogador getJogador() {
 		return jogador;
 	}
@@ -69,6 +71,11 @@ public class HabilidadeGrupoValor implements ElementoRoleta {
 
 	public HabilidadeGrupo getHabilidadeGrupo() {
 		return habilidadeGrupo;
+	}
+	
+	@Override
+	public HabilidadeGrupo getHabilidadeJogavel() {
+		return getHabilidadeGrupo();
 	}
 
 	public void setHabilidadeGrupo(HabilidadeGrupo habilidadeGrupo) {
@@ -117,6 +124,12 @@ public class HabilidadeGrupoValor implements ElementoRoleta {
 		return HabilidadeGrupoAcao.HABILIDADE_GRUPO_ACAO.get(getHabilidadeGrupo());
 	}
 	
+	@Override
+	public HabilidadeGrupoAcao getHabilidadeAcaoJogavel() {
+		return getHabilidadeGrupoAcao();
+	}
+	
+	@Override
 	public void calcularValorN() {
 
 		if (ValidatorUtil.isEmpty(getJogador())) {
@@ -130,6 +143,11 @@ public class HabilidadeGrupoValor implements ElementoRoleta {
 
 	public HabilidadeGrupoValorEstatistica getHabilidadeGrupoValorEstatistica() {
 		return habilidadeGrupoValorEstatistica;
+	}
+	
+	@Override
+	public HabilidadeValorJogavelEstatistica getHabilidadeValorJogavelEstatistica() {
+		return getHabilidadeGrupoValorEstatistica();
 	}
 
 	public void setHabilidadeGrupoValorEstatistica(HabilidadeGrupoValorEstatistica habilidadeGrupoValorEstatistica) {

@@ -1,7 +1,6 @@
 package com.fastfoot.bets.service;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -12,13 +11,13 @@ import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepository;
 import com.fastfoot.match.model.Esquema;
-import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
 import com.fastfoot.match.service.EscalarClubeService;
 import com.fastfoot.player.model.HabilidadeGrupo;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.Jogador;
@@ -32,19 +31,18 @@ import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
-import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService implements CalcularPartidaProbabilidadeResultadoService {
+public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService extends CalcularPartidaProbabilidadeResultadoSimularPartidaAbstractService {
 
 	private static final Integer NUM_SIMULACOES = 100;
 	
-	private static final Double NUM_LANCES_POR_MINUTO = 1d;
+	/*private static final Double NUM_LANCES_POR_MINUTO = 1d;
 	
 	private static final Integer MINUTOS = 90;
 
-	private static final float MIN_FORA = 0.2f;
+	private static final float MIN_FORA = 0.2f;*/
 	
 	@Autowired
 	private JogadorRepository jogadorRepository;
@@ -110,7 +108,12 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		return calcularPartidaProbabilidadeResultado(partidaResultado, escalacaoMandante, escalacaoVisitante);
 	}
 
+	@Override
 	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante) {
+		return calcularPartidaProbabilidadeResultado(partidaResultado, escalacaoMandante, escalacaoVisitante, TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO, true);
+	}
+
+	/*public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
 				escalacaoMandante, escalacaoVisitante,
@@ -131,7 +134,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		
 		for (int i = 0; i < NUM_SIMULACOES; i++) {
 			//partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
-			jogar(esquema, partidaResultado);
+			jogar(esquema, partidaResultado, true);
 			
 			if (partidaResultado.getGolsMandante() > partidaResultado.getGolsVisitante()) {
 				vitoriaMandante++;
@@ -153,9 +156,14 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		
 		return partidaProbabilidadeResultado;
 
+	}*/
+	
+	@Override
+	protected HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor) {
+		return new HabilidadeGrupoValor(HabilidadeGrupo.FORA, valor);
 	}
 	
-	private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
+	/*private void jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado) {
 
 		//List<PartidaLance> lances = new ArrayList<PartidaLance>();
 		Integer ordemJogada = 1;
@@ -248,7 +256,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 					//atualizarEstatisticasHabilidadeGrupo(habilidadeValorAcao, jogadorAcaoVenceu);
 					
 					/*if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getGoleiroSemPosse().getGoleiro(),
-							habilidadeValorReacao.getHabilidadeGrupo(), goleiroVenceu, ordemJogada, false, minuto);*/
+							habilidadeValorReacao.getHabilidadeGrupo(), goleiroVenceu, ordemJogada, false, minuto);* /
 					//atualizarEstatisticasHabilidadeGrupo(habilidadeValorReacao, goleiroVenceu);
 					ordemJogada++;
 					
@@ -273,7 +281,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 						}
 						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 								.incrementarGolsSofridos();
-						*/
+						* /
 					} else if (goleiroVenceu) {
 						//if (IMPRIMIR) System.err.println("\t\tGOLEIRO DEFENDEU");
 						//partidaResultado.incrementarFinalizacaoDefendida(esquema.getPosseBolaMandante());
@@ -282,13 +290,13 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 								.incrementarFinalizacoesDefendidas();
 						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 								.incrementarGoleiroFinalizacoesDefendidas();
-						*/
+						* /
 					} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						//if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
 						//partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
 						/*
 						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana().incrementarFinalizacoesFora();
-						*/
+						* /
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 					//jogadorAssistencia = null;
@@ -316,6 +324,6 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 		//if (IMPRIMIR) System.err.println(String.format("\n\t\t%d x %d", golMandante, golVisitante));
 		
 		partidaResultado.setPartidaJogada(true);
-	}
+	}*/
 
 }

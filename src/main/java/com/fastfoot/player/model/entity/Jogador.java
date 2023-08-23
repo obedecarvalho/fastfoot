@@ -24,8 +24,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeAcaoJogavel;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.HabilidadeGrupoAcao;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
@@ -310,6 +312,26 @@ public class Jogador {
 	@JsonIgnore
 	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades) {
 		return getHabilidadesGrupo().stream().filter(hv -> habilidades.contains(hv.getHabilidadeGrupoAcao())).collect(Collectors.toList());
+	}
+	
+	@JsonIgnore
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado){
+		if (agrupado) {
+			return getHabilidadesGrupo();
+		} else {
+			return getHabilidades();
+		}
+	}
+	
+	@JsonIgnore
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado,
+			List<? extends HabilidadeAcaoJogavel> habilidades) {
+		/*if (agrupado) {
+			return getHabilidadesGrupo((List<HabilidadeGrupoAcao>) habilidades);
+		} else {
+			return getHabilidades((List<HabilidadeAcao>) habilidades);
+		}*/
+		return getHabilidadesValorJogavel(agrupado).stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcaoJogavel())).collect(Collectors.toList());
 	}
 	
 	@JsonIgnore

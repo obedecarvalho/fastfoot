@@ -3,7 +3,7 @@ package com.fastfoot.player.model;
 import java.util.Arrays;
 import java.util.List;
 
-public enum HabilidadeGrupo {
+public enum HabilidadeGrupo implements HabilidadeJogavel {
 
 	DEFESA(new Habilidade[] {Habilidade.MARCACAO, Habilidade.DESARME, Habilidade.INTERCEPTACAO/*, Habilidade.CABECEIO, Habilidade.FORCA*/}, TipoHabilidadeAcao.REACAO),
 
@@ -73,6 +73,7 @@ public enum HabilidadeGrupo {
 		return TipoHabilidadeAcao.ACAO_INICIO_MEIO.equals(getTipoHabilidade());
 	}
 
+	@Override
 	public String getDescricao() {
 		return this.name();
 	}

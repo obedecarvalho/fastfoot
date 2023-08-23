@@ -59,7 +59,7 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 	 */
 
 	@Autowired
-	private CalcularPartidaProbabilidadeResultadoSimularPartidaService calcularPartidaProbabilidadeResultadoSimularPartidaService;
+	private CalcularPartidaProbabilidadeResultadoSimularPartidaService calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeService;
 
 	@Autowired
 	private CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService;
@@ -78,7 +78,7 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 			TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
 
 		if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA.equals(tipoClubeProbabilidade)) {
-			calcularPartidaProbabilidadeResultadoSimularPartidaService.calcularPartidaProbabilidadeResultado(rodada);
+			calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeService.calcularPartidaProbabilidadeResultado(rodada);
 		} else if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO
 				.equals(tipoClubeProbabilidade)) {
 			calcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoService.calcularPartidaProbabilidadeResultado(rodada);
@@ -102,10 +102,10 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 
 		if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA.equals(tipoClubeProbabilidade)) {
 			if (!ValidatorUtil.isEmpty(escalacaoMandante) && !ValidatorUtil.isEmpty(escalacaoMandante)) {
-				return calcularPartidaProbabilidadeResultadoSimularPartidaService.calcularPartidaProbabilidadeResultado(partidaResultado,
+				return calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeService.calcularPartidaProbabilidadeResultado(partidaResultado,
 						escalacaoMandante, escalacaoVisitante);
 			} else {
-				return calcularPartidaProbabilidadeResultadoSimularPartidaService.calcularPartidaProbabilidadeResultado(partidaResultado);
+				return calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeService.calcularPartidaProbabilidadeResultado(partidaResultado);
 			}
 		} else if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO
 				.equals(tipoClubeProbabilidade)) {

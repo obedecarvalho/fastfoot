@@ -16,13 +16,16 @@ import javax.persistence.Transient;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeAcao;
+import com.fastfoot.player.model.HabilidadeAcaoJogavel;
+import com.fastfoot.player.model.HabilidadeJogavel;
 import com.fastfoot.player.model.HabilidadeTipo;
-import com.fastfoot.service.util.ElementoRoleta;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
+import com.fastfoot.player.model.HabilidadeValorJogavelEstatistica;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para JogadorHabilidade ??
+public class HabilidadeValor implements HabilidadeValorJogavel {//TODO: renomear para JogadorHabilidade ??
 	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
@@ -88,6 +91,11 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 	public HabilidadeAcao getHabilidadeAcao() {
 		return HabilidadeAcao.HABILIDADE_ACAO.get(getHabilidade());
 	}
+	
+	@Override
+	public HabilidadeAcaoJogavel getHabilidadeAcaoJogavel() {
+		return getHabilidadeAcao();
+	}
 
 	@Override
 	public Integer getValor() {
@@ -103,6 +111,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 		return valorN;
 	}
 	
+	@Override
 	public void calcularValorN() {
 
 		/*int energia = Constantes.ENERGIA_MINIMA_JOGAR;
@@ -134,6 +143,7 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 		this.id = id;
 	}
 
+	@Override
 	public Jogador getJogador() {
 		return jogador;
 	}
@@ -144,6 +154,11 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 
 	public Habilidade getHabilidade() {
 		return habilidade;
+	}
+	
+	@Override
+	public HabilidadeJogavel getHabilidadeJogavel() {
+		return getHabilidade();
 	}
 
 	public void setHabilidade(Habilidade habilidade) {
@@ -160,6 +175,11 @@ public class HabilidadeValor implements ElementoRoleta {//TODO: renomear para Jo
 
 	public HabilidadeValorEstatistica getHabilidadeValorEstatistica() {
 		return habilidadeValorEstatistica;
+	}
+	
+	@Override
+	public HabilidadeValorJogavelEstatistica getHabilidadeValorJogavelEstatistica() {
+		return getHabilidadeValorEstatistica();
 	}
 
 	public void setHabilidadeValorEstatistica(HabilidadeValorEstatistica habilidadeValorEstatistica) {
