@@ -20,7 +20,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 	 * CN: 16 -> 8 -> (4' + 12) -> 8 -> 4 -> 2 [6 RODADAS]
 	 */
 
-	@Override
+	/*@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -35,9 +35,10 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		SemanaUtil.associarRodadaCopaNacionalQuatroRodadasSemana(campeonato);
 
 		return campeonato;
-	}
+	}*/
 
-	private List<RodadaEliminatoria> gerarRodadasCopaNacionalII(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
+	@Override
+	protected List<RodadaEliminatoria> gerarRodadasCopaNacionalII(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
 
 		RodadaEliminatoria rodadaEliminatoria = null, rodadaAnterior;
 		List<PartidaEliminatoriaResultado> partidasRodada = null, partidasRodadaAnterior = null;
@@ -82,7 +83,7 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		return rodadas;
 	}
 
-	@Override
+	/*@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLiga(liga);
@@ -97,9 +98,20 @@ public class CampeonatoEliminatorioFactoryImplVinteEOitoClubes extends Campeonat
 		SemanaUtil.associarRodadaCopaNacionalSeisRodadasSemana(campeonato);
 
 		return campeonato;
+	}*/
+	
+	@Override
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+
+		CampeonatoEliminatorio campeonato = super.criarCampeonatoCopaNacional(temporada, liga, clubes, nivelCampeonato);
+
+		SemanaUtil.associarRodadaCopaNacionalSeisRodadasSemana(campeonato);
+
+		return campeonato;
 	}
 
-	private List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
+	@Override
+	protected List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
 		
 		RodadaEliminatoria rodadaEliminatoria = null, rodadaAnterior;
 		List<PartidaEliminatoriaResultado> partidasRodada = null, partidasRodadaAnterior = null;

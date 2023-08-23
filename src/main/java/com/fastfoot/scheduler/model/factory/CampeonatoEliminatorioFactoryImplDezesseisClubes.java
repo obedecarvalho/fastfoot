@@ -7,6 +7,7 @@ import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.model.Liga;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
+import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.util.SemanaUtil;
 
@@ -23,6 +24,13 @@ public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends Campeonato
 
 		return campeonato;
 	}
+	
+	@Override
+	protected List<RodadaEliminatoria> gerarRodadasCopaNacionalII(List<ClubeRanking> clubes,
+			CampeonatoEliminatorio campeonatoEliminatorio) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 	@Override
 	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
@@ -36,4 +44,10 @@ public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends Campeonato
 		return campeonato;
 	}
 
+	@Override
+	protected List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes,
+			CampeonatoEliminatorio campeonatoEliminatorio) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
