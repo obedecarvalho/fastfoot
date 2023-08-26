@@ -74,7 +74,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeValor> getHabilidadesValorAcaoMeioFimJogadorPosicaoAtualPosse() {
+	private List<HabilidadeValor> getHabilidadesValorAcaoMeioFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValorAcaoMeioFim();
 		} else {
@@ -83,7 +83,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoMeioFimJogadorPosicaoAtualPosse() {
+	private List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoMeioFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValorAcaoMeioFim();
 		} else {
@@ -102,7 +102,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualPosse() {
+	private List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValor();
 		} else {
@@ -111,7 +111,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualPosse() {
+	private List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValor();
 		} else {
@@ -129,7 +129,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeValor> getHabilidadesValorAcaoFimJogadorPosicaoAtualPosse() {
+	private List<HabilidadeValor> getHabilidadesValorAcaoFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValorAcaoFim();
 		} else {
@@ -138,7 +138,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoFimJogadorPosicaoAtualPosse() {
+	private List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValorAcaoFim();
 		} else {
@@ -156,7 +156,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
+	private List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
 		} else {
@@ -165,7 +165,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
+	private List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);
 		} else {
@@ -203,7 +203,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {
+	private List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
 		} else {
@@ -212,7 +212,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades) {
+	private List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades) {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);
 		} else {

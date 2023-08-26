@@ -12,35 +12,24 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.model.Liga;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.ValorTransferenciaHabilidadeGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 
 @Service
 public class CalcularValorTransferenciaJogadorPorHabilidadeGrupoService extends CalcularValorTransferenciaJogadorService {
 
-	//public static final Map<HabilidadeGrupo, ValorTransferenciaHabilidadeGrupo> VALOR_TRANSFERENCIA_HABILIDADE;
-	
 	public static final Map<HabilidadeGrupo, Double> VALOR_TRANSFERENCIA_HABILIDADE;
 	
 	static {
-		/*VALOR_TRANSFERENCIA_HABILIDADE = new HashMap<HabilidadeGrupo, ValorTransferenciaHabilidadeGrupo>();
-
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.DEFESA, ValorTransferenciaHabilidadeGrupo.DEFESA);
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CONCLUSAO, ValorTransferenciaHabilidadeGrupo.CONCLUSAO);
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CRIACAO, ValorTransferenciaHabilidadeGrupo.CRIACAO);
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.POSSE_BOLA, ValorTransferenciaHabilidadeGrupo.POSSE_BOLA);
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.QUEBRA_LINHA, ValorTransferenciaHabilidadeGrupo.QUEBRA_LINHA);
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.GOLEIRO, ValorTransferenciaHabilidadeGrupo.GOLEIRO);*/
 		
 		VALOR_TRANSFERENCIA_HABILIDADE = new HashMap<HabilidadeGrupo, Double>();
 		
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.DEFESA, ValorTransferenciaHabilidadeGrupo.DEFESA.getPeso());
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CONCLUSAO, ValorTransferenciaHabilidadeGrupo.CONCLUSAO.getPeso());
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CRIACAO, ValorTransferenciaHabilidadeGrupo.CRIACAO.getPeso());
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.POSSE_BOLA, ValorTransferenciaHabilidadeGrupo.POSSE_BOLA.getPeso());
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.QUEBRA_LINHA, ValorTransferenciaHabilidadeGrupo.QUEBRA_LINHA.getPeso());
-		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.GOLEIRO, ValorTransferenciaHabilidadeGrupo.GOLEIRO.getPeso());
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.DEFESA, 1.15);
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CONCLUSAO, 1.275);
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.CRIACAO, 1.225);
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.POSSE_BOLA, 1.075);
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.QUEBRA_LINHA, 1.20);
+		VALOR_TRANSFERENCIA_HABILIDADE.put(HabilidadeGrupo.GOLEIRO, 1.3);
 
 	}
 	
@@ -73,44 +62,5 @@ public class CalcularValorTransferenciaJogadorPorHabilidadeGrupoService extends 
 		j.setValorTransferencia(calcularValorTransferencia(j.getHabilidadesGrupoValor(), j.getIdade(),
 				j.getModoDesenvolvimentoJogador(), VALOR_TRANSFERENCIA_HABILIDADE, 300));
 	}
-
-	//@Override
-	/*public void calcularValorTransferencia(Jogador jogador) {
-		
-		Double pesoHabilidade = null;
-		
-		Map<HabilidadeGrupoValor, Double> habilidadeValorPeso = new HashMap<HabilidadeGrupoValor, Double>();
-		
-		for (HabilidadeGrupoValor habilidadeValor : jogador.getHabilidadesGrupoValor()) {
-			
-			pesoHabilidade = VALOR_TRANSFERENCIA_HABILIDADE.get(habilidadeValor.getHabilidadeGrupo()).getPeso();
-			
-			habilidadeValorPeso.put(habilidadeValor, pesoHabilidade * habilidadeValor.getPotencialDesenvolvimento());
-		}
-
-		Double valor = 0d;
-
-		Double habilidadeComPeso = null;
-
-		for (int i = jogador.getIdade(); i < JogadorFactory.IDADE_MAX; i++) {
-
-			double ajuste = jogador.getModoDesenvolvimentoJogador().getValorAjuste()[i - JogadorFactory.IDADE_MIN];
-
-			for (HabilidadeGrupoValor habilidadeValor : jogador.getHabilidadesGrupoValor()) {
-
-				habilidadeComPeso = habilidadeValorPeso.get(habilidadeValor);
-				
-				double valorAj = Math.pow((ajuste * habilidadeComPeso), FORCA_N_POWER)
-						/ TAXA_DESCONTO_TEMPO[i - jogador.getIdade()];
-
-				valor += valorAj;
-			}
-
-		}
-
-		//Aproveitando para arredondar também
-		jogador.setValorTransferencia(Math.round(valor * 300) / 100d);
-
-	}*/
 
 }
