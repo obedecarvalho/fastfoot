@@ -2,14 +2,11 @@ package com.fastfoot.scheduler.service.util;
 
 import java.util.Set;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Constantes;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
-import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 
-public class PromotorContinentalImplDoisPorGrupo implements PromotorContinental {
+public class PromotorContinentalImplDoisPorGrupo extends PromotorContinental {
 	
-	@Override
+	/*@Override
 	public void promover(CampeonatoMisto campeonato) {
 
 		Clube primeiroColocado, segundoColocado; 
@@ -24,7 +21,7 @@ public class PromotorContinentalImplDoisPorGrupo implements PromotorContinental 
 			campeonato.getPrimeiraRodadaEliminatoria().getPartidas().get(i).setClubeMandante(primeiroColocado);
 			campeonato.getPrimeiraRodadaEliminatoria().getPartidas().get(j).setClubeVisitante(segundoColocado);
 		}
-	}
+	}*/
 
 	@Override
 	public void promover(Set<CampeonatoMisto> campeonatos) {

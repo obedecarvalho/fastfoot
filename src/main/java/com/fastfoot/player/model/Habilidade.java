@@ -49,6 +49,7 @@ public enum Habilidade implements HabilidadeJogavel {
 
 	REFLEXO("Reflexo", TipoHabilidadeAcao.REACAO_GOLEIRO),//14
 	JOGO_AEREO("Jogo Aereo", TipoHabilidadeAcao.REACAO_GOLEIRO),//15
+	//DEFESA_PENALTY("Defesa Penalty", TipoHabilidadeAcao.REACAO_GOLEIRO),
 	
 	ERRO("ERRO", null),
 	FORA("FORA", null);

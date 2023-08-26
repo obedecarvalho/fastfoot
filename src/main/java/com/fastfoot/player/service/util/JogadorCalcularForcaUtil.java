@@ -6,7 +6,7 @@ import com.fastfoot.player.model.factory.JogadorFactory;
 public class JogadorCalcularForcaUtil {
 
 	public static void calcularForcaGeral(Jogador jogador) {
-		jogador.setForcaGeral((new Double(jogador.getHabilidades().stream().filter(h -> h.isHabilidadeEspecifica())
+		jogador.setForcaGeral((new Double(jogador.getHabilidadesValor().stream().filter(h -> h.isHabilidadeEspecifica())
 				.mapToInt(h -> h.getValor()).average().getAsDouble())).intValue());//TODO: usar valorTotal
 	}
 

@@ -135,7 +135,7 @@ public class AposentarJogadorService {
 		
 		jogadorRepository.saveAll(novosJogadores);
 		contratoRepository.saveAll(novosJogadores.stream().map(j -> j.getContratoAtual()).collect(Collectors.toList()));
-		List<HabilidadeValor> jogHab = novosJogadores.stream().flatMap(j -> j.getHabilidades().stream())
+		List<HabilidadeValor> jogHab = novosJogadores.stream().flatMap(j -> j.getHabilidadesValor().stream())
 				.collect(Collectors.toList());
 		habilidadeValorRepository.saveAll(jogHab);
 		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);

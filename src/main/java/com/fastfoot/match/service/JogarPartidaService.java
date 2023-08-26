@@ -30,6 +30,7 @@ import com.fastfoot.service.util.RandomUtil;
 import com.fastfoot.service.util.RoletaUtil;
 
 public abstract class JogarPartidaService {
+	//@see CalcularPartidaProbabilidadeResultadoSimularPartidaAbstractService, SimularConfrontoJogadorService
 	
 	protected static final Integer MINUTOS = 90;
 	
@@ -151,7 +152,7 @@ public abstract class JogarPartidaService {
 		return pl;
 	}
 	
-	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
+	protected void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
 			EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,

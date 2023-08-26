@@ -18,6 +18,8 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 	//public List<HabilidadeValorEstatistica> findByHabilidadeValor(HabilidadeValor habilidadeValor);
 
 	public List<HabilidadeValorEstatisticaGrupo> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
+	
+	//###	SELECT ESPECIFICOS	###
 
 	@Query(nativeQuery = true, value = " SELECT "
 			+ " 	percentile_disc(0.25) within group (order by quantidade_uso) as qu_q3, "
@@ -34,6 +36,10 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			+ " 	AND amistoso = ?2 "
 	)
 	public List<Map<String, Object>> findPercentilByTemporada(Long idTemporada, Boolean amistoso);
+	
+	//###	/SELECT ESPECIFICOS	###
+	
+	//###	INSERT, UPDATE E DELETE	###
 	
 	@Transactional
 	@Modifying
@@ -63,4 +69,6 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 			" GROUP BY s.id_temporada, id_habilidade_valor, amistoso;"
 	)
 	public void agruparHabilidadeValorEstatisticas();
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

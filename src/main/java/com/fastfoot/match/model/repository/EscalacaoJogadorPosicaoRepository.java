@@ -20,8 +20,10 @@ public interface EscalacaoJogadorPosicaoRepository extends JpaRepository<Escalac
 	
 	public List<EscalacaoJogadorPosicao> findByJogadorAndAtivo(Jogador jogador, Boolean ativo);
 	
-	@Query(" SELECT DISTINCT e FROM EscalacaoJogadorPosicao e INNER JOIN FETCH e.jogador j INNER JOIN FETCH j.habilidades h WHERE e.clube = :clube AND e.ativo = :ativo")
+	@Query(" SELECT DISTINCT e FROM EscalacaoJogadorPosicao e INNER JOIN FETCH e.jogador j INNER JOIN FETCH j.habilidadesValor h WHERE e.clube = :clube AND e.ativo = :ativo")
 	public List<EscalacaoJogadorPosicao> findByClubeAndAtivoFetchJogadorHabilidades(@Param("clube") Clube clube, @Param("ativo") Boolean ativo);
+	
+	//###	INSERT, UPDATE E DELETE	###
 	
 	@Transactional
 	@Modifying
@@ -30,5 +32,7 @@ public interface EscalacaoJogadorPosicaoRepository extends JpaRepository<Escalac
 			" SET ativo = false "
 	)
 	public void desativarTodas();
+	
+	//###	/INSERT, UPDATE E DELETE	###
 
 }

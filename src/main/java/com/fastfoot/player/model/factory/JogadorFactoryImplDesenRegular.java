@@ -96,7 +96,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 				j.getIdade() + 1);
 		Double passoProx = null;
 		
-		for (HabilidadeValor hv : j.getHabilidades()) {
+		for (HabilidadeValor hv : j.getHabilidadesValor()) {
 			passoProx = ((hv.getPotencialDesenvolvimento() * ajusteForcaProx) - hv.getValorTotal())
 					/ JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 			hv.setPassoDesenvolvimento(passoProx);
@@ -116,7 +116,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 		Double variacao = null;
 		List<Double> valorHabilidadesEspecificasPotEfetiva = new ArrayList<Double>();
 		
-		for (HabilidadeValor hv : j.getHabilidades()) {
+		for (HabilidadeValor hv : j.getHabilidadesValor()) {
 			passoProx = ((hv.getPotencialDesenvolvimento() * ajusteForcaProx) - hv.getValorTotal())
 					/ JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR;
 

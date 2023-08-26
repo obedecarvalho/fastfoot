@@ -255,7 +255,7 @@ public class JogadorDTO {
 		dto.setIdade(jogador.getIdade());
 		dto.setForcaGeral(jogador.getForcaGeral());
 		
-		Map<Habilidade, HabilidadeValor> habs = jogador.getHabilidades().stream()
+		Map<Habilidade, HabilidadeValor> habs = jogador.getHabilidadesValor().stream()
 				.collect(Collectors.toMap(HabilidadeValor::getHabilidade, Function.identity()));
 
 		dto.setValorPasse(habs.get(Habilidade.PASSE).getValor());

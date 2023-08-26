@@ -27,6 +27,7 @@ import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeAcaoJogavel;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.HabilidadeGrupoAcao;
+import com.fastfoot.player.model.HabilidadeJogavel;
 import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.Posicao;
@@ -65,11 +66,11 @@ public class Jogador {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
-	private List<HabilidadeValor> habilidades;
+	private List<HabilidadeValor> habilidadesValor;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "jogador", fetch = FetchType.LAZY)
-	private List<HabilidadeGrupoValor> habilidadesGrupo;
+	private List<HabilidadeGrupoValor> habilidadesGrupoValor;
 	
 	private ModoDesenvolvimentoJogador modoDesenvolvimentoJogador;
 	
@@ -88,19 +89,19 @@ public class Jogador {
 
 	@JsonIgnore
 	@Transient
-	private List<HabilidadeValor> habilidadesAcaoFim;
+	private List<HabilidadeValor> habilidadesValorAcaoFim;
 
 	@JsonIgnore
 	@Transient
-	private List<HabilidadeGrupoValor> habilidadesGrupoAcaoFim;
+	private List<HabilidadeGrupoValor> habilidadesGrupoValorAcaoFim;
 
 	@JsonIgnore
 	@Transient
-	private List<HabilidadeValor> habilidadesAcaoMeioFim;
+	private List<HabilidadeValor> habilidadesValorAcaoMeioFim;
 
 	@JsonIgnore
 	@Transient
-	private List<HabilidadeGrupoValor> habilidadesGrupoAcaoMeioFim;
+	private List<HabilidadeGrupoValor> habilidadesGrupoValorAcaoMeioFim;
 
 	@Transient
 	private JogadorEstatisticasSemana jogadorEstatisticasSemana;
@@ -164,12 +165,12 @@ public class Jogador {
 		this.idade = idade;
 	}
 
-	public List<HabilidadeValor> getHabilidades() {
-		return habilidades;
+	public List<HabilidadeValor> getHabilidadesValor() {
+		return habilidadesValor;
 	}
 
-	public void setHabilidades(List<HabilidadeValor> habilidadeValor) {
-		this.habilidades = habilidadeValor;
+	public void setHabilidadesValor(List<HabilidadeValor> habilidadeValor) {
+		this.habilidadesValor = habilidadeValor;
 	}
 
 	public Integer getForcaGeral() {
@@ -226,12 +227,12 @@ public class Jogador {
 		this.jogadorEstatisticasSemana = jogadorEstatisticasSemana;
 	}
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupo() {
-		return habilidadesGrupo;
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValor() {
+		return habilidadesGrupoValor;
 	}
 
-	public void setHabilidadesGrupo(List<HabilidadeGrupoValor> habilidadesGrupo) {
-		this.habilidadesGrupo = habilidadesGrupo;
+	public void setHabilidadesGrupoValor(List<HabilidadeGrupoValor> habilidadesGrupo) {
+		this.habilidadesGrupoValor = habilidadesGrupo;
 	}
 
 	public Contrato getContratoAtual() {
@@ -297,29 +298,29 @@ public class Jogador {
 	//###	METODOS AUXILIARES	###
 
 	@JsonIgnore
-	public void addHabilidade(HabilidadeValor habilidadeValor) {
-		if (getHabilidades() == null) {
-			setHabilidades(new ArrayList<HabilidadeValor>());
+	public void addHabilidadeValor(HabilidadeValor habilidadeValor) {
+		if (getHabilidadesValor() == null) {
+			setHabilidadesValor(new ArrayList<HabilidadeValor>());
 		}
-		getHabilidades().add(habilidadeValor);
+		getHabilidadesValor().add(habilidadeValor);
 	}
 
 	@JsonIgnore
-	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
-		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
+	public List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {
+		return getHabilidadesValor().stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcao())).collect(Collectors.toList());
 	}
 
 	@JsonIgnore
-	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades) {
-		return getHabilidadesGrupo().stream().filter(hv -> habilidades.contains(hv.getHabilidadeGrupoAcao())).collect(Collectors.toList());
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades) {
+		return getHabilidadesGrupoValor().stream().filter(hv -> habilidades.contains(hv.getHabilidadeGrupoAcao())).collect(Collectors.toList());
 	}
 	
 	@JsonIgnore
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado){
 		if (agrupado) {
-			return getHabilidadesGrupo();
+			return getHabilidadesGrupoValor();
 		} else {
-			return getHabilidades();
+			return getHabilidadesValor();
 		}
 	}
 	
@@ -327,62 +328,67 @@ public class Jogador {
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado,
 			List<? extends HabilidadeAcaoJogavel> habilidades) {
 		/*if (agrupado) {
-			return getHabilidadesGrupo((List<HabilidadeGrupoAcao>) habilidades);
+			return getHabilidadesGrupoValor((List<HabilidadeGrupoAcao>) habilidades);
 		} else {
-			return getHabilidades((List<HabilidadeAcao>) habilidades);
+			return getHabilidadesValor((List<HabilidadeAcao>) habilidades);
 		}*/
 		return getHabilidadesValorJogavel(agrupado).stream().filter(hv -> habilidades.contains(hv.getHabilidadeAcaoJogavel())).collect(Collectors.toList());
 	}
 	
 	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadeValorByHabilidade(List<Habilidade> habilidades) {
-		return getHabilidades().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
+		return getHabilidadesValor().stream().filter(hv -> habilidades.contains(hv.getHabilidade())).collect(Collectors.toList());
 	}
 	
 	@JsonIgnore
 	public HabilidadeValor getHabilidadeValorByHabilidade(Habilidade habilidade) {
-		return getHabilidades().stream().filter(hv -> habilidade.equals(hv.getHabilidade())).findFirst().get();
+		return getHabilidadesValor().stream().filter(hv -> habilidade.equals(hv.getHabilidade())).findFirst().get();
 	}
 	
 	@JsonIgnore
 	public HabilidadeGrupoValor getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo habilidade) {
-		return getHabilidadesGrupo().stream().filter(hv -> habilidade.equals(hv.getHabilidadeGrupo())).findFirst().get();
-	}
-
-	@JsonIgnore
-	public List<HabilidadeValor> getHabilidadesAcaoFimValor() {
-		if (habilidadesAcaoFim == null) {
-			habilidadesAcaoFim = getHabilidades(Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO,
-					HabilidadeAcao.CRUZAMENTO, HabilidadeAcao.ARMACAO));
-		}
-		return habilidadesAcaoFim; 
+		return getHabilidadesGrupoValor().stream().filter(hv -> habilidade.equals(hv.getHabilidadeGrupo())).findFirst().get();
 	}
 	
 	@JsonIgnore
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoFimValor() {
-		if (habilidadesGrupoAcaoFim == null) {
-			habilidadesGrupoAcaoFim = getHabilidadesGrupo(
-					Arrays.asList(HabilidadeGrupoAcao.CONCLUSAO, HabilidadeGrupoAcao.CRIACAO));
-		}
-		return habilidadesGrupoAcaoFim; 
+	public HabilidadeValorJogavel getHabilidadeValorJogavelByHabilidade(Boolean agrupado, HabilidadeJogavel habilidadeJogavel) {
+		return getHabilidadesValorJogavel(agrupado).stream().filter(hv -> habilidadeJogavel.equals(hv.getHabilidadeJogavel())).findFirst().get();
 	}
 
 	@JsonIgnore
-	public List<HabilidadeValor> getHabilidadesAcaoMeioFimValor() {
-		if (habilidadesAcaoMeioFim == null) {
-			habilidadesAcaoMeioFim = getHabilidades(
+	public List<HabilidadeValor> getHabilidadesValorAcaoFim() {
+		if (habilidadesValorAcaoFim == null) {
+			habilidadesValorAcaoFim = getHabilidadesValor(Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO,
+					HabilidadeAcao.CRUZAMENTO, HabilidadeAcao.ARMACAO));
+		}
+		return habilidadesValorAcaoFim; 
+	}
+	
+	@JsonIgnore
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoFim() {
+		if (habilidadesGrupoValorAcaoFim == null) {
+			habilidadesGrupoValorAcaoFim = getHabilidadesGrupoValor(
+					Arrays.asList(HabilidadeGrupoAcao.CONCLUSAO, HabilidadeGrupoAcao.CRIACAO));
+		}
+		return habilidadesGrupoValorAcaoFim; 
+	}
+
+	@JsonIgnore
+	public List<HabilidadeValor> getHabilidadesValorAcaoMeioFim() {
+		if (habilidadesValorAcaoMeioFim == null) {
+			habilidadesValorAcaoMeioFim = getHabilidadesValor(
 					Arrays.asList(HabilidadeAcao.PASSE, HabilidadeAcao.FINALIZACAO, HabilidadeAcao.CRUZAMENTO,
 							HabilidadeAcao.ARMACAO, HabilidadeAcao.VELOCIDADE, HabilidadeAcao.DRIBLE, HabilidadeAcao.FORCA));
 		}
-		return habilidadesAcaoMeioFim;
+		return habilidadesValorAcaoMeioFim;
 	}
 
 	@JsonIgnore
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoMeioFimValor() {
-		if (habilidadesGrupoAcaoMeioFim == null) {
-			habilidadesGrupoAcaoMeioFim = getHabilidadesGrupo(Arrays.asList(HabilidadeGrupoAcao.QUEBRA_LINHA,
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoMeioFim() {
+		if (habilidadesGrupoValorAcaoMeioFim == null) {
+			habilidadesGrupoValorAcaoMeioFim = getHabilidadesGrupoValor(Arrays.asList(HabilidadeGrupoAcao.QUEBRA_LINHA,
 					HabilidadeGrupoAcao.CONCLUSAO, HabilidadeGrupoAcao.CRIACAO));
 		}
-		return habilidadesGrupoAcaoMeioFim;
+		return habilidadesGrupoValorAcaoMeioFim;
 	}
 }

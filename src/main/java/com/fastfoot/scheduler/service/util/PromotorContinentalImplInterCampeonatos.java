@@ -11,9 +11,9 @@ import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 
-public class PromotorContinentalImplInterCampeonatos implements PromotorContinental {
+public class PromotorContinentalImplInterCampeonatos extends PromotorContinental {
 
-	@Override
+	/*@Override
 	public void promover(CampeonatoMisto campeonato) {
 
 		Clube primeiroColocado, segundoColocado; 
@@ -28,7 +28,7 @@ public class PromotorContinentalImplInterCampeonatos implements PromotorContinen
 			campeonato.getPrimeiraRodadaEliminatoria().getPartidas().get(i).setClubeMandante(primeiroColocado);
 			campeonato.getPrimeiraRodadaEliminatoria().getPartidas().get(j).setClubeVisitante(segundoColocado);
 		}
-	}
+	}*/
 
 	private void promover(CampeonatoMisto campeonato, CampeonatoMisto campeonatoSuperior, Integer posProxColocado) {
 

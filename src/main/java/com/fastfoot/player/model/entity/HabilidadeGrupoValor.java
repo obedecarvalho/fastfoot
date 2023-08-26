@@ -36,6 +36,8 @@ public class HabilidadeGrupoValor implements HabilidadeValorJogavel {
 	private Integer valor;
 	
 	private Double valorTotal;
+	
+	private Double potencialDesenvolvimento;
 
 	@Transient
 	private Integer valorN;
@@ -97,6 +99,15 @@ public class HabilidadeGrupoValor implements HabilidadeValorJogavel {
 
 	public void setValorTotal(Double valorTotal) {
 		this.valorTotal = valorTotal;
+	}
+
+	@Override
+	public Double getPotencialDesenvolvimento() {
+		return potencialDesenvolvimento;
+	}
+
+	public void setPotencialDesenvolvimento(Double potencialDesenvolvimento) {
+		this.potencialDesenvolvimento = potencialDesenvolvimento;
 	}
 
 	@Override

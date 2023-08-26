@@ -30,6 +30,8 @@ public interface CampeonatoRepository extends JpaRepository<Campeonato, Long>{
 	public Optional<Campeonato> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga,
 			NivelCampeonato nivelCampeonato);
 	
+	//###	INSERT, UPDATE E DELETE	###
+	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -38,4 +40,6 @@ public interface CampeonatoRepository extends JpaRepository<Campeonato, Long>{
 			" where id in (?1)"
 	)
 	public void incrementarRodadaAtual(Collection<Long> idsCampeonatos);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

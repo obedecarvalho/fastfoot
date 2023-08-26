@@ -14,4 +14,6 @@ public interface HabilidadeValorJogavel extends ElementoRoleta {
 	public void calcularValorN();
 	
 	public Jogador getJogador();
+	
+	public Double getPotencialDesenvolvimento();
 }

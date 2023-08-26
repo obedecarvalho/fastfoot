@@ -83,15 +83,15 @@ public class CriarJogadoresClubeService {
 			criarJogadoresClube(c, jogadores, s);
 		}
 		
-		calcularValorTransferencia(jogadores);
-		
 		List<HabilidadeGrupoValor> habilidadeGrupoValores = new ArrayList<HabilidadeGrupoValor>();
 		
 		for (Jogador jogador : jogadores) {
 			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
 		}
 		
-		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidades().stream())
+		calcularValorTransferencia(jogadores);
+		
+		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidadesValor().stream())
 				.collect(Collectors.toList());
 		
 		List<Contrato> contratos = jogadores.stream().map(j -> j.getContratoAtual()).collect(Collectors.toList());

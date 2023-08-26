@@ -17,6 +17,8 @@ public interface CampeonatoMistoRepository extends JpaRepository<CampeonatoMisto
 
 	public List<CampeonatoMisto> findByTemporada(Temporada temporada);
 	
+	//###	INSERT, UPDATE E DELETE	###
+	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -25,4 +27,6 @@ public interface CampeonatoMistoRepository extends JpaRepository<CampeonatoMisto
 			" where id in (?1)"
 	)
 	public void incrementarRodadaAtual(Collection<Long> idsCampeonatos);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

@@ -3,35 +3,33 @@ package com.fastfoot.match.model;
 import java.util.List;
 
 import com.fastfoot.match.model.entity.EscalacaoClube;
-import com.fastfoot.player.model.HabilidadeAcao;
 import com.fastfoot.player.model.HabilidadeAcaoJogavel;
-import com.fastfoot.player.model.HabilidadeGrupoAcao;
 import com.fastfoot.player.model.HabilidadeValorJogavel;
-import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
-import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 
 public interface Esquema {
 
-	public List<HabilidadeValor> getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse();
+	/*public List<HabilidadeValor> getHabilidadesValorAcaoMeioFimJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoMeioFimJogadorPosicaoAtualPosse();
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoMeioFimJogadorPosicaoAtualPosse();*/
 
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoMeioFimJogadorPosicaoAtualPosse(Boolean agrupado);
 
-	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse();
+	/*public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualPosse();
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualPosse();
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualPosse();*/
 
-	public List<HabilidadeValor> getHabilidadesAcaoFimJogadorPosicaoAtualPosse();
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelJogadorPosicaoAtualPosse(Boolean agrupado);
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoFimJogadorPosicaoAtualPosse();
+	/*public List<HabilidadeValor> getHabilidadesValorAcaoFimJogadorPosicaoAtualPosse();
+
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoFimJogadorPosicaoAtualPosse();*/
 	
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoFimJogadorPosicaoAtualPosse(Boolean agrupado);
 
-	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades);
+	/*public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades);
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades);
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades);*/
 	
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelJogadorPosicaoAtualSemPosse(Boolean agrupado, List<? extends HabilidadeAcaoJogavel> habilidades);
 
@@ -39,9 +37,9 @@ public interface Esquema {
 
 	public List<EsquemaTransicao> getTransicoesPosse();
 	
-	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades);
+	/*public List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades);
 
-	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades);
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades);*/
 	
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado, List<? extends HabilidadeAcaoJogavel> habilidades);
 

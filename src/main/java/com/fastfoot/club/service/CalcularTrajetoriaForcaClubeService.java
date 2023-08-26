@@ -1,7 +1,6 @@
 package com.fastfoot.club.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.CompletableFuture;
@@ -23,13 +22,13 @@ import com.fastfoot.scheduler.model.entity.Semana;
 @Service
 public class CalcularTrajetoriaForcaClubeService {
 	
-	private static final Comparator<Jogador> COMPARATOR = new Comparator<Jogador>() {
+	/*private static final Comparator<Jogador> COMPARATOR = new Comparator<Jogador>() {
 		
 		@Override
 		public int compare(Jogador o1, Jogador o2) {
 			return o1.getForcaGeralPotencial().compareTo(o2.getForcaGeralPotencial());
 		}
-	};
+	};*/
 	
 	//###	REPOSITORY	###
 	
@@ -94,42 +93,42 @@ public class CalcularTrajetoriaForcaClubeService {
 			//TODO: verificar se há jogadores para serem escalados como titular (jogador da posicao faltante)
 
 			//G
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isGoleiro()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isGoleiro()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeGol - 1));
 			
 			//Z
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isZagueiro()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isZagueiro()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeZag - 1));
 			
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isZagueiro()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isZagueiro()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeZag - 2));
 			
 			//L
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isLateral()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isLateral()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeLat - 1));
 			
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isLateral()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isLateral()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeLat - 2));
 			
 			//V
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isVolante()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isVolante()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeVol - 1));
 			
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isVolante()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isVolante()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeVol - 2));
 			
 			//M
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isMeia()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isMeia()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeMei - 1));
 			
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isMeia()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isMeia()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeMei - 2));
 			
 			//A
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isAtacante()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isAtacante()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeAta - 1));
 			
-			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isAtacante()).sorted(COMPARATOR)
+			jogadorTitularTemporada.add(jogadores.stream().filter(j -> j.getPosicao().isAtacante()).sorted(JogadorFactory.getComparatorForcaGeralPotencial())
 					.collect(Collectors.toList()).get(qtdeAta - 2));
 			
 			idadeMediaTitulares.add(String.format(Locale.US, "%.2f",

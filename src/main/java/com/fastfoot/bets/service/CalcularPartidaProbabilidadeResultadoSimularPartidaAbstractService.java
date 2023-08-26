@@ -18,6 +18,7 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstractService implements CalcularPartidaProbabilidadeResultadoService {
+	//@see JogarPartidaService, SimularConfrontoJogadorService
 	
 	private static final Integer NUM_SIMULACOES = 100;
 	
@@ -31,7 +32,7 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 	
 	public abstract PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante);
 	
-	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante,
+	protected PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante,
 			TipoProbabilidadeResultadoPartida tipoProbabilidadeResultadoPartida, Boolean agrupado) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(
@@ -93,7 +94,9 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 		
 		Boolean jogadorAcaoVenceu = null, goleiroVenceu = null;
 		
-		for (int i = 0; i < (NUM_LANCES_POR_MINUTO * MINUTOS); i++) {
+		for (int minuto = 1; minuto <= MINUTOS; minuto++) {
+
+			for (int j = 0; j < NUM_LANCES_POR_MINUTO; j++) {
 			
 			do {
 			
@@ -235,6 +238,8 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 				//habilidadeVencedorAnterior = habilidadeValorReacao;
 				habilidadeVencedorAnterior = null;
 				//jogadorAssistencia = null;
+			}
+			
 			}
 		}
 

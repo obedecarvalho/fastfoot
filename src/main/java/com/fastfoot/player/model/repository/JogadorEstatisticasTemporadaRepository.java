@@ -33,6 +33,8 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 	public List<JogadorEstatisticasTemporada> findByLigaClubeAndStatusJogadorAndIdadeBetween(@Param("liga") Liga liga,
 			@Param("idClubeMin") Integer idClubeMin, @Param("idClubeMax") Integer idClubeMax,
 			@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
+	
+	//###	INSERT, UPDATE E DELETE	###
 
 	@Transactional
 	@Modifying
@@ -65,5 +67,7 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" GROUP BY id_jogador, id_clube, s.id_temporada, amistoso"
 	)
 	public void agruparJogadorEstatisticasTemporada();
+	
+	//###	/INSERT, UPDATE E DELETE	###
 
 }

@@ -32,6 +32,8 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 
 	public List<CampeonatoEliminatorio> findByTemporadaAndLiga(Temporada temporada, Liga liga);
 	
+	//###	INSERT, UPDATE E DELETE	###
+	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -40,4 +42,6 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 			" where id in (?1)"
 	)
 	public void incrementarRodadaAtual(Collection<Long> idsCampeonatos);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

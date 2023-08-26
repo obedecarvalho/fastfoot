@@ -35,7 +35,7 @@ public class DesenvolverJogadorService {
 		
 		calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogadores);
 		
-		habilidadeValorRepository.saveAll(jogadores.stream().flatMap(j -> j.getHabilidades().stream()).collect(Collectors.toList()));
+		habilidadeValorRepository.saveAll(jogadores.stream().flatMap(j -> j.getHabilidadesValor().stream()).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
@@ -44,7 +44,7 @@ public class DesenvolverJogadorService {
 	private void desenvolverJogador(Jogador jogador) {
 
 		Double newValorTotal = null;
-		for (HabilidadeValor hv : jogador.getHabilidades()) {
+		for (HabilidadeValor hv : jogador.getHabilidadesValor()) {
 			newValorTotal = hv.getValorTotal() + hv.getPassoDesenvolvimento();
 	
 			hv.setValor(newValorTotal.intValue());

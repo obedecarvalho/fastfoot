@@ -15,6 +15,8 @@ import com.fastfoot.player.model.entity.Jogador;
 public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor, Long> {
 
 	public List<HabilidadeValor> findByJogador(Jogador jogador);
+	
+	//###	INSERT, UPDATE E DELETE	###
 
 	@Transactional
 	@Modifying
@@ -80,4 +82,6 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" ) "
 	)
 	public void atualizarPassoDesenvolvimento2(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

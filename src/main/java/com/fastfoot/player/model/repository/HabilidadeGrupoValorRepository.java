@@ -19,6 +19,8 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 
 	public List<HabilidadeGrupoValor> findByHabilidadeGrupo(HabilidadeGrupo habilidadeGrupo);
 	
+	//###	INSERT, UPDATE E DELETE	###
+	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -54,5 +56,7 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 			" where habilidade_grupo = ?1 "
 	)
 	public void calcular2(int habilidadeGrupoOrdinal, int[] habilidadeOrdinal);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 
 }

@@ -60,7 +60,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		
 		List<HabilidadeValor> habilidadeValores = new ArrayList<HabilidadeValor>();
 		for (Jogador jog : jogadores) {
-			habilidadeValores.addAll(jog.getHabilidades());
+			habilidadeValores.addAll(jog.getHabilidadesValor());
 		}
 		
 		jogadorRepository.saveAll(jogadores);
@@ -83,7 +83,7 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 		
 		List<HabilidadeValor> habilidadeValores = new ArrayList<HabilidadeValor>();
 		for (Jogador jog : jogadores) {
-			habilidadeValores.addAll(jog.getHabilidades());
+			habilidadeValores.addAll(jog.getHabilidadesValor());
 		}
 		
 		jogadorRepository.saveAll(jogadores);

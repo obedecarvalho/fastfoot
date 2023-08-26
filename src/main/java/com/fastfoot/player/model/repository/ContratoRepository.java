@@ -44,6 +44,11 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 			@Param("idClubeMin") Integer idClubeMin, @Param("idClubeMax") Integer idClubeMax,
 			@Param("anoAtual") Integer anoAtual/*, @Param("status") StatusJogador status*/);
 	
+	@Query("SELECT c FROM Contrato c WHERE c.jogador IN :jogadores AND c.ativo = :ativo")
+	public List<Contrato> findByJogadoresAndAtivo(@Param("jogadores") Collection<Jogador> jogadores, @Param("ativo") Boolean ativo);
+	
+	//###	SELECT ESPECIFICOS	###
+	
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(salario) as total_salarios" +
 			" from contrato c" +
@@ -51,12 +56,15 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findValorTotalSalariosPorClube();
-
-	@Query("SELECT c FROM Contrato c WHERE c.jogador IN :jogadores AND c.ativo = :ativo")
-	public List<Contrato> findByJogadoresAndAtivo(@Param("jogadores") Collection<Jogador> jogadores, @Param("ativo") Boolean ativo);
+	
+	//###	/SELECT ESPECIFICOS	###
+	
+	//###	INSERT, UPDATE E DELETE	###
 
 	@Transactional
 	@Modifying
 	@Query("UPDATE Contrato c SET c.ativo = false WHERE c IN :contratos")
 	public void desativar(@Param("contratos") Collection<Contrato> contratos);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

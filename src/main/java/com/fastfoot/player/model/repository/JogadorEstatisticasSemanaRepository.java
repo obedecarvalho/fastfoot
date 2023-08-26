@@ -22,14 +22,8 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 	public List<JogadorEstatisticasSemana> findByJogador(Jogador jogador);
 	
 	public List<JogadorEstatisticasSemana> findBySemana(Semana semana);
-	
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" delete from jogador_estatisticas_semana" +
-			" where id_semana in (select id from semana s where s.id_temporada = ?1)"
-	)
-	public void deleteByIdTemporada(Long idTemporada);
+		
+	//###	SELECT ESPECIFICOS	###
 
 	@Query(nativeQuery = true, value = 
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +
@@ -135,4 +129,18 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao, c.logo"
 	)
 	public List<Map<String, Object>> findAgrupadoByIdCampeonato(Long idCampeonato);
+	
+	//###	/SELECT ESPECIFICOS	###
+	
+	//###	INSERT, UPDATE E DELETE	###
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" delete from jogador_estatisticas_semana" +
+			" where id_semana in (select id from semana s where s.id_temporada = ?1)"
+	)
+	public void deleteByIdTemporada(Long idTemporada);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

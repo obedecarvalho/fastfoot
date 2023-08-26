@@ -12,6 +12,8 @@ import com.fastfoot.match.model.entity.PartidaEstatisticas;
 @Repository
 public interface PartidaEstatisticasRepository extends JpaRepository<PartidaEstatisticas, Long> {
 
+	//###	SELECT ESPECIFICOS	###
+	
 	@Query(nativeQuery = true, value =
 			" select id_clube, " +
 			" 	sum(gols)/sum(num_jogos) as gols_partida, " +
@@ -124,4 +126,6 @@ public interface PartidaEstatisticasRepository extends JpaRepository<PartidaEsta
 			" group by id_clube "
 	)
 	public List<Map<String, Object>> findEstatisticasDefesaClubePorTemporada(Long idTemporada);
+	
+	//###	/SELECT ESPECIFICOS	###
 }

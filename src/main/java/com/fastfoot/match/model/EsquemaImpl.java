@@ -73,21 +73,21 @@ public class EsquemaImpl implements Esquema {
 		this.goleiroVisitante = goleiroVisitante;
 	}
 
-	@Override
-	public List<HabilidadeValor> getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse() {
+	//@Override
+	public List<HabilidadeValor> getHabilidadesValorAcaoMeioFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesAcaoMeioFimValor();
+			return posicaoAtual.getMandante().getHabilidadesValorAcaoMeioFim();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesAcaoMeioFimValor();
+			return posicaoAtual.getVisitante().getHabilidadesValorAcaoMeioFim();
 		}
 	}
 
-	@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoMeioFimJogadorPosicaoAtualPosse() {
+	//@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoMeioFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesGrupoAcaoMeioFimValor();
+			return posicaoAtual.getMandante().getHabilidadesGrupoValorAcaoMeioFim();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoMeioFimValor();
+			return posicaoAtual.getVisitante().getHabilidadesGrupoValorAcaoMeioFim();
 		}
 	}
 	
@@ -95,72 +95,81 @@ public class EsquemaImpl implements Esquema {
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoMeioFimJogadorPosicaoAtualPosse(
 			Boolean agrupado) {
 		if (agrupado) {
-			return getHabilidadesGrupoAcaoMeioFimJogadorPosicaoAtualPosse();
+			return getHabilidadesGrupoValorAcaoMeioFimJogadorPosicaoAtualPosse();
 		} else {
-			return getHabilidadesAcaoMeioFimJogadorPosicaoAtualPosse();
+			return getHabilidadesValorAcaoMeioFimJogadorPosicaoAtualPosse();
+		}
+	}
+
+	//@Override
+	public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesValor();
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesValor();
+		}
+	}
+
+	//@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualPosse() {
+		if (posseBolaMandante) {
+			return posicaoAtual.getMandante().getHabilidadesGrupoValor();
+		} else {
+			return posicaoAtual.getVisitante().getHabilidadesGrupoValor();
 		}
 	}
 
 	@Override
-	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualPosse() {
-		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidades();
+	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelJogadorPosicaoAtualPosse(Boolean agrupado) {
+		if (agrupado) {
+			return getHabilidadesGrupoValorJogadorPosicaoAtualPosse();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidades();
+			return getHabilidadesValorJogadorPosicaoAtualPosse();
 		}
 	}
 
-	@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualPosse() {
+	//@Override
+	public List<HabilidadeValor> getHabilidadesValorAcaoFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesGrupo();
+			return posicaoAtual.getMandante().getHabilidadesValorAcaoFim();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesGrupo();
+			return posicaoAtual.getVisitante().getHabilidadesValorAcaoFim();
 		}
 	}
 
-	@Override
-	public List<HabilidadeValor> getHabilidadesAcaoFimJogadorPosicaoAtualPosse() {
+	//@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorAcaoFimJogadorPosicaoAtualPosse() {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesAcaoFimValor();
+			return posicaoAtual.getMandante().getHabilidadesGrupoValorAcaoFim();
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesAcaoFimValor();
-		}
-	}
-
-	@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoAcaoFimJogadorPosicaoAtualPosse() {
-		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesGrupoAcaoFimValor();
-		} else {
-			return posicaoAtual.getVisitante().getHabilidadesGrupoAcaoFimValor();
+			return posicaoAtual.getVisitante().getHabilidadesGrupoValorAcaoFim();
 		}
 	}
 	
 	@Override
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelAcaoFimJogadorPosicaoAtualPosse(Boolean agrupado) {
 		if (agrupado) {
-			return getHabilidadesGrupoAcaoFimJogadorPosicaoAtualPosse();
+			return getHabilidadesGrupoValorAcaoFimJogadorPosicaoAtualPosse();
 		} else {
-			return getHabilidadesAcaoFimJogadorPosicaoAtualPosse();
+			return getHabilidadesValorAcaoFimJogadorPosicaoAtualPosse();
 		}
 	}
 
-	@Override
-	public List<HabilidadeValor> getHabilidadesJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
+	//@Override
+	public List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidades(habilidades);
+			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidades(habilidades);
+			return posicaoAtual.getVisitante().getHabilidadesValor(habilidades);
 		}
 	}
 
-	@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupoJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
+	//@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
 		if (!posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
+			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
+			return posicaoAtual.getVisitante().getHabilidadesGrupoValor(habilidades);
 		}
 	}
 	
@@ -168,9 +177,9 @@ public class EsquemaImpl implements Esquema {
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavelJogadorPosicaoAtualSemPosse(Boolean agrupado,
 			List<? extends HabilidadeAcaoJogavel> habilidades) {
 		/*if (agrupado) {
-			return getHabilidadesGrupoJogadorPosicaoAtualSemPosse((List<HabilidadeGrupoAcao>) habilidades);
+			return getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse((List<HabilidadeGrupoAcao>) habilidades);
 		} else {
-			return getHabilidadesJogadorPosicaoAtualSemPosse((List<HabilidadeAcao>) habilidades);
+			return getHabilidadesValorJogadorPosicaoAtualSemPosse((List<HabilidadeAcao>) habilidades);
 		}*/
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValorJogavel(agrupado, habilidades);
@@ -193,21 +202,21 @@ public class EsquemaImpl implements Esquema {
 		}
 	}
 
-	@Override
-	public List<HabilidadeValor> getHabilidades(List<HabilidadeAcao> habilidades) {
+	//@Override
+	public List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidades(habilidades);
+			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidades(habilidades);
+			return posicaoAtual.getVisitante().getHabilidadesValor(habilidades);
 		}
 	}
 
-	@Override
-	public List<HabilidadeGrupoValor> getHabilidadesGrupo(List<HabilidadeGrupoAcao> habilidades) {
+	//@Override
+	public List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades) {
 		if (posseBolaMandante) {
-			return posicaoAtual.getMandante().getHabilidadesGrupo(habilidades);
+			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);
 		} else {
-			return posicaoAtual.getVisitante().getHabilidadesGrupo(habilidades);
+			return posicaoAtual.getVisitante().getHabilidadesGrupoValor(habilidades);
 		}
 	}
 	
@@ -215,9 +224,9 @@ public class EsquemaImpl implements Esquema {
 	public List<? extends HabilidadeValorJogavel> getHabilidadesValorJogavel(Boolean agrupado,
 			List<? extends HabilidadeAcaoJogavel> habilidades) {
 		/*if (agrupado) {
-			return getHabilidadesGrupo((List<HabilidadeGrupoAcao>) habilidades);
+			return getHabilidadesGrupoValor((List<HabilidadeGrupoAcao>) habilidades);
 		} else {
-			return getHabilidades((List<HabilidadeAcao>) habilidades);
+			return getHabilidadesValor((List<HabilidadeAcao>) habilidades);
 		}*/
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValorJogavel(agrupado, habilidades);

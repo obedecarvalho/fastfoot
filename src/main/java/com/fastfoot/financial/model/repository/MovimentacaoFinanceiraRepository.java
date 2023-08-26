@@ -32,6 +32,8 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	public List<MovimentacaoFinanceira> findByTemporadaAndClube(@Param("temporada") Temporada temporada,
 			@Param("clube") Clube clube);
 	
+	//###	SELECT ESPECIFICOS	###
+	
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_movimentacao) as saldo" +
 			" from movimentacao_financeira mf" +
@@ -73,5 +75,7 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 			" ) as sal on sal.id_clube = c.id"
 	)
 	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual);//TODO: usar salario contrato
+	
+	//###	/SELECT ESPECIFICOS	###
 
 }

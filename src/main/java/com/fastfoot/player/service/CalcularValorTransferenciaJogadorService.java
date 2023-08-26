@@ -1,6 +1,16 @@
 package com.fastfoot.player.service;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fastfoot.player.model.HabilidadeJogavel;
+import com.fastfoot.player.model.HabilidadeValorJogavel;
+import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
+import com.fastfoot.player.model.factory.JogadorFactory;
+
 public abstract class CalcularValorTransferenciaJogadorService {
+	//@see CalcularSalarioContratoService
 
 	public static final Integer FORCA_N_POWER = 3;
 
@@ -16,4 +26,44 @@ public abstract class CalcularValorTransferenciaJogadorService {
 			8.599359298, 10.14724397, 11.97374789, 14.12902251, 16.67224656, 19.67325094, 23.21443611, 27.3930346,
 			32.32378083 };//0.18
 
+	protected Double calcularValorTransferencia(
+			List<? extends HabilidadeValorJogavel> habilidadesValorJogavel,
+			Integer idade, ModoDesenvolvimentoJogador modoDesenvolvimentoJogador,
+			Map<? extends HabilidadeJogavel, Double> pesoHabilidadeJogavel, Integer peso) {
+		
+		Double pesoHabilidade = null;
+		
+		Map<HabilidadeValorJogavel, Double> habilidadeValorPeso = new HashMap<HabilidadeValorJogavel, Double>();
+		
+		for (HabilidadeValorJogavel habilidadeValor : habilidadesValorJogavel) {
+			
+			pesoHabilidade = pesoHabilidadeJogavel.get(habilidadeValor.getHabilidadeJogavel());
+			
+			habilidadeValorPeso.put(habilidadeValor, pesoHabilidade * habilidadeValor.getPotencialDesenvolvimento());
+		}
+
+		Double valor = 0d;
+
+		Double habilidadeComPeso = null;
+
+		for (int i = idade; i < JogadorFactory.IDADE_MAX; i++) {
+
+			double ajuste = modoDesenvolvimentoJogador.getValorAjuste()[i - JogadorFactory.IDADE_MIN];
+
+			for (HabilidadeValorJogavel habilidadeValor : habilidadesValorJogavel) {
+
+				habilidadeComPeso = habilidadeValorPeso.get(habilidadeValor);
+				
+				double valorAj = Math.pow((ajuste * habilidadeComPeso), FORCA_N_POWER)
+						/ TAXA_DESCONTO_TEMPO[i - idade];
+
+				valor += valorAj;
+			}
+
+		}
+
+		//Aproveitando para arredondar também
+		return Math.round(valor * peso) / 100d;
+
+	}
 }

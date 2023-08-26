@@ -165,6 +165,7 @@ public class HabilidadeValor implements HabilidadeValorJogavel {//TODO: renomear
 		this.habilidade = habilidade;
 	}
 
+	@Override
 	public Double getPotencialDesenvolvimento() {
 		return potencialDesenvolvimento;
 	}

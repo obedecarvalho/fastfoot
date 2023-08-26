@@ -86,7 +86,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 	private void inicializarEstatisticas(List<Jogador> jogadores, Semana semana,
 			PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
-			for (HabilidadeValor hv : j.getHabilidades()) {
+			for (HabilidadeValor hv : j.getHabilidadesValor()) {
 				hv.setHabilidadeValorEstatistica(
 						new HabilidadeValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
 			}
@@ -146,7 +146,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 	private void inicializarEstatisticasHabilidadeGrupo(List<Jogador> jogadores, Semana semana,
 			PartidaResultadoJogavel partidaResultado) {
 		for (Jogador j : jogadores) {
-			for (HabilidadeGrupoValor hv : j.getHabilidadesGrupo()) {
+			for (HabilidadeGrupoValor hv : j.getHabilidadesGrupoValor()) {
 				hv.setHabilidadeGrupoValorEstatistica(
 						new HabilidadeGrupoValorEstatistica(hv, semana, partidaResultado.isAmistoso()));
 			}

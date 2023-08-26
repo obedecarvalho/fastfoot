@@ -80,6 +80,7 @@ public class CalcularHabilidadeGrupoValorService {
 			habilidadeGrupoValor.setHabilidadeGrupo(habilidadeGrupo);
 			habilidadeGrupoValor.setValorTotal(habilidadeValores.stream().mapToDouble(HabilidadeValor::getValorTotal).average().getAsDouble());
 			habilidadeGrupoValor.setValor(habilidadeGrupoValor.getValorTotal().intValue());
+			habilidadeGrupoValor.setPotencialDesenvolvimento(habilidadeValores.stream().mapToDouble(HabilidadeValor::getPotencialDesenvolvimento).average().getAsDouble());
 			
 			habilidadeGrupoValores.add(habilidadeGrupoValor);
 

@@ -14,11 +14,17 @@ import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 @Repository
 public interface HabilidadeValorEstatisticaRepository extends JpaRepository<HabilidadeValorEstatistica, Long> {
 	
+	//###	SELECT ESPECIFICOS	###
+	
 	@Query(nativeQuery = true, value = " SELECT hve.id_habilidade_valor, "
 			+ " SUM(hve.quantidade_uso) AS quantidade_uso, SUM(hve.quantidade_uso_vencedor) AS quantidade_uso_vencedor, hve.amistoso "
 			+ " FROM habilidade_valor_estatistica hve " + " INNER JOIN semana s ON hve.id_semana = s.id "
 			+ " WHERE s.id_temporada = ?1 " + " GROUP BY hve.id_habilidade_valor, hve.amistoso ")
 	public List<Map<String, Object>> findAgrupadoByTemporada(Long idTemporada);
+	
+	//###	/SELECT ESPECIFICOS	###
+	
+	//###	INSERT, UPDATE E DELETE	###
 	
 	@Transactional
 	@Modifying
@@ -27,4 +33,6 @@ public interface HabilidadeValorEstatisticaRepository extends JpaRepository<Habi
 			" where id_semana in (select id from semana s where s.id_temporada = ?1)"
 	)
 	public void deleteByIdTemporada(Long idTemporada);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

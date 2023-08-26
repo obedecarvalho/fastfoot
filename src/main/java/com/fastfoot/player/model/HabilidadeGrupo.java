@@ -7,7 +7,7 @@ public enum HabilidadeGrupo implements HabilidadeJogavel {
 
 	DEFESA(new Habilidade[] {Habilidade.MARCACAO, Habilidade.DESARME, Habilidade.INTERCEPTACAO/*, Habilidade.CABECEIO, Habilidade.FORCA*/}, TipoHabilidadeAcao.REACAO),
 
-	CONCLUSAO(new Habilidade[] {Habilidade.FINALIZACAO, Habilidade.CABECEIO}, TipoHabilidadeAcao.ACAO_FIM),
+	CONCLUSAO(new Habilidade[] {Habilidade.FINALIZACAO, Habilidade.CABECEIO}, TipoHabilidadeAcao.ACAO_FIM),//ARREMATE
 
 	CRIACAO(new Habilidade[] {Habilidade.ARMACAO, Habilidade.CRUZAMENTO, Habilidade.PASSE}, TipoHabilidadeAcao.ACAO_FIM),
 

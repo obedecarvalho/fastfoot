@@ -22,18 +22,7 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 	@Query("SELECT je FROM JogadorEnergia je WHERE je.jogador.clube = :clube ORDER BY je.id DESC ")
 	public List<JogadorEnergia> findByClube(Clube clube);
 	
-	/*@Query("SELECT je FROM JogadorEnergia je WHERE je.jogador.clube = :clube AND je.temporada = :temporada ORDER BY je.id DESC ")
-	public List<JogadorEnergia> findByClubeAndTemporada(Clube clube, Temporada temporada);*/
-	
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" insert into jogador_energia (id, energia, id_jogador)  " +
-			" select nextval('jogador_energia_seq'), ?1 as energia, id as id_jogador " +
-			" from jogador " +
-			" where status_jogador = 0 " //StatusJogador.ATIVO
-	)
-	public void inserirEnergiaTodosJogadores(Integer energia);
+	//###	SELECT ESPECIFICOS	###
 	
 	@Query(nativeQuery = true, value =
 			" select id_jogador, sum(energia) as energia " +
@@ -52,6 +41,10 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 			" group by id_jogador "
 	)
 	public List<Map<String, Object>> findEnergiaJogador();
+	
+	//###	/SELECT ESPECIFICOS	###
+	
+	//###	INSERT, UPDATE E DELETE	###
 	
 	@Transactional
 	@Modifying
@@ -97,4 +90,16 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 			" where tmp.energia < ?1 "
 	)
 	public void inserirRecuperacaoEnergiaJogadores(Integer energiaMax, Integer energiaRecuperar, Integer idadeMin, Integer idadeMax);
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" insert into jogador_energia (id, energia, id_jogador)  " +
+			" select nextval('jogador_energia_seq'), ?1 as energia, id as id_jogador " +
+			" from jogador " +
+			" where status_jogador = 0 " //StatusJogador.ATIVO
+	)
+	public void inserirEnergiaTodosJogadores(Integer energia);
+	
+	//###	/INSERT, UPDATE E DELETE	###
 }

@@ -16,6 +16,7 @@ import com.fastfoot.player.model.EstrategiaHabilidadeVolante;
 import com.fastfoot.player.model.EstrategiaHabilidadeZagueiro;
 import com.fastfoot.player.model.Habilidade;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
+import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.HabilidadeTipo;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.Posicao;
@@ -36,6 +37,12 @@ public abstract class JogadorFactory {
 	private static final Comparator<Jogador> COMPARATOR_FORCA_GERAL_ENERGIA;
 	
 	private static final Comparator<Jogador> COMPARATOR_ENERGIA;
+	
+	private static final Comparator<Jogador> COMPARATOR_FORCA_GERAL_POTENCIAL;
+	
+	private static final Comparator<Jogador> COMPARATOR_HABILIDADE_FINALIZACAO;
+
+	private static final Comparator<Jogador> COMPARATOR_HABILIDADE_GRUPO_CONCLUSAO;
 	
 	static {
 		COMPARATOR_FORCA_GERAL = new Comparator<Jogador>() {
@@ -81,6 +88,32 @@ public abstract class JogadorFactory {
 			public int compare(Jogador o1, Jogador o2) {
 				return o1.getJogadorEnergia().getEnergiaAtual()
 						.compareTo(o2.getJogadorEnergia().getEnergiaAtual());
+			}
+		};
+		
+		COMPARATOR_FORCA_GERAL_POTENCIAL = new Comparator<Jogador>() {
+
+			@Override
+			public int compare(Jogador o1, Jogador o2) {
+				return o1.getForcaGeralPotencial().compareTo(o2.getForcaGeralPotencial());
+			}
+		};
+		
+		COMPARATOR_HABILIDADE_FINALIZACAO = new Comparator<Jogador>() {
+			
+			@Override
+			public int compare(Jogador o1, Jogador o2) {
+				return o2.getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO).getValorTotal()
+						.compareTo(o1.getHabilidadeValorByHabilidade(Habilidade.FINALIZACAO).getValorTotal());// Reverso
+			}
+		};
+
+		COMPARATOR_HABILIDADE_GRUPO_CONCLUSAO = new Comparator<Jogador>() {
+			
+			@Override
+			public int compare(Jogador o1, Jogador o2) {
+				return o2.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO).getValorTotal()
+						.compareTo(o1.getHabilidadeGrupoValorByHabilidade(HabilidadeGrupo.CONCLUSAO).getValorTotal());// Reverso
 			}
 		};
 	}
@@ -176,7 +209,7 @@ public abstract class JogadorFactory {
 			HabilidadeTipo habilidadeTipo, Double potencial, Double passoDesenvolvimento) {
 		HabilidadeValor hv = new HabilidadeValor(jogador, habilidade, valor, valorDecimal, habilidadeTipo, potencial,
 				passoDesenvolvimento);
-		jogador.addHabilidade(hv);
+		jogador.addHabilidadeValor(hv);
 	}
 
 	protected Integer sortearIdade() {
@@ -363,5 +396,17 @@ public abstract class JogadorFactory {
 	
 	public static Comparator<Jogador> getComparatorEnergia() {
 		return COMPARATOR_ENERGIA;
+	}
+	
+	public static Comparator<Jogador> getComparatorForcaGeralPotencial() {
+		return COMPARATOR_FORCA_GERAL_POTENCIAL;
+	}
+	
+	public static Comparator<Jogador> getComparatorHabilidadeFinalizacao() {
+		return COMPARATOR_HABILIDADE_FINALIZACAO;
+	}
+	
+	public static Comparator<Jogador> getComparatorHabilidadeGrupoConclusao() {
+		return COMPARATOR_HABILIDADE_GRUPO_CONCLUSAO;
 	}
 }

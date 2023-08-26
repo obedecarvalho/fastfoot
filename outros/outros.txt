@@ -14,3 +14,13 @@ GRANT ALL PRIVILEGES ON fastfoot.* TO fastfoot@localhost WITH GRANT OPTION;
 
 http://localhost:8081/swagger-ui/index.html
 http://localhost:8081/v3/api-docs
+
+------------------------------------------------------
+Código duplicado:
+	https://pmd.github.io/
+	<pmd_files>/bin/pmd cpd --minimum-tokens 100 --dir ./
+
+------------------------------------------------------
+Comentários:
+	sudo apt-get install cloc
+	cloc --by-file --skip-uniqueness --by-percent c ./ 

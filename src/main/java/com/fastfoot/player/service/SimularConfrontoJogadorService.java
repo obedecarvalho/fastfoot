@@ -17,7 +17,8 @@ import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
-public class SimularConfrontoJogadorService {
+public class SimularConfrontoJogadorService {//TODO: usar HabilidadeValorJogavel
+	//@see JogarPartidaService, CalcularPartidaProbabilidadeResultadoSimularPartidaAbstractService
 	
 	private static final Integer NUM_SIMULACOES = 10000;
 	
@@ -27,11 +28,11 @@ public class SimularConfrontoJogadorService {
 
 	public void simularConfrontoJogador(Jogador jogAcao, Jogador jogReacao, Jogador goleiro) {
 		
-		jogAcao.getHabilidades().stream()
+		jogAcao.getHabilidadesValor().stream()
 				.forEach(hv -> hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv)));
-		jogReacao.getHabilidades().stream()
+		jogReacao.getHabilidadesValor().stream()
 				.forEach(hv -> hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv)));
-		goleiro.getHabilidades().stream()
+		goleiro.getHabilidadesValor().stream()
 				.forEach(hv -> hv.setHabilidadeValorEstatistica(new HabilidadeValorEstatistica(hv)));
 		
 		JogadorEstatisticasTemporada jogAcaoEstatisticas = new JogadorEstatisticasTemporada(jogAcao);
@@ -56,18 +57,18 @@ public class SimularConfrontoJogadorService {
 				if (habilidadeVencedorAnterior != null
 						&& habilidadeVencedorAnterior.getHabilidadeAcao().contemAcoesSubsequentes()) {
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidades(
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesValor(
 									habilidadeVencedorAnterior.getHabilidadeAcao().getAcoesSubsequentes()));
 				} else {
 
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoMeioFimValor());
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesValorAcaoMeioFim());
 
 				}
 
 				habilidadeValorReacao = (HabilidadeValor) RoletaUtil
 						.sortearN((List<? extends ElementoRoleta>) jogReacao
-								.getHabilidades(habilidadeValorAcao.getHabilidadeAcao().getPossiveisReacoes()));
+								.getHabilidadesValor(habilidadeValorAcao.getHabilidadeAcao().getPossiveisReacoes()));
 
 				jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorN(habilidadeValorAcao, habilidadeValorReacao);
 				
@@ -96,7 +97,7 @@ public class SimularConfrontoJogadorService {
 						|| habilidadeValorAcao.getHabilidadeAcao().isAcaoInicioMeio()) {
 
 					habilidadeValorAcao = (HabilidadeValor) RoletaUtil
-							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesAcaoFimValor());
+							.sortearN((List<? extends ElementoRoleta>) jogAcao.getHabilidadesValorAcaoFim());
 					
 					if (!habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()){
 						habilidadeValorAcao.getHabilidadeValorEstatistica().incrementarQuantidadeUso();
@@ -109,7 +110,7 @@ public class SimularConfrontoJogadorService {
 
 				if (habilidadeValorAcao.getHabilidadeAcao().isExigeGoleiro()) {
 					habilidadeValorReacao = (HabilidadeValor) RoletaUtil
-							.sortearN((List<? extends ElementoRoleta>) goleiro.getHabilidades(
+							.sortearN((List<? extends ElementoRoleta>) goleiro.getHabilidadesValor(
 									Arrays.asList(habilidadeValorAcao.getHabilidadeAcao().getReacaoGoleiro())));
 
 					habilidadeFora = new HabilidadeValor(Habilidade.FORA,
@@ -171,14 +172,14 @@ public class SimularConfrontoJogadorService {
 		
 		System.err.println("\tJogador Acao");
 		System.err.println(jogAcaoEstatisticas);		
-		System.err.println(jogAcao.getHabilidades().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
+		System.err.println(jogAcao.getHabilidadesValor().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
 		
 		System.err.println("\tJogador Reacao");
-		System.err.println(jogReacao.getHabilidades().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
+		System.err.println(jogReacao.getHabilidadesValor().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
 		
 		System.err.println("\tGoleiro");
 		System.err.println(goleiroEstatisticas);		
-		System.err.println(goleiro.getHabilidades().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
+		System.err.println(goleiro.getHabilidadesValor().stream().map(HabilidadeValor::getHabilidadeValorEstatistica).filter(e -> e.getQuantidadeUso() > 0).collect(Collectors.toList()));
 		
 		//System.err.println("\tLances");
 		//System.err.println(lances);
