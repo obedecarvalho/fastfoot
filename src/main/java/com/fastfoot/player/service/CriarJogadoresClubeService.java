@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
@@ -73,11 +74,11 @@ public class CriarJogadoresClubeService {
 	private CalcularSalarioContratoService calcularSalarioContratoService;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> criarJogadoresClube(List<Clube> clubes) {
+	public CompletableFuture<Boolean> criarJogadoresClube(Jogo jogo, List<Clube> clubes) {
 
 		List<Jogador> jogadores = new ArrayList<Jogador>();
 		
-		Semana s = semanaCRUDService.getProximaSemana();
+		Semana s = semanaCRUDService.getProximaSemana(jogo);
 		
 		for (Clube c : clubes) {
 			criarJogadoresClube(c, jogadores, s);
@@ -89,7 +90,7 @@ public class CriarJogadoresClubeService {
 			calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogador, habilidadeGrupoValores);
 		}
 		
-		calcularValorTransferencia(jogadores);
+		calcularValorTransferencia(jogo, jogadores);
 		
 		List<HabilidadeValor> habilidades = jogadores.stream().flatMap(j -> j.getHabilidadesValor().stream())
 				.collect(Collectors.toList());
@@ -104,8 +105,8 @@ public class CriarJogadoresClubeService {
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	protected void calcularValorTransferencia(List<Jogador> jogadores) {
-		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
+	protected void calcularValorTransferencia(Jogo jogo, List<Jogador> jogadores) {
+		if (carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 			for (Jogador jogador : jogadores) {
 				calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(jogador);
 			}

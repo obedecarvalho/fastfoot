@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -75,7 +76,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		return partidaEliminatoriaResultadoRepository.save(t);
 	}
 
-	public List<PartidaEliminatoriaResultado> getByIdClube(Integer idClube){
+	public List<PartidaEliminatoriaResultado> getByIdClube(Long idClube){
 		
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 		
@@ -84,7 +85,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		}
 		
 		List<PartidaEliminatoriaResultado> partidas = partidaEliminatoriaResultadoRepository
-				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(), clubeOpt.get());
+				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(clubeOpt.get().getLigaJogo().getJogo()), clubeOpt.get());
 		
 		return partidas;
 	}
@@ -109,9 +110,9 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		return partidas;
 	}
 	
-	public List<PartidaEliminatoriaResultado> getByNumeroSemana(Integer numeroSemana){
+	public List<PartidaEliminatoriaResultado> getByNumeroSemana(Jogo jogo, Integer numeroSemana){
 		
-		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual(jogo);
 		
 		Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporadaAtual, numeroSemana);
 		
@@ -125,7 +126,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		return partidas;
 	}
 	
-	public List<PartidaEliminatoriaResultado> getByIdClubeIdCampeonatoNumeroSemana(Integer idClube, Long idCampeonato,
+	public List<PartidaEliminatoriaResultado> getByIdClubeIdCampeonatoNumeroSemana(Jogo jogo, Long idClube, Long idCampeonato,
 			Integer numeroSemana) {
 
 		if (!ValidatorUtil.isEmpty(idClube) && !ValidatorUtil.isEmpty(idCampeonato)
@@ -136,7 +137,7 @@ public class PartidaEliminatoriaCRUDService implements CRUDService<PartidaElimin
 		} else if (!ValidatorUtil.isEmpty(idCampeonato)) {
 			return getByIdCampeonato(idCampeonato);
 		} else if (!ValidatorUtil.isEmpty(numeroSemana)) {
-			return getByNumeroSemana(numeroSemana);
+			return getByNumeroSemana(jogo, numeroSemana);
 		}
 
 		return null;

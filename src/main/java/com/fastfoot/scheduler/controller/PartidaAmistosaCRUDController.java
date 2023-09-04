@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.service.crud.PartidaAmistosaCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -28,6 +30,9 @@ public class PartidaAmistosaCRUDController implements CRUDController<PartidaAmis
 
 	@Autowired
 	private PartidaAmistosaCRUDService partidaAmistosaCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/partidasAmistosas")
@@ -55,14 +60,20 @@ public class PartidaAmistosaCRUDController implements CRUDController<PartidaAmis
 
 	@GetMapping("/partidasAmistosas")
 	public ResponseEntity<List<PartidaAmistosaResultado>> getAll(
-			@RequestParam(name = "idClube", required = false) Integer idClube,
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "idClube", required = false) Long idClube,
 			@RequestParam(name = "numeroSemana", required = false) Integer numeroSemana) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 			
 			List<PartidaAmistosaResultado> partidas;
 			
 			if (!ValidatorUtil.isEmpty(idClube) || !ValidatorUtil.isEmpty(numeroSemana)) {
-				partidas = partidaAmistosaCRUDService.getByIdClubeNumeroSemana(idClube, numeroSemana);
+				partidas = partidaAmistosaCRUDService.getByIdClubeNumeroSemana(idClube, numeroSemana, jogo);
 			} else {
 				partidas = partidaAmistosaCRUDService.getAll();
 			}

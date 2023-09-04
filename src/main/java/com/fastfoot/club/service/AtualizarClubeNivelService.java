@@ -21,7 +21,7 @@ import com.fastfoot.club.model.entity.MudancaClubeNivel;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.MudancaClubeNivelRepository;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
 
@@ -72,15 +72,15 @@ public class AtualizarClubeNivelService {
 	 * @param liga
 	 */
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> atualizarClubeNivel(Temporada temporada, Liga liga) {
+	public CompletableFuture<Boolean> atualizarClubeNivel(Temporada temporada, LigaJogo liga) {
 		
-		List<ClubeRanking> rankings = clubeRankingRepository.findByLigaAndTemporada(liga, temporada);
+		List<ClubeRanking> rankings = clubeRankingRepository.findByLigaJogoAndTemporada(liga, temporada);
 		
 		Optional<Temporada> t = null;
 		for (int i = 1; i < NUM_TEMPORADAS_ANALISAR; i++) {
-			t = temporadaRepository.findFirstByAno(temporada.getAno() - i);
+			t = temporadaRepository.findFirstByJogoAndAno(temporada.getJogo(), temporada.getAno() - i);
 			if (t.isPresent()) {
-				rankings.addAll(clubeRankingRepository.findByLigaAndTemporada(liga, t.get()));
+				rankings.addAll(clubeRankingRepository.findByLigaJogoAndTemporada(liga, t.get()));
 			} else {
 				//throw new RuntimeException("Não há temporadas suficientes.");
 				return CompletableFuture.completedFuture(Boolean.FALSE);
@@ -149,7 +149,7 @@ public class AtualizarClubeNivelService {
 		
 		Optional<Temporada> t = null;
 		for (int i = 1; i < NUM_TEMPORADAS_ANALISAR; i++) {
-			t = temporadaRepository.findFirstByAno(temporada.getAno() - i);
+			t = temporadaRepository.findFirstByJogoAndAno(temporada.getJogo(), temporada.getAno() - i);
 			if (t.isPresent()) {
 				rankings.addAll(clubeRankingRepository.findByTemporada(t.get()));
 			} else {

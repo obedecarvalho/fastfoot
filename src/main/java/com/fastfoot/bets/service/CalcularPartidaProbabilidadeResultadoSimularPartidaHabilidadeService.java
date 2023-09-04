@@ -63,7 +63,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeServic
 			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
 		}
 
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(partidas);
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), partidas);
 
 		for (PartidaResultadoJogavel p : partidas) {
 			probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));

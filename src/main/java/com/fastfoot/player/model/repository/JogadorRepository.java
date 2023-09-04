@@ -12,7 +12,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 
@@ -21,28 +22,70 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	public List<Jogador> findByClubeAndStatusJogador(Clube clube, StatusJogador status);
 
-	public List<Jogador> findByStatusJogador(StatusJogador status);
+	@Query("SELECT j FROM Jogador j WHERE j.clube.ligaJogo.jogo = :jogo AND j.statusJogador = :status")
+	public List<Jogador> findByJogoAndStatusJogador(@Param("jogo") Jogo jogo, @Param("status") StatusJogador status);
 
-	public List<Jogador> findByIdadeAndStatusJogador(Integer idade, StatusJogador status);	
+	@Query("SELECT j FROM Jogador j WHERE j.clube.ligaJogo.jogo = :jogo AND j.idade = :idade AND j.statusJogador = :status")
+	public List<Jogador> findByJogoAndIdadeAndStatusJogador(@Param("jogo") Jogo jogo, @Param("idade") Integer idade, @Param("status") StatusJogador status);
 	
-	@Query(" SELECT j FROM Jogador j WHERE j.clube.liga = :liga AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
-	public List<Jogador> findByLigaClubeAndStatusJogador(@Param("liga") Liga liga,
-			@Param("status") StatusJogador status, @Param("idClubeMin") Integer idClubeMin,
-			@Param("idClubeMax") Integer idClubeMax);
-
-	@Query(" SELECT j FROM Jogador j WHERE j.idade BETWEEN :idadeMin AND :idadeMax ")
-	public List<Jogador> findByIdadeBetween(@Param("idadeMin") Integer idadeMin, @Param("idadeMax") Integer idadeMax);
+	@Query(" SELECT j FROM Jogador j WHERE j.clube.ligaJogo = :ligaJogo AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
+	public List<Jogador> findByLigaJogoClubeAndStatusJogador(@Param("ligaJogo") LigaJogo ligaJogo,
+			@Param("status") StatusJogador status, @Param("idClubeMin") Long idClubeMin,
+			@Param("idClubeMax") Long idClubeMax);
+	
+	//###	FETCH HABILIDADES_VALOR	###
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
+	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidades(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube = :clube AND j.statusJogador = :status ")
+	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidades(@Param("clube") Clube clube, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube.ligaJogo = :ligaJogo AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
+	public List<Jogador> findByLigaJogoClubeAndStatusJogadorFetchHabilidades(@Param("ligaJogo") LigaJogo ligaJogo,
+			@Param("status") StatusJogador status, @Param("idClubeMin") Long idClubeMin,
+			@Param("idClubeMax") Long idClubeMax);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j = :jogador ")
+	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube.ligaJogo.jogo = :jogo AND j.statusJogador = :status ")
+	public List<Jogador> findByJogoAndStatusJogadorFetchHabilidades(@Param("jogo") Jogo jogo, @Param("status") StatusJogador status);
+	
+	//###	/FETCH HABILIDADES_VALOR	###
+	
+	//###	FETCH HABILIDADES_GRUPO_VALOR	###
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube.ligaJogo = :ligaJogo AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
+	public List<Jogador> findByLigaJogoClubeAndStatusJogadorFetchHabilidadesGrupo(@Param("ligaJogo") LigaJogo ligaJogo,
+			@Param("status") StatusJogador status, @Param("idClubeMin") Long idClubeMin,
+			@Param("idClubeMax") Long idClubeMax);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
+	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidadesGrupo(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube = :clube AND j.statusJogador = :status ")
+	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidadesGrupo(@Param("clube") Clube clube, @Param("status") StatusJogador status);
+	
+	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube.ligaJogo.jogo = :jogo AND j.statusJogador = :status ")
+	public List<Jogador> findByJogoAndStatusJogadorFetchHabilidadesGrupo(@Param("jogo") Jogo jogo, @Param("status") StatusJogador status);
+	
+	//###	/FETCH HABILIDADES_GRUPO_VALOR	###
 
 	//###	SELECT ESPECIFICOS	###
 
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_transferencia) as valor_transferencia" +
 			" from jogador j" +
+			" inner join clube c on j.id_clube = c.id" +
+			" inner join liga_jogo lj on c.id_liga_jogo = lj.id" +
 			" where status_jogador = 0" + //StatusJogador.ATIVO
+			"	 and lj.id_jogo = ?1 " +
 			" group by id_clube"
 	)
-	public List<Map<String, Object>> findValorTransferenciaPorClube();
+	public List<Map<String, Object>> findValorTransferenciaPorClube(Long idJogo);
 	
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" select j.id_clube, j.posicao, count(*) as total" +
 			" from jogador j" +
@@ -55,57 +98,18 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	@Query(nativeQuery = true, value =
 			" select j.id_clube, j.posicao, count(*) as total" +
 			" from jogador j" +
+			" inner join clube c on j.id_clube = c.id" +
+			" inner join liga_jogo lj on c.id_liga_jogo = lj.id" +
 			" where j.status_jogador = 0" + //StatusJogador.ATIVO
 			" 	and j.posicao not in (?1)" +
 			" 	and j.idade not in (?2)" +
+			" 	and lj.id_jogo = ?3" +
 			" group by j.id_clube, j.posicao" +
 			" order by j.id_clube, total"
 	)
-	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(String posicaoExcluir, Integer idadeExcluir);
+	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube(String posicaoExcluir, Integer idadeExcluir, Long idJogo);
 	
 	//###	/SELECT ESPECIFICOS	###
-	
-	//###	FETCH HABILIDADES_VALOR	###
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
-	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidades(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube = :clube AND j.statusJogador = :status ")
-	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidades(@Param("clube") Clube clube, @Param("status") StatusJogador status);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube.liga = :liga AND j.statusJogador = :status ")
-	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga, @Param("status") StatusJogador status);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.clube.liga = :liga AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
-	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidades(@Param("liga") Liga liga,
-			@Param("status") StatusJogador status, @Param("idClubeMin") Integer idClubeMin,
-			@Param("idClubeMax") Integer idClubeMax);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j = :jogador ")
-	public List<Jogador> findByJogadorFetchHabilidades(@Param("jogador") Jogador jogador);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesValor hv WHERE j.statusJogador = :status ")
-	public List<Jogador> findByStatusJogadorFetchHabilidades(@Param("status") StatusJogador status);
-	
-	//###	/FETCH HABILIDADES_VALOR	###
-	
-	//###	FETCH HABILIDADES_GRUPO_VALOR	###
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube.liga = :liga AND j.statusJogador = :status AND j.clube.id BETWEEN :idClubeMin AND :idClubeMax ")
-	public List<Jogador> findByLigaClubeAndStatusJogadorFetchHabilidadesGrupo(@Param("liga") Liga liga,
-			@Param("status") StatusJogador status, @Param("idClubeMin") Integer idClubeMin,
-			@Param("idClubeMax") Integer idClubeMax);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube IN :clubes AND j.statusJogador = :status ")
-	public List<Jogador> findByClubesAndStatusJogadorFetchHabilidadesGrupo(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.clube = :clube AND j.statusJogador = :status ")
-	public List<Jogador> findByClubeAndStatusJogadorFetchHabilidadesGrupo(@Param("clube") Clube clube, @Param("status") StatusJogador status);
-	
-	@Query(" SELECT DISTINCT j FROM Jogador j JOIN FETCH j.habilidadesGrupoValor hv WHERE j.statusJogador = :status ")
-	public List<Jogador> findByStatusJogadorFetchHabilidadesGrupo(@Param("status") StatusJogador status);
-	
-	//###	/FETCH HABILIDADES_GRUPO_VALOR	###
 	
 	//###	INSERT, UPDATE E DELETE	###
 
@@ -118,14 +122,18 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" 	select j.id, avg(hv.valor_decimal) as forca_geral " +
 			" 	from jogador j " +
 			" 	inner join habilidade_valor hv on hv.id_jogador = j.id " +
+			" 	inner join clube c on j.id_clube = c.id " +
+			" 	inner join liga_jogo lj on c.id_liga_jogo = lj.id " +
 			" 	where hv.habilidade_tipo = 0 " +//HabilidadeTipo.ESPECIFICA 
 			" 		and j.status_jogador = 0 " +//StatusJogador.ATIVO
+			" 		and lj.id_jogo = ?1 " +
 			" 	group by j.id " +
 			" ) tmp " + 
 			" where jog.id = tmp.id "
 	)
-	public void calcularForcaGeral();
+	public void calcularForcaGeral(Long idJogo);
 	
+	@Deprecated
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -139,6 +147,25 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	)
 	public void calcularForcaGeral2();
 	
+	@Deprecated
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update jogador j " +
+			" set forca_geral = ( " +
+			" 	select avg(valor_decimal) " +
+			" 	from habilidade_valor hv " +
+			"	inner join jogador j2 on hv.id_jogador = j2.id " +
+			"	inner join clube c on j2.id_clube = c.id " +
+			"	inner join liga_jogo lj on c.id_liga_jogo = lj.id " +
+			" 	where j.id = hv.id_jogador " +
+			"		and lj.id_jogo = ?1 " +
+			" 		and hv.habilidade_tipo = 0) " +	//HabilidadeTipo.ESPECIFICA
+			" where j.status_jogador = 0 "	//StatusJogador.ATIVO
+	)
+	public void calcularForcaGeral2(Long idJogo);
+	
+	@Deprecated
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -147,6 +174,17 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 					//+ " where status_jogador = 0 "
 	)
 	public void incrementarIdade();
+	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" update jogador j " +
+			" set idade = idade + 1 " +
+			" from clube c " +
+			" inner join liga_jogo lj on c.id_liga_jogo = lj.id " +
+			" where lj.id_jogo = ?1 and j.id_clube = c.id "
+	)
+	public void incrementarIdade(Long idJogo);
 	
 	//###	/INSERT, UPDATE E DELETE	###
 }

@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
@@ -156,6 +157,7 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		this.tipoNegociacao = tipoNegociacao;
 	}
 
+	@JsonIgnore
 	@Override
 	public Integer getValor() {
 		if (peso == null) {
@@ -165,6 +167,7 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		return peso;
 	}
 
+	@JsonIgnore
 	@Override
 	public Integer getValorN() {
 		if (pesoN == null) {
@@ -174,11 +177,13 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 		return pesoN;
 	}
 	
+	@JsonIgnore
 	@Override
 	public Double getValorAsDouble() {
 		return new Double(getValor());
 	}
 
+	@JsonIgnore
 	@Override
 	public Double getValorNAsDouble() {
 		return new Double(getValorN());

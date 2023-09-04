@@ -17,6 +17,7 @@ import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 @Entity
 public class PartidaProbabilidadeResultado {
+	//TODO: usar estrategia de FK semelhante a PartidaEstatisticas?
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaProbabilidadeResultadoSequence")	

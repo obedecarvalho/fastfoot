@@ -9,7 +9,7 @@ import javax.persistence.ManyToOne;
 public class ClubeTituloRanking {
 
 	@Id
-	private Integer id;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
@@ -35,7 +35,7 @@ public class ClubeTituloRanking {
 
 	}
 	
-	public ClubeTituloRanking(Integer id, Clube clube) {
+	public ClubeTituloRanking(Long id, Clube clube) {
 		this.id = id;
 		this.clube = clube;
 		this.titulosNacional = 0;	
@@ -48,11 +48,11 @@ public class ClubeTituloRanking {
 		this.pontuacao = 0;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

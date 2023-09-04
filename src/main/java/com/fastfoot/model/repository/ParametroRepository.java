@@ -6,13 +6,14 @@ import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.model.entity.Parametro;
 
 @Repository
-public interface ParametroRepository extends JpaRepository<Parametro, Integer>{
+public interface ParametroRepository extends JpaRepository<Parametro, Long>{
 	
-	public Optional<Parametro> findFirstByNome(String nome);
+	public Optional<Parametro> findFirstByNomeAndJogo(String nome, Jogo jogo);
 
-	public List<Parametro> findByNome(String nome);
+	public List<Parametro> findByJogo(Jogo jogo);
 
 }

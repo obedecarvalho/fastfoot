@@ -9,21 +9,32 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.service.CRUDService;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
+import com.fastfoot.service.CRUDServiceJogavel;
+import com.fastfoot.service.LigaJogoCRUDService;
 
 @Service
-public class ClubeCRUDService implements CRUDService<Clube, Integer> {
+public class ClubeCRUDService implements CRUDServiceJogavel<Clube, Long> {
 	
 	@Autowired
 	private ClubeRepository clubeRepository;
+
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 
 	@Override
 	public List<Clube> getAll() {
 		return clubeRepository.findAll();
 	}
+	
+	@Override
+	public List<Clube> getByJogo(Jogo jogo) {
+		return clubeRepository.findByJogo(jogo);
+	}
 
 	@Override
-	public Clube getById(Integer id) {
+	public Clube getById(Long id) {
 		Optional<Clube> clubeOpt = clubeRepository.findById(id);
 		if (clubeOpt.isPresent()) {
 			return clubeOpt.get();
@@ -32,7 +43,7 @@ public class ClubeCRUDService implements CRUDService<Clube, Integer> {
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Long id) {
 		clubeRepository.deleteById(id);		
 	}
 
@@ -51,10 +62,13 @@ public class ClubeCRUDService implements CRUDService<Clube, Integer> {
 		return clubeRepository.save(t);
 	}
 	
-	public List<Clube> getByLiga(Integer ligaOrdinal){
-
+	public List<Clube> getByLiga(Jogo jogo, Integer ligaOrdinal){
+		
 		Liga liga = Liga.values()[ligaOrdinal];
-		return clubeRepository.findByLiga(liga);
+		
+		LigaJogo ligaJogo = ligaJogoCRUDService.getByJogo(jogo, liga);
+
+		return clubeRepository.findByLigaJogo(ligaJogo);
 
 	}
 

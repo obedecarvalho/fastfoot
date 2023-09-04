@@ -19,9 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.service.crud.JogadorCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -31,6 +33,9 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 	
 	@Autowired
 	private JogadorCRUDService jogadorCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/jogadores")
@@ -56,14 +61,21 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 	}
 
 	@GetMapping("/jogadores")
-	public ResponseEntity<List<Jogador>> getAll(@RequestParam(name = "idClube", required = false) Integer idClube) {
+	public ResponseEntity<List<Jogador>> getAll(
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "idClube", required = false) Long idClube) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
 			List<Jogador> jogadores;
 
 			if (ValidatorUtil.isEmpty(idClube)) {
 				//jogadores = jogadorCRUDService.getAll();
-				jogadores = jogadorCRUDService.getAllAtivos();
+				jogadores = jogadorCRUDService.getAllAtivos(jogo);
 			} else {
 				jogadores = jogadorCRUDService.getAtivosByClube(new Clube(idClube));
 			}

@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -21,10 +20,6 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	
 	public List<MovimentacaoFinanceira> findBySemana(Semana semana);
 	
-	public List<MovimentacaoFinanceira> findByTipoMovimentacao(TipoMovimentacaoFinanceira tipoMovimentacao);
-	
-	public List<MovimentacaoFinanceira> findByTipoMovimentacaoIn(List<TipoMovimentacaoFinanceira> tipoMovimentacao);
-	
 	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.semana.temporada = :temporada ")
 	public List<MovimentacaoFinanceira> findByTemporada(@Param("temporada") Temporada temporada);
 	
@@ -34,12 +29,23 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	
 	//###	SELECT ESPECIFICOS	###
 	
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_movimentacao) as saldo" +
 			" from movimentacao_financeira mf" +
 			" group by id_clube"
 	)
 	public List<Map<String, Object>> findSaldoPorClube();
+	
+	@Query(nativeQuery = true, value =
+			" select id_clube, sum(valor_movimentacao) as saldo" +
+			" from movimentacao_financeira mf" +
+			" inner join clube c on mf.id_clube = c.id" +
+			" inner join liga_jogo lj on c.id_liga_jogo = lj.id" +
+			" where lj.id_jogo = ?1 " +
+			" group by id_clube"
+	)
+	public List<Map<String, Object>> findSaldoPorClubeByIdJogo(Long idJogo);
 	
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_movimentacao) as saldo" +
@@ -59,6 +65,7 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	)
 	public List<Map<String, Object>> findAgrupadoPorTipoAndTemporada(Long idTemporada);
 
+	@Deprecated
 	@Query(nativeQuery = true, value =
 			" select c.id as id_clube, mov.saldo, sal.salarios as salarios_projetado" +
 			" from clube c" +
@@ -75,6 +82,25 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 			" ) as sal on sal.id_clube = c.id"
 	)
 	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual);//TODO: usar salario contrato
+	
+	@Query(nativeQuery = true, value =
+			" select c.id as id_clube, mov.saldo, sal.salarios as salarios_projetado" +
+			" from clube c" +
+			" inner join liga_jogo lj on c.id_liga_jogo = lj.id" +
+			" inner join (" +
+			" 	select id_clube, sum(valor_movimentacao) as saldo" +
+			" 	from movimentacao_financeira" +
+			" 	group by id_clube" +
+			" ) as mov on mov.id_clube = c.id" +
+			" inner join (" +
+			" 	select id_clube, sum(valor_transferencia) * ?1 as salarios" +
+			" 	from jogador j" +
+			" 	where j.status_jogador = 0" +//StatusJogador.ATIVO
+			" 	group by id_clube" +
+			" ) as sal on sal.id_clube = c.id" +
+			" where lj.id_jogo = ?2"
+	)
+	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual, Long idJogo);//TODO: usar salario contrato
 	
 	//###	/SELECT ESPECIFICOS	###
 

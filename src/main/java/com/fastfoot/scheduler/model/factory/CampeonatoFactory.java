@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
@@ -16,10 +16,10 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public class CampeonatoFactory {
 	
-	public static Campeonato criarCampeonato (Temporada temporada, Liga liga, List<Clube> clubes, NivelCampeonato nivelCampeonato) {
+	public static Campeonato criarCampeonato (Temporada temporada, LigaJogo liga, List<Clube> clubes, NivelCampeonato nivelCampeonato) {
 		Campeonato campeonato = new Campeonato();
 		campeonato.setTemporada(temporada);
-		campeonato.setLiga(liga);
+		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		

@@ -84,7 +84,7 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" 	AND jes.amistoso = ?3" +
 			" GROUP BY id_jogador, jes.id_clube, s.id_temporada, amistoso, j.nome, c.nome, j.posicao, c.logo"
 	)
-	public List<Map<String, Object>> findAgrupadoByTemporadaAndClube(Long idTemporada, Integer idClube, Boolean amistoso);
+	public List<Map<String, Object>> findAgrupadoByTemporadaAndClube(Long idTemporada, Long idClube, Boolean amistoso);
 	
 	@Query(nativeQuery = true, value = 
 			" SELECT id_jogador, jes.id_clube, s.id_temporada, amistoso, " +

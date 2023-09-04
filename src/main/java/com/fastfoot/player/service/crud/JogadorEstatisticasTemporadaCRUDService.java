@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.PosicaoAttributeConverter;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
@@ -18,6 +19,7 @@ import com.fastfoot.player.model.repository.JogadorEstatisticasTemporadaReposito
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.CRUDService;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<JogadorEstatisticasTemporada, Long> {
@@ -74,14 +76,14 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 	public List<JogadorEstatisticasTemporada> getAgrupadoTemporadaAtualByClube(Clube clube, Boolean amistoso) {
 
 		List<Map<String, Object>> estatisticasAgrupada = jogadorEstatisticasSemanaRepository
-				.findAgrupadoByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual().getId(), clube.getId(), amistoso);
+				.findAgrupadoByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(clube.getLigaJogo().getJogo()).getId(), clube.getId(), amistoso);
 
 		return transformMapToObj(estatisticasAgrupada);
 
 	}
 	
-	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporadaAtual(Boolean amistoso) {
-		return getAgrupadoByTemporada(temporadaCRUDService.getTemporadaAtual(), amistoso);
+	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporadaAtual(Jogo jogo, Boolean amistoso) {
+		return getAgrupadoByTemporada(temporadaCRUDService.getTemporadaAtual(jogo), amistoso);
 	}
 	
 	public List<JogadorEstatisticasTemporada> getAgrupadoByTemporada(Temporada temporada, Boolean amistoso) {
@@ -113,7 +115,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			jogadorEstatisticasTemporada.getJogador().setNome((String) e.get("nome_jogador"));
 			//jogadorEstatisticasTemporada.getJogador().setPosicao(Posicao.values()[(Integer) e.get("posicao")]);
 			jogadorEstatisticasTemporada.getJogador().setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((String) e.get("posicao")));
-			jogadorEstatisticasTemporada.setClube(new Clube((Integer) e.get("id_clube")));
+			jogadorEstatisticasTemporada.setClube(new Clube(DatabaseUtil.getValueLong(e.get("id_clube"))));
 			jogadorEstatisticasTemporada.getClube().setNome((String) e.get("nome_clube"));
 			jogadorEstatisticasTemporada.getClube().setLogo((String) e.get("logo_clube"));
 			jogadorEstatisticasTemporada.getJogador().setClube(jogadorEstatisticasTemporada.getClube());

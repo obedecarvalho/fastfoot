@@ -47,7 +47,7 @@ public class CampeonatoDTO {
 		dto.setNivelCampeonato(campeonatoJogavel.getNivelCampeonato().name());
 
 		//dto.setNomeCampeonato(campeonatoJogavel.getNome());
-		dto.setNomeCampeonato((campeonatoJogavel.getLiga() != null ? campeonatoJogavel.getLiga().name() + "-" : "")
+		dto.setNomeCampeonato((campeonatoJogavel.getLigaJogo() != null ? campeonatoJogavel.getLigaJogo().getLiga().name() + "-" : "")
 				+ campeonatoJogavel.getNivelCampeonato().name());
 		return dto;
 	}

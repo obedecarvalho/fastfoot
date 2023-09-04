@@ -63,7 +63,7 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
 		}
 
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(partidas);
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), partidas);
 
 		for (PartidaResultadoJogavel p : partidas) {
 			probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));

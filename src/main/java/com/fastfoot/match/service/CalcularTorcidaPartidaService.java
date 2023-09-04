@@ -16,6 +16,7 @@ import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.match.model.PartidaTorcidaPorcentagem;
 import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
 import com.fastfoot.match.model.entity.PartidaTorcida;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
@@ -179,11 +180,11 @@ public class CalcularTorcidaPartidaService {
 		
 		double renda = 0.0d;
 		
-		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional(semana.getTemporada().getJogo());
 
 		int tamanhoEstadio = partida.getClubeMandante().getNivelNacional().getTamanhoTorcida();
 
-		Double porcPublicoAlvo = getPorcentagemPublicoAlvo(partida);
+		Double porcPublicoAlvo = getPorcentagemPublicoAlvo(semana.getTemporada().getJogo(), partida);
 
 		//if (porcPublicoAlvo == null) return;
 
@@ -253,11 +254,11 @@ public class CalcularTorcidaPartidaService {
 		return entrada;
 	}
 	
-	private Double getPorcentagemPublicoAlvo(PartidaResultadoJogavel partida) {
+	private Double getPorcentagemPublicoAlvo(Jogo jogo, PartidaResultadoJogavel partida) {
 
 		if (partida.getNivelCampeonato().isCopaNacional()) {
 			
-			Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
+			Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional(jogo);
 
 			if (partida.getRodada().getNumero() == numRodadasCN) {// Final
 				return PartidaTorcidaPorcentagem.getPorcentagem(partida.getNivelCampeonato(),
@@ -342,13 +343,13 @@ public class CalcularTorcidaPartidaService {
 
 	}
 
-	public Double calcularPrevisaoEntradaIngressos(List<? extends PartidaResultadoJogavel> partidas, boolean mandante) {
+	public Double calcularPrevisaoEntradaIngressos(Jogo jogo, List<? extends PartidaResultadoJogavel> partidas, boolean mandante) {
 		if (ValidatorUtil.isEmpty(partidas)) return 0.0d;
 
 		Double porcPublicoAlvo = null, renda = 0.0d;
 		Integer publicoClube = null, tamanhoEstadio = null;
 		
-		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional(jogo);
 		
 		for (PartidaResultadoJogavel p : partidas) {
 			
@@ -361,7 +362,7 @@ public class CalcularTorcidaPartidaService {
 			if (p.isAmistoso()) {
 				porcPublicoAlvo = PartidaTorcidaPorcentagem.getPorcentagemAmistoso();
 			} else if (p.getNivelCampeonato().isCIOuCIIOuCIII() || p.getNivelCampeonato().isCNIOuCNII()) {
-				porcPublicoAlvo = getPorcentagemPublicoAlvo(p);
+				porcPublicoAlvo = getPorcentagemPublicoAlvo(jogo, p);
 			} else if (p.getNivelCampeonato().isNIOuNII()) {
 				porcPublicoAlvo = PartidaTorcidaPorcentagem.getPorcentagem(p.getNivelCampeonato(), 9);
 			}

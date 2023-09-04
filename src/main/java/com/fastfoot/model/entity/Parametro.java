@@ -4,47 +4,47 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 
 @Entity
 public class Parametro {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "parametroSequence")	
+	@SequenceGenerator(name = "parametroSequence", sequenceName = "parametro_seq")
+	private Long id;
 	
 	private String nome;
 	
 	private String valor;
 	
 	private String descricao;
-	
-	/*private String valorMaximo;
-	
-	private String valorMinimo;*/
 
 	//Valores separados por ,
 	private String possiveisValores;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_jogo")
+	private Jogo jogo;
 
 	public Parametro() {
 
 	}
-
-	public Parametro(String nome, String valor) {
-		this.nome = nome;
-		this.valor = valor;
-	}
-
-	public Parametro(String nome, String valor, String possiveisValores) {
+	
+	public Parametro(String nome, String valor, String possiveisValores, Jogo jogo) {
 		this.nome = nome;
 		this.valor = valor;
 		this.possiveisValores = possiveisValores;
+		this.jogo = jogo;
 	}
 	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -72,28 +72,20 @@ public class Parametro {
 		this.descricao = descricao;
 	}
 
-	/*public String getValorMaximo() {
-		return valorMaximo;
-	}
-
-	public void setValorMaximo(String valorMaximo) {
-		this.valorMaximo = valorMaximo;
-	}
-
-	public String getValorMinimo() {
-		return valorMinimo;
-	}
-
-	public void setValorMinimo(String valorMinimo) {
-		this.valorMinimo = valorMinimo;
-	}*/
-
 	public String getPossiveisValores() {
 		return possiveisValores;
 	}
 
 	public void setPossiveisValores(String possiveisValores) {
 		this.possiveisValores = possiveisValores;
+	}
+
+	public Jogo getJogo() {
+		return jogo;
+	}
+
+	public void setJogo(Jogo jogo) {
+		this.jogo = jogo;
 	}
 
 	public boolean validar() {

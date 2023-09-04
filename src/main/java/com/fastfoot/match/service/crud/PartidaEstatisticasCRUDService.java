@@ -23,9 +23,9 @@ public class PartidaEstatisticasCRUDService implements CRUDService<PartidaEstati
 
 	@Override
 	public PartidaEstatisticas getById(Long id) {
-		Optional<PartidaEstatisticas> clubeOpt = partidaEstatisticasRepository.findById(id);
-		if (clubeOpt.isPresent()) {
-			return clubeOpt.get();
+		Optional<PartidaEstatisticas> partidaEstatisticasOpt = partidaEstatisticasRepository.findById(id);
+		if (partidaEstatisticasOpt.isPresent()) {
+			return partidaEstatisticasOpt.get();
 		}
 		return null;
 	}

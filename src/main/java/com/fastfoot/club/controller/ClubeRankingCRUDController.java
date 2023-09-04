@@ -20,20 +20,25 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.service.crud.ClubeRankingCRUDService;
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, Integer> {
+public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, Long> {
 	
 	@Autowired
 	private ClubeRankingCRUDService clubeRankingCRUDService;
 	
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/clubeRankings")
@@ -63,25 +68,31 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 	//@Override
 	@GetMapping("/clubeRankings")
 	public ResponseEntity<List<ClubeRanking>> getAll(
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
 			@RequestParam(name = "liga", required = false) Integer liga,
 			@RequestParam(name = "ano", required = false) Integer ano,
-			@RequestParam(name = "idClube", required = false) Integer idClube) {
+			@RequestParam(name = "idClube", required = false) Long idClube) {
 		
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 			
 			List<ClubeRanking> clubes;
 			
 			if (!ValidatorUtil.isEmpty(liga)) {
 				if (ValidatorUtil.isEmpty(ano)) {
-					Temporada temporada = temporadaCRUDService.getTemporadaAtual();
-					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, temporada.getAno() - 1);
+					Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
+					clubes = clubeRankingCRUDService.getByLigaAndAno(jogo, liga, temporada.getAno() - 1);
 				} else {
-					clubes = clubeRankingCRUDService.getByLigaAndAno(liga, ano);
+					clubes = clubeRankingCRUDService.getByLigaAndAno(jogo, liga, ano);
 				}
 			} else if (!ValidatorUtil.isEmpty(idClube)) {
-				clubes = clubeRankingCRUDService.getByClube(new Clube(idClube));
+				clubes = clubeRankingCRUDService.getByClube(new Clube(idClube));//TODO: colocar em endpoint especifico
 			} else {
-				clubes = clubeRankingCRUDService.getAll();
+				clubes = clubeRankingCRUDService.getByJogo(jogo);
 			}
 	
 			if (ValidatorUtil.isEmpty(clubes)) {
@@ -97,7 +108,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 
 	@Override
 	@GetMapping("/clubeRankings/{id}")
-	public ResponseEntity<ClubeRanking> getById(@PathVariable("id") Integer id) {
+	public ResponseEntity<ClubeRanking> getById(@PathVariable("id") Long id) {
 		
 		try {
 		
@@ -116,7 +127,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 
 	@Override
 	@PutMapping("/clubeRankings/{id}")
-	public ResponseEntity<ClubeRanking> update(@PathVariable("id") Integer id, @RequestBody ClubeRanking t) {
+	public ResponseEntity<ClubeRanking> update(@PathVariable("id") Long id, @RequestBody ClubeRanking t) {
 		
 		try {
 		
@@ -141,7 +152,7 @@ public class ClubeRankingCRUDController implements CRUDController<ClubeRanking, 
 
 	@Override
 	@DeleteMapping("/clubeRankings/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Integer id) {
+	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
 			clubeRankingCRUDService.delete(id);
 			return ResponseEntity.noContent().build();

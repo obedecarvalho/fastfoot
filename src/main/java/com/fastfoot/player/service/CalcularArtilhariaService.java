@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.dto.ArtilhariaDTO;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
@@ -35,12 +36,12 @@ public class CalcularArtilhariaService {
 		}
 	};
 
-	public List<ArtilhariaDTO> getAll(Boolean amistoso) {
+	public List<ArtilhariaDTO> getAll(Jogo jogo, Boolean amistoso) {
 		
 		List<JogadorEstatisticasTemporada> estatisticas = jogadorEstatisticasTemporadaCRUDService
-				.getAgrupadoByTemporadaAtual(amistoso);
+				.getAgrupadoByTemporadaAtual(jogo, amistoso);
 
-		estatisticas.addAll(jogadorEstatisticasTemporadaRepository.findByAmistoso(amistoso));
+		estatisticas.addAll(jogadorEstatisticasTemporadaRepository.findByJogoAndAmistoso(jogo, amistoso));
 
 		return agruparEstatisticas(estatisticas, 100);
 		

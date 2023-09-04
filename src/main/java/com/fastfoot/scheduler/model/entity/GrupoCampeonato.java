@@ -8,13 +8,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 @Entity
 public class GrupoCampeonato {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "grupoCampeonatoSequence")	
+	@SequenceGenerator(name = "grupoCampeonatoSequence", sequenceName = "grupo_campeonato_seq")
 	private Long id;
 	
 	private Integer numero;

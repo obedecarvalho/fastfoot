@@ -10,21 +10,32 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.service.CRUDService;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
+import com.fastfoot.service.CRUDServiceJogavel;
+import com.fastfoot.service.LigaJogoCRUDService;
 
 @Service
-public class ClubeRankingCRUDService implements CRUDService<ClubeRanking, Integer> {
+public class ClubeRankingCRUDService implements CRUDServiceJogavel<ClubeRanking, Long> {
 	
 	@Autowired
 	private ClubeRankingRepository clubeRankingRepository;
+	
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 
 	@Override
 	public List<ClubeRanking> getAll() {
 		return clubeRankingRepository.findAll();
 	}
+	
+	@Override
+	public List<ClubeRanking> getByJogo(Jogo jogo) {
+		return clubeRankingRepository.findByJogo(jogo);
+	}
 
 	@Override
-	public ClubeRanking getById(Integer id) {
+	public ClubeRanking getById(Long id) {
 		Optional<ClubeRanking> clubeOpt = clubeRankingRepository.findById(id);
 		if (clubeOpt.isPresent()) {
 			return clubeOpt.get();
@@ -33,7 +44,7 @@ public class ClubeRankingCRUDService implements CRUDService<ClubeRanking, Intege
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Long id) {
 		clubeRankingRepository.deleteById(id);
 	}
 
@@ -56,10 +67,13 @@ public class ClubeRankingCRUDService implements CRUDService<ClubeRanking, Intege
 		return clubeRankingRepository.findByClube(clube);
 	}
 
-	public List<ClubeRanking> getByLigaAndAno(Integer ligaOrdinal, Integer ano){
+	public List<ClubeRanking> getByLigaAndAno(Jogo jogo, Integer ligaOrdinal, Integer ano){
 
 		Liga liga = Liga.values()[ligaOrdinal];
-		return clubeRankingRepository.findByLigaAndAno(liga, ano);
+		
+		LigaJogo ligaJogo = ligaJogoCRUDService.getByJogo(jogo, liga);
+		
+		return clubeRankingRepository.findByLigaJogoAndAno(ligaJogo, ano);
 
 	}
 }

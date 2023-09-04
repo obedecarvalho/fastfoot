@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 /**
@@ -18,17 +18,11 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Repository
 public interface TemporadaRepository extends JpaRepository<Temporada, Long>{
 
-	public List<Temporada> findByAtual(Boolean atual);
-	
-	public Optional<Temporada> findFirstByAtual(Boolean atual);
+	public Optional<Temporada> findFirstByJogoAndAtual(Jogo jogo, Boolean atual);
 
-	@Query("SELECT t.ano FROM Temporada t ORDER BY t.ano DESC ")
-	public List<Integer> getAnosTemporadas();
-
-	public Optional<Temporada> findFirstByAno(Integer ano);
+	public Optional<Temporada> findFirstByJogoAndAno(Jogo jogo, Integer ano);
 	
-	@Query("SELECT t FROM Temporada t WHERE t.ano = ( SELECT t2.ano - 1 FROM Temporada t2 WHERE t2.atual = TRUE) ORDER BY t.ano DESC ")
-	public Optional<Temporada> findFirstAnteriorAtual();
+	public Optional<Temporada> findFirstByJogoOrderByAnoDesc(Jogo jogo);
 	
-	public Optional<Temporada> findFirstByOrderByAnoDesc();
+	public List<Temporada> findByJogo(Jogo jogo);
 }

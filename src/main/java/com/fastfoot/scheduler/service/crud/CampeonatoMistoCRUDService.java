@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.repository.CampeonatoMistoRepository;
 import com.fastfoot.service.CRUDService;
@@ -53,7 +54,7 @@ public class CampeonatoMistoCRUDService implements CRUDService<CampeonatoMisto, 
 		return campeonatoMistoRepository.save(t);
 	}
 
-	public List<CampeonatoMisto> getAllTemporadaAtual() {
-		return campeonatoMistoRepository.findByTemporada(temporadaCRUDService.getTemporadaAtual());
+	public List<CampeonatoMisto> getAllTemporadaAtual(Jogo jogo) {
+		return campeonatoMistoRepository.findByTemporada(temporadaCRUDService.getTemporadaAtual(jogo));
 	}
 }

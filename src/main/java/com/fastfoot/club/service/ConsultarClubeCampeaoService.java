@@ -15,7 +15,8 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.probability.service.util.ClubeRankingProbabilidadeUtil;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
@@ -32,6 +33,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.CarregarParametroService;
+import com.fastfoot.service.LigaJogoCRUDService;
 
 @Service
 public class ConsultarClubeCampeaoService {
@@ -43,6 +45,9 @@ public class ConsultarClubeCampeaoService {
 	
 	@Autowired
 	private CarregarParametroService carregarParametroService;
+	
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 	
 	//###	REPOSITORY	###
 	
@@ -61,8 +66,8 @@ public class ConsultarClubeCampeaoService {
 	@Autowired
 	private ClubeRankingRepository clubeRankingRepository;
 
-	public List<ClubeTituloAnoDTO> consultarClubeCampeaoByAno(Integer ano) {
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+	public List<ClubeTituloAnoDTO> consultarClubeCampeaoByAno(Jogo jogo, Integer ano) {
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
 
@@ -78,7 +83,7 @@ public class ConsultarClubeCampeaoService {
 
 		} else {
 
-			temporada = temporadaCRUDService.getTemporadaByAno(ano);
+			temporada = temporadaCRUDService.getTemporadaByAno(jogo, ano);
 
 			if (temporada != null) {
 				clubeTituloAnosList.addAll(getCampeoes(temporada));
@@ -118,7 +123,8 @@ public class ConsultarClubeCampeaoService {
 
 		//int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
 
-		for (Liga liga : Liga.getAll()) {
+		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(t.getJogo());
+		for (LigaJogo liga : ligaJogos) {
 
 			/*copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
 
@@ -139,16 +145,16 @@ public class ConsultarClubeCampeaoService {
 		return clubeTituloAnosList;
 	}
 
-	private List<ClubeTituloAnoDTO> getCampeoesCopaNacional(Temporada t, Liga liga) {
+	private List<ClubeTituloAnoDTO> getCampeoesCopaNacional(Temporada t, LigaJogo liga) {
 
 		List<ClubeTituloAnoDTO> clubeTituloAnosList = new ArrayList<ClubeTituloAnoDTO>();
 
-		List<CampeonatoEliminatorio> copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLiga(t, liga);
+		List<CampeonatoEliminatorio> copasNacionais = campeonatoEliminatorioRepository.findByTemporadaAndLigaJogo(t, liga);
 
 		RodadaEliminatoria r = null;
 		List<PartidaEliminatoriaResultado> p = null;
 
-		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
+		int numeroRodadas = carregarParametroService.getNumeroRodadasCopaNacional(t.getJogo());
 
 		for (CampeonatoEliminatorio c : copasNacionais) {
 
@@ -213,7 +219,7 @@ public class ConsultarClubeCampeaoService {
 		return clubeTituloAnosList;
 	}
 	
-	public Map<Integer, Clube> getCampeoes(Temporada t, Liga liga) {
+	public Map<Integer, Clube> getCampeoes(Temporada t, LigaJogo liga) {
 		
 		Map<Integer, Clube> clubesCampeoes = new HashMap<Integer, Clube>();
 		

@@ -21,7 +21,7 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.ContratoRepository;
@@ -32,7 +32,7 @@ import com.fastfoot.player.service.RenovarContratosAutomaticamenteService;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.service.LigaJogoCRUDService;
 import com.fastfoot.service.util.DatabaseUtil;
 import com.fastfoot.service.util.RoletaUtil;
 import com.fastfoot.service.util.ValidatorUtil;
@@ -85,8 +85,8 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 	//###	SERVICE	###
 
-	@Autowired
-	private TemporadaCRUDService temporadaCRUDService;
+	/*@Autowired
+	private TemporadaCRUDService temporadaCRUDService;*/
 
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
@@ -102,20 +102,24 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 	@Autowired
 	private CalcularPrevisaoReceitaIngressosService calcularPrevisaoReceitaIngressosService;
+	
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 
-	public void executarTransferenciasAutomaticamente() {
+	public void executarTransferenciasAutomaticamente(Temporada temporada) {
 		
 		ResultadoExecucaoTransferenciasAutomaticasDTO elementosParaSalvarDTO = new ResultadoExecucaoTransferenciasAutomaticasDTO();
 		
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
-		Semana s = semanaCRUDService.getProximaSemana();
+		//Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Semana s = semanaCRUDService.getProximaSemana(temporada.getJogo());
 		
 		List<NecessidadeContratacaoClube> necessidadeContratacaoClubes = new ArrayList<NecessidadeContratacaoClube>();
 		List<DisponivelNegociacao> disponivelNegociacao = new ArrayList<DisponivelNegociacao>();
 		
 		List<CompletableFuture<PrepararDadosAnaliseTransferenciasReturn>> desenvolverJogadorFuture = new ArrayList<CompletableFuture<PrepararDadosAnaliseTransferenciasReturn>>();
 		
-		for (Liga liga : Liga.getAll()) {
+		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(temporada.getJogo());
+		for (LigaJogo liga : ligaJogos) {
 			desenvolverJogadorFuture.add(prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias(
 					temporada, liga, true));
 			desenvolverJogadorFuture.add(prepararDadosAnaliseTransferenciasService.prepararDadosAnaliseTransferencias(
@@ -410,7 +414,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	private Map<Clube, ClubeSaldo> getClubeSaldo(Temporada temporada) {
 
 		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual);
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual, temporada.getJogo().getId());
 		
 		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
 		
@@ -418,7 +422,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		
 		for (Map<String, Object> sc : saldoClubes) {
 			clubeSaldo = new ClubeSaldo();
-			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
+			clubeSaldo.setClube(new Clube(DatabaseUtil.getValueLong(sc.get("id_clube"))));
 			clubeSaldo.setSaldo(DatabaseUtil.getValueDecimal(sc.get("saldo")));
 			clubeSaldo.setPrevisaoSaidaSalarios(DatabaseUtil.getValueDecimal(sc.get("salarios_projetado")));
 			/*clubeSaldo.setPrevisaoEntradaIngressos(
@@ -440,6 +444,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 		return clubesSaldo;
 	}
 
+	@SuppressWarnings("unused")
 	private void possiveisTrocas(List<PropostaTransferenciaJogador> propostas, Map<Clube, ClubeSaldo> clubeSaldo) {//TODO
 		
 		List<PropostaTransferenciaJogador> propostasPossiveisTrocas;

@@ -11,7 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -30,16 +30,16 @@ public class PrepararDadosAnaliseTransferenciasService {
 	private AvaliarNecessidadeContratacaoClubeService avaliarNecessidadeContratacaoClubeService;
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<PrepararDadosAnaliseTransferenciasReturn> prepararDadosAnaliseTransferencias(Temporada temporada, Liga liga, boolean primeirosIds) {
+	public CompletableFuture<PrepararDadosAnaliseTransferenciasReturn> prepararDadosAnaliseTransferencias(Temporada temporada, LigaJogo liga, boolean primeirosIds) {
 		
 		List<Jogador> jogadores;
 
 		if (primeirosIds) {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15);
 		} else {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal());
 		}
 		
 		Map<Clube, List<Jogador>> jogadoresClube = jogadores.stream().collect(Collectors.groupingBy(Jogador::getClube));

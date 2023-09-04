@@ -24,6 +24,29 @@ public class DatabaseUtil {
 		throw new RuntimeException("Tipo de dado não mapeado: " + object.getClass());
 		
 	}
+	
+	/**
+	 * Trata variações de Long em retorno de banco de dados.
+	 * 
+	 * Usado para MySQL
+	 * 
+	 * 
+	 * @param object
+	 * @return
+	 */
+	public static Long getValueLong(Object object) {
+		
+		if (object instanceof Long) {
+			return (Long) object;
+		} else if (object instanceof BigInteger) {
+			return ((BigInteger) object).longValue();
+		} else if (object instanceof BigDecimal) {
+			return ((BigDecimal) object).longValue();
+		}
+		
+		throw new RuntimeException("Tipo de dado não mapeado: " + object.getClass());
+		
+	}
 
 	/**
 	 * Trata variações de Inteiros em retorno de banco de dados.

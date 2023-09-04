@@ -27,11 +27,11 @@ public class AgruparHabilidadeValorEstatisticaService {
 	
 	public void agrupar2(Temporada temporada) {
 
-		//habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
-		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas();
+		habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas(temporada.getId());
+		//habilidadeValorEstatisticaGrupoRepository.agruparHabilidadeValorEstatisticas();
 
-		//habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
-		habilidadeValorEstatisticaRepository.deleteAllInBatch();
+		habilidadeValorEstatisticaRepository.deleteByIdTemporada(temporada.getId());
+		//habilidadeValorEstatisticaRepository.deleteAllInBatch();
 		//habilidadeValorEstatisticaRepository.deleteAll();
 		
 	}

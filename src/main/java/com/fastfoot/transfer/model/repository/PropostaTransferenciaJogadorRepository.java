@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 
@@ -24,6 +25,7 @@ public interface PropostaTransferenciaJogadorRepository extends JpaRepository<Pr
 	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceitaIsNull(@Param("temporada") Temporada temporada);
 	
 	public List<PropostaTransferenciaJogador> findByTemporadaAndPropostaAceita(Temporada temporada, Boolean propostaAceita);
-	
-	public List<PropostaTransferenciaJogador> findByPropostaAceita(Boolean propostaAceita);
+
+	@Query(" SELECT ptj FROM PropostaTransferenciaJogador ptj WHERE ptj.temporada.jogo = :jogo AND ptj.propostaAceita = :propostaAceita ")
+	public List<PropostaTransferenciaJogador> findByJogoAndPropostaAceita(@Param("jogo") Jogo jogo, @Param("propostaAceita") Boolean propostaAceita);
 }

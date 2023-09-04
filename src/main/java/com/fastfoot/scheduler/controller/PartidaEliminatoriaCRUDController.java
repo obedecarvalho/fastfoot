@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.service.crud.PartidaEliminatoriaCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -28,6 +30,9 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 	
 	@Autowired
 	private PartidaEliminatoriaCRUDService partidaEliminatoriaCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/partidasEliminatorias")
@@ -55,16 +60,22 @@ public class PartidaEliminatoriaCRUDController implements CRUDController<Partida
 
 	@GetMapping("/partidasEliminatorias")
 	public ResponseEntity<List<PartidaEliminatoriaResultado>> getAll(
-			@RequestParam(name = "idClube", required = false) Integer idClube,
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "idClube", required = false) Long idClube,
 			@RequestParam(name = "idCampeonato", required = false) Long idCampeonato,
 			@RequestParam(name = "numeroSemana", required = false) Integer numeroSemana) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 			
 			List<PartidaEliminatoriaResultado> partidas;
 			
 			if (!ValidatorUtil.isEmpty(idClube) || !ValidatorUtil.isEmpty(idCampeonato)
 					|| !ValidatorUtil.isEmpty(numeroSemana)) {
-				partidas = partidaEliminatoriaCRUDService.getByIdClubeIdCampeonatoNumeroSemana(idClube, idCampeonato, numeroSemana);
+				partidas = partidaEliminatoriaCRUDService.getByIdClubeIdCampeonatoNumeroSemana(jogo, idClube, idCampeonato, numeroSemana);
 			} else {
 				partidas = partidaEliminatoriaCRUDService.getAll();
 			}

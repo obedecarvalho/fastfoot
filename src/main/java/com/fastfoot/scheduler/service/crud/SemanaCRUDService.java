@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.service.CRUDService;
@@ -50,24 +51,24 @@ public class SemanaCRUDService implements CRUDService<Semana, Long> {
 		return semanaRepository.save(t);
 	}
 	
-	public Semana getSemanaAtual() {
-		Optional<Semana> semanaOpt = semanaRepository.findSemanaAtual();
+	public Semana getSemanaAtual(Jogo jogo) {
+		Optional<Semana> semanaOpt = semanaRepository.findSemanaAtual(jogo);
 		if (semanaOpt.isPresent()) {
 			return semanaOpt.get();
 		}
 		return null;
 	}
 	
-	public Semana getProximaSemana() {
-		Optional<Semana> semanaOpt = semanaRepository.findProximaSemana();
+	public Semana getProximaSemana(Jogo jogo) {
+		Optional<Semana> semanaOpt = semanaRepository.findProximaSemana(jogo);
 		if (semanaOpt.isPresent()) {
 			return semanaOpt.get();
 		}
 		return null;
 	}
 	
-	public Semana getByNumeroSemanaTemporadaAtual(Integer numeroSemana) {
-		Optional<Semana> semanaOpt = semanaRepository.findByNumeroSemanaTemporadaAtual(numeroSemana);
+	public Semana getByNumeroSemanaTemporadaAtual(Jogo jogo, Integer numeroSemana) {
+		Optional<Semana> semanaOpt = semanaRepository.findByNumeroSemanaTemporadaAtual(jogo, numeroSemana);
 		if (semanaOpt.isPresent()) {
 			return semanaOpt.get();
 		}

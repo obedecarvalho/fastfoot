@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.HabilidadeEstatisticaPercentil;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
@@ -28,21 +29,21 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	private JogadorRepository jogadorRepository;
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(int idadeMin, int idadeMax) {
+	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(Jogo jogo, int idadeMin, int idadeMax) {
 
 		for (int i = idadeMin; i < idadeMax; i++) {
-			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
+			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.REGULAR.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
-					ModoDesenvolvimentoJogador.REGULAR.ordinal());
-			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
+					ModoDesenvolvimentoJogador.REGULAR.ordinal(), jogo.getId());
+			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.PRECOCE.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
-					ModoDesenvolvimentoJogador.PRECOCE.ordinal());
-			habilidadeValorRepository.atualizarPassoDesenvolvimento2(i,
+					ModoDesenvolvimentoJogador.PRECOCE.ordinal(), jogo.getId());
+			habilidadeValorRepository.atualizarPassoDesenvolvimento(i,
 					JogadorFactory.QTDE_DESENVOLVIMENTO_ANO_JOGADOR.intValue(),
 					ModoDesenvolvimentoJogador.TARDIO.getValorAjuste()[i - JogadorFactory.IDADE_MIN + 1],
-					ModoDesenvolvimentoJogador.TARDIO.ordinal());
+					ModoDesenvolvimentoJogador.TARDIO.ordinal(), jogo.getId());
 		}
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
@@ -52,7 +53,6 @@ public class AtualizarPassoDesenvolvimentoJogadorService {
 	public CompletableFuture<Boolean> ajustarPassoDesenvolvimento(List<Jogador> jogadores) {
 		
 		for (Jogador j : jogadores) {
-			//j.setIdade(j.getIdade() + 1);
 			if ((j.getIdade() + 1) < JogadorFactory.IDADE_MAX) {
 				JogadorFactory.getInstance().ajustarPassoDesenvolvimento(j);
 			}

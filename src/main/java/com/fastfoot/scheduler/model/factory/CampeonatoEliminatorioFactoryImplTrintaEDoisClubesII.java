@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -31,7 +31,7 @@ public class CampeonatoEliminatorioFactoryImplTrintaEDoisClubesII extends Campeo
 	}
 
 	@Override
-	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 
 		CampeonatoEliminatorio campeonato = super.criarCampeonatoCopaNacional(temporada, liga, clubes, nivelCampeonato);
 

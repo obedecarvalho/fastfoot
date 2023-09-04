@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEnergia;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
@@ -23,8 +24,8 @@ public class CarregarJogadorEnergiaService {
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
 
-	public void carregarJogadorEnergia(List<Jogador> jogadores) {
-		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogador();
+	public void carregarJogadorEnergia(Jogo jogo, List<Jogador> jogadores) {
+		List<Map<String, Object>> jogEnergia = jogadorEnergiaRepository.findEnergiaJogador(jogo.getId());
 
 		carregarJogadorEnergia(jogadores, jogEnergia);
 	}

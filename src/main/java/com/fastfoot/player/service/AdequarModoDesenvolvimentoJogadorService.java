@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.ModoDesenvolvimentoJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
@@ -31,16 +31,16 @@ public class AdequarModoDesenvolvimentoJogadorService {
 	private JogadorEstatisticasTemporadaRepository jogadorEstatisticasTemporadaRepository;
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(Temporada temporada, Liga liga, boolean primeirosIds) {
+	public CompletableFuture<Boolean> adequarModoDesenvolvimentoJogador(Temporada temporada, LigaJogo liga, boolean primeirosIds) {
 
 		List<JogadorEstatisticasTemporada> jets;
 
 		if (primeirosIds) {
-			jets = jogadorEstatisticasTemporadaRepository.findByLigaClubeAndStatusJogadorAndIdadeBetween(liga,
-					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16, JogadorFactory.IDADE_MIN, 23);
+			jets = jogadorEstatisticasTemporadaRepository.findByLigaJogoClubeAndStatusJogadorAndIdadeBetween(liga,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15, JogadorFactory.IDADE_MIN, 23);
 		} else {
-			jets = jogadorEstatisticasTemporadaRepository.findByLigaClubeAndStatusJogadorAndIdadeBetween(liga,
-					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32, JogadorFactory.IDADE_MIN, 23);
+			jets = jogadorEstatisticasTemporadaRepository.findByLigaJogoClubeAndStatusJogadorAndIdadeBetween(liga,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal(), JogadorFactory.IDADE_MIN, 23);
 		}
 
 		Map<Jogador, List<JogadorEstatisticasTemporada>> jogadorEstatisticas = jets.stream()

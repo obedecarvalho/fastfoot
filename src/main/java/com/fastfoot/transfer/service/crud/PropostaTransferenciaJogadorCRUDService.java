@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.service.CRUDService;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.model.repository.PropostaTransferenciaJogadorRepository;
@@ -52,8 +53,8 @@ public class PropostaTransferenciaJogadorCRUDService implements CRUDService<Prop
 		return propostaTransferenciaJogadorRepository.save(t);
 	}
 	
-	public List<PropostaTransferenciaJogador> getByPropostaAceita(boolean propostaAceita){
-		return propostaTransferenciaJogadorRepository.findByPropostaAceita(propostaAceita);
+	public List<PropostaTransferenciaJogador> getByPropostaAceita(Jogo jogo, boolean propostaAceita){
+		return propostaTransferenciaJogadorRepository.findByJogoAndPropostaAceita(jogo, propostaAceita);
 	}
 
 }

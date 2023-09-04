@@ -9,14 +9,17 @@ import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
 
 @Repository
-public interface ClubeTituloRankingRepository extends JpaRepository<ClubeTituloRanking, Integer> {
+public interface ClubeTituloRankingRepository extends JpaRepository<ClubeTituloRanking, Long> {
 
 	public List<ClubeTituloRanking> findByClube(Clube clube);
 
-	@Query("SELECT crt FROM ClubeTituloRanking crt WHERE crt.clube.liga = :liga")
-	public List<ClubeTituloRanking> findByLiga(@Param("liga") Liga liga);
+	@Query("SELECT crt FROM ClubeTituloRanking crt WHERE crt.clube.ligaJogo = :ligaJogo")
+	public List<ClubeTituloRanking> findByLigaJogo(@Param("ligaJogo") LigaJogo ligaJogo);
 
+	@Query("SELECT ctr FROM ClubeTituloRanking ctr WHERE ctr.clube.ligaJogo.jogo = :jogo ")
+	public List<ClubeTituloRanking> findByJogo(@Param("jogo") Jogo jogo);
 }

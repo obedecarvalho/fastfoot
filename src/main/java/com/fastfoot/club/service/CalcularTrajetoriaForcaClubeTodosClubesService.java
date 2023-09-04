@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
 
@@ -29,9 +30,9 @@ public class CalcularTrajetoriaForcaClubeTodosClubesService {
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
 	
-	public void calcularTrajetoriaForcaClube() {
-		List<Clube> clubes = clubeRepository.findAll(); 
-		Semana s = semanaCRUDService.getProximaSemana();
+	public void calcularTrajetoriaForcaClube(Jogo jogo) {
+		List<Clube> clubes = clubeRepository.findByJogo(jogo);
+		Semana s = semanaCRUDService.getProximaSemana(jogo);
 
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		

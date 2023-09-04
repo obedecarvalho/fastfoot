@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -65,7 +66,7 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 		return partidaAmistosaResultadoRepository.save(t);
 	}
 	
-	public List<PartidaAmistosaResultado> getByIdClube(Integer idClube) {
+	public List<PartidaAmistosaResultado> getByIdClube(Long idClube) {
 
 		Optional<Clube> clubeOpt = clubeRepository.findById(idClube);
 
@@ -74,14 +75,14 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 		}
 
 		List<PartidaAmistosaResultado> partidas = partidaAmistosaResultadoRepository
-				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(), clubeOpt.get());
+				.findByTemporadaAndClube(temporadaCRUDService.getTemporadaAtual(clubeOpt.get().getLigaJogo().getJogo()), clubeOpt.get());
 
 		return partidas;
 	}
 
-	public List<PartidaAmistosaResultado> getByNumeroSemana(Integer numeroSemana) {
+	public List<PartidaAmistosaResultado> getByNumeroSemana(Jogo jogo, Integer numeroSemana) {
 
-		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporadaAtual = temporadaCRUDService.getTemporadaAtual(jogo);
 
 		Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporadaAtual, numeroSemana);
 
@@ -94,14 +95,14 @@ public class PartidaAmistosaCRUDService implements CRUDService<PartidaAmistosaRe
 		return partidas;
 	}
 	
-	public List<PartidaAmistosaResultado> getByIdClubeNumeroSemana(Integer idClube, Integer numeroSemana) {
+	public List<PartidaAmistosaResultado> getByIdClubeNumeroSemana(Long idClube, Integer numeroSemana, Jogo jogo) {
 
 		if (!ValidatorUtil.isEmpty(idClube) && !ValidatorUtil.isEmpty(numeroSemana)) {
 			// TODO
 		} else if (!ValidatorUtil.isEmpty(idClube)) {
 			return getByIdClube(idClube);
 		} else if (!ValidatorUtil.isEmpty(numeroSemana)) {
-			return getByNumeroSemana(numeroSemana);
+			return getByNumeroSemana(jogo, numeroSemana);
 		}
 
 		return null;

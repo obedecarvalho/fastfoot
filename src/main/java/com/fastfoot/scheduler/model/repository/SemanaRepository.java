@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -18,12 +19,12 @@ public interface SemanaRepository extends JpaRepository<Semana, Long>{
 	
 	public Optional<Semana> findFirstByTemporadaAndNumero(Temporada temporada, Integer numero);
 	
-	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.temporada.semanaAtual = s.numero ")
-	public Optional<Semana> findSemanaAtual();
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.temporada.semanaAtual = s.numero AND s.temporada.jogo = :jogo ")
+	public Optional<Semana> findSemanaAtual(@Param("jogo") Jogo jogo);
 	
-	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND (s.temporada.semanaAtual + 1) = s.numero ")
-	public Optional<Semana> findProximaSemana();
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND (s.temporada.semanaAtual + 1) = s.numero AND s.temporada.jogo = :jogo ")
+	public Optional<Semana> findProximaSemana(@Param("jogo") Jogo jogo);
 	
-	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.numero = :numero")
-	public Optional<Semana> findByNumeroSemanaTemporadaAtual(@Param("numero") Integer numero);
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.numero = :numero AND s.temporada.jogo = :jogo ")
+	public Optional<Semana> findByNumeroSemanaTemporadaAtual(@Param("jogo") Jogo jogo, @Param("numero") Integer numero);
 }

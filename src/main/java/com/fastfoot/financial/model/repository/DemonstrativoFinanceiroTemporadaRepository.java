@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.DemonstrativoFinanceiroTemporada;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -18,8 +17,4 @@ public interface DemonstrativoFinanceiroTemporadaRepository extends JpaRepositor
 	public List<DemonstrativoFinanceiroTemporada> findByTemporada(Temporada temporada);
 	
 	public List<DemonstrativoFinanceiroTemporada> findByTemporadaAndClube(Temporada temporada, Clube clube);
-	
-	public List<DemonstrativoFinanceiroTemporada> findByTipoMovimentacao(TipoMovimentacaoFinanceira tipoMovimentacao);
-	
-	public List<DemonstrativoFinanceiroTemporada> findByTipoMovimentacaoIn(List<TipoMovimentacaoFinanceira> tipoMovimentacao);
 }

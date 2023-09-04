@@ -13,7 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
@@ -112,8 +112,13 @@ public class CampeonatoMisto implements CampeonatoJogavel {
 		this.primeiraRodadaEliminatoria = primeiraRodadaEliminatoria;
 	}
 
-	@Override
+	/*@Override
 	public Liga getLiga() {
+		return null;
+	}*/
+	
+	@Override
+	public LigaJogo getLigaJogo() {
 		return null;
 	}
 

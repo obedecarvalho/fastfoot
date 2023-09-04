@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
@@ -35,7 +35,7 @@ public class ClubeRankingUtil {
 		}
 	};
 	
-	public static List<ClubeRanking> rankearClubesTemporada(Temporada temporada, List<Clube> clubes) {
+	public static List<ClubeRanking> rankearClubesTemporada(Temporada temporada, List<Clube> clubes, List<LigaJogo> ligaJogos) {
 		List<ClubeRanking> rankings =  gerarClubeRankingInicial(clubes, temporada);
 
 		Map<Clube, ClubeRanking> clubeRankings = rankings.stream().collect(Collectors.toMap(ClubeRanking::getClube, Function.identity()));
@@ -52,16 +52,16 @@ public class ClubeRankingUtil {
 		rankearCopaNacional(clubeRankings, copasNacionaisII);//Esperado que CNII subscreva CNI
 		rankearContinental(clubeRankings, temporada.getCampeonatosContinentais());//Esperado que CIII subscreva CII e CII subscreva CI
 		
-		gerarPosicaoGeral(rankings);
+		gerarPosicaoGeral(rankings, ligaJogos);
 		gerarPosicaoGlobal(rankings);
 		
 		return rankings;
 	}
 
-	protected static void gerarPosicaoGeral(List<ClubeRanking> rankings) {
+	protected static void gerarPosicaoGeral(List<ClubeRanking> rankings, List<LigaJogo> ligaJogos) {
 		List<ClubeRanking> rankingsLiga = null;
-		for (Liga l : Liga.getAll()) {
-			rankingsLiga = rankings.stream().filter(r -> l.equals(r.getClube().getLiga())).collect(Collectors.toList());
+		for (LigaJogo l : ligaJogos) {
+			rankingsLiga = rankings.stream().filter(r -> l.equals(r.getClube().getLigaJogo())).collect(Collectors.toList());
 			gerarPosicaoGeralLiga(rankingsLiga);
 		}
 	}

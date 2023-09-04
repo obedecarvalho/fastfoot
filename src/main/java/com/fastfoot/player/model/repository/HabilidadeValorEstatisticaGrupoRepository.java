@@ -15,8 +15,6 @@ import com.fastfoot.scheduler.model.entity.Temporada;
 @Repository
 public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository<HabilidadeValorEstatisticaGrupo, Long> {
 
-	//public List<HabilidadeValorEstatistica> findByHabilidadeValor(HabilidadeValor habilidadeValor);
-
 	public List<HabilidadeValorEstatisticaGrupo> findByTemporadaAndAmistoso(Temporada temporada, Boolean amistoso);
 	
 	//###	SELECT ESPECIFICOS	###
@@ -56,6 +54,7 @@ public interface HabilidadeValorEstatisticaGrupoRepository extends JpaRepository
 	)
 	public void agruparHabilidadeValorEstatisticas(Long idTemporadaAgrupar);
 	
+	@Deprecated
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 

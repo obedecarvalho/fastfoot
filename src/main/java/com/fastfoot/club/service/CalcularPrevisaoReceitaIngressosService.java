@@ -70,12 +70,12 @@ public class CalcularPrevisaoReceitaIngressosService {
 			
 			receita = 0.0d;
 			
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasMandante.get(clube), true);
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasEliminatoriasMandante.get(clube), true);
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasAmistosasMandante.get(clube), true);
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasVisitante.get(clube), false);
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasEliminatoriasVisitante.get(clube), false);
-			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(partidasAmistosasVisitante.get(clube), false);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasMandante.get(clube), true);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasEliminatoriasMandante.get(clube), true);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasAmistosasMandante.get(clube), true);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasVisitante.get(clube), false);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasEliminatoriasVisitante.get(clube), false);
+			receita += calcularTorcidaPartidaService.calcularPrevisaoEntradaIngressos(temporada.getJogo(), partidasAmistosasVisitante.get(clube), false);
 
 			clubeReceita.put(clube, receita);
 		}

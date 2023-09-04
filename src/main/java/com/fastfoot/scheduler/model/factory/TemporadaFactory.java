@@ -4,17 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
 public class TemporadaFactory {
 	
-	public static Temporada criarTemporada(Integer ano) {
+	public static Temporada criarTemporada(Jogo jogo, Integer ano) {
 		Temporada temporada = new Temporada();
 		temporada.setAtual(true);
 		temporada.setAno(ano);
 		temporada.setSemanas(criarSemanas(temporada));
 		temporada.setSemanaAtual(0);
+		temporada.setJogo(jogo);
 		return temporada;
 	}
 	

@@ -9,7 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
@@ -28,24 +29,24 @@ public class CalcularHabilidadeGrupoValorService {
 	private JogadorRepository jogadorRepository;
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularHabilidadeGrupoValor(HabilidadeGrupo habilidadeGrupo) {
+	public CompletableFuture<Boolean> calcularHabilidadeGrupoValor(Jogo jogo, HabilidadeGrupo habilidadeGrupo) {
 
-		habilidadeGrupoValorRepository.calcular2(habilidadeGrupo.ordinal(), habilidadeGrupo.getHabilidadesOrdinal());
+		habilidadeGrupoValorRepository.calcular(habilidadeGrupo.ordinal(), habilidadeGrupo.getHabilidadesOrdinal(), jogo.getId());
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 	
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularHabilidadeGrupoValor(Liga liga, boolean primeirosIds) {
+	public CompletableFuture<Boolean> calcularHabilidadeGrupoValor(LigaJogo liga, boolean primeirosIds) {
 		
 		List<Jogador> jogadores;
 
 		if (primeirosIds) {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15);
 		} else {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal());
 		}
 		
 		calcularHabilidadeGrupoValor(jogadores);

@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.repository.ClubeRepository;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
@@ -50,7 +50,7 @@ public class MarcarAmistososSemanalmenteService {
 
 		//TODO: dar um shuffle na lista OU fazer heuristica para evitar muitos amistosos entre os mesmos dois clubes 
 		
-		List<Clube> clubes = clubeRepository.findAll();
+		List<Clube> clubes = clubeRepository.findByJogo(semanaAmistoso.getTemporada().getJogo());
 
 		List<PartidaResultado> partidas = partidaResultadoRepository.findBySemana(semanaAmistoso);
 
@@ -79,7 +79,7 @@ public class MarcarAmistososSemanalmenteService {
 
 		clubes.removeAll(clubesComJogos);
 		
-		Map<Liga, List<Clube>> clubesLiga = clubes.stream().collect(Collectors.groupingBy(Clube::getLiga));
+		Map<LigaJogo, List<Clube>> clubesLiga = clubes.stream().collect(Collectors.groupingBy(Clube::getLigaJogo));
 		
 		List<RodadaAmistosa> rodadas = criarPartidas(semanaAmistoso, clubesLiga, clubes.size());
 		
@@ -90,12 +90,12 @@ public class MarcarAmistososSemanalmenteService {
 				.flatMap(r -> r.getPartidas().stream()).collect(Collectors.toList()));
 	}
 
-	private List<RodadaAmistosa> criarPartidas(Semana semanaAmistoso, Map<Liga, List<Clube>> clubesLiga, int totalClubes) {
+	private List<RodadaAmistosa> criarPartidas(Semana semanaAmistoso, Map<LigaJogo, List<Clube>> clubesLiga, int totalClubes) {
 		
 		List<Clube> clubesA = null;
 		List<Clube> clubesB = null;
-		Liga ligaA = null;
-		Liga ligaB = null;
+		LigaJogo ligaA = null;
+		LigaJogo ligaB = null;
 		
 		List<RodadaAmistosa> rodadas = new ArrayList<RodadaAmistosa>();
 		
@@ -127,17 +127,17 @@ public class MarcarAmistososSemanalmenteService {
 			}
 			
 			
-			List<Liga> ligas = Liga.getAll();
+			List<LigaJogo> ligas = new ArrayList<LigaJogo>(clubesLiga.keySet());
 			Collections.shuffle(ligas);
 			
-			for (Liga l : ligas) {
+			for (LigaJogo l : ligas) {
 				if (clubesA == null || clubesLiga.get(l).size() > clubesA.size()) {
 					clubesA = clubesLiga.get(l);
 					ligaA = l;
 				}
 			}
 			
-			for (Liga l : ligas) {
+			for (LigaJogo l : ligas) {
 				if (!ligaA.equals(l) && (clubesB == null || clubesLiga.get(l).size() > clubesB.size())) {
 					clubesB = clubesLiga.get(l);
 					ligaB = l;

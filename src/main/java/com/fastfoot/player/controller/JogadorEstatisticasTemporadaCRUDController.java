@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.service.crud.ClubeCRUDService;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.player.model.entity.JogadorEstatisticasTemporada;
 import com.fastfoot.player.service.crud.JogadorEstatisticasTemporadaCRUDService;
@@ -42,6 +43,9 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 
 	@Autowired
 	private JogadorEstatisticasTemporadaCRUDService jogadorEstatisticasTemporadaCRUDService;
+	
+	@Autowired
+	private ClubeCRUDService clubeCRUDService;
 
 	@Override
 	@PostMapping("/jogadorEstatisticasTemporada")
@@ -67,15 +71,20 @@ public class JogadorEstatisticasTemporadaCRUDController implements CRUDControlle
 	}
 
 	@GetMapping("/jogadorEstatisticasTemporada")
-	public ResponseEntity<List<JogadorEstatisticasTemporada>> getAll(@RequestParam(name = "idClube", required = false) Integer idClube) {
+	public ResponseEntity<List<JogadorEstatisticasTemporada>> getAll(@RequestParam(name = "idClube", required = false) Long idClube) {
 		try {
+			
+			Clube clube = clubeCRUDService.getById(idClube);
+			if (ValidatorUtil.isEmpty(clube)) {
+				return ResponseEntity.internalServerError().build();
+			}
 
 			List<JogadorEstatisticasTemporada> estatisticas;
 			
 			if (idClube == null) {
 				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAll();
 			} else {
-				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAgrupadoTemporadaAtualByClube(new Clube(idClube), false);
+				estatisticas = jogadorEstatisticasTemporadaCRUDService.getAgrupadoTemporadaAtualByClube(clube, false);
 			}
 	
 			if (ValidatorUtil.isEmpty(estatisticas)) {

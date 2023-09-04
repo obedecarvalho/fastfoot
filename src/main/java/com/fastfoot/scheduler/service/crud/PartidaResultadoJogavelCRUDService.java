@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -82,7 +83,7 @@ public class PartidaResultadoJogavelCRUDService {
 	}
 	
 	public List<PartidaResultadoJogavel> getByClubeAndTemporadaAtual(Clube clube) {
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(clube.getLigaJogo().getJogo());
 		
 		List<PartidaResultadoJogavel> partidas = new ArrayList<PartidaResultadoJogavel>();
 
@@ -93,8 +94,8 @@ public class PartidaResultadoJogavelCRUDService {
 		return partidas;
 	}
 	
-	public List<PartidaResultadoJogavel> getByNumeroSemanaTemporadaAtual(Integer numeroSemana) {
-		return getBySemana(semanaCRUDService.getByNumeroSemanaTemporadaAtual(numeroSemana));
+	public List<PartidaResultadoJogavel> getByNumeroSemanaTemporadaAtual(Jogo jogo, Integer numeroSemana) {
+		return getBySemana(semanaCRUDService.getByNumeroSemanaTemporadaAtual(jogo, numeroSemana));
 	}
 
 	public List<PartidaResultadoJogavel> getBySemana(Semana semana) {

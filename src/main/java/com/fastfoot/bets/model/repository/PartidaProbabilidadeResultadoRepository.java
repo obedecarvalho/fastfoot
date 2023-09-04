@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaResultado;
@@ -16,6 +15,4 @@ public interface PartidaProbabilidadeResultadoRepository extends JpaRepository<P
 	public List<PartidaProbabilidadeResultado> findByPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado);
 	
 	public List<PartidaProbabilidadeResultado> findByPartidaResultado(PartidaResultado partidaResultado);
-	
-	public List<PartidaProbabilidadeResultado> findByTipoProbabilidadeResultadoPartida(TipoProbabilidadeResultadoPartida tipoProbabilidadeResultadoPartida);
 }

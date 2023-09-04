@@ -24,14 +24,15 @@ public class CalcularJurosBancariosService {
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 	
 	public void calcularJurosBancarios(Semana semana) {
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoPorClube();
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository
+				.findSaldoPorClubeByIdJogo(semana.getTemporada().getJogo().getId());
 		ClubeSaldo clubeSaldo = null;
 		
 		List<ClubeSaldo> clubeSaldos = new ArrayList<ClubeSaldo>();
 		
 		for (Map<String, Object> sc : saldoClubes) {
 			clubeSaldo = new ClubeSaldo();
-			clubeSaldo.setClube(new Clube((Integer) sc.get("id_clube")));
+			clubeSaldo.setClube(new Clube(DatabaseUtil.getValueLong(sc.get("id_clube"))));
 			clubeSaldo.setSaldo(DatabaseUtil.getValueDecimal(sc.get("saldo")));
 			clubeSaldos.add(clubeSaldo);
 		}

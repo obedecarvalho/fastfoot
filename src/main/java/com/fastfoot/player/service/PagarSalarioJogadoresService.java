@@ -30,7 +30,7 @@ public class PagarSalarioJogadoresService {
 	private ContratoRepository contratoRepository;
 
 	public void pagarSalarioJogadores(Semana semana) {
-		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube(semana.getTemporada().getJogo().getId());
 
 		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 		
@@ -40,7 +40,7 @@ public class PagarSalarioJogadoresService {
 			
 			valorSalario = Math.round((DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia"))) * porcentagemSalario) / 100d;//Arredondar
 			
-			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,
+			saidas.add(criarMovimentacaoFinanceira(new Clube(DatabaseUtil.getValueLong(vtc.get("id_clube"))), semana, valorSalario,
 					String.format("Salários (%d)", semana.getNumero())));
 		}
 
@@ -48,7 +48,8 @@ public class PagarSalarioJogadoresService {
 	}
 
 	public void pagarSalarioJogadoresPorContrato(Semana semana) {
-		List<Map<String, Object>> valorSalariosClubes = contratoRepository.findValorTotalSalariosPorClube();
+		List<Map<String, Object>> valorSalariosClubes = contratoRepository
+				.findValorTotalSalariosPorClube(semana.getTemporada().getJogo().getId());
 
 		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 		
@@ -59,7 +60,7 @@ public class PagarSalarioJogadoresService {
 			valorSalario = DatabaseUtil.getValueDecimal(vtc.get("total_salarios")); 
 					//Math.round(((Double) vtc.get("valor_transferencia")) * porcentagemSalario) / 100d;//Arredondar
 			
-			saidas.add(criarMovimentacaoFinanceira(new Clube((Integer) vtc.get("id_clube")), semana, valorSalario,
+			saidas.add(criarMovimentacaoFinanceira(new Clube(DatabaseUtil.getValueLong(vtc.get("id_clube"))), semana, valorSalario,
 					String.format("Salários (%d)", semana.getNumero())));
 		}
 

@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -27,6 +30,9 @@ public class TemporadaCRUDController implements CRUDController<Temporada, Long> 
 
 	@Autowired
 	private TemporadaCRUDService temporadaCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/temporadas")
@@ -47,11 +53,22 @@ public class TemporadaCRUDController implements CRUDController<Temporada, Long> 
 	}
 	
 	@Override
-	@GetMapping("/temporadas")
 	public ResponseEntity<List<Temporada>> getAll() {
+		//TODO
+		return null;
+	}
+	
+	//@Override
+	@GetMapping("/temporadas")
+	public ResponseEntity<List<Temporada>> getAll(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			List<Temporada> temporadas = temporadaCRUDService.getAll();
+			List<Temporada> temporadas = temporadaCRUDService.getByJogo(jogo);
 			
 			if (ValidatorUtil.isEmpty(temporadas)) {
 				return ResponseEntity.noContent().build();
@@ -65,10 +82,15 @@ public class TemporadaCRUDController implements CRUDController<Temporada, Long> 
 	}
 	
 	@GetMapping("/temporadas/temporadaAtual")
-	public ResponseEntity<Temporada> getTemporadaAtual() {
+	public ResponseEntity<Temporada> getTemporadaAtual(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+			Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 
 			if (ValidatorUtil.isEmpty(temporada)) {
 				return ResponseEntity.noContent().build();

@@ -7,15 +7,15 @@ import com.fastfoot.club.model.entity.Clube;
 
 public class ClubeDTO {
 
-	private Integer idClube;
+	private Long idClube;
 	
 	private String nomeClube;
 
-	public Integer getIdClube() {
+	public Long getIdClube() {
 		return idClube;
 	}
 
-	public void setIdClube(Integer idClube) {
+	public void setIdClube(Long idClube) {
 		this.idClube = idClube;
 	}
 

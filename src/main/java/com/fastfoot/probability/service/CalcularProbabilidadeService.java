@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.probability.model.CampeonatoClubeProbabilidadePosicao;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.ClubeRankingPosicaoProbabilidade;
@@ -36,13 +37,13 @@ public abstract class CalcularProbabilidadeService {
 
 	protected abstract Integer getPosicoesClassificamCIIMax();
 
-	protected abstract Integer getPosicoesClassificamCIIIMin();
+	protected abstract Integer getPosicoesClassificamCIIIMin(Jogo jogo);
 
-	protected abstract Integer getPosicoesClassificamCIIIMax();
+	protected abstract Integer getPosicoesClassificamCIIIMax(Jogo jogo);
 
 	protected abstract Integer getPosicoesClassificamCNIMin();
 
-	protected abstract Integer getPosicoesClassificamCNIMax();
+	protected abstract Integer getPosicoesClassificamCNIMax(Jogo jogo);
 	
 	protected abstract void jogarPartida(PartidaResultado p, Map<Clube, ClassificacaoProbabilidade> classificacaoProbabilidades,
 			PartidaProbabilidadeResultado partidaProbabilidade);
@@ -198,7 +199,7 @@ public abstract class CalcularProbabilidadeService {
 	
 				//CIII
 				Integer probabilidadeClassificacaoCIII = 0;
-				for (int i = getPosicoesClassificamCIIIMin(); i <= getPosicoesClassificamCIIIMax(); i++ ) {
+				for (int i = getPosicoesClassificamCIIIMin(semana.getTemporada().getJogo()); i <= getPosicoesClassificamCIIIMax(semana.getTemporada().getJogo()); i++ ) {
 					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
 					if (crpp != null) {
 						probabilidadeClassificacaoCIII += crpp.getProbabilidade();
@@ -209,7 +210,7 @@ public abstract class CalcularProbabilidadeService {
 	
 				//CNI
 				Integer probabilidadeClassificacaoCNI = 0;
-				for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(); i++ ) {
+				for (int i = getPosicoesClassificamCNIMin(); i <= getPosicoesClassificamCNIMax(semana.getTemporada().getJogo()); i++ ) {
 					crpp = cp.getClubeProbabilidadePosicaoGeral().get(i);
 					if (crpp != null) {
 						probabilidadeClassificacaoCNI += crpp.getProbabilidade();

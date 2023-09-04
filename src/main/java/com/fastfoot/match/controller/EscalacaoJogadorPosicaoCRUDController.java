@@ -54,7 +54,7 @@ public class EscalacaoJogadorPosicaoCRUDController implements CRUDController<Esc
 	}
 
 	@GetMapping("/escalacaoJogadorPosicao")
-	public ResponseEntity<List<EscalacaoJogadorPosicao>> getAll(@RequestParam(name = "idClube", required = false) Integer idClube) {
+	public ResponseEntity<List<EscalacaoJogadorPosicao>> getAll(@RequestParam(name = "idClube", required = false) Long idClube) {
 		try {
 
 			List<EscalacaoJogadorPosicao> jogadores;

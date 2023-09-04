@@ -8,7 +8,7 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 	
 	private Long idJogador;
 	
-	private Integer idClube;
+	private Long idClube;
 	
 	private Integer forcaGeralJogador;
 	
@@ -34,11 +34,11 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 		this.idJogador = idJogador;
 	}
 
-	public Integer getIdClube() {
+	public Long getIdClube() {
 		return idClube;
 	}
 
-	public void setIdClube(Integer idClube) {
+	public void setIdClube(Long idClube) {
 		this.idClube = idClube;
 	}
 

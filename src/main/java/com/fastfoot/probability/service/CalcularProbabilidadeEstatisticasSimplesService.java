@@ -17,6 +17,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.service.ConsultarClubeCampeaoService;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.probability.model.ClassificacaoProbabilidade;
 import com.fastfoot.probability.model.TipoCampeonatoClubeProbabilidade;
 import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
@@ -87,8 +88,8 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 		
 		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional,
 				nacionalII, null, TipoCampeonatoClubeProbabilidade.ESTATISTICAS_SIMPLES,
-				consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLiga()),
-				carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CLUBES_REBAIXADOS));
+				consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLigaJogo()),
+				carregarParametroService.getParametroInteger(semana.getTemporada().getJogo(), ParametroConstantes.NUMERO_CLUBES_REBAIXADOS));
 		
 		salvarProbabilidades(probabilidades);
 		
@@ -171,9 +172,9 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 	
 	protected Integer getPosicoesClassificamCIIMax() { return 8; }
 	
-	protected Integer getPosicoesClassificamCIIIMin() {
+	protected Integer getPosicoesClassificamCIIIMin(Jogo jogo) {
 
-		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -182,11 +183,11 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 		return 9;
 	}
 
-	protected Integer getPosicoesClassificamCIIIMax() {
+	protected Integer getPosicoesClassificamCIIIMax(Jogo jogo) {
 
-		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 
-		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
 
 		if (nroCompeticoesContinentais != 3) {
 			return -1;
@@ -201,9 +202,9 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 	
 	protected Integer getPosicoesClassificamCNIMin() { return 1; }
 	
-	protected Integer getPosicoesClassificamCNIMax() {
+	protected Integer getPosicoesClassificamCNIMax(Jogo jogo) {
 		
-		return carregarParametroService.getNumeroTimesParticipantesCopaNacional();
+		return carregarParametroService.getNumeroTimesParticipantesCopaNacional(jogo);
 	}
 	
 	//########	TESTE	##############

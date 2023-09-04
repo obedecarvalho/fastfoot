@@ -11,21 +11,24 @@ urlNovaTemporada = 'http://localhost:8081/api/criarNovaTemporada'
 
 numero = 0
 
-if len(sys.argv) == 4:
+if len(sys.argv) == 5:
     novaTemporada = (sys.argv[1] != '0')
     #transferencias = (sys.argv[4] != '0')
     if sys.argv[2] == '1':
     	rodadaFinal = int(sys.argv[3])
     	numTemporada = 1
     	totalRodadas = 0
+    	id_jogo = int(sys.argv[4])
     elif sys.argv[2] == '2':
     	numTemporada = int(sys.argv[3])
     	rodadaFinal = 25
     	totalRodadas = 0
+    	id_jogo = int(sys.argv[4])
     elif sys.argv[2] == '3':
     	numTemporada = 1
     	rodadaFinal = 0
     	totalRodadas = int(sys.argv[3])
+    	id_jogo = int(sys.argv[4])
 elif len(sys.argv) == 1:#equivalente a 'temporada-completa.py 1 1 25' ou 'temporada-completa.py 1 2 1'
     novaTemporada = True
     rodadaFinal = 25
@@ -33,7 +36,7 @@ elif len(sys.argv) == 1:#equivalente a 'temporada-completa.py 1 1 25' ou 'tempor
     totalRodadas = 0
     #transferencias = True
 else:
-	print('Comando: temporada-completa <nova_temporada> <modo> <n>')
+	print('Comando: temporada-completa <nova_temporada> <modo> <n> <id_jogo>')
 	print('\t<nova_temporada> Indica se deve requisitar criação de nova temporada. Valores [0, 1] ')
 	print('\t<modo> Valores [1, 2, 3]:\n\t\t1: Executa ate <n> rodadas\n\t\t2: Executa ate <n> temporadas\n\t\t3: Executa <n> rodadas ')
 	#print('\t<transferencias> Indica se deve requisitar executar transferencias. Valores [0, 1] ')
@@ -45,7 +48,7 @@ for i in range(1, numTemporada+1):
 
 	if novaTemporada:
 		start_time = time.time()
-		r = requests.get(urlNovaTemporada)
+		r = requests.get(urlNovaTemporada + '/' + str(id_jogo))
 		finish_time = time.time()
 
 		if r.status_code == 200:
@@ -74,7 +77,7 @@ for i in range(1, numTemporada+1):
 	while numero < rodadaFinal:
 		time.sleep(0.5)
 		start_time = time.time()
-		r = requests.get(url)
+		r = requests.get(url + '/' + str(id_jogo))
 		finish_time = time.time()
 		if r.status_code == 200:
 			numero = int(r.json()['numero'])
@@ -86,7 +89,7 @@ for i in range(1, numTemporada+1):
 	for j in range(totalRodadas):
 		time.sleep(0.5)
 		start_time = time.time()
-		r = requests.get(url)
+		r = requests.get(url + '/' + str(id_jogo))
 		finish_time = time.time()
 		if r.status_code == 200:
 			numero = int(r.json()['numero'])

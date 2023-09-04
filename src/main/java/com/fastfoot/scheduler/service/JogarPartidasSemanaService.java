@@ -20,8 +20,9 @@ import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.financial.service.GerarDemonstrativoFinanceiroTemporadaService;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
@@ -71,6 +72,7 @@ import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEDoisClu
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEOitoClubes;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEQuatroClubes;
 import com.fastfoot.service.CarregarParametroService;
+import com.fastfoot.service.LigaJogoCRUDService;
 
 /*
  * https://www.baeldung.com/apache-commons-collections-vs-guava
@@ -137,6 +139,7 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private CarregarParametroService carregarParametroService;
 	
+	@SuppressWarnings("unused")
 	@Autowired
 	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeEstatisticasSimplesService;
 
@@ -158,8 +161,8 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
 	
-	@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;
+	/*@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;*/
 	
 	@Autowired
 	private ClassificarClubesTemporadaService classificarClubesTemporadaService;
@@ -175,8 +178,11 @@ public class JogarPartidasSemanaService {
 
 	@Autowired
 	private GerarDemonstrativoFinanceiroTemporadaService gerarDemonstrativoFinanceiroTemporadaService;
+	
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 
-	public SemanaDTO jogarPartidasSemana() {
+	public SemanaDTO jogarPartidasSemana(Jogo jogo) {
 		
 		//Instanciar StopWatch
 		StopWatch stopWatch = new StopWatch();
@@ -188,7 +194,7 @@ public class JogarPartidasSemanaService {
 		long inicio = stopWatch.getSplitTime();
 		
 		//Carregar dados
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 		temporada.setSemanaAtual(temporada.getSemanaAtual() + 1);
 		Semana semana = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual()).get();
 
@@ -247,11 +253,11 @@ public class JogarPartidasSemanaService {
 
 		//calcular probabilidades
 		if (semana.getNumero() >= 22 && semana.getNumero() <= 24
-				&& carregarParametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {
+				&& carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.CALCULAR_PROBABILIDADES)) {
 			calcularProbabilidades(semana, temporada);
 		}
 		if ((semana.getNumero() == 21 || semana.getNumero() == 19 || semana.getNumero() == 17)
-				&& carregarParametroService.getParametroBoolean(ParametroConstantes.CALCULAR_PROBABILIDADES)) {//TODO: criar parametro ...PROBABILIDADE_COMPLETOS??
+				&& carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.CALCULAR_PROBABILIDADES)) {//TODO: criar parametro ...PROBABILIDADE_COMPLETOS??
 			calcularProbabilidades(semana, temporada);
 		}
 		stopWatch.split();
@@ -260,7 +266,7 @@ public class JogarPartidasSemanaService {
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
-			classificarClubesTemporadaService.classificarClubesTemporadaAtual();
+			classificarClubesTemporadaService.classificarClubesTemporadaAtual(temporada);
 		}
 		stopWatch.split();
 		mensagens.add("\t#classificarClubesTemporadaAtual:" + (stopWatch.getSplitTime() - inicio));
@@ -274,16 +280,16 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//Desenvolver jogadores
-		if (semana.getNumero() % 5 == 0) {
-			habilidadeValorRepository.desenvolverTodasHabilidades2();
-			jogadorRepository.calcularForcaGeral2();
+		if (semana.getNumero() % 5 == 0) {//TODO: mudar pra não usar na semana 25
+			habilidadeValorRepository.desenvolverTodasHabilidades(jogo.getId());//TODO: criar service
+			jogadorRepository.calcularForcaGeral(jogo.getId());
 		}
 		stopWatch.split();
 		mensagens.add("\t#desenvolverTodasHabilidades:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		if (semana.getNumero() % 5 == 0) {
-			calcularHabilidadeGrupoValor3();
+		if (semana.getNumero() % 5 == 0) {//TODO: mudar pra não usar na semana 25
+			calcularHabilidadeGrupoValor3(jogo);
 		}
 		stopWatch.split();
 		mensagens.add("\t#calcularHabilidadeGrupoValor:" + (stopWatch.getSplitTime() - inicio));
@@ -307,7 +313,7 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//jogadorEnergiaRepository.inserirRecuperacaoEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, Constantes.REPOSICAO_ENERGIA_SEMANAL);
-		recuperarEnergiaJogadores();
+		recuperarEnergiaJogadores(jogo);
 		stopWatch.split();
 		mensagens.add("\t#recuperarEnergia:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
@@ -333,19 +339,21 @@ public class JogarPartidasSemanaService {
 		return SemanaDTO.convertToDTO(semana);
 	}
 	
-	private void recuperarEnergiaJogadores() {
+	private void recuperarEnergiaJogadores(Jogo jogo) {
 		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
-				Constantes.RECUPERACAO_ENERGIA_SEMANAL_ATE_23, JogadorFactory.IDADE_MIN, Constantes.IDADE_MAX_JOGADOR_JOVEM);
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_ATE_23, JogadorFactory.IDADE_MIN,
+				Constantes.IDADE_MAX_JOGADOR_JOVEM, jogo.getId());
 		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
-				Constantes.RECUPERACAO_ENERGIA_SEMANAL_24_A_32, Constantes.IDADE_MAX_JOGADOR_JOVEM + 1, 32);
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_24_A_32, Constantes.IDADE_MAX_JOGADOR_JOVEM + 1, 32,
+				jogo.getId());
 		jogadorEnergiaRepository.inserirRecuperacaoEnergiaJogadores(Constantes.ENERGIA_INICIAL,
-				Constantes.RECUPERACAO_ENERGIA_SEMANAL_APOS_33, 33, JogadorFactory.IDADE_MAX);
+				Constantes.RECUPERACAO_ENERGIA_SEMANAL_APOS_33, 33, JogadorFactory.IDADE_MAX, jogo.getId());
 	}
 	
 	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
 		
-		if (carregarParametroService.getParametroBoolean(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)
-				&& temporada.getSemanaAtual() > 1) {
+		if (carregarParametroService.getParametroBoolean(temporada.getJogo(), ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)
+				&& temporada.getSemanaAtual() > 1) {//TODO: não está calculado probabilidade semana 1 e 2
 		
 			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
 			
@@ -363,12 +371,12 @@ public class JogarPartidasSemanaService {
 	
 			for (Rodada r : semana.getRodadas()) {
 				completableFutures.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
-						carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
+						carregarParametroService.getTipoCampeonatoClubeProbabilidade(temporada.getJogo())));
 			}
 	
 			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
 				completableFutures.add(calcularPartidaProbabilidadeResultadoFacadeService.calcularPartidaProbabilidadeResultado(r,
-						carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
+						carregarParametroService.getTipoCampeonatoClubeProbabilidade(temporada.getJogo())));
 			}
 			
 			CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
@@ -376,9 +384,10 @@ public class JogarPartidasSemanaService {
 		}
 	}
 
-	private void desenvolverJogadores() {
+	@SuppressWarnings("unused")
+	private void desenvolverJogadores(Jogo jogo) {
 
-		List<Jogador> jogadores = jogadorRepository.findByStatusJogadorFetchHabilidades(StatusJogador.ATIVO);
+		List<Jogador> jogadores = jogadorRepository.findByJogoAndStatusJogadorFetchHabilidades(jogo, StatusJogador.ATIVO);
 
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -395,31 +404,27 @@ public class JogarPartidasSemanaService {
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 
 	}
-
-	private void calcularHabilidadeGrupoValor2() {
-		for (HabilidadeGrupo hg : HabilidadeGrupo.getAll()) {
-			habilidadeGrupoValorRepository.calcular(hg.ordinal(), hg.getHabilidadesOrdinal());
-		}
-	}
 	
-	private void calcularHabilidadeGrupoValor3() {
+	private void calcularHabilidadeGrupoValor3(Jogo jogo) {
 
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 
 		for (HabilidadeGrupo hg : HabilidadeGrupo.getAll()) {
-			completableFutures.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(hg));
+			completableFutures.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogo, hg));
 		}
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
-	private void calcularHabilidadeGrupoValor() {
+	@SuppressWarnings("unused")
+	private void calcularHabilidadeGrupoValor(Jogo jogo) {
 
 		habilidadeGrupoValorRepository.deleteAllInBatch();
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
-		for (Liga liga : Liga.getAll()) {
+		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(jogo);
+		for (LigaJogo liga : ligaJogos) {
 			completableFutures
 					.add(calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(liga, true));
 			completableFutures
@@ -433,16 +438,17 @@ public class JogarPartidasSemanaService {
 		
 		List<Campeonato> campeonatos = campeonatoRepository.findByTemporada(temporada);
 		
-		Map<Liga, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap = campeonatos.stream().collect(
-				Collectors.groupingBy(Campeonato::getLiga, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
+		Map<LigaJogo, Map<NivelCampeonato, List<Campeonato>>> campeonatosMap = campeonatos.stream().collect(
+				Collectors.groupingBy(Campeonato::getLigaJogo, Collectors.groupingBy(Campeonato::getNivelCampeonato)));
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 
-		for (Liga l : Liga.getAll()) {
+		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(temporada.getJogo());
+		for (LigaJogo l : ligaJogos) {
 			completableFutures.add(calcularProbabilidadeSimularPartidaService.calcularProbabilidadesCampeonato(
 					semana, campeonatosMap.get(l).get(NivelCampeonato.NACIONAL).get(0),
 					campeonatosMap.get(l).get(NivelCampeonato.NACIONAL_II).get(0),
-					carregarParametroService.getTipoCampeonatoClubeProbabilidade()));
+					carregarParametroService.getTipoCampeonatoClubeProbabilidade(temporada.getJogo())));
 		}
 
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
@@ -485,14 +491,14 @@ public class JogarPartidasSemanaService {
 						.setPartidas(partidaEliminatoriaRepository.findByRodada(c.getPrimeiraRodadaEliminatoria()));
 			}
 
-			getPromotorContinental().promover(campeonatosMisto);
+			getPromotorContinental(semana.getTemporada().getJogo()).promover(campeonatosMisto);
 			partidaEliminatoriaRepository.saveAll(
 					campeonatosMisto.stream().flatMap(c -> c.getPrimeiraRodadaEliminatoria().getPartidas().stream())
 							.collect(Collectors.toList()));
 		}
 		if (semana.getNumero() == Constantes.SEMANA_PROMOCAO_CNII) {
 
-			Boolean jogarCopaNacII = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_II);
+			Boolean jogarCopaNacII = carregarParametroService.getParametroBoolean(semana.getTemporada().getJogo(), ParametroConstantes.JOGAR_COPA_NACIONAL_II);
 			
 			if (jogarCopaNacII) {
 				List<CampeonatoEliminatorio> campeonatos = semana.getRodadasEliminatorias().stream()
@@ -506,7 +512,7 @@ public class JogarPartidasSemanaService {
 				
 				for (CampeonatoEliminatorio c : campeonatos) {
 					CampeonatoEliminatorio copaNacionalII = campeonatoEliminatorioRepository
-							.findFirstByTemporadaAndLigaAndNivelCampeonato(c.getTemporada(), c.getLiga(), NivelCampeonato.COPA_NACIONAL_II).get();
+							.findFirstByTemporadaAndLigaJogoAndNivelCampeonato(c.getTemporada(), c.getLigaJogo(), NivelCampeonato.COPA_NACIONAL_II).get();
 					
 					rodadaCNII = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(copaNacionalII, 1).get(0);
 					rodadaCNII.setPartidas(partidaEliminatoriaRepository.findByRodada(rodadaCNII));
@@ -517,7 +523,7 @@ public class JogarPartidasSemanaService {
 					rodada2Fase = rodadaEliminatoriaRepository.findByCampeonatoEliminatorioAndNumero(c, 2).get(0);
 					rodada2Fase.setPartidas(partidaEliminatoriaRepository.findByRodada(rodada2Fase));
 	
-					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria();
+					PromotorEliminatoria promotorEliminatoria = getPromotorEliminatoria(semana.getTemporada().getJogo());
 					promotorEliminatoria.classificarCopaNacionalII(rodadaCNII, rodada1Fase, rodada2Fase);
 					
 					partidasSalvar.addAll(rodadaCNII.getPartidas());
@@ -529,24 +535,24 @@ public class JogarPartidasSemanaService {
 
 	}
 	
-	private PromotorContinental getPromotorContinental() {
+	private PromotorContinental getPromotorContinental(Jogo jogo) {
 		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
 		PromotorContinental promotorContinental = null;
 
-		if (carregarParametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo()) {
+		if (carregarParametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo(jogo)) {
 			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
-		} else if (carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado()) {	
+		} else if (carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo)) {	
 			promotorContinental = new PromotorContinentalImplInterCampeonatos();
 		}
 
 		return promotorContinental;
 	}
 
-	private PromotorEliminatoria getPromotorEliminatoria() {
-		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
-		Integer numRodadas = carregarParametroService.getNumeroRodadasCopaNacional();
-		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
-		Boolean jogarCNCompleta = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
+	private PromotorEliminatoria getPromotorEliminatoria(Jogo jogo) {
+		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+		Integer numRodadas = carregarParametroService.getNumeroRodadasCopaNacional(jogo);
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean jogarCNCompleta = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
 
 		
 		PromotorEliminatoria promotorEliminatoria = null;
@@ -582,8 +588,8 @@ public class JogarPartidasSemanaService {
 
 	private void marcarAmistososSemanalmente(Semana semana) {
 		
-		boolean marcarAmistosos = carregarParametroService.isMarcarAmistososAutomaticamenteSemanaASemana()
-				|| carregarParametroService.isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana();
+		boolean marcarAmistosos = carregarParametroService.isMarcarAmistososAutomaticamenteSemanaASemana(semana.getTemporada().getJogo())
+				|| carregarParametroService.isMarcarAmistososAutomaticamenteInicioTemporadaESemanaASemana(semana.getTemporada().getJogo());
 		
 		//Jogos amistosos aconteceram nas semanas de 10 a 22
 		//a marcação acontece duas semanas antes
@@ -599,7 +605,7 @@ public class JogarPartidasSemanaService {
 	}
 	
 	private void gerarClubeResumoTemporada(Temporada temporada) {
-		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		gerarClubeResumoTemporadaService.gerarClubeResumoTemporada(temporada);
 	}
 }

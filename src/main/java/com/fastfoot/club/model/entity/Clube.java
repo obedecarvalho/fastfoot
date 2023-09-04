@@ -4,25 +4,25 @@ import java.util.Objects;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.service.util.ElementoRoleta;
 
 @Entity
 public class Clube implements ElementoRoleta {
 	
 	@Id
-	private Integer id;
+	private Long id;
 	
 	private String nome;
 	
 	private Integer forcaGeral;
-	
-	private Liga liga;
 
 	private Integer forcaGeralAtual;
 	
@@ -31,6 +31,10 @@ public class Clube implements ElementoRoleta {
 	private ClubeNivel nivelInternacional;
 	
 	private String logo;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_liga_jogo")
+	private LigaJogo ligaJogo;
 
 	@Transient
 	@JsonIgnore
@@ -40,27 +44,38 @@ public class Clube implements ElementoRoleta {
 		super();
 	}
 	
-	public Clube(Integer id) {
+	public Clube(Long id) {
 		super();
 		this.id = id;
 	}
 
-	public Clube(Integer id, Liga liga, ClubeNivel nivelNacional, ClubeNivel nivelInternacional, String nome, String logo) {
+	/*public Clube(Long id, Liga liga, ClubeNivel nivelNacional, ClubeNivel nivelInternacional, String nome, String logo) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.nivelNacional = nivelNacional;
 		this.forcaGeral = nivelNacional.getForcaGeral();//TODO
-		this.liga = liga;
+		//this.liga = liga;
+		this.nivelInternacional = nivelInternacional;
+		this.logo = logo;
+	}*/
+	
+	public Clube(Long id, LigaJogo ligaJogo, ClubeNivel nivelNacional, ClubeNivel nivelInternacional, String nome, String logo) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.nivelNacional = nivelNacional;
+		this.forcaGeral = nivelNacional.getForcaGeral();//TODO
+		this.ligaJogo = ligaJogo;
 		this.nivelInternacional = nivelInternacional;
 		this.logo = logo;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -78,14 +93,6 @@ public class Clube implements ElementoRoleta {
 
 	public void setForcaGeral(Integer overhall) {
 		this.forcaGeral = overhall;
-	}
-
-	public Liga getLiga() {
-		return liga;
-	}
-
-	public void setLiga(Liga liga) {
-		this.liga = liga;
 	}
 
 	public ClubeNivel getNivelNacional() {
@@ -110,6 +117,14 @@ public class Clube implements ElementoRoleta {
 
 	public void setNivelInternacional(ClubeNivel nivelInternacional) {
 		this.nivelInternacional = nivelInternacional;
+	}
+
+	public LigaJogo getLigaJogo() {
+		return ligaJogo;
+	}
+
+	public void setLigaJogo(LigaJogo ligaJogo) {
+		this.ligaJogo = ligaJogo;
 	}
 
 	@Override
@@ -144,7 +159,7 @@ public class Clube implements ElementoRoleta {
 	
 	@Override
 	public String toString() {
-		return "Clube [nome=" + nome + ", liga=" + liga.name() + "]";
+		return "Clube [nome=" + nome + ", liga=" + ligaJogo.getLiga().name() + "]";
 	}
 
 	@Override

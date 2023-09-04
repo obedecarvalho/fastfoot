@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
@@ -20,16 +20,16 @@ public class CalcularValorTransferenciaJogadorForcaGeralService extends Calcular
 	private JogadorRepository jogadorRepository;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> calcularValorTransferencia(Liga liga, boolean primeirosIds) {
+	public CompletableFuture<Boolean> calcularValorTransferencia(LigaJogo liga, boolean primeirosIds) {
 
 		List<Jogador> jogadores;
 
 		if (primeirosIds) {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 1, liga.getIdBaseLiga() + 16);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15);
 		} else {
-			jogadores = jogadorRepository.findByLigaClubeAndStatusJogador(liga, StatusJogador.ATIVO,
-					liga.getIdBaseLiga() + 17, liga.getIdBaseLiga() + 32);
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal());
 		}
 
 		for (Jogador j : jogadores) {

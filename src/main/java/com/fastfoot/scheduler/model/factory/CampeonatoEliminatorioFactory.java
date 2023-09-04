@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.club.model.entity.ClubeRanking;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -23,9 +23,9 @@ public abstract class CampeonatoEliminatorioFactory {
 	
 	protected abstract List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio);
 	
-	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
-		campeonato.setLiga(liga);
+		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
@@ -39,9 +39,9 @@ public abstract class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 	
-	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
-		campeonato.setLiga(liga);
+		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
@@ -53,9 +53,9 @@ public abstract class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 
-	public CampeonatoEliminatorio criarCampeonato(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonato(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
-		campeonato.setLiga(liga);
+		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);

@@ -54,7 +54,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 		for (Map<String, Object> mov : movimentacoesTemporada) {
 			demonstrativoFinanceiroTemporada = new DemonstrativoFinanceiroTemporada();
 
-			demonstrativoFinanceiroTemporada.setClube(new Clube((Integer) mov.get("id_clube")));
+			demonstrativoFinanceiroTemporada.setClube(new Clube(DatabaseUtil.getValueLong(mov.get("id_clube"))));
 			demonstrativoFinanceiroTemporada.setTemporada(temporada);
 			/*demonstrativoFinanceiroTemporada
 					.setTipoMovimentacao(TipoMovimentacaoFinanceira.values()[(int) mov.get("tipo_movimentacao")]);*/
@@ -70,17 +70,17 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 	}
 	
 	protected List<DemonstrativoFinanceiroTemporada> gerarDemonstrativoFinanceiroTemporadaCaixa(Temporada temporada) {
-		List<Map<String, Object>> saldoAtual = movimentacaoFinanceiraRepository.findSaldoPorClube();
+		List<Map<String, Object>> saldoAtual = movimentacaoFinanceiraRepository.findSaldoPorClubeByIdJogo(temporada.getJogo().getId());
 		List<Map<String, Object>> saldoTemporadaAtual = movimentacaoFinanceiraRepository.findSaldoPorClube(temporada.getId());
 		
-		Map<Integer, Double[]> saldoClube = new HashMap<Integer, Double[]>();
+		Map<Long, Double[]> saldoClube = new HashMap<Long, Double[]>();
 		List<DemonstrativoFinanceiroTemporada> demonstrativosFinanceiroTemporada = new ArrayList<DemonstrativoFinanceiroTemporada>();
-		Integer idClube;
+		Long idClube;
 		Double saldo;
 		DemonstrativoFinanceiroTemporada demonstrativoFinanceiroTemporada;
 		
 		for (Map<String, Object> s : saldoAtual) {
-			idClube = (Integer) s.get("id_clube");
+			idClube = DatabaseUtil.getValueLong(s.get("id_clube"));
 			saldo = DatabaseUtil.getValueDecimal(s.get("saldo"));
 			
 			saldoClube.put(idClube, new Double[3]);
@@ -88,7 +88,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 		}
 		
 		for (Map<String, Object> s : saldoTemporadaAtual) {
-			idClube = (Integer) s.get("id_clube");
+			idClube = DatabaseUtil.getValueLong(s.get("id_clube"));
 			saldo = DatabaseUtil.getValueDecimal(s.get("saldo"));
 			
 			saldoClube.get(idClube)[1] = saldo;
@@ -96,7 +96,7 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 			saldoClube.get(idClube)[2] = saldoClube.get(idClube)[0] - saldoClube.get(idClube)[1];
 		}
 
-		for (Integer id : saldoClube.keySet()) {
+		for (Long id : saldoClube.keySet()) {
 			demonstrativoFinanceiroTemporada = new DemonstrativoFinanceiroTemporada();
 			
 			demonstrativoFinanceiroTemporada.setClube(new Clube(id));
@@ -131,17 +131,17 @@ public class GerarDemonstrativoFinanceiroTemporadaService {
 
 	protected List<DemonstrativoFinanceiroTemporada> gerarDemonstrativoFinanceiroAtivosTemporada(Temporada temporada) {
 		
-		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube(temporada.getJogo().getId());
 		
 		List<DemonstrativoFinanceiroTemporada> ativos = new ArrayList<DemonstrativoFinanceiroTemporada>();
 		
 		double valorElenco;
-		int idClube;
+		Long idClube;
 		DemonstrativoFinanceiroTemporada demonstrativoFinanceiroTemporada;
 		
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
 			valorElenco = DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia"));
-			idClube = (int) vtc.get("id_clube");
+			idClube = DatabaseUtil.getValueLong(vtc.get("id_clube"));
 			
 			demonstrativoFinanceiroTemporada = new DemonstrativoFinanceiroTemporada();
 			

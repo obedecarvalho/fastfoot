@@ -30,8 +30,8 @@ public class ClubeRanking {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "clubeRankingSequence")	
-	@SequenceGenerator(name = "clubeRankingSequence", sequenceName = "clube_ranking_seq", initialValue = 1000)
-	private Integer id;
+	@SequenceGenerator(name = "clubeRankingSequence", sequenceName = "clube_ranking_seq")
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_clube")
@@ -59,7 +59,7 @@ public class ClubeRanking {
 		super();
 	}
 
-	public ClubeRanking(Integer id, Clube clube, Integer ano, Integer posicaoGeral,
+	/*public ClubeRanking(Long id, Clube clube, Integer ano, Integer posicaoGeral,
 			ClassificacaoNacional classificacaoNacional, ClassificacaoCopaNacional classificacaoCopaNacional,
 			ClassificacaoContinental classificacaoContinental) {
 		super();
@@ -70,13 +70,25 @@ public class ClubeRanking {
 		this.classificacaoNacional = classificacaoNacional;
 		this.classificacaoContinental = classificacaoContinental;
 		this.classificacaoCopaNacional = classificacaoCopaNacional;
+	}*/
+	
+	public ClubeRanking(Clube clube, Integer ano, Integer posicaoGeral,
+			ClassificacaoNacional classificacaoNacional, ClassificacaoCopaNacional classificacaoCopaNacional,
+			ClassificacaoContinental classificacaoContinental) {
+		super();
+		this.clube = clube;
+		this.ano = ano;
+		this.posicaoGeral = posicaoGeral;
+		this.classificacaoNacional = classificacaoNacional;
+		this.classificacaoContinental = classificacaoContinental;
+		this.classificacaoCopaNacional = classificacaoCopaNacional;
 	}
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

@@ -156,6 +156,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
+	@SuppressWarnings("unused")
 	private List<HabilidadeValor> getHabilidadesValorJogadorPosicaoAtualSemPosse(List<HabilidadeAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
@@ -165,6 +166,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
+	@SuppressWarnings("unused")
 	private List<HabilidadeGrupoValor> getHabilidadesGrupoValorJogadorPosicaoAtualSemPosse(List<HabilidadeGrupoAcao> habilidades) {
 		if (!posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);
@@ -203,6 +205,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
+	@SuppressWarnings("unused")
 	private List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesValor(habilidades);
@@ -212,6 +215,7 @@ public class EsquemaImpl implements Esquema {
 	}
 
 	//@Override
+	@SuppressWarnings("unused")
 	private List<HabilidadeGrupoValor> getHabilidadesGrupoValor(List<HabilidadeGrupoAcao> habilidades) {
 		if (posseBolaMandante) {
 			return posicaoAtual.getMandante().getHabilidadesGrupoValor(habilidades);

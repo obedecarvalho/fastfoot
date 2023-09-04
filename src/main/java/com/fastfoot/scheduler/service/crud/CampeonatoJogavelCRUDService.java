@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.CampeonatoEliminatorioRepository;
@@ -59,9 +60,9 @@ public class CampeonatoJogavelCRUDService {
 		return null;
 	}
 	
-	public List<CampeonatoJogavel> getByTemporadaAtual() {
+	public List<CampeonatoJogavel> getByTemporadaAtual(Jogo jogo) {
 		
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 		
 		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
 		
@@ -72,9 +73,9 @@ public class CampeonatoJogavelCRUDService {
 		return campeonatos;
 	}
 	
-	public List<CampeonatoJogavel> getNacionalByTemporadaAtual() {
+	public List<CampeonatoJogavel> getNacionalByTemporadaAtual(Jogo jogo) {
 		
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 		
 		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
 		
@@ -83,9 +84,9 @@ public class CampeonatoJogavelCRUDService {
 		return campeonatos;
 	}
 
-	public List<CampeonatoJogavel> getCopaNacionalByTemporadaAtual() {
+	public List<CampeonatoJogavel> getCopaNacionalByTemporadaAtual(Jogo jogo) {
 		
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 		
 		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
 		
@@ -94,9 +95,9 @@ public class CampeonatoJogavelCRUDService {
 		return campeonatos;
 	}
 	
-	public List<CampeonatoJogavel> getContinentalByTemporadaAtual() {
+	public List<CampeonatoJogavel> getContinentalByTemporadaAtual(Jogo jogo) {
 		
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		Temporada temporada = temporadaCRUDService.getTemporadaAtual(jogo);
 		
 		List<CampeonatoJogavel> campeonatos = new ArrayList<CampeonatoJogavel>();
 

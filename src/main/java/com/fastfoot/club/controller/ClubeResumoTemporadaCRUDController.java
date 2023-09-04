@@ -57,7 +57,7 @@ public class ClubeResumoTemporadaCRUDController implements CRUDController<ClubeR
 
 	//@Override
 	@GetMapping("/clubeResumoTemporada")
-	public ResponseEntity<List<ClubeResumoTemporada>> getAll(@RequestParam(name = "idClube", required = false) Integer idClube) {
+	public ResponseEntity<List<ClubeResumoTemporada>> getAll(@RequestParam(name = "idClube", required = false) Long idClube) {
 		
 		try {
 			

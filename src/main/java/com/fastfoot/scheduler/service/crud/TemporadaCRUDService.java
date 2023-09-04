@@ -6,12 +6,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.model.repository.TemporadaRepository;
-import com.fastfoot.service.CRUDService;
+import com.fastfoot.service.CRUDServiceJogavel;
 
 @Service
-public class TemporadaCRUDService implements CRUDService<Temporada, Long> {
+public class TemporadaCRUDService implements CRUDServiceJogavel<Temporada, Long> {
 
 	@Autowired
 	private TemporadaRepository temporadaRepository;
@@ -19,6 +20,11 @@ public class TemporadaCRUDService implements CRUDService<Temporada, Long> {
 	@Override
 	public List<Temporada> getAll() {
 		return temporadaRepository.findAll();
+	}
+	
+	@Override
+	public List<Temporada> getByJogo(Jogo jogo) {
+		return temporadaRepository.findByJogo(jogo);
 	}
 
 	@Override
@@ -50,24 +56,16 @@ public class TemporadaCRUDService implements CRUDService<Temporada, Long> {
 		return temporadaRepository.save(t);
 	}
 	
-	public Temporada getTemporadaAtual() {
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAtual(true);
+	public Temporada getTemporadaAtual(Jogo jogo) {
+		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByJogoAndAtual(jogo, true);
 		if (temporadaOpt.isPresent()) {
 			return temporadaOpt.get();
 		}
 		return null;
 	}
 	
-	public Temporada getTemporadaAnterior() {
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstAnteriorAtual();
-		if (temporadaOpt.isPresent()) {
-			return temporadaOpt.get();
-		}
-		return null;
-	}
-	
-	public Temporada getTemporadaByAno(Integer ano) {
-		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByAno(ano);
+	public Temporada getTemporadaByAno(Jogo jogo, Integer ano) {
+		Optional<Temporada> temporadaOpt = temporadaRepository.findFirstByJogoAndAno(jogo, ano);
 		if (temporadaOpt.isPresent()) {
 			return temporadaOpt.get();
 		}

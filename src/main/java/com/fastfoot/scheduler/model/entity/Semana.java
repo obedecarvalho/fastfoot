@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fastfoot.model.Constantes;
@@ -25,7 +26,8 @@ import com.fastfoot.scheduler.model.RodadaJogavel;
 public class Semana {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "semanaSequence")	
+	@SequenceGenerator(name = "semanaSequence", sequenceName = "semana_seq")
 	private Long id;
 	
 	private Integer numero;//Semanas vão de 1 a 25 durante a temporada

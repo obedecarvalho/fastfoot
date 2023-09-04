@@ -6,15 +6,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fastfoot.model.entity.Jogo;
 
 @Entity
 public class Temporada {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "temporadaSequence")	
+	@SequenceGenerator(name = "temporadaSequence", sequenceName = "temporada_sequence")
 	private Long id;
 	
 	private Integer ano;
@@ -22,6 +27,10 @@ public class Temporada {
 	private Boolean atual;
 	
 	private Integer semanaAtual;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_jogo")
+	private Jogo jogo;
 	
 	@Transient
 	@JsonIgnore
@@ -121,6 +130,14 @@ public class Temporada {
 
 	public void setRodadasAmistosas(List<RodadaAmistosa> rodadasAmistosas) {
 		this.rodadasAmistosas = rodadasAmistosas;
+	}
+
+	public Jogo getJogo() {
+		return jogo;
+	}
+
+	public void setJogo(Jogo jogo) {
+		this.jogo = jogo;
 	}
 
 	@Override

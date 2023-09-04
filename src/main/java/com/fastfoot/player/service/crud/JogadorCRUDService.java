@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
@@ -56,7 +57,7 @@ public class JogadorCRUDService implements CRUDService<Jogador, Long> {
 		return jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
 	}
 	
-	public List<Jogador> getAllAtivos(){
-		return jogadorRepository.findByStatusJogador(StatusJogador.ATIVO);
+	public List<Jogador> getAllAtivos(Jogo jogo){
+		return jogadorRepository.findByJogoAndStatusJogador(jogo, StatusJogador.ATIVO);
 	}
 }

@@ -31,7 +31,7 @@ public class RodadaAmistosaFactory {
 			int posInicial = i * Constantes.NRO_CLUBES_POR_LIGA_CONT;
 			int posFinal = Math.min((i + 1) * Constantes.NRO_CLUBES_POR_LIGA_CONT, clubes.get(Liga.ENGLND).size());
 			
-			for (Liga l : Liga.getAll()) {
+			for (Liga l : clubes.keySet()) {
 				clubesGrupo.put(l, clubes.get(l).subList(posInicial, posFinal));
 			}
 			rodadas = Arrays.asList(new RodadaAmistosa(101, NivelCampeonato.AMISTOSO_INTERNACIONAL),

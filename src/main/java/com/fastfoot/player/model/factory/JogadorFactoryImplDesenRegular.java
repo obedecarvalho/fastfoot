@@ -143,6 +143,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 	private static final Double PESO_Q3 = 0.33;
 	private static final Double PESO_Q4 = 0.00;
 	
+	@SuppressWarnings("unused")
 	private Double getPesoHabilidadeValor(HabilidadeEstatisticaPercentil habilidadeEstatisticaPercentil,
 			HabilidadeValorEstatisticaGrupo habilidadeValorEstatisticaGrupo) {
 		

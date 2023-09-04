@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.Temporada;
@@ -20,17 +20,10 @@ public interface CampeonatoEliminatorioRepository extends JpaRepository<Campeona
 
 	public List<CampeonatoEliminatorio> findByTemporada(Temporada temporada);
 
-	public List<CampeonatoEliminatorio> findByNivelCampeonato(NivelCampeonato nivelCampeonato);
+	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaJogoAndNivelCampeonato(Temporada temporada,
+			LigaJogo ligaJogo, NivelCampeonato nivelCampeonato);
 
-	public List<CampeonatoEliminatorio> findByLiga(Liga liga);
-
-	public List<CampeonatoEliminatorio> findByTemporadaAndLigaAndNivelCampeonato(Temporada temporada, Liga liga,
-			NivelCampeonato nivelCampeonato);
-
-	public Optional<CampeonatoEliminatorio> findFirstByTemporadaAndLigaAndNivelCampeonato(Temporada temporada,
-			Liga liga, NivelCampeonato nivelCampeonato);
-
-	public List<CampeonatoEliminatorio> findByTemporadaAndLiga(Temporada temporada, Liga liga);
+	public List<CampeonatoEliminatorio> findByTemporadaAndLigaJogo(Temporada temporada, LigaJogo ligaJogo);
 	
 	//###	INSERT, UPDATE E DELETE	###
 	

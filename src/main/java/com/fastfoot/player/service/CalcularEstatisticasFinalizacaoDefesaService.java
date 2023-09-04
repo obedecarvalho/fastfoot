@@ -13,6 +13,7 @@ import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.probability.model.ClubeProbabilidadeDefesa;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class CalcularEstatisticasFinalizacaoDefesaService {
@@ -30,7 +31,7 @@ public class CalcularEstatisticasFinalizacaoDefesaService {
 		for (Map<String, Object> e : estatisticasFinalizacoes) {
 			clubeProbabilidadeFinalizacao = new ClubeProbabilidadeFinalizacao();
 
-			clubeProbabilidadeFinalizacao.setClube(new Clube((Integer) e.get("id_clube")));
+			clubeProbabilidadeFinalizacao.setClube(new Clube(DatabaseUtil.getValueLong(e.get("id_clube"))));
 			clubeProbabilidadeFinalizacao
 					.setFinalizacoesPartidas(((BigDecimal) e.get("finalizacoes_partidas")).doubleValue());
 			clubeProbabilidadeFinalizacao.setGolsPartida(((BigDecimal) e.get("gols_partida")).doubleValue());
@@ -55,7 +56,7 @@ public class CalcularEstatisticasFinalizacaoDefesaService {
 		for (Map<String, Object> e : estatisticasDefesa) {
 			clubeProbabilidadeDefesa = new ClubeProbabilidadeDefesa();
 
-			clubeProbabilidadeDefesa.setClube(new Clube((Integer) e.get("id_clube")));
+			clubeProbabilidadeDefesa.setClube(new Clube(DatabaseUtil.getValueLong(e.get("id_clube"))));
 			clubeProbabilidadeDefesa.setProbabilidadeDefesa(((BigDecimal) e.get("probabilidade_defesa")).doubleValue());
 
 			clubesProbabilidadeDefesa.put(clubeProbabilidadeDefesa.getClube(), clubeProbabilidadeDefesa);

@@ -79,7 +79,7 @@ public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<Camp
 	
 	public List<CampeonatoClubeProbabilidade> getByCampeonatoAndRodadaAtualComClassificacao(Campeonato campeonato){
 		
-		Semana semanaAtual = semanaCRUDService.getSemanaAtual();
+		Semana semanaAtual = semanaCRUDService.getSemanaAtual(campeonato.getLigaJogo().getJogo());
 
 		List<CampeonatoClubeProbabilidade> probabilidades;
 

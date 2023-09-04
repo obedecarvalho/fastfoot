@@ -18,6 +18,7 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 	
 	//###	INSERT, UPDATE E DELETE	###
 
+	@Deprecated
 	@Transactional
 	@Modifying
 	@Query( nativeQuery = true, value =
@@ -36,6 +37,7 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 	)
 	public void desenvolverTodasHabilidades();
 	
+	@Deprecated
 	@Transactional
 	@Modifying
 	@Query( nativeQuery = true, value =
@@ -52,6 +54,24 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 	
 	@Transactional
 	@Modifying
+	@Query( nativeQuery = true, value =
+			" update habilidade_valor " +
+			" set valor = floor(valor_decimal + passo_desenvolvimento), " +
+			" 	valor_decimal = valor_decimal + passo_desenvolvimento " +
+			" where id_jogador in ( " +
+			" 	select j.id " +
+			" 	from jogador j " +
+			" 	inner join clube c on j.id_clube = c.id " +
+			" 	inner join liga_jogo lj on c.id_liga_jogo = lj.id " +
+			" 	where status_jogador = 0 " + //StatusJogador.ATIVO
+			" 		and lj.id_jogo = ?1 " +
+			" ) "
+	)
+	public void desenvolverTodasHabilidades(Long idJogo);
+	
+	@Deprecated
+	@Transactional
+	@Modifying
 	@Query(nativeQuery = true, value = 
 			" update habilidade_valor hv " +
 			" set passo_desenvolvimento = tmp.novo_passo " +
@@ -60,13 +80,27 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" 		((hv.potencial_desenvolvimento * ?3) - (hv.valor_decimal))/?2 as novo_passo " +
 			" 	from habilidade_valor hv " +
 			" 	inner join jogador j on j.id = hv.id_jogador " +
-			//" 	inner join jogador_detalhe jd on jd.id = j.id_jogador_detalhe " +
 			" 	where j.idade = ?1 " +
 			"		AND j.modo_desenvolvimento_jogador = ?4 " +
 			" ) as tmp " +
 			" where hv.id = tmp.id "
 	)
 	public void atualizarPassoDesenvolvimento(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);
+	
+	@Deprecated
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" UPDATE habilidade_valor "+
+			" SET passo_desenvolvimento = ((potencial_desenvolvimento * ?3) - (valor_decimal))/?2 "+
+			" WHERE id_jogador IN ( "+
+			" 	SELECT j.id "+
+			" 	FROM jogador j "+
+			" 	WHERE j.idade = ?1 "+
+			" 		AND j.modo_desenvolvimento_jogador = ?4 "+
+			" ) "
+	)
+	public void atualizarPassoDesenvolvimento2(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);
 	
 	@Transactional
 	@Modifying
@@ -76,12 +110,14 @@ public interface HabilidadeValorRepository extends JpaRepository<HabilidadeValor
 			" WHERE id_jogador IN ( "+
 			" 	SELECT j.id "+
 			" 	FROM jogador j "+
-			//" 	INNER JOIN jogador_detalhe jd ON jd.id = j.id_jogador_detalhe "+
+			" 	INNER JOIN clube c on j.id_clube = c.id "+
+			" 	INNER JOIN liga_jogo lj on c.id_liga_jogo = lj.id "+
 			" 	WHERE j.idade = ?1 "+
 			" 		AND j.modo_desenvolvimento_jogador = ?4 "+
+			" 		AND lj.id_jogo = ?5 "+
 			" ) "
 	)
-	public void atualizarPassoDesenvolvimento2(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador);
+	public void atualizarPassoDesenvolvimento(Integer idade, Integer qtdeDesenvolvimentoAno, Double ajusteForca, Integer modoDesenvolvimentoJogador, Long idJogo);
 	
 	//###	/INSERT, UPDATE E DELETE	###
 }

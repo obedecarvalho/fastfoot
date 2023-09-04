@@ -10,14 +10,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.Constantes;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 import com.fastfoot.scheduler.service.crud.SemanaCRUDService;
-import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.service.util.RandomUtil;
 
 @Service
@@ -26,8 +25,8 @@ public class RenovarContratosAutomaticamenteService {
 	@Autowired
 	private ContratoRepository contratoRepository;
 
-	@Autowired
-	private TemporadaCRUDService temporadaCRUDService;
+	/*@Autowired
+	private TemporadaCRUDService temporadaCRUDService;*/
 
 	@Autowired
 	private SemanaCRUDService semanaCRUDService;
@@ -36,20 +35,20 @@ public class RenovarContratosAutomaticamenteService {
 	private CalcularSalarioContratoService calcularSalarioContratoService;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> renovarContratosAutomaticamente(Liga liga, boolean primeirosIds) {
+	public CompletableFuture<Boolean> renovarContratosAutomaticamente(Temporada temporada, LigaJogo liga, boolean primeirosIds) {
 
-		Temporada temporada = temporadaCRUDService.getTemporadaAtual();
+		//Temporada temporada = temporadaCRUDService.getTemporadaAtual();
 
-		Semana s = semanaCRUDService.getProximaSemana();
+		Semana s = semanaCRUDService.getProximaSemana(temporada.getJogo());
 
 		List<Contrato> contratos = null;
 
 		if (primeirosIds) {
-			contratos = contratoRepository.findByLigaAndAtivoAndVencidos(liga, true, liga.getIdBaseLiga() + 1,
-					liga.getIdBaseLiga() + 16, temporada.getAno()/*, StatusJogador.ATIVO*/);
+			contratos = contratoRepository.findByLigaJogoAndAtivoAndVencidos(liga, true, liga.getIdClubeInicial(),
+					liga.getIdClubeInicial() + 15, temporada.getAno()/*, StatusJogador.ATIVO*/);
 		} else {
-			contratos = contratoRepository.findByLigaAndAtivoAndVencidos(liga, true, liga.getIdBaseLiga() + 17,
-					liga.getIdBaseLiga() + 32, temporada.getAno()/*, StatusJogador.ATIVO*/);
+			contratos = contratoRepository.findByLigaJogoAndAtivoAndVencidos(liga, true, liga.getIdClubeInicial() + 16,
+					liga.getIdClubeFinal(), temporada.getAno()/*, StatusJogador.ATIVO*/);
 		}
 
 		List<Contrato> contratosNovos = new ArrayList<Contrato>();

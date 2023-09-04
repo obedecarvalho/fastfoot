@@ -23,9 +23,9 @@ public class PartidaTorcidaCRUDService implements CRUDService<PartidaTorcida, Lo
 
 	@Override
 	public PartidaTorcida getById(Long id) {
-		Optional<PartidaTorcida> clubeOpt = partidaTorcidaRepository.findById(id);
-		if (clubeOpt.isPresent()) {
-			return clubeOpt.get();
+		Optional<PartidaTorcida> partidaTorcidaOpt = partidaTorcidaRepository.findById(id);
+		if (partidaTorcidaOpt.isPresent()) {
+			return partidaTorcidaOpt.get();
 		}
 		return null;
 	}

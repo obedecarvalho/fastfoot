@@ -57,13 +57,13 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 		
 		List<MovimentacaoFinanceira> movimentaceosFinanceiras = movimentacaoFinanceiraRepository.findAll();
 
-		Map<Integer, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
+		Map<Long, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
 				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,
-						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));
+						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));//TODO: mudar de getClube().getId() % FastfootApplication.NUM_THREAD para liga + primeirosId
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
-		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+		for (long i = 0; i < FastfootApplication.NUM_THREAD; i++) {
 			completableFutures
 					.add(calcularClubeSaldoSemanaService.calcularClubeSaldoSemana(semanas, movimentacoesClube.get(i)));
 		}

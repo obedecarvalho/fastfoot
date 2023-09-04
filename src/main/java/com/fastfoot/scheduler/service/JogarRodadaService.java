@@ -100,9 +100,9 @@ public class JogarRodadaService {
 		carregarPartidas(rodada);
 
 		if (agrupado) {
-			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
 		
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
@@ -218,9 +218,9 @@ public class JogarRodadaService {
 		carregarPartidas(rodada);
 
 		if (agrupado) {
-			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
 		
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
@@ -264,9 +264,9 @@ public class JogarRodadaService {
 
 		carregarPartidas(rodada);
 		if (agrupado) {
-			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getPartidas());
+		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
 		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
 		jogarRodada(rodada, partidaJogadorEstatisticaDTO, agrupado);

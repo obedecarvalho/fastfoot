@@ -18,6 +18,7 @@ import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.ParametroConstantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
@@ -82,11 +83,11 @@ public class DistribuirPremiacaoCompeticoesService {
 						.findByTemporadaGrupoCampeonato(semana.getTemporada());
 				
 				for (Classificacao c : classificacao) {
-					Double premiacao = getPremiacao(c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(), c.getPosicao());
+					Double premiacao = getPremiacao(semana.getTemporada().getJogo(), c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(), c.getPosicao());
 					if (premiacao != null) {
 						entradas.add(criarMovimentacaoFinanceira(c.getClube(), semana, premiacao,
 								String.format("Classificação à Quartas Final (%s)",
-										getNivelFinal(c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(),
+										getNivelFinal(semana.getTemporada().getJogo(), c.getGrupoCampeonato().getCampeonato().getNivelCampeonato(),
 												c.getPosicao()).name())));
 					}
 				}
@@ -94,7 +95,7 @@ public class DistribuirPremiacaoCompeticoesService {
 			}
 		}
 		
-		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional();
+		Integer numRodadasCN = carregarParametroService.getNumeroRodadasCopaNacional(semana.getTemporada().getJogo());
 		
 		if (SemanaUtil.isSemanaCopaNacional(numRodadasCN, semana.getNumero())) {
 			distribuirPremiacaoCompeticoesCopaNacional(semana, numRodadasCN, partidasNivel, entradas, clubePremiacao);
@@ -269,10 +270,10 @@ public class DistribuirPremiacaoCompeticoesService {
 		}
 	}
 	
-	private Double getPremiacao(NivelCampeonato nivelCampeonato, int posicao) {
-		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado();
-		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
-		Boolean jogarCIII = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+	private Double getPremiacao(Jogo jogo, NivelCampeonato nivelCampeonato, int posicao) {
+		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo);
+		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+		Boolean jogarCIII = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
 		
 		if (!melhorEliminado && (posicao == 1 || posicao == 2)) {
 			return PremiacaoClassificacao.getPremiacao(nivelCampeonato,
@@ -317,9 +318,9 @@ public class DistribuirPremiacaoCompeticoesService {
 		return null;
 	}
 	
-	private NivelCampeonato getNivelFinal(NivelCampeonato nivelCampeonato, int posicao) {
-		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado();
-		Boolean jogarCIII = carregarParametroService.getParametroInteger(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
+	private NivelCampeonato getNivelFinal(Jogo jogo, NivelCampeonato nivelCampeonato, int posicao) {
+		Boolean melhorEliminado = carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo);
+		Boolean jogarCIII = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS) == 3;
 		
 		if (melhorEliminado && nivelCampeonato.isContinental() && posicao == 3) return NivelCampeonato.CONTINENTAL_II;
 		
@@ -368,16 +369,16 @@ public class DistribuirPremiacaoCompeticoesService {
 	}
 	
 	private List<MovimentacaoFinanceira> distribuirPremiacaoJogadores(Map<Clube, List<PremiacaoJogador>> clubePremiacao, Semana semana) {
-		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube();
+		List<Map<String, Object>> valorTransferenciaClubes = jogadorRepository.findValorTransferenciaPorClube(semana.getTemporada().getJogo().getId());
 
 		List<MovimentacaoFinanceira> saidas = new ArrayList<MovimentacaoFinanceira>();
 		
 		double valorPremiacao, porcentagemSalario = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * 100;
 		
-		Map<Integer, Double> valorTransferenciaPorClube = new HashMap<Integer, Double>();
+		Map<Long, Double> valorTransferenciaPorClube = new HashMap<Long, Double>();
 
 		for (Map<String, Object> vtc : valorTransferenciaClubes) {
-			valorTransferenciaPorClube.put((Integer) vtc.get("id_clube"), DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia")));
+			valorTransferenciaPorClube.put(DatabaseUtil.getValueLong(vtc.get("id_clube")), DatabaseUtil.getValueDecimal(vtc.get("valor_transferencia")));
 		}
 		
 		for (Clube c : clubePremiacao.keySet()) {

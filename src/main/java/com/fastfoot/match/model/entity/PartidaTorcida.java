@@ -14,6 +14,8 @@ import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 @Entity
 public class PartidaTorcida {
+	//TODO: usar estrategia de FK semelhante a PartidaEstatisticas?
+	//TODO: salvar renda mandante e visitante
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaTorcidaSequence")

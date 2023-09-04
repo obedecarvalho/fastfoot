@@ -1,29 +1,33 @@
 package com.fastfoot.model;
 
-import java.util.Arrays;
-import java.util.List;
-
 public enum Liga {
 	
-	NULL(0),
-	GENEBE(100),
-	SPAPOR(200),
-	ITAFRA(300),
-	ENGLND(400),
-	/*BRASIL*/
+	NULL,
+	GENEBE,
+	SPAPOR,
+	ITAFRA,
+	ENGLND,
 	;
 	
-	private Integer idBaseLiga;
+	/*NULL(0l),
+	GENEBE(100l),
+	SPAPOR(200l),
+	ITAFRA(300l),
+	ENGLND(400l),
+	/*BRASIL* /
+	;
 	
-	private Liga(Integer idBaseLiga) {
+	private Long idBaseLiga;
+	
+	private Liga(Long idBaseLiga) {
 		this.idBaseLiga = idBaseLiga;
 	}
 
-	public Integer getIdBaseLiga() {
+	public Long getIdBaseLiga() {
 		return idBaseLiga;
 	}
 
 	public static List<Liga> getAll() {
 		return Arrays.asList(Liga.GENEBE, Liga.SPAPOR, Liga.ITAFRA, Liga.ENGLND);
-	}
+	}*/
 }

@@ -13,7 +13,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fastfoot.model.Liga;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
@@ -26,8 +26,6 @@ public class Campeonato implements CampeonatoJogavel {
 	@SequenceGenerator(name = "campeonatoSequence", sequenceName = "campeonato_seq")
 	private Long id;
 	
-	private Liga liga;
-	
 	private String nome;
 
 	private Integer rodadaAtual;
@@ -38,6 +36,10 @@ public class Campeonato implements CampeonatoJogavel {
 
 	@Convert(converter = NivelCampeonatoAttributeConverter.class)
 	private NivelCampeonato nivelCampeonato;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_liga_jogo")
+	private LigaJogo ligaJogo;
 	
 	@Transient
 	private List<Classificacao> classificacao;
@@ -58,14 +60,6 @@ public class Campeonato implements CampeonatoJogavel {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Liga getLiga() {
-		return liga;
-	}
-
-	public void setLiga(Liga liga) {
-		this.liga = liga;
 	}
 
 	@Override
@@ -118,6 +112,15 @@ public class Campeonato implements CampeonatoJogavel {
 		this.nivelCampeonato = nivelCampeonato;
 	}
 
+	@Override
+	public LigaJogo getLigaJogo() {
+		return ligaJogo;
+	}
+
+	public void setLigaJogo(LigaJogo ligaJogo) {
+		this.ligaJogo = ligaJogo;
+	}
+
 	@JsonIgnore
 	public boolean isNacional() {
 		return NivelCampeonato.NACIONAL.equals(nivelCampeonato);
@@ -130,7 +133,7 @@ public class Campeonato implements CampeonatoJogavel {
 
 	@Override
 	public String toString() {
-		return "Campeonato [" + liga.name() + ", " + temporada.getAno() + ", " + nivelCampeonato.name() + "]";
+		return "Campeonato [" + ligaJogo.getLiga().name() + ", " + temporada.getAno() + ", " + nivelCampeonato.name() + "]";
 	}
 
 }

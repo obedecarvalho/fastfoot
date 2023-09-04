@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValor;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValorEstatistica;
@@ -37,7 +38,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 	
 	//###	HABILIDADE_VALOR	###
 	
-	public void carregarEscalacao(List<? extends PartidaResultadoJogavel> partidas) {
+	public void carregarEscalacao(Jogo jogo, List<? extends PartidaResultadoJogavel> partidas) {
 
 		List<Clube> clubes = new ArrayList<Clube>();
 
@@ -47,7 +48,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidades(clubes,
 				StatusJogador.ATIVO);
 
-		carregarJogadorEnergiaService.carregarJogadorEnergia(jogadores);
+		carregarJogadorEnergiaService.carregarJogadorEnergia(jogo, jogadores);
 
 		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
 				.collect(Collectors.groupingBy(Jogador::getClube));
@@ -97,7 +98,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 	
 	//###	HABILIDADE_GRUPO_VALOR	###
 	
-	public void carregarEscalacaoHabilidadeGrupo(List<? extends PartidaResultadoJogavel> partidas) {
+	public void carregarEscalacaoHabilidadeGrupo(Jogo jogo, List<? extends PartidaResultadoJogavel> partidas) {
 
 		List<Clube> clubes = new ArrayList<Clube>();
 
@@ -107,7 +108,7 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		List<Jogador> jogadores = jogadorRepository.findByClubesAndStatusJogadorFetchHabilidadesGrupo(clubes,
 				StatusJogador.ATIVO);
 
-		carregarJogadorEnergiaService.carregarJogadorEnergia(jogadores);
+		carregarJogadorEnergiaService.carregarJogadorEnergia(jogo, jogadores);
 
 		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream()
 				.collect(Collectors.groupingBy(Jogador::getClube));

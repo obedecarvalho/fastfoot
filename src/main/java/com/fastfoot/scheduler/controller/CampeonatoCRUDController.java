@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.service.crud.CampeonatoCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -28,6 +30,9 @@ public class CampeonatoCRUDController implements CRUDController<Campeonato, Long
 
 	@Autowired
 	private CampeonatoCRUDService campeonatoCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/campeonatos")
@@ -53,13 +58,20 @@ public class CampeonatoCRUDController implements CRUDController<Campeonato, Long
 	}
 	
 	@GetMapping("/campeonatos")
-	public ResponseEntity<List<Campeonato>> getAll(@RequestParam(name = "temporadaAtual", required = false) Boolean temporadaAtual) {
+	public ResponseEntity<List<Campeonato>> getAll(
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "temporadaAtual", required = false) Boolean temporadaAtual) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
 			List<Campeonato> campeonatos;
 			
 			if (temporadaAtual != null && temporadaAtual) {
-				campeonatos = campeonatoCRUDService.getAllTemporadaAtual();
+				campeonatos = campeonatoCRUDService.getAllTemporadaAtual(jogo);
 			} else {
 				campeonatos = campeonatoCRUDService.getAll();
 			}

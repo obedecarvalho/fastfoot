@@ -24,7 +24,7 @@ public class DistribuirPatrocinioService {
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
 	public void distribuirPatrocinio(Temporada temporada) {
-		List<Clube> clubes = clubeRepository.findAll();
+		List<Clube> clubes = clubeRepository.findByJogo(temporada.getJogo());
 		
 		List<MovimentacaoFinanceira> entradas = new ArrayList<MovimentacaoFinanceira>();
 		

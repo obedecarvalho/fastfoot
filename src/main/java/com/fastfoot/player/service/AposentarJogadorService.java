@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.QuantitativoPosicaoClubeDTO;
 import com.fastfoot.player.model.StatusJogador;
@@ -60,7 +61,7 @@ public class AposentarJogadorService {
 	private CalcularSalarioContratoService calcularSalarioContratoService;
 
 	@Async("defaultExecutor")
-	public CompletableFuture<Boolean> aposentarJogador(Map<Clube, List<Jogador>> jogadoresAposentarPorClube,
+	public CompletableFuture<Boolean> aposentarJogador(Jogo jogo, Map<Clube, List<Jogador>> jogadoresAposentarPorClube,
 			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {
 		//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?
 		//TODO: deletar HabilidadeValor do jogador aposentado?
@@ -71,7 +72,7 @@ public class AposentarJogadorService {
 		List<Jogador> jogadoresClubeAposentar = null;
 		List<QuantitativoPosicaoClubeDTO> quantitativoPosicaoClubeDTOs = null;
 		
-		Semana s = semanaCRUDService.getProximaSemana();
+		Semana s = semanaCRUDService.getProximaSemana(jogo);
 
 		Posicao p = null;
 		

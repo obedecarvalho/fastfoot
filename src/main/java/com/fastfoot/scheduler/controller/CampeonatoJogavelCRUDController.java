@@ -7,10 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.CampeonatoJogavel;
 import com.fastfoot.scheduler.service.crud.CampeonatoJogavelCRUDService;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -20,6 +23,9 @@ public class CampeonatoJogavelCRUDController {
 	
 	@Autowired
 	private CampeonatoJogavelCRUDService campeonatoJogavelCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@GetMapping("/campeonatosJogavel")
 	public ResponseEntity<List<CampeonatoJogavel>> getAll() {
@@ -39,10 +45,15 @@ public class CampeonatoJogavelCRUDController {
 	}
 	
 	@GetMapping("/campeonatosJogavel/temporadaAtual")
-	public ResponseEntity<List<CampeonatoJogavel>> getByTemporadaAtual() {
+	public ResponseEntity<List<CampeonatoJogavel>> getByTemporadaAtual(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getByTemporadaAtual(jogo);
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
@@ -56,10 +67,15 @@ public class CampeonatoJogavelCRUDController {
 	}
 	
 	@GetMapping("/campeonatosJogavel/temporadaAtual/nacional")
-	public ResponseEntity<List<CampeonatoJogavel>> getNacionalByTemporadaAtual() {
+	public ResponseEntity<List<CampeonatoJogavel>> getNacionalByTemporadaAtual(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getNacionalByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getNacionalByTemporadaAtual(jogo);
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
@@ -73,10 +89,15 @@ public class CampeonatoJogavelCRUDController {
 	}
 	
 	@GetMapping("/campeonatosJogavel/temporadaAtual/copaNacional")
-	public ResponseEntity<List<CampeonatoJogavel>> getCopaNacionalByTemporadaAtual() {
+	public ResponseEntity<List<CampeonatoJogavel>> getCopaNacionalByTemporadaAtual(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getCopaNacionalByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getCopaNacionalByTemporadaAtual(jogo);
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();
@@ -90,10 +111,15 @@ public class CampeonatoJogavelCRUDController {
 	}
 	
 	@GetMapping("/campeonatosJogavel/temporadaAtual/continental")
-	public ResponseEntity<List<CampeonatoJogavel>> getContinentalByTemporadaAtual() {
+	public ResponseEntity<List<CampeonatoJogavel>> getContinentalByTemporadaAtual(@RequestParam(name = "idJogo", required = true) Long idJogo) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 
-			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getContinentalByTemporadaAtual();
+			List<CampeonatoJogavel> campeonatos = campeonatoJogavelCRUDService.getContinentalByTemporadaAtual(jogo);
 
 			if (ValidatorUtil.isEmpty(campeonatos)) {
 				return ResponseEntity.noContent().build();

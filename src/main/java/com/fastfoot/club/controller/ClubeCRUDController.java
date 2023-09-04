@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.service.crud.ClubeCRUDService;
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin("*")
-public class ClubeCRUDController implements CRUDController<Clube, Integer> {
+public class ClubeCRUDController implements CRUDController<Clube, Long> {
 	
 	private static final Comparator<Clube> COMPARATOR = new Comparator<Clube>() {
 		@Override
@@ -37,6 +39,9 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 	
 	@Autowired
 	private ClubeCRUDService clubeCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/clubes")
@@ -65,16 +70,22 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 
 	//@Override
 	@GetMapping("/clubes")
-	public ResponseEntity<List<Clube>> getAll(@RequestParam(name = "liga", required = false) Integer liga) {
+	public ResponseEntity<List<Clube>> getAll(@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "liga", required = false) Integer liga) {
 		
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 			
 			List<Clube> clubes;
 			
 			if (ValidatorUtil.isEmpty(liga)) {
-				clubes = clubeCRUDService.getAll();
+				clubes = clubeCRUDService.getByJogo(jogo);
 			} else {
-				clubes = clubeCRUDService.getByLiga(liga);
+				clubes = clubeCRUDService.getByLiga(jogo, liga);
 			}
 	
 			if (ValidatorUtil.isEmpty(clubes)) {
@@ -94,7 +105,7 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 
 	@Override
 	@GetMapping("/clubes/{id}")
-	public ResponseEntity<Clube> getById(@PathVariable("id") Integer id) {
+	public ResponseEntity<Clube> getById(@PathVariable("id") Long id) {
 		
 		try {
 		
@@ -113,7 +124,7 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 
 	@Override
 	@PutMapping("/clubes/{id}")
-	public ResponseEntity<Clube> update(@PathVariable("id") Integer id, @RequestBody Clube t) {
+	public ResponseEntity<Clube> update(@PathVariable("id") Long id, @RequestBody Clube t) {
 		
 		try {
 		
@@ -138,7 +149,7 @@ public class ClubeCRUDController implements CRUDController<Clube, Integer> {
 
 	@Override
 	@DeleteMapping("/clubes/{id}")
-	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Integer id) {
+	public ResponseEntity<HttpStatus> delete(@PathVariable("id") Long id) {
 		try {
 			clubeCRUDService.delete(id);
 			return ResponseEntity.noContent().build();

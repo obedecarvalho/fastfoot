@@ -20,6 +20,7 @@ import com.fastfoot.controller.CRUDController;
 import com.fastfoot.probability.model.entity.CampeonatoClubeProbabilidade;
 import com.fastfoot.probability.service.crud.CampeonatoClubeProbabilidadeCRUDService;
 import com.fastfoot.scheduler.model.entity.Campeonato;
+import com.fastfoot.scheduler.service.crud.CampeonatoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 
 @RestController
@@ -29,6 +30,9 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 
 	@Autowired
 	private CampeonatoClubeProbabilidadeCRUDService campeonatoClubeProbabilidadeCRUDService;
+	
+	@Autowired
+	private CampeonatoCRUDService campeonatoCRUDService;
 
 	@Override
 	@PostMapping("/campeonatoClubeProbabilidades")
@@ -76,12 +80,17 @@ public class CampeonatoClubeProbabilidadeCRUDController implements CRUDControlle
 		
 		try {
 			
+			Campeonato campeonato = campeonatoCRUDService.getById(idCampeonato);
+			if (ValidatorUtil.isEmpty(campeonato)) {
+				return ResponseEntity.noContent().build();
+			}
+			
 			List<CampeonatoClubeProbabilidade> clubes = null;
 			
 			if (comClassificacao != null && comClassificacao) {
-				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoAndRodadaAtualComClassificacao(new Campeonato(idCampeonato));
+				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoAndRodadaAtualComClassificacao(campeonato);
 			} else {
-				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoRodadaAtual(new Campeonato(idCampeonato));
+				clubes = campeonatoClubeProbabilidadeCRUDService.getByCampeonatoRodadaAtual(campeonato);
 			}
 
 			if (ValidatorUtil.isEmpty(clubes)) {

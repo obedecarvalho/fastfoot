@@ -9,21 +9,32 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
 import com.fastfoot.model.Liga;
-import com.fastfoot.service.CRUDService;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
+import com.fastfoot.service.CRUDServiceJogavel;
+import com.fastfoot.service.LigaJogoCRUDService;
 
 @Service
-public class ClubeTituloRankingCRUDService implements CRUDService<ClubeTituloRanking, Integer> {
+public class ClubeTituloRankingCRUDService implements CRUDServiceJogavel<ClubeTituloRanking, Long> {
 	
 	@Autowired
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
+	
+	@Autowired
+	private LigaJogoCRUDService ligaJogoCRUDService;
 
 	@Override
 	public List<ClubeTituloRanking> getAll() {
 		return clubeTituloRankingRepository.findAll();
 	}
+	
+	@Override
+	public List<ClubeTituloRanking> getByJogo(Jogo jogo) {
+		return clubeTituloRankingRepository.findByJogo(jogo);
+	}
 
 	@Override
-	public ClubeTituloRanking getById(Integer id) {
+	public ClubeTituloRanking getById(Long id) {
 		Optional<ClubeTituloRanking> clubeOpt = clubeTituloRankingRepository.findById(id);
 		if (clubeOpt.isPresent()) {
 			return clubeOpt.get();
@@ -32,7 +43,7 @@ public class ClubeTituloRankingCRUDService implements CRUDService<ClubeTituloRan
 	}
 
 	@Override
-	public void delete(Integer id) {
+	public void delete(Long id) {
 		clubeTituloRankingRepository.deleteById(id);		
 	}
 
@@ -51,7 +62,7 @@ public class ClubeTituloRankingCRUDService implements CRUDService<ClubeTituloRan
 		return clubeTituloRankingRepository.save(t);
 	}
 	
-	public List<ClubeTituloRanking> getByLiga(String ligaStr){
+	public List<ClubeTituloRanking> getByLiga(Jogo jogo, String ligaStr){
 
 		Liga liga = null;
 
@@ -61,15 +72,16 @@ public class ClubeTituloRankingCRUDService implements CRUDService<ClubeTituloRan
 			// TODO: handle exception
 		}
 
-		return getByLiga(liga);
+		return getByLiga(jogo, liga);
 	}
 	
-	public List<ClubeTituloRanking> getByLiga(Integer ligaOrdinal){
+	public List<ClubeTituloRanking> getByLiga(Jogo jogo, Integer ligaOrdinal){
 		Liga liga = Liga.values()[ligaOrdinal];
-		return getByLiga(liga);
+		return getByLiga(jogo, liga);
 	}
 
-	public List<ClubeTituloRanking> getByLiga(Liga liga){
-		return clubeTituloRankingRepository.findByLiga(liga);
+	public List<ClubeTituloRanking> getByLiga(Jogo jogo, Liga liga){
+		LigaJogo ligaJogo = ligaJogoCRUDService.getByJogo(jogo, liga);
+		return clubeTituloRankingRepository.findByLigaJogo(ligaJogo);
 	}
 }

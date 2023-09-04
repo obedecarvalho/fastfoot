@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.controller.CRUDController;
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.service.JogoCRUDService;
 import com.fastfoot.service.util.ValidatorUtil;
 import com.fastfoot.transfer.model.entity.PropostaTransferenciaJogador;
 import com.fastfoot.transfer.service.crud.PropostaTransferenciaJogadorCRUDService;
@@ -28,6 +30,9 @@ public class PropostaTransferenciaJogadorCRUDController implements CRUDControlle
 	
 	@Autowired
 	private PropostaTransferenciaJogadorCRUDService propostaTransferenciaJogadorCRUDService;
+	
+	@Autowired
+	private JogoCRUDService jogoCRUDService;
 
 	@Override
 	@PostMapping("/propostaTransferenciaJogador")
@@ -53,15 +58,22 @@ public class PropostaTransferenciaJogadorCRUDController implements CRUDControlle
 	}
 	
 	@GetMapping("/propostaTransferenciaJogador")
-	public ResponseEntity<List<PropostaTransferenciaJogador>> getAll(@RequestParam(name = "propostaAceita", required = false) Boolean propostaAceita) {
+	public ResponseEntity<List<PropostaTransferenciaJogador>> getAll(
+			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "propostaAceita", required = false) Boolean propostaAceita) {
 		try {
+			
+			Jogo jogo = jogoCRUDService.getById(idJogo);
+			if (ValidatorUtil.isEmpty(jogo)) {
+				return ResponseEntity.noContent().build();
+			}
 			
 			List<PropostaTransferenciaJogador> propostas;
 
 			if (propostaAceita == null) {
 				propostas = propostaTransferenciaJogadorCRUDService.getAll();
 			} else {
-				propostas = propostaTransferenciaJogadorCRUDService.getByPropostaAceita(propostaAceita);
+				propostas = propostaTransferenciaJogadorCRUDService.getByPropostaAceita(jogo, propostaAceita);
 			}
 	
 			if (ValidatorUtil.isEmpty(propostas)) {

@@ -22,7 +22,7 @@ public class ConsultarEscalacaoClubeController {
 	private ConsultarEscalacaoClubeService consultarEscalacaoClubeService;
 
 	@GetMapping("/consultarEscalacaoClube/{idClube}")
-	public ResponseEntity<EscalacaoClubeDTO> consultarEscalacaoClube(@PathVariable(name = "idClube") Integer idClube) {
+	public ResponseEntity<EscalacaoClubeDTO> consultarEscalacaoClube(@PathVariable(name = "idClube") Long idClube) {
 		Clube c = new Clube(idClube);
 		EscalacaoClubeDTO escalacaoDTO = consultarEscalacaoClubeService.consultarEscalacaoClube(c);		
 		if (ValidatorUtil.isEmpty(escalacaoDTO)) {
