@@ -54,7 +54,7 @@ public class Clube implements ElementoRoleta {
 		this.id = id;
 		this.nome = nome;
 		this.nivelNacional = nivelNacional;
-		this.forcaGeral = nivelNacional.getForcaGeral();//TODO
+		this.forcaGeral = nivelNacional.getForcaGeral();
 		//this.liga = liga;
 		this.nivelInternacional = nivelInternacional;
 		this.logo = logo;

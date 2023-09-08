@@ -25,6 +25,12 @@ public enum EscalacaoPosicao {
 	P_RES_4(false, "RES_4", OrdemPosicaoRelacao.LATERAL), //LAT
 	P_RES_5(false, "RES_5", OrdemPosicaoRelacao.MEIA), //MEI
 	P_RES_6(false, "RES_6", OrdemPosicaoRelacao.ATACANTE), //ATA
+	P_RES_7(false, "RES_7", OrdemPosicaoRelacao.GOLEIRO), //GOL
+	P_RES_8(false, "RES_8", OrdemPosicaoRelacao.ZAGUEIRO), //ZAG
+	P_RES_9(false, "RES_9", OrdemPosicaoRelacao.VOLANTE), //VOL
+	P_RES_10(false, "RES_10", OrdemPosicaoRelacao.LATERAL), //LAT
+	P_RES_11(false, "RES_11", OrdemPosicaoRelacao.MEIA), //MEI
+	P_RES_12(false, "RES_12", OrdemPosicaoRelacao.ATACANTE), //ATA
 	P_SUPLENTE(false, "SUP", null);
 	
 	private boolean titular;
