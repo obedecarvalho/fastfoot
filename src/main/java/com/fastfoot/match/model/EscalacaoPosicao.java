@@ -50,7 +50,7 @@ public enum EscalacaoPosicao {
 	}
 	
 	public static List<EscalacaoPosicao> getEscalacaoReservas() {
-		return Arrays.asList(P_RES_1, P_RES_2, P_RES_3, P_RES_4, P_RES_5, P_RES_6);
+		return Arrays.asList(P_RES_1, P_RES_2, P_RES_3, P_RES_4, P_RES_5, P_RES_6, P_RES_7, P_RES_8, P_RES_9, P_RES_10, P_RES_11, P_RES_12);
 	}
 
 	public boolean isTitular() {
