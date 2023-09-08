@@ -32,7 +32,15 @@ public class PreCarregarParametrosService {
 	public List<Parametro> inicializarParametrosPadrao(Jogo jogo) {
 			List<Parametro> parametros = new ArrayList<Parametro>();
 			
-			parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "true", "true, false", jogo));
+			//parametros.add(new Parametro(ParametroConstantes.USAR_VERSAO_SIMPLIFICADA, "true", "true, false", jogo));
+			
+			parametros.add(new Parametro(ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA,
+					ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE_GRUPO,
+					String.format("%s, %s, %s",
+							ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_FORCA_GERAL,
+							ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE,
+							ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE_GRUPO),
+					jogo));
 
 			parametros.add(new Parametro(ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS, "3", "2, 3", jogo));
 
@@ -64,7 +72,7 @@ public class PreCarregarParametrosService {
 			
 			parametros.add(new Parametro(ParametroConstantes.CALCULAR_PROBABILIDADES, "true", "false, true", jogo));
 			
-			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA, "true", "false, true", jogo));
+			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES, "true", "false, true", jogo));
 			
 			parametros.add(new Parametro(ParametroConstantes.USAR_APOSTAS_ESPORTIVAS, "true", "false, true", jogo));
 			

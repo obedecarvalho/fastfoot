@@ -304,6 +304,15 @@ public class Jogador {
 		}
 		getHabilidadesValor().add(habilidadeValor);
 	}
+	
+	@JsonIgnore
+	public void addHabilidadeGrupoValor(HabilidadeGrupoValor habilidadeValor) {
+		if (getHabilidadesGrupoValor() == null) {
+			setHabilidadesGrupoValor(new ArrayList<HabilidadeGrupoValor>());
+		}
+		getHabilidadesGrupoValor().add(habilidadeValor);
+	}
+
 
 	@JsonIgnore
 	public List<HabilidadeValor> getHabilidadesValor(List<HabilidadeAcao> habilidades) {

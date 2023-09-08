@@ -139,7 +139,6 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private CarregarParametroService carregarParametroService;
 	
-	@SuppressWarnings("unused")
 	@Autowired
 	private CalcularProbabilidadeEstatisticasSimplesService calcularProbabilidadeEstatisticasSimplesService;
 
@@ -384,7 +383,6 @@ public class JogarPartidasSemanaService {
 		}
 	}
 
-	@SuppressWarnings("unused")
 	private void desenvolverJogadores(Jogo jogo) {
 
 		List<Jogador> jogadores = jogadorRepository.findByJogoAndStatusJogadorFetchHabilidades(jogo, StatusJogador.ATIVO);
@@ -416,7 +414,6 @@ public class JogarPartidasSemanaService {
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
 	
-	@SuppressWarnings("unused")
 	private void calcularHabilidadeGrupoValor(Jogo jogo) {
 
 		habilidadeGrupoValorRepository.deleteAllInBatch();
@@ -552,7 +549,7 @@ public class JogarPartidasSemanaService {
 		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
 		Integer numRodadas = carregarParametroService.getNumeroRodadasCopaNacional(jogo);
 		Boolean cIIIReduzido = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
-		Boolean jogarCNCompleta = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA);
+		Boolean jogarCNCompleta = carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES);
 
 		
 		PromotorEliminatoria promotorEliminatoria = null;

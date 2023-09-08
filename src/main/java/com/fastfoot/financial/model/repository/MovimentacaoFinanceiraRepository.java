@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
@@ -26,6 +27,10 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.semana.temporada = :temporada AND mov.clube = :clube ")
 	public List<MovimentacaoFinanceira> findByTemporadaAndClube(@Param("temporada") Temporada temporada,
 			@Param("clube") Clube clube);
+	
+	//@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.semana.temporada.jogo = :jogo ")
+	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.clube.ligaJogo.jogo = :jogo ")
+	public List<MovimentacaoFinanceira> findByJogo(@Param("jogo") Jogo jogo);
 	
 	//###	SELECT ESPECIFICOS	###
 	

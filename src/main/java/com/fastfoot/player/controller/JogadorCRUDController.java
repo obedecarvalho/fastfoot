@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.service.crud.ClubeCRUDService;
 import com.fastfoot.controller.CRUDController;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.player.model.entity.Jogador;
@@ -36,6 +37,9 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 	
 	@Autowired
 	private JogoCRUDService jogoCRUDService;
+	
+	@Autowired
+	private ClubeCRUDService clubeCRUDService;
 
 	@Override
 	@PostMapping("/jogadores")
@@ -62,22 +66,37 @@ public class JogadorCRUDController implements CRUDController<Jogador, Long> {
 
 	@GetMapping("/jogadores")
 	public ResponseEntity<List<Jogador>> getAll(
-			@RequestParam(name = "idJogo", required = true) Long idJogo,
+			@RequestParam(name = "idJogo", required = false) Long idJogo,
 			@RequestParam(name = "idClube", required = false) Long idClube) {
 		try {
 			
-			Jogo jogo = jogoCRUDService.getById(idJogo);
-			if (ValidatorUtil.isEmpty(jogo)) {
-				return ResponseEntity.noContent().build();
+			if (ValidatorUtil.isEmpty(idClube) && ValidatorUtil.isEmpty(idJogo)) {
+				return ResponseEntity.badRequest().build();
+			}
+			
+			Jogo jogo = null;
+			Clube clube = null;
+			
+			if (!ValidatorUtil.isEmpty(idJogo)) {
+				jogo = jogoCRUDService.getById(idJogo);
+				if (ValidatorUtil.isEmpty(jogo)) {
+					return ResponseEntity.noContent().build();
+				}
+			}
+			
+			if (!ValidatorUtil.isEmpty(idClube)) {
+				clube = clubeCRUDService.getById(idClube);
+				if (ValidatorUtil.isEmpty(clube)) {
+					return ResponseEntity.noContent().build();
+				}
 			}
 
 			List<Jogador> jogadores;
 
-			if (ValidatorUtil.isEmpty(idClube)) {
-				//jogadores = jogadorCRUDService.getAll();
+			if (!ValidatorUtil.isEmpty(idJogo)) {
 				jogadores = jogadorCRUDService.getAllAtivos(jogo);
 			} else {
-				jogadores = jogadorCRUDService.getAtivosByClube(new Clube(idClube));
+				jogadores = jogadorCRUDService.getAtivosByClube(clube);
 			}
 	
 			if (ValidatorUtil.isEmpty(jogadores)) {

@@ -44,7 +44,7 @@ public class ClassificarClubesTemporadaService {
 		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(temporada.getJogo());
 		List<Clube> clubes = clubeRepository.findByJogo(temporada.getJogo());
 		List<ClubeRanking> rankings = ClubeRankingUtil.rankearClubesTemporada(temporada, clubes, ligaJogos);
-		List<ClubeTituloRanking> rankingsTitulos = clubeTituloRankingRepository.findAll();
+		List<ClubeTituloRanking> rankingsTitulos = clubeTituloRankingRepository.findByJogo(temporada.getJogo());
 		ClubeTituloRankingUtil.atualizarRankingTitulos(rankings, rankingsTitulos);
 		clubeRankingRepository.saveAll(rankings);
 		clubeTituloRankingRepository.saveAll(rankingsTitulos);

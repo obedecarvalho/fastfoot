@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
-import com.fastfoot.service.CRUDService;
+import com.fastfoot.service.CRUDServiceJogavel;
 
 @Service
-public class SemanaCRUDService implements CRUDService<Semana, Long> {
+public class SemanaCRUDService implements CRUDServiceJogavel<Semana, Long> {
 
 	@Autowired
 	private SemanaRepository semanaRepository;
@@ -20,6 +20,11 @@ public class SemanaCRUDService implements CRUDService<Semana, Long> {
 	@Override
 	public List<Semana> getAll() {
 		return semanaRepository.findAll();
+	}
+	
+	@Override
+	public List<Semana> getByJogo(Jogo jogo) {
+		return semanaRepository.findByJogo(jogo);
 	}
 
 	@Override

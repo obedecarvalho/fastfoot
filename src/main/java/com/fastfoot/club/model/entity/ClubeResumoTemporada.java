@@ -19,6 +19,7 @@ import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.NivelCampeonatoAttributeConverter;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Entity
 public class ClubeResumoTemporada {
@@ -169,6 +170,18 @@ public class ClubeResumoTemporada {
 
 	public void setClassificacaoContinental(ClassificacaoContinental classificacaoContinental) {
 		this.classificacaoContinental = classificacaoContinental;
+	}
+	
+	//@Transient
+	public String getClassificacaoDescricao() {
+		if (!ValidatorUtil.isEmpty(classificacaoNacional)) {
+			return classificacaoNacional.name();
+		} else if (!ValidatorUtil.isEmpty(classificacaoCopaNacional)) {
+			return classificacaoCopaNacional.name();
+		} else if (!ValidatorUtil.isEmpty(classificacaoContinental)) {
+			return classificacaoContinental.name();
+		}
+		return null;
 	}
 
 	@Override

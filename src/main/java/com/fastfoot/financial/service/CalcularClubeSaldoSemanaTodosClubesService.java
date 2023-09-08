@@ -15,6 +15,7 @@ import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 
@@ -49,13 +50,13 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 	@Autowired
 	private CalcularClubeSaldoSemanaService calcularClubeSaldoSemanaService;
 
-	public void calcularClubeSaldoSemana() {
+	public void calcularClubeSaldoSemana(Jogo jogo) {
 		
-		List<Semana> semanas = semanaRepository.findAll();
+		List<Semana> semanas = semanaRepository.findByJogo(jogo);
 		
 		Collections.sort(semanas, COMPARATOR);
 		
-		List<MovimentacaoFinanceira> movimentaceosFinanceiras = movimentacaoFinanceiraRepository.findAll();
+		List<MovimentacaoFinanceira> movimentaceosFinanceiras = movimentacaoFinanceiraRepository.findByJogo(jogo);
 
 		Map<Long, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
 				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,

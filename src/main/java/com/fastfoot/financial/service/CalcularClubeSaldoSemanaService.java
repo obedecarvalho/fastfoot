@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.ClubeSaldoSemana;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.ClubeSaldoSemanaRepository;
@@ -42,10 +43,13 @@ public class CalcularClubeSaldoSemanaService {
 			List<MovimentacaoFinanceira> movimentacaoFinanceiras, List<ClubeSaldoSemana> clubeSaldoSemanas) {
 
 		Map<Semana, List<MovimentacaoFinanceira>> semanaMovimentacoes = movimentacaoFinanceiras.stream()
-				.filter(mf -> mf.getSemana() != null)//TODO
+				.filter(mf -> mf.getSemana() != null)
 				.collect(Collectors.groupingBy(MovimentacaoFinanceira::getSemana));
+		
+		MovimentacaoFinanceira caixaInicial = movimentacaoFinanceiras.stream()
+				.filter(mf -> TipoMovimentacaoFinanceira.CAIXA_INICIAL.equals(mf.getTipoMovimentacao())).findFirst().get();
 
-		double saldoAnterior = 0.0d;
+		double saldoAnterior = caixaInicial.getValorMovimentacao();
 
 		List<MovimentacaoFinanceira> movimentacoesSemana = null;
 

@@ -27,4 +27,7 @@ public interface SemanaRepository extends JpaRepository<Semana, Long>{
 	
 	@Query(" SELECT s FROM Semana s WHERE s.temporada.atual = true AND s.numero = :numero AND s.temporada.jogo = :jogo ")
 	public Optional<Semana> findByNumeroSemanaTemporadaAtual(@Param("jogo") Jogo jogo, @Param("numero") Integer numero);
+	
+	@Query(" SELECT s FROM Semana s WHERE s.temporada.jogo = :jogo ")
+	public List<Semana> findByJogo(@Param("jogo") Jogo jogo);
 }

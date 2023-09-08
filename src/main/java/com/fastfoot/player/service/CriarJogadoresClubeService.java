@@ -62,6 +62,9 @@ public class CriarJogadoresClubeService {
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
 	
 	@Autowired
+	private CalcularValorTransferenciaJogadorPorHabilidadeGrupoService calcularValorTransferenciaJogadorPorHabilidadeGrupoService;
+	
+	@Autowired
 	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
 
 	@Autowired
@@ -105,7 +108,7 @@ public class CriarJogadoresClubeService {
 		return CompletableFuture.completedFuture(true);
 	}
 	
-	protected void calcularValorTransferencia(Jogo jogo, List<Jogador> jogadores) {
+	/*protected void calcularValorTransferencia(Jogo jogo, List<Jogador> jogadores) {
 		if (carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 			for (Jogador jogador : jogadores) {
 				calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(jogador);
@@ -113,6 +116,24 @@ public class CriarJogadoresClubeService {
 		} else {
 			for (Jogador jogador : jogadores) {
 				calcularValorTransferenciaJogadorPorHabilidadeService.calcularValorTransferencia(jogador);
+			}
+		}
+	}*/
+	
+	protected void calcularValorTransferencia(Jogo jogo, List<Jogador> jogadores) {
+		String metodoCalculo = carregarParametroService.getParametroString(jogo, ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA);
+
+		if (ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_FORCA_GERAL.equals(metodoCalculo)) {
+			for (Jogador jogador : jogadores) {
+				calcularValorTransferenciaJogadorForcaGeralService.calcularValorTransferencia(jogador);
+			}
+		} else if (ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE.equals(metodoCalculo)) {
+			for (Jogador jogador : jogadores) {
+				calcularValorTransferenciaJogadorPorHabilidadeService.calcularValorTransferencia(jogador);
+			}
+		} else if (ParametroConstantes.METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE_GRUPO.equals(metodoCalculo)) {
+			for (Jogador jogador : jogadores) {
+				calcularValorTransferenciaJogadorPorHabilidadeGrupoService.calcularValorTransferencia(jogador);
 			}
 		}
 	}

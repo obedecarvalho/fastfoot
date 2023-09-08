@@ -3,7 +3,15 @@ package com.fastfoot.model;
 public class ParametroConstantes {
 	
 	//true, false
-	public static final String USAR_VERSAO_SIMPLIFICADA = "USAR_VERSAO_SIMPLIFICADA";
+	//public static final String USAR_VERSAO_SIMPLIFICADA = "USAR_VERSAO_SIMPLIFICADA";
+	
+	public static final String METODO_CALCULO_VALOR_TRANSFERENCIA = "METODO_CALCULO_VALOR_TRANSFERENCIA";
+	
+	public static final String METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_FORCA_GERAL = "FORCA_GERAL";
+	
+	public static final String METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE = "HABILIDADE";
+	
+	public static final String METODO_CALCULO_VALOR_TRANSFERENCIA_PARAM_HABILIDADE_GRUPO = "HABILIDADE_GRUPO";
 
 	//2, 3
 	public static final String NUMERO_CAMPEONATOS_CONTINENTAIS = "NUMERO_CAMPEONATOS_CONTINENTAIS";
@@ -21,11 +29,11 @@ public class ParametroConstantes {
 	//4 (16 TIMES), 5 (20, 22 ou 24 TIMES), 6 (28, 30 ou 32 TIMES)
 	public static final String NUMERO_RODADAS_COPA_NACIONAL = "NUMERO_RODADAS_COPA_NACIONAL";
 
-	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R = "4 (16 TIMES)";
+	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_4R = "4_(16_TIMES)";
 
-	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R = "6 (28, 30 ou 32 TIMES)";
+	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_6R = "6_(28,_30_ou_32_TIMES)";
 
-	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R = "5 (20, 22 ou 24 TIMES)";
+	public static final String NUMERO_RODADAS_COPA_NACIONAL_PARAM_5R = "5_(20,_22_ou_24_TIMES)";
 
 	public static final String MARCAR_AMISTOSOS_AUTOMATICAMENTE = "MARCAR_AMISTOSOS_AUTOMATICAMENTE";
 	
@@ -45,7 +53,7 @@ public class ParametroConstantes {
 	
 	//true, false
 	//Para o caso de haver CIII Reduzido, 32 clubes jogar a copa nacional (ao invés de 30)
-	public static final String JOGAR_COPA_NACIONAL_COMPLETA = "JOGAR_COPA_NACIONAL_COMPLETA";
+	public static final String JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES = "JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES";
 
 	//true, false
 	public static final String JOGAR_SUPERCOPA = "JOGAR_SUPERCOPA";//TODO: implementar logica
