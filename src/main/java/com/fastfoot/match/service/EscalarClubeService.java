@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.EscalacaoPosicao;
+import com.fastfoot.match.model.StatusEscalacaoJogador;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.model.Constantes;
@@ -38,13 +39,15 @@ public class EscalarClubeService {
 		}
 		
 		if (jogPos.size() > 0) {
-			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep1, jogPos.get(0), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep1, jogPos.get(0), true,
+					StatusEscalacaoJogador.TITULAR));
 		} else {
 			posicoesVazias.add(ep1);
 		}
 		
 		if (jogPos.size() > 1) {
-			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep2, jogPos.get(1), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep2, jogPos.get(1), true,
+					StatusEscalacaoJogador.TITULAR));
 		} else {
 			posicoesVazias.add(ep2);
 		}
@@ -67,7 +70,8 @@ public class EscalarClubeService {
 		}
 		
 		if (jogPos.size() > 0) {
-			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_GOL, jogPos.get(0), true));
+			escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, EscalacaoPosicao.P_GOL,
+					jogPos.get(0), true, StatusEscalacaoJogador.TITULAR));
 		} else {
 			posicoesVazias.add(EscalacaoPosicao.P_GOL);
 		}
@@ -138,7 +142,9 @@ public class EscalarClubeService {
 			while (naoPreenchido && i < ep.getOrdemPosicaoParaEscalar().length) {
 				possiveisJogadores = jogadoresSuplentes.get(ep.getOrdemPosicaoParaEscalar()[i]);
 				if (!ValidatorUtil.isEmpty(possiveisJogadores)) {
-					escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep, possiveisJogadores.get(0), true));
+					escalacao.add(new EscalacaoJogadorPosicao(clube, escalacaoClubePartida, ep,
+							possiveisJogadores.get(0), true,
+							ep.isTitular() ? StatusEscalacaoJogador.TITULAR : StatusEscalacaoJogador.RESERVA));
 					possiveisJogadores.remove(0);
 					naoPreenchido = false;
 				}

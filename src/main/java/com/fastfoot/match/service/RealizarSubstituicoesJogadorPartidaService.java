@@ -14,6 +14,7 @@ import com.fastfoot.match.model.EscalacaoPosicao;
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaPosicao;
 import com.fastfoot.match.model.EstrategiaSubstituicao;
+import com.fastfoot.match.model.StatusEscalacaoJogador;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.player.model.entity.Jogador;
@@ -29,16 +30,25 @@ public class RealizarSubstituicoesJogadorPartidaService {
 	public void realizarSubstituicoesJogadorPartida(Esquema esquema, EstrategiaSubstituicao estrategiaSubstituicao,
 			PartidaResultadoJogavel partidaResultado, boolean mandante, int minutoSubstituicao) {
 		
+		/*
 		//TODO: validar para que jogador que acabou de ser entrar na substituição não seja substituido
+		 * TODO: remover jogador que entrou da reserva
+		 */
 		
 		if (EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS.equals(estrategiaSubstituicao)) {
 			substituirMaisCansados(esquema, partidaResultado, mandante, minutoSubstituicao,
-					sortearNumeroSubstituicoes());
-		} else if (EstrategiaSubstituicao.SUBSTITUIR_SO_SE_ESTIVER_MELHOR.equals(estrategiaSubstituicao)) {
-			//TODO
+					sortearNumeroSubstituicoes(), false);
+		} else if (EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS_SO_SE_RESERVA_ESTIVER_MELHOR.equals(estrategiaSubstituicao)) {
+			substituirMaisCansados(esquema, partidaResultado, mandante, minutoSubstituicao,
+					sortearNumeroSubstituicoes(), true);
 		} else if (EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES.equals(estrategiaSubstituicao)) {
 			entrarSubstituitoMaisForte(esquema, partidaResultado, mandante, minutoSubstituicao,
-					sortearNumeroSubstituicoes());
+					sortearNumeroSubstituicoes(), false);
+		} else if (EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES_SO_SE_RESERVA_ESTIVER_MELHOR.equals(estrategiaSubstituicao)) {
+			entrarSubstituitoMaisForte(esquema, partidaResultado, mandante, minutoSubstituicao,
+					sortearNumeroSubstituicoes(), false);
+		} else if (EstrategiaSubstituicao.ENTRAR_JOGADORES_A_DESENVOLVER.equals(estrategiaSubstituicao)) {
+			//TODO
 		}
 		
 	}
@@ -55,19 +65,21 @@ public class RealizarSubstituicoesJogadorPartidaService {
 	}
 	
 	private void entrarSubstituitoMaisForte(Esquema esquema, PartidaResultadoJogavel partidaResultado, boolean mandante,
-			int minutoSubstituicao, int numeroSubstituicoes) {
+			int minutoSubstituicao, int numeroSubstituicoes, boolean soSeEstiverMelhor) {
 		
 		List<Jogador> jogadoresReservas;
 
 		if (mandante) {
 			jogadoresReservas = esquema.getEscalacaoClubeMandante().getListEscalacaoJogadorPosicao().stream()
-					.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao())
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao())
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto()
 							&& !e.getJogador().getPosicao().isGoleiro())
 					.map(EscalacaoJogadorPosicao::getJogador).sorted(JogadorFactory.getComparatorForcaGeralEnergia())
 					.collect(Collectors.toList());
 		} else {
 			jogadoresReservas = esquema.getEscalacaoClubeVisitante().getListEscalacaoJogadorPosicao().stream()
-					.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao())
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao())
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto()
 							&& !e.getJogador().getPosicao().isGoleiro())
 					.map(EscalacaoJogadorPosicao::getJogador).sorted(JogadorFactory.getComparatorForcaGeralEnergia())
 					.collect(Collectors.toList());
@@ -84,12 +96,44 @@ public class RealizarSubstituicoesJogadorPartidaService {
 		}
 		
 		//
+		Map<Jogador, EscalacaoJogadorPosicao> jogReserva;
+		if (mandante) {
+			jogReserva = esquema.getEscalacaoClubeMandante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		} else {
+			jogReserva = esquema.getEscalacaoClubeVisitante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		}
+		
+		Map<Jogador, EscalacaoJogadorPosicao> jogTitular;
+		if (mandante) {
+			jogTitular = esquema.getEscalacaoClubeMandante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituido())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		} else {
+			jogTitular = esquema.getEscalacaoClubeVisitante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituido())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		}
+		
+		System.err.println("CHECK3: " + (new ArrayList<Jogador>(jogPosicao.keySet())).equals(new ArrayList<Jogador>(jogTitular.keySet())));
+		System.err.println("CHECK2: " + jogadoresReservas.equals(new ArrayList<Jogador>(jogReserva.keySet())));
+		//
+		
+		//
 		List<Jogador> jogs = new ArrayList<Jogador>(jogPosicao.keySet());
 		List<Jogador> jogadoresTitularesPosicao;
 		Jogador jogadorSubstituir;
 		//
 		
 		numeroSubstituicoes = Math.min(numeroSubstituicoes, jogadoresReservas.size());
+		double forcaPonderadaSubstituido, forcaPonderadaSubstituto;
 
 		int i = 0, pos = 0;
 		while (i < numeroSubstituicoes && pos < jogadoresReservas.size()) {
@@ -104,6 +148,21 @@ public class RealizarSubstituicoesJogadorPartidaService {
 			if (!ValidatorUtil.isEmpty(jogadoresTitularesPosicao)) {
 				
 				jogadorSubstituir = jogadoresTitularesPosicao.get(0);
+				
+				//
+				if (soSeEstiverMelhor) {
+					forcaPonderadaSubstituido = Math.pow(jogadorSubstituir.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (jogadorSubstituir.getJogadorEnergia().getEnergiaAtual() / 100.0);
+					
+					forcaPonderadaSubstituto = Math.pow(jogadorSubstituto.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (jogadorSubstituto.getJogadorEnergia().getEnergiaAtual() / 100.0);
+					
+					if (forcaPonderadaSubstituto < forcaPonderadaSubstituido) {
+						pos++;
+						continue;
+					}
+				}
+				//
 				
 				if (!partidaResultado.isAmistoso()) {
 					jogadorSubstituto.setJogadorEstatisticasSemana(
@@ -123,6 +182,12 @@ public class RealizarSubstituicoesJogadorPartidaService {
 						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
 								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
+				//
+				jogTitular.get(jogadorSubstituir).setStatusEscalacaoJogador(
+						jogTitular.get(jogadorSubstituir).getStatusEscalacaoJogador().getStatusSubstituido());
+				jogReserva.get(jogadorSubstituto).setStatusEscalacaoJogador(StatusEscalacaoJogador.RESERVA_SUBSTITUTO);
+				//
+				
 				if (mandante) {
 					jogPosicao.get(jogadorSubstituir).setMandante(jogadorSubstituto);
 				} else {
@@ -135,13 +200,13 @@ public class RealizarSubstituicoesJogadorPartidaService {
 				pos++;
 			}
 
-			if (pos >= jogPosicao.size())
-				i = Constantes.NUMERO_MAX_SUBSTITUICOES;
+			/*if (pos >= jogPosicao.size())
+				i = Constantes.NUMERO_MAX_SUBSTITUICOES;*/
 		}
 	}
 	
 	private void substituirMaisCansados(Esquema esquema, PartidaResultadoJogavel partidaResultado, boolean mandante,
-			int minutoSubstituicao, int numeroSubstituicoes) {
+			int minutoSubstituicao, int numeroSubstituicoes, boolean soSeEstiverMelhor) {
 
 		Map<Jogador, EsquemaPosicao> jogPosicao;
 
@@ -159,29 +224,67 @@ public class RealizarSubstituicoesJogadorPartidaService {
 		Map<Jogador, EscalacaoJogadorPosicao> jogReserva;
 		if (mandante) {
 			jogReserva = esquema.getEscalacaoClubeMandante().getListEscalacaoJogadorPosicao().stream()
-					.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto())
 					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
 		} else {
 			jogReserva = esquema.getEscalacaoClubeVisitante().getListEscalacaoJogadorPosicao().stream()
-					.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					//.filter(e -> EscalacaoPosicao.getEscalacaoReservas().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituto())
 					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
 		}
+		
+		//
+		Map<Jogador, EscalacaoJogadorPosicao> jogTitular;
+		if (mandante) {
+			jogTitular = esquema.getEscalacaoClubeMandante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituido())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		} else {
+			jogTitular = esquema.getEscalacaoClubeVisitante().getListEscalacaoJogadorPosicao().stream()
+					//.filter(e -> EscalacaoPosicao.getEscalacaoTitulares().contains(e.getEscalacaoPosicao()))
+					.filter(e -> e.getStatusEscalacaoJogador().isPossivelSubstituido())
+					.collect(Collectors.toMap(EscalacaoJogadorPosicao::getJogador, Function.identity()));
+		}
+		
+		System.err.println("CHECK: " + jogs.equals(new ArrayList<Jogador>(jogTitular.keySet())));
+		//
 
 		List<Jogador> jogadoresReservas;
 		Jogador jogadorSubstituto;
+		
+		List<Jogador> jogadoresReservasDisponiveis = new ArrayList<Jogador>(jogReserva.keySet());
+		numeroSubstituicoes = Math.min(numeroSubstituicoes, jogadoresReservasDisponiveis.size());
+		double forcaPonderadaSubstituido, forcaPonderadaSubstituto;
 
 		int i = 0, pos = 0;
-		while (i < numeroSubstituicoes) {
+		while (i < numeroSubstituicoes && pos < jogPosicao.size()) {
 
 			Jogador jogadorSubstituir = jogs.get(pos);
 
-			jogadoresReservas = (new ArrayList<Jogador>(jogReserva.keySet())).stream()
+			jogadoresReservas = jogadoresReservasDisponiveis.stream()
 					.filter(j -> j.getPosicao().equals(jogadorSubstituir.getPosicao()))
 					.sorted(JogadorFactory.getComparatorForcaGeralEnergia()).collect(Collectors.toList());
 
 			if (!ValidatorUtil.isEmpty(jogadoresReservas)) {
 				
 				jogadorSubstituto = jogadoresReservas.get(0);
+				
+				//
+				if (soSeEstiverMelhor) {
+					forcaPonderadaSubstituido = Math.pow(jogadorSubstituir.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (jogadorSubstituir.getJogadorEnergia().getEnergiaAtual() / 100.0);
+					
+					forcaPonderadaSubstituto = Math.pow(jogadorSubstituto.getForcaGeral(), Constantes.ROLETA_N_POWER)
+							* (jogadorSubstituto.getJogadorEnergia().getEnergiaAtual() / 100.0);
+					
+					if (forcaPonderadaSubstituto < forcaPonderadaSubstituido) {
+						pos++;
+						continue;
+					}
+				}
+				//
 				
 				if (!partidaResultado.isAmistoso()) {
 					jogadorSubstituto.setJogadorEstatisticasSemana(
@@ -201,11 +304,18 @@ public class RealizarSubstituicoesJogadorPartidaService {
 						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
 								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
+				//
+				jogTitular.get(jogadorSubstituir).setStatusEscalacaoJogador(
+						jogTitular.get(jogadorSubstituir).getStatusEscalacaoJogador().getStatusSubstituido());
+				jogReserva.get(jogadorSubstituto).setStatusEscalacaoJogador(StatusEscalacaoJogador.RESERVA_SUBSTITUTO);
+				//
+				
 				if (mandante) {
 					jogPosicao.get(jogadorSubstituir).setMandante(jogadorSubstituto);
 				} else {
 					jogPosicao.get(jogadorSubstituir).setVisitante(jogadorSubstituto);
 				}
+				jogadoresReservasDisponiveis.remove(jogadorSubstituto);
 				jogReserva.remove(jogadorSubstituto);
 				pos++;
 				i++;
@@ -213,8 +323,8 @@ public class RealizarSubstituicoesJogadorPartidaService {
 				pos++;
 			}
 
-			if (pos >= jogPosicao.size())
-				i = Constantes.NUMERO_MAX_SUBSTITUICOES;
+			/*if (pos >= jogPosicao.size())
+				i = Constantes.NUMERO_MAX_SUBSTITUICOES;*/
 		}
 	}
 }

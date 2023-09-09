@@ -14,6 +14,7 @@ import javax.persistence.Table;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.EscalacaoPosicao;
+import com.fastfoot.match.model.StatusEscalacaoJogador;
 import com.fastfoot.player.model.entity.Jogador;
 
 @Entity
@@ -45,18 +46,22 @@ public class EscalacaoJogadorPosicao {
 	@ManyToOne
 	@JoinColumn(name = "id_escalacao_clube")
 	private EscalacaoClube escalacaoClube;
+	
+	private StatusEscalacaoJogador statusEscalacaoJogador;
 
 	public EscalacaoJogadorPosicao() {
 
 	}
 
-	public EscalacaoJogadorPosicao(Clube clube, EscalacaoClube escalacaoClube, EscalacaoPosicao escalacaoPosicao, Jogador jogador, Boolean ativo) {
+	public EscalacaoJogadorPosicao(Clube clube, EscalacaoClube escalacaoClube, EscalacaoPosicao escalacaoPosicao,
+			Jogador jogador, Boolean ativo, StatusEscalacaoJogador statusEscalacaoJogador) {
 		super();
 		this.escalacaoPosicao = escalacaoPosicao;
 		this.jogador = jogador;
 		this.clube = clube;
 		this.ativo = ativo;
 		this.escalacaoClube = escalacaoClube;
+		this.statusEscalacaoJogador = statusEscalacaoJogador;
 	}
 
 	public Long getId() {
@@ -97,6 +102,14 @@ public class EscalacaoJogadorPosicao {
 
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
+	}
+
+	public StatusEscalacaoJogador getStatusEscalacaoJogador() {
+		return statusEscalacaoJogador;
+	}
+
+	public void setStatusEscalacaoJogador(StatusEscalacaoJogador statusEscalacaoJogador) {
+		this.statusEscalacaoJogador = statusEscalacaoJogador;
 	}
 
 	public EscalacaoClube getEscalacaoClubePartida() {

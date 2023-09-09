@@ -20,6 +20,14 @@ public enum OrdemPosicaoRelacao {
 	public Posicao[] getOrdemPosicaoRelacao() {
 		return ordemPosicaoRelacao;
 	}
-	
-	
+
+	public static OrdemPosicaoRelacao getByPosicao(Posicao posicao) {
+		for (OrdemPosicaoRelacao ordem : values()) {
+			if (ordem.getOrdemPosicaoRelacao()[0].equals(posicao)) {
+				return ordem;
+			}
+		}
+		return null;
+	}
+
 }

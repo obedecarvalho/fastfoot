@@ -1,12 +1,14 @@
 package com.fastfoot.match.model;
 
-public enum EstrategiaSubstituicao {//TODO: implementar logica
+public enum EstrategiaSubstituicao {
 	
 	SUBSTITUIR_MAIS_CANSADOS,
-	SUBSTITUIR_SO_SE_ESTIVER_MELHOR, //força * energia
+	SUBSTITUIR_MAIS_CANSADOS_SO_SE_RESERVA_ESTIVER_MELHOR,
 	
 	ENTRAR_JOGADORES_A_DESENVOLVER,
+	
 	ENTRAR_SUBSTITUTOS_MAIS_FORTES,
+	ENTRAR_SUBSTITUTOS_MAIS_FORTES_SO_SE_RESERVA_ESTIVER_MELHOR,
 	
 	;
 

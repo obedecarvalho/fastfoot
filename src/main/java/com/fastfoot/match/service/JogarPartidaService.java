@@ -241,7 +241,9 @@ public abstract class JogarPartidaService {
 			if (minuto == minutoSubstituicaoMandante) {
 				EstrategiaSubstituicao estrategia = RoletaUtil.sortearPesoUm(
 						new EstrategiaSubstituicao[] { EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES,
-								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS });
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS,
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS_SO_SE_RESERVA_ESTIVER_MELHOR,
+								EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES_SO_SE_RESERVA_ESTIVER_MELHOR });
 				realizarSubstituicoesJogadorPartida(esquema,
 						estrategia, partidaResultado, true, minuto);
 			}
@@ -249,7 +251,9 @@ public abstract class JogarPartidaService {
 			if (minuto == minutoSubstituicaoVisitante) {
 				EstrategiaSubstituicao estrategia = RoletaUtil.sortearPesoUm(
 						new EstrategiaSubstituicao[] { EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES,
-								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS });
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS,
+								EstrategiaSubstituicao.SUBSTITUIR_MAIS_CANSADOS_SO_SE_RESERVA_ESTIVER_MELHOR,
+								EstrategiaSubstituicao.ENTRAR_SUBSTITUTOS_MAIS_FORTES_SO_SE_RESERVA_ESTIVER_MELHOR });
 				realizarSubstituicoesJogadorPartida(esquema,
 						estrategia, partidaResultado, false, minuto);
 			}
