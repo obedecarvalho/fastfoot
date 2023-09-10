@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
-public class JogadorEnergia {
+public class JogadorEnergia {//TODO: tipoenergia inicial/recuperacao/gasto
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogadorEnergiaSequence")

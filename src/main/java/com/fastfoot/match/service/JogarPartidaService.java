@@ -9,7 +9,7 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EsquemaTransicao;
 import com.fastfoot.match.model.EstrategiaSubstituicao;
 import com.fastfoot.match.model.JogadorApoioCriacao;
-import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.model.PartidaDadosSalvarDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
@@ -46,16 +46,16 @@ public abstract class JogarPartidaService {
 	
 	protected abstract void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema);
 	
-	protected abstract void salvarEstatisticas(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO);
+	protected abstract void salvarEstatisticas(List<Jogador> jogadores, PartidaDadosSalvarDTO partidaDadosSalvarDTO);
 	
 	protected abstract void realizarSubstituicoesJogadorPartida(Esquema esquema, EstrategiaSubstituicao estrategiaSubstituicao,
 			PartidaResultadoJogavel partidaResultado, boolean mandante, int minutoSubstituicao);
 
 	public abstract void jogar(PartidaResultadoJogavel partidaResultado,
-			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO);
+			PartidaDadosSalvarDTO partidaDadosSalvarDTO);
 
 	public abstract void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
-			EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO);
+			EscalacaoClube escalacaoVisitante, PartidaDadosSalvarDTO partidaDadosSalvarDTO);
 	
 	protected void calcularMinutosJogador(Esquema esquema) {
 		
@@ -97,15 +97,15 @@ public abstract class JogarPartidaService {
 	}
 
 	protected void salvarEstatisticasJogador(List<Jogador> jogadores,
-			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		partidaJogadorEstatisticaDTO.adicionarJogadorEstatisticaSemana(
+			PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
+		partidaDadosSalvarDTO.adicionarJogadorEstatisticaSemana(
 				jogadores.stream().filter(j -> j.getJogadorEstatisticasSemana() != null)
 						.map(Jogador::getJogadorEstatisticasSemana).collect(Collectors.toList()));
 	}
 	
 	protected void salvarJogadorEnergia(List<Jogador> jogadores,
-			PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		partidaJogadorEstatisticaDTO
+			PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
+		partidaDadosSalvarDTO
 				.adicionarJogadorEnergias(jogadores.stream().map(j -> j.getJogadorEnergia())
 						.filter(je -> je.getEnergia() != 0).collect(Collectors.toList()));
 	}
@@ -153,7 +153,7 @@ public abstract class JogarPartidaService {
 	}
 	
 	protected void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
-			EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
+			EscalacaoClube escalacaoVisitante, PartidaDadosSalvarDTO partidaDadosSalvarDTO, Boolean agrupado) {
 
 		Esquema esquema = EsquemaFactoryImpl.getInstance().gerarEsquemaEscalacao(escalacaoMandante, escalacaoVisitante,
 				RoletaUtil.sortearPesoUm(JogadorApoioCriacao.values()),
@@ -175,19 +175,21 @@ public abstract class JogarPartidaService {
 		calcularMinutosJogador(esquema);
 		
 		salvarEstatisticas(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
 		salvarEstatisticas(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
 		salvarEstatisticasJogador(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
 		salvarEstatisticasJogador(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
 		salvarJogadorEnergia(escalacaoMandante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
 		salvarJogadorEnergia(escalacaoVisitante.getListEscalacaoJogadorPosicao().stream()
-				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaJogadorEstatisticaDTO);
+				.map(EscalacaoJogadorPosicao::getJogador).collect(Collectors.toList()), partidaDadosSalvarDTO);
+		partidaDadosSalvarDTO.addEscalacaoClube(escalacaoMandante);
+		partidaDadosSalvarDTO.addEscalacaoClube(escalacaoVisitante);
 		
-		partidaJogadorEstatisticaDTO.adicionarPartidaLance(lances);
+		partidaDadosSalvarDTO.adicionarPartidaLance(lances);
 	}
 	
 	protected List<PartidaLance> jogar(Esquema esquema, PartidaResultadoJogavel partidaResultado, Boolean agrupado) {

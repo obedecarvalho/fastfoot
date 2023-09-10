@@ -3,13 +3,16 @@ package com.fastfoot.match.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.PartidaLance;
+import com.fastfoot.match.model.entity.PartidaTorcida;
 import com.fastfoot.player.model.entity.HabilidadeGrupoValorEstatistica;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.JogadorEnergia;
 import com.fastfoot.player.model.entity.JogadorEstatisticasSemana;
 
-public class PartidaJogadorEstatisticaDTO {
+public class PartidaDadosSalvarDTO {
 
 	private List<HabilidadeValorEstatistica> habilidadeValorEstatistica;
 
@@ -20,13 +23,22 @@ public class PartidaJogadorEstatisticaDTO {
 	private List<JogadorEnergia> jogadorEnergias;
 
 	private List<HabilidadeGrupoValorEstatistica> habilidadeGrupoValorEstatisticas;
+	
+	private List<MovimentacaoFinanceira> movimentacaoFinanceira;
+	
+	private List<PartidaTorcida> partidaTorcidaList;
+	
+	private List<EscalacaoClube> escalacaoClubes;
 
-	public PartidaJogadorEstatisticaDTO() {
+	public PartidaDadosSalvarDTO() {
 		this.habilidadeValorEstatistica = new ArrayList<HabilidadeValorEstatistica>();
 		this.jogadorEstatisticasSemana = new ArrayList<JogadorEstatisticasSemana>();
 		this.partidaLances = new ArrayList<PartidaLance>();
 		this.jogadorEnergias = new ArrayList<JogadorEnergia>();
 		this.habilidadeGrupoValorEstatisticas = new ArrayList<HabilidadeGrupoValorEstatistica>();
+		this.movimentacaoFinanceira = new ArrayList<MovimentacaoFinanceira>();
+		this.partidaTorcidaList = new ArrayList<PartidaTorcida>();
+		this.escalacaoClubes = new ArrayList<EscalacaoClube>();
 	}
 
 	public List<HabilidadeValorEstatistica> getHabilidadeValorEstatistica() {
@@ -67,5 +79,29 @@ public class PartidaJogadorEstatisticaDTO {
 
 	public void adicionarHabilidadeGrupoValorEstatistica(List<HabilidadeGrupoValorEstatistica> habilidadeGrupoValorEstatisticas) {
 		this.habilidadeGrupoValorEstatisticas.addAll(habilidadeGrupoValorEstatisticas);
+	}
+
+	public List<MovimentacaoFinanceira> getMovimentacaoFinanceira() {
+		return movimentacaoFinanceira;
+	}
+
+	public List<PartidaTorcida> getPartidaTorcidaList() {
+		return partidaTorcidaList;
+	}
+	
+	public void addMovimentacaoFinanceira(MovimentacaoFinanceira mfe) {
+		this.movimentacaoFinanceira.add(mfe);
+	}
+
+	public void addPartidaTorcida(PartidaTorcida partidaTorcida) {
+		this.partidaTorcidaList.add(partidaTorcida);
+	}
+
+	public List<EscalacaoClube> getEscalacaoClubes() {
+		return escalacaoClubes;
+	}
+
+	public void addEscalacaoClube(EscalacaoClube escalacaoClube) {
+		this.escalacaoClubes.add(escalacaoClube);
 	}
 }

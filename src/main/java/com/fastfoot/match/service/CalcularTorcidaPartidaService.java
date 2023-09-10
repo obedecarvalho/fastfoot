@@ -13,8 +13,8 @@ import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
+import com.fastfoot.match.model.PartidaDadosSalvarDTO;
 import com.fastfoot.match.model.PartidaTorcidaPorcentagem;
-import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
 import com.fastfoot.match.model.entity.PartidaTorcida;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -47,18 +47,18 @@ public class CalcularTorcidaPartidaService {
 	@Autowired
 	private CarregarParametroService carregarParametroService;
 
-	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+	public void calcularTorcidaPartida(RodadaJogavel rodada, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		
 		if (rodada.isAmistoso()) {
 			for (PartidaResultadoJogavel p : rodada.getPartidas()) {
-				calcularTorcidaPartidaAmistosa(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+				calcularTorcidaPartidaAmistosa(p, rodada.getSemana(), partidaDadosSalvarDTO);
 			}
 		} else {
 
 			if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
 					|| rodada.getNivelCampeonato().isCNIOuCNII()) {
 				for (PartidaResultadoJogavel p : rodada.getPartidas()) {
-					calcularTorcidaPartida(p, rodada.getSemana(), partidaTorcidaSalvarDTO);
+					calcularTorcidaPartida(p, rodada.getSemana(), partidaDadosSalvarDTO);
 				}
 			}
 	
@@ -69,7 +69,7 @@ public class CalcularTorcidaPartidaService {
 				
 				
 				for (PartidaResultadoJogavel p : rodada.getPartidas()) {
-					calcularTorcidaPartidaNacional(p, clubeClassificacao, rodada.getSemana(), partidaTorcidaSalvarDTO);
+					calcularTorcidaPartidaNacional(p, clubeClassificacao, rodada.getSemana(), partidaDadosSalvarDTO);
 				}
 			}
 		}
@@ -78,7 +78,7 @@ public class CalcularTorcidaPartidaService {
 	
 	protected void calcularTorcidaPartidaNacional(PartidaResultadoJogavel partida,
 			Map<Clube, Classificacao> clubeClassificacao, Semana semana,
-			PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+			PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		
 		double renda = 0.0d;
 
@@ -105,14 +105,14 @@ public class CalcularTorcidaPartidaService {
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoMandante,
 				partida.getRodada().getNumero(), null);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
 				semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)", partida.getNivelCampeonato().name(),
 						partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoVisitante,
 				partida.getRodada().getNumero(), null);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
 				partida.getClubeVisitante(), semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)",
 						partida.getNivelCampeonato().name(), partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -125,14 +125,14 @@ public class CalcularTorcidaPartidaService {
 			throw new RuntimeException("Erro inesperado");
 		}
 		
-		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
+		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
 	
 	private Double getPorcentagemPublicoAlvoNacional(NivelCampeonato nivelCampeonato, Map<Clube, Classificacao> clubeClassificacao, Clube clube) {
 		return PartidaTorcidaPorcentagem.getPorcentagem(nivelCampeonato, clubeClassificacao.get(clube).getPosicao());
 	}
 	
-	protected void calcularTorcidaPartidaAmistosa(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+	protected void calcularTorcidaPartidaAmistosa(PartidaResultadoJogavel partida, Semana semana, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		
 		double renda = 0.0d;
 
@@ -154,13 +154,13 @@ public class CalcularTorcidaPartidaService {
 		
 		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoMandante);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeMandante(),
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeMandante(),
 				semana, renda,
 				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressosAmistosos(publicoVisitante);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeVisitante(),
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceiraAmistosos(partida.getClubeVisitante(),
 				semana, renda,
 				String.format("Ingressos (R:%d, E:%d)", partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -173,10 +173,10 @@ public class CalcularTorcidaPartidaService {
 			throw new RuntimeException("Erro inesperado");
 		}
 		
-		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
+		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
 
-	protected void calcularTorcidaPartida(PartidaResultadoJogavel partida, Semana semana, PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO) {
+	protected void calcularTorcidaPartida(PartidaResultadoJogavel partida, Semana semana, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		
 		double renda = 0.0d;
 		
@@ -201,14 +201,14 @@ public class CalcularTorcidaPartidaService {
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoMandante,
 				partida.getRodada().getNumero(), numRodadasCN);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(partida.getClubeMandante(),
 				semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)", partida.getNivelCampeonato().name(),
 						partida.getRodada().getNumero(), tamanhoEstadio)));
 
 		renda = PartidaTorcidaPorcentagem.getRendaIngressos(partida.getNivelCampeonato(), publicoVisitante,
 				partida.getRodada().getNumero(), numRodadasCN);
 
-		partidaTorcidaSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
+		partidaDadosSalvarDTO.addMovimentacaoFinanceira(criarMovimentacaoFinanceira(
 				partida.getClubeVisitante(), semana, renda, String.format("Ingressos (N:%s, R:%d, E:%d)",
 						partida.getNivelCampeonato().name(), partida.getRodada().getNumero(), tamanhoEstadio)));
 		
@@ -223,7 +223,7 @@ public class CalcularTorcidaPartidaService {
 			throw new RuntimeException("Erro inesperado");
 		}
 		
-		partidaTorcidaSalvarDTO.addPartidaTorcida(partidaTorcida);
+		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
 	
 	private MovimentacaoFinanceira criarMovimentacaoFinanceira(Clube clube, Semana semana,

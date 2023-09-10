@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EstrategiaSubstituicao;
-import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
+import com.fastfoot.match.model.PartidaDadosSalvarDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.player.model.HabilidadeGrupo;
 import com.fastfoot.player.model.HabilidadeValorJogavel;
@@ -39,7 +39,7 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 	@Autowired
 	private RealizarSubstituicoesJogadorPartidaService realizarSubstituicoesJogadorPartidaService;
 
-	protected void salvarEstatisticas(List<Jogador> jogadores, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	protected void salvarEstatisticas(List<Jogador> jogadores, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		List<HabilidadeGrupoValorEstatistica> estatisticas = new ArrayList<HabilidadeGrupoValorEstatistica>();
 		
 		for (Jogador j : jogadores) {
@@ -47,18 +47,21 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 					.filter(hve -> hve.getQuantidadeUso() > 0).collect(Collectors.toList()));
 		}
 
-		partidaJogadorEstatisticaDTO.adicionarHabilidadeGrupoValorEstatistica(estatisticas);
+		partidaDadosSalvarDTO.adicionarHabilidadeGrupoValorEstatistica(estatisticas);
 	}
 
 	@Override
-	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	public void jogar(PartidaResultadoJogavel partidaResultado, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 		
 		EscalacaoClube escalacaoMandante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresHabilidadeGrupoPartida(partidaResultado.getClubeMandante(), partidaResultado);
 		EscalacaoClube escalacaoVisitante = carregarEscalacaoJogadoresPartidaService
 				.carregarJogadoresHabilidadeGrupoPartida(partidaResultado.getClubeVisitante(), partidaResultado);
 		
-		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO);
+		partidaResultado.setEscalacaoMandante(escalacaoMandante);
+		partidaResultado.setEscalacaoVisitante(escalacaoVisitante);
+		
+		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaDadosSalvarDTO);
 	}
 
 	@Override
@@ -68,8 +71,8 @@ public class JogarPartidaHabilidadeGrupoService extends JogarPartidaService {
 	
 	@Override
 	public void jogar(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante,
-			EscalacaoClube escalacaoVisitante, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
-		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaJogadorEstatisticaDTO, true);
+			EscalacaoClube escalacaoVisitante, PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
+		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaDadosSalvarDTO, true);
 	}
 
 	@Override

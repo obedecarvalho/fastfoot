@@ -6,6 +6,7 @@ import java.util.List;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.match.model.entity.PartidaTorcida;
 
+@Deprecated
 public class PartidaTorcidaSalvarDTO {
 	
 	private List<MovimentacaoFinanceira> movimentacaoFinanceira;

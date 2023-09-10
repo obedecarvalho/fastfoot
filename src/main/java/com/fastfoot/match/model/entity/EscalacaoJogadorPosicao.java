@@ -139,6 +139,7 @@ public class EscalacaoJogadorPosicao {
 
 	@Override
 	public String toString() {
-		return "EscalacaoJogadorPosicao [jogador=" + jogador + ", escalacaoPosicao=" + escalacaoPosicao + "]";
+		return "EscalacaoJogadorPosicao [jogador=" + jogador + ", escalacaoPosicao=" + escalacaoPosicao + ", status="
+				+ statusEscalacaoJogador + "]";
 	}
 }

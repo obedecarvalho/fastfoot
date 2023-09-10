@@ -9,8 +9,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
-import com.fastfoot.match.model.PartidaJogadorEstatisticaDTO;
-import com.fastfoot.match.model.dto.PartidaTorcidaSalvarDTO;
+import com.fastfoot.match.model.PartidaDadosSalvarDTO;
+import com.fastfoot.match.model.repository.EscalacaoClubeRepository;
+import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
@@ -73,6 +74,12 @@ public class JogarRodadaService {
 	
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
+	
+	@Autowired
+	private EscalacaoClubeRepository escalacaoClubeRepository;
+	
+	@Autowired
+	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
 
 	//###	SERVICE	###
 	@Autowired
@@ -87,27 +94,28 @@ public class JogarRodadaService {
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 
-	private static final Boolean SALVAR_LANCES = false;
+	private static final Boolean SALVAR_LANCES = false;//#DEVEL
+	
+	private static final Boolean SALVAR_ESCALACAO = true;//#DEVEL
 	
 	private static final Boolean SALVAR_HABILIDADE_VALOR_ESTATISTICAS = false;//#DEVEL
 
 	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(Rodada rodada, Boolean agrupado) {
 		
-		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
-		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
+		PartidaDadosSalvarDTO partidaDadosSalvarDTO = new PartidaDadosSalvarDTO();
 
 		carregarPartidas(rodada);
 
 		if (agrupado) {
 			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
 		
-		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaDadosSalvarDTO);
 		
-		jogarPartidas(rodada, partidaJogadorEstatisticaDTO, agrupado);
+		jogarPartidas(rodada, partidaDadosSalvarDTO, agrupado);
 		
 		salvarPartidas(rodada);
 
@@ -117,27 +125,31 @@ public class JogarRodadaService {
 			salvarClassificacao(rodada);
 		}
 		
-		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		salvarPartidaJogadorEstatisticas(partidaDadosSalvarDTO);
 		
-		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		salvarPartidaTorcida(partidaDadosSalvarDTO);
 		
 		if (SALVAR_LANCES) {
-			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+			partidaLanceRepository.saveAll(partidaDadosSalvarDTO.getPartidaLances());
+		}
+		
+		if (SALVAR_ESCALACAO) {
+			salvarEscalacao(partidaDadosSalvarDTO);
 		}
 
 		return CompletableFuture.completedFuture(rodada);
 	}
 
-	private void jogarPartidas(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
+	private void jogarPartidas(Rodada rodada, PartidaDadosSalvarDTO partidaDadosSalvarDTO, Boolean agrupado) {
 		if(rodada.getCampeonato() != null) {
-			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+			jogarRodada(rodada, partidaDadosSalvarDTO,
 					rodada.getCampeonato().getClassificacao(), agrupado);
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
 				ClassificacaoUtil.ordernarClassificacao(rodada.getCampeonato().getClassificacao(), false);
 			}
 		} else if (rodada.getGrupoCampeonato() != null) {
-			jogarRodada(rodada, partidaJogadorEstatisticaDTO,
+			jogarRodada(rodada, partidaDadosSalvarDTO,
 					rodada.getGrupoCampeonato().getClassificacao(), agrupado);
 			
 			if (!rodada.isUltimaRodadaPontosCorridos()) {
@@ -212,29 +224,32 @@ public class JogarRodadaService {
 	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaEliminatoria rodada, Boolean agrupado) {
 		
-		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
-		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
+		PartidaDadosSalvarDTO partidaDadosSalvarDTO = new PartidaDadosSalvarDTO();
 
 		carregarPartidas(rodada);
 
 		if (agrupado) {
 			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
 		
-		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaDadosSalvarDTO);
 		
-		jogarRodada(rodada, partidaJogadorEstatisticaDTO, agrupado);
+		jogarRodada(rodada, partidaDadosSalvarDTO, agrupado);
 		
 		salvarPartidas(rodada);
 		
-		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
+		salvarPartidaJogadorEstatisticas(partidaDadosSalvarDTO);
 		
-		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		salvarPartidaTorcida(partidaDadosSalvarDTO);
 		
 		if (SALVAR_LANCES) {
-			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+			partidaLanceRepository.saveAll(partidaDadosSalvarDTO.getPartidaLances());
+		}
+		
+		if (SALVAR_ESCALACAO) {
+			salvarEscalacao(partidaDadosSalvarDTO);
 		}
 		
 		return CompletableFuture.completedFuture(rodada);
@@ -259,38 +274,41 @@ public class JogarRodadaService {
 	@Async("defaultExecutor")
 	public CompletableFuture<RodadaJogavel> executarRodada(RodadaAmistosa rodada, Boolean agrupado) {
 		
-		PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO = new PartidaJogadorEstatisticaDTO();
-		PartidaTorcidaSalvarDTO partidaTorcidaSalvarDTO = new PartidaTorcidaSalvarDTO();
+		PartidaDadosSalvarDTO partidaDadosSalvarDTO = new PartidaDadosSalvarDTO();
 
 		carregarPartidas(rodada);
 		if (agrupado) {
 			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		} else {
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacao(rodada.getSemana().getTemporada().getJogo(), rodada.getPartidas());
 		}
-		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaTorcidaSalvarDTO);
-		jogarRodada(rodada, partidaJogadorEstatisticaDTO, agrupado);
+		calcularTorcidaPartidaService.calcularTorcidaPartida(rodada, partidaDadosSalvarDTO);
+		jogarRodada(rodada, partidaDadosSalvarDTO, agrupado);
 		salvarPartidas(rodada);
 
-		salvarPartidaJogadorEstatisticas(partidaJogadorEstatisticaDTO);
-		salvarPartidaTorcida(partidaTorcidaSalvarDTO);
+		salvarPartidaJogadorEstatisticas(partidaDadosSalvarDTO);
+		salvarPartidaTorcida(partidaDadosSalvarDTO);
 		
 		if (SALVAR_LANCES) {
-			partidaLanceRepository.saveAll(partidaJogadorEstatisticaDTO.getPartidaLances());
+			partidaLanceRepository.saveAll(partidaDadosSalvarDTO.getPartidaLances());
+		}
+		
+		if (SALVAR_ESCALACAO) {
+			salvarEscalacao(partidaDadosSalvarDTO);
 		}
 
 		return CompletableFuture.completedFuture(rodada);
 	}
 	
-	private void salvarPartidaJogadorEstatisticas(PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO) {
+	private void salvarPartidaJogadorEstatisticas(PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
 
 		if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
-		habilidadeValorEstatisticaRepository.saveAll(partidaJogadorEstatisticaDTO.getHabilidadeValorEstatistica());
+		habilidadeValorEstatisticaRepository.saveAll(partidaDadosSalvarDTO.getHabilidadeValorEstatistica());
 		}
 		
-		jogadorEstatisticasSemanaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEstatisticasSemana());
+		jogadorEstatisticasSemanaRepository.saveAll(partidaDadosSalvarDTO.getJogadorEstatisticasSemana());
 		
-		jogadorEnergiaRepository.saveAll(partidaJogadorEstatisticaDTO.getJogadorEnergias());
+		jogadorEnergiaRepository.saveAll(partidaDadosSalvarDTO.getJogadorEnergias());
 		
 	}
 
@@ -308,31 +326,37 @@ public class JogarRodadaService {
 		//if (SALVAR_LANCES) { salvarLances(r.getPartidas()); }
 	}
 	
-	private void salvarPartidaTorcida(PartidaTorcidaSalvarDTO dto) {
-		partidaTorcidaRepository.saveAll(dto.getPartidaTorcidaList());
-		movimentacaoFinanceiraRepository.saveAll(dto.getMovimentacaoFinanceira());
+	private void salvarPartidaTorcida(PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
+		partidaTorcidaRepository.saveAll(partidaDadosSalvarDTO.getPartidaTorcidaList());
+		movimentacaoFinanceiraRepository.saveAll(partidaDadosSalvarDTO.getMovimentacaoFinanceira());
+	}
+	
+	private void salvarEscalacao(PartidaDadosSalvarDTO partidaDadosSalvarDTO) {
+		escalacaoClubeRepository.saveAll(partidaDadosSalvarDTO.getEscalacaoClubes());
+		escalacaoJogadorPosicaoRepository.saveAll(partidaDadosSalvarDTO.getEscalacaoClubes().stream()
+				.flatMap(e -> e.getListEscalacaoJogadorPosicao().stream()).collect(Collectors.toList()));
 	}
 
-	private void jogarRodada(Rodada rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, List<Classificacao> classificacao, Boolean agrupado) {
+	private void jogarRodada(Rodada rodada, PartidaDadosSalvarDTO partidaDadosSalvarDTO, List<Classificacao> classificacao, Boolean agrupado) {
 
 		for (PartidaResultado p : rodada.getPartidas()) {
 			if (agrupado) {
-				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);
 			} else {
-			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+				jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);
 			}
 		}
 		
 		ClassificacaoUtil.atualizarClassificacao(classificacao, rodada.getPartidas());
 	}
 
-	private void jogarRodada(RodadaEliminatoria rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
+	private void jogarRodada(RodadaEliminatoria rodada, PartidaDadosSalvarDTO partidaDadosSalvarDTO, Boolean agrupado) {
 
 		for (PartidaEliminatoriaResultado p : rodada.getPartidas()) {
 			if (agrupado) {
-				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);	
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);	
 			} else {
-			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+				jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);
 			}
 
 			if (p.getProximaPartida() != null) {
@@ -341,12 +365,12 @@ public class JogarRodadaService {
 		}
 	}
 
-	private void jogarRodada(RodadaAmistosa rodada, PartidaJogadorEstatisticaDTO partidaJogadorEstatisticaDTO, Boolean agrupado) {
+	private void jogarRodada(RodadaAmistosa rodada, PartidaDadosSalvarDTO partidaDadosSalvarDTO, Boolean agrupado) {
 		for (PartidaAmistosaResultado p : rodada.getPartidas()) {
 			if (agrupado) {
-				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+				jogarPartidaHabilidadeGrupoService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);
 			} else {
-			jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaJogadorEstatisticaDTO);
+				jogarPartidaHabilidadeService.jogar(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante(), partidaDadosSalvarDTO);
 			}
 		}
 	}
