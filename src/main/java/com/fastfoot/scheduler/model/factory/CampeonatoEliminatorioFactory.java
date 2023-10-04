@@ -29,6 +29,7 @@ public abstract class CampeonatoEliminatorioFactory {
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
 		
 		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacionalII(clubes, campeonato);
 		
@@ -45,6 +46,7 @@ public abstract class CampeonatoEliminatorioFactory {
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
 		
 		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacional(clubes, campeonato);
 		
@@ -59,6 +61,7 @@ public abstract class CampeonatoEliminatorioFactory {
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
 
 		List<RodadaEliminatoria> rodadas = gerarRodadas(clubes, campeonato);
 

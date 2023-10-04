@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeService;
+import com.fastfoot.club.service.AtualizarTreinadorTituloRankingService;
+import com.fastfoot.club.service.ClassificarClubesTemporadaService;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
+import com.fastfoot.club.service.GerarTreinadorResumoTemporadaService;
 import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.financial.service.GerarDemonstrativoFinanceiroTemporadaService;
@@ -160,8 +163,8 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
 	
-	/*@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;*/
+	@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;
 	
 	@Autowired
 	private ClassificarClubesTemporadaService classificarClubesTemporadaService;
@@ -180,6 +183,12 @@ public class JogarPartidasSemanaService {
 	
 	@Autowired
 	private LigaJogoCRUDService ligaJogoCRUDService;
+
+	@Autowired
+	private GerarTreinadorResumoTemporadaService gerarTreinadorResumoTemporadaService;
+
+	@Autowired
+	private AtualizarTreinadorTituloRankingService atualizarTreinadorTituloRankingService;
 
 	public SemanaDTO jogarPartidasSemana(Jogo jogo) {
 		
@@ -262,6 +271,13 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		mensagens.add("\t#calcularProbabilidades:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		if (semana.isUltimaSemana()) {
+			carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+		}
+		stopWatch.split();
+		mensagens.add("\t#carregarCampeonatosTemporada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
@@ -270,12 +286,27 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		mensagens.add("\t#classificarClubesTemporadaAtual:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		//gerar ClubeRanking
+		if (semana.isUltimaSemana()) {
+			atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(temporada);
+		}
+		stopWatch.split();
+		mensagens.add("\t#atualizarTreinadorTituloRanking:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		if (semana.isUltimaSemana()) {
 			gerarClubeResumoTemporada(temporada);
 		}
 		stopWatch.split();
 		mensagens.add("\t#gerarClubeResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		if (semana.isUltimaSemana()) {
+			gerarTreinadorResumoTemporadaService.gerarTreinadorResumoTemporada(temporada);
+		}
+		stopWatch.split();
+		mensagens.add("\t#gerarTreinadorResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//Desenvolver jogadores

@@ -22,6 +22,7 @@ public class CampeonatoFactory {
 		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
 		campeonato.setNivelCampeonato(nivelCampeonato);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
 		
 		List<Classificacao> classificacao = ClassificacaoFactory.gerarClassificacaoInicial(clubes, campeonato, null);
 		

@@ -1,5 +1,7 @@
 package com.fastfoot.probability.service.crud;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -99,6 +101,16 @@ public class CampeonatoClubeProbabilidadeCRUDService implements CRUDService<Camp
 				.collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
 
 		probabilidades.stream().forEach(p -> p.setClassificacao(clubeClassificacao.get(p.getClube())));
+		
+		Collections.sort(probabilidades, new Comparator<CampeonatoClubeProbabilidade>() {
+
+			@Override
+			public int compare(CampeonatoClubeProbabilidade arg0, CampeonatoClubeProbabilidade arg1) {
+				
+				return arg0.getClassificacao().getPosicao().compareTo(arg1.getClassificacao().getPosicao());
+				
+			}
+		});
 
 		return probabilidades;
 	}

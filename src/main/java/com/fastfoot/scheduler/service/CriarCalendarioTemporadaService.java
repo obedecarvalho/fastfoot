@@ -21,6 +21,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
+import com.fastfoot.club.service.AnalisarDesempenhoTreinadorService;
 import com.fastfoot.club.service.AtualizarClubeNivelService;
 import com.fastfoot.club.service.DistribuirPatrocinioService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
@@ -169,6 +170,8 @@ public class CriarCalendarioTemporadaService {
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeService calcularValorTransferenciaJogadorPorHabilidadeService;
 	
+	@Autowired
+	private AnalisarDesempenhoTreinadorService analisarDesempenhoTreinadorService;
 
 	@Autowired
 	private CalcularValorTransferenciaJogadorPorHabilidadeGrupoService calcularValorTransferenciaJogadorPorHabilidadeGrupoService;
@@ -266,6 +269,11 @@ public class CriarCalendarioTemporadaService {
 			renovarContratosAutomaticamente(temporada);
 			stopWatch.split();
 			mensagens.add("\t#renovarContratosAutomaticamente:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			
+			analisarDesempenhoTreinadorService.analisarDesempenhoTreinador(temporadaAtual);
+			stopWatch.split();
+			mensagens.add("\t#analisarDesempenhoTreinador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		} else {

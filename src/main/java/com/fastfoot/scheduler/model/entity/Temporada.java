@@ -19,7 +19,7 @@ public class Temporada {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "temporadaSequence")	
-	@SequenceGenerator(name = "temporadaSequence", sequenceName = "temporada_sequence")
+	@SequenceGenerator(name = "temporadaSequence", sequenceName = "temporada_seq")
 	private Long id;
 	
 	private Integer ano;

@@ -18,12 +18,12 @@ drop table jogador;
 
 --campeonato
 drop table campeonato_clube_probabilidade;
-drop table partida_probabilidade_resultado;
-drop table partida_torcida;
 drop table partida_amistosa_resultado;
 drop table partida_eliminatoria_resultado;
 drop table partida_resultado;
 drop table partida_estatisticas;
+drop table partida_probabilidade_resultado;
+drop table partida_torcida;
 drop table rodada;
 drop table rodada_amistosa;
 drop table rodada_eliminatoria;
@@ -44,8 +44,13 @@ drop table clube_titulo_ranking;
 drop table clube_resumo_temporada;
 drop table clube_ranking;
 drop table clube;
+drop table treinador_resumo_temporada;
+drop table treinador_titulo_ranking;
+drop table treinador;
 
 --temporada
 drop table parametro;
 drop table semana;
 drop table temporada;
+drop table liga_jogo;
+drop table jogo;

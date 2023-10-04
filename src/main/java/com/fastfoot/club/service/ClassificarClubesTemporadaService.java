@@ -1,4 +1,4 @@
-package com.fastfoot.scheduler.service;
+package com.fastfoot.club.service;
 
 import java.util.List;
 
@@ -29,8 +29,8 @@ public class ClassificarClubesTemporadaService {
 	@Autowired
 	private ClubeTituloRankingRepository clubeTituloRankingRepository;
 
-	@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;
+	/*@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;*/
 	
 	/*@Autowired
 	private TemporadaCRUDService temporadaCRUDService;*/
@@ -40,7 +40,7 @@ public class ClassificarClubesTemporadaService {
 
 	public void classificarClubesTemporadaAtual(Temporada temporada) {
 		//Temporada temporada = temporadaCRUDService.getTemporadaAtual();
-		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(temporada.getJogo());
 		List<Clube> clubes = clubeRepository.findByJogo(temporada.getJogo());
 		List<ClubeRanking> rankings = ClubeRankingUtil.rankearClubesTemporada(temporada, clubes, ligaJogos);

@@ -4,17 +4,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
 @Entity
 public class PartidaTorcida {
-	//TODO: usar estrategia de FK semelhante a PartidaEstatisticas?
 	//TODO: salvar renda mandante e visitante
 	
 	@Id
@@ -22,7 +18,7 @@ public class PartidaTorcida {
 	@SequenceGenerator(name = "partidaTorcidaSequence", sequenceName = "partida_torcida_seq")
 	private Long id;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
 	private PartidaResultado partidaResultado;
 	
@@ -32,9 +28,12 @@ public class PartidaTorcida {
 	
 	@ManyToOne
 	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
+	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
 	
 	private Integer publico;
+	
+	@Transient
+	private PartidaResultadoJogavel partida;
 
 	public Long getId() {
 		return id;
@@ -44,7 +43,7 @@ public class PartidaTorcida {
 		this.id = id;
 	}
 
-	public PartidaResultado getPartidaResultado() {
+	/*public PartidaResultado getPartidaResultado() {
 		return partidaResultado;
 	}
 
@@ -66,7 +65,7 @@ public class PartidaTorcida {
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}
+	}*/
 
 	public Integer getPublico() {
 		return publico;
@@ -74,6 +73,14 @@ public class PartidaTorcida {
 
 	public void setPublico(Integer publico) {
 		this.publico = publico;
+	}
+
+	public PartidaResultadoJogavel getPartida() {
+		return partida;
+	}
+
+	public void setPartida(PartidaResultadoJogavel partida) {
+		this.partida = partida;
 	}
 
 }

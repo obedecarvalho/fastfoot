@@ -122,4 +122,10 @@ public class Constantes {
 	public static final Integer MOV_FINAN_ID_BASE_CAIXA = 300;
 
 	public static final Integer MOV_FINAN_ID_BASE_ATIVO = 400;
+	
+	//###	TREINADOR	###
+	public static final Integer POSICAO_MAX_RANKING_NIVEL_6 = 28;
+	
+	public static final Integer POSICAO_MAX_RANKING_NIVEL_7 = 30;
+	//###	/TREINADOR	###
 }

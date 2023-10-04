@@ -12,8 +12,6 @@ import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
 import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.service.util.ElementoRoleta;
 import com.fastfoot.service.util.RoletaUtil;
 
@@ -46,11 +44,12 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 		partidaProbabilidadeResultado
 				.setTipoProbabilidadeResultadoPartida(tipoProbabilidadeResultadoPartida);
 		
-		if (partidaResultado instanceof PartidaResultado) {
+		partidaResultado.setPartidaProbabilidadeResultado(partidaProbabilidadeResultado);
+		/*if (partidaResultado instanceof PartidaResultado) {
 			partidaProbabilidadeResultado.setPartidaResultado((PartidaResultado) partidaResultado);
 		} else if (partidaResultado instanceof PartidaEliminatoriaResultado) {
 			partidaProbabilidadeResultado.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partidaResultado);
-		}
+		}*/
 		
 		for (int i = 0; i < NUM_SIMULACOES; i++) {
 			//partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());

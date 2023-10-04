@@ -56,86 +56,6 @@ where id_campeonato in (
 	where t.id_jogo = $1
 );
 delete
-from partida_probabilidade_resultado
-where id_partida_resultado in (
-	select p.id
-	from grupo_campeonato gc
-	inner join campeonato_misto cm on cm.id = gc.id_campeonato_misto
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada r on gc.id = r.id_grupo_campeonato
-	inner join partida_resultado p on p.id_rodada = r.id
-	where t.id_jogo = $1
-	union all
-	select p.id
-	from campeonato cm
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada r on cm.id = r.id_campeonato
-	inner join partida_resultado p on p.id_rodada = r.id
-	where t.id_jogo = $1
-);
-delete
-from partida_probabilidade_resultado
-where id_partida_eliminatoria_resultado in (
-	select p.id
-	from campeonato_misto cm
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada_eliminatoria r on r.id_campeonato_misto = cm.id
-	inner join partida_eliminatoria_resultado p on p.id_rodada_eliminatoria = r.id
-	where t.id_jogo = $1
-	union all
-	select p.id
-	from campeonato_eliminatorio ce
-	inner join temporada t on ce.id_temporada = t.id
-	inner join rodada_eliminatoria r on r.id_campeonato_eliminatorio = ce.id
-	inner join partida_eliminatoria_resultado p on p.id_rodada_eliminatoria = r.id
-	where t.id_jogo = $1
-);
-delete
-from partida_torcida
-where id_partida_eliminatoria_resultado in (
-	select p.id
-	from campeonato_misto cm
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada_eliminatoria r on r.id_campeonato_misto = cm.id
-	inner join partida_eliminatoria_resultado p on p.id_rodada_eliminatoria = r.id
-	where t.id_jogo = $1
-	union all
-	select p.id
-	from campeonato_eliminatorio ce
-	inner join temporada t on ce.id_temporada = t.id
-	inner join rodada_eliminatoria r on r.id_campeonato_eliminatorio = ce.id
-	inner join partida_eliminatoria_resultado p on p.id_rodada_eliminatoria = r.id
-	where t.id_jogo = $1
-);
-delete
-from partida_torcida
-where id_partida_resultado in (
-	select p.id
-	from grupo_campeonato gc
-	inner join campeonato_misto cm on cm.id = gc.id_campeonato_misto
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada r on gc.id = r.id_grupo_campeonato
-	inner join partida_resultado p on p.id_rodada = r.id
-	where t.id_jogo = $1
-	union all
-	select p.id
-	from campeonato cm
-	inner join temporada t on cm.id_temporada = t.id
-	inner join rodada r on cm.id = r.id_campeonato
-	inner join partida_resultado p on p.id_rodada = r.id
-	where t.id_jogo = $1
-);
-delete
-from partida_torcida
-where id_partida_amistosa_resultado in (
-	select p.id
-	from temporada t
-	inner join semana s on t.id = s.id_temporada
-	inner join rodada_amistosa r on r.id_semana = s.id
-	inner join partida_amistosa_resultado p on p.id_rodada_amistosa = r.id
-	where t.id_jogo = $1
-);
-delete
 from partida_amistosa_resultado
 where id_rodada_amistosa in (
 	select r.id
@@ -191,6 +111,30 @@ where id not in (
 	from partida_eliminatoria_resultado
 	union all
 	select id_partida_estatisticas
+	from partida_resultado
+);
+delete
+from partida_torcida
+where id not in (
+	select id_partida_torcida
+	from partida_amistosa_resultado
+	union all
+	select id_partida_torcida
+	from partida_eliminatoria_resultado
+	union all
+	select id_partida_torcida
+	from partida_resultado
+);
+delete
+from partida_probabilidade_resultado
+where id not in (
+	select id_partida_probabilidade_resultado
+	from partida_amistosa_resultado
+	union all
+	select id_partida_probabilidade_resultado
+	from partida_eliminatoria_resultado
+	union all
+	select id_partida_probabilidade_resultado
 	from partida_resultado
 );
 delete
@@ -346,6 +290,20 @@ from jogador j
 inner join clube c on j.id_clube = c.id
 inner join liga_jogo lj on c.id_liga_jogo = lj.id
 where contrato.id_jogador = j.id and lj.id_jogo = $1;
+delete
+from treinador_resumo_temporada
+where id_treinador in (
+	select id
+	from treinador
+	where id_jogo = $1
+);
+delete 
+from mudanca_treinador
+where id_temporada in (
+	select id
+	from temporada
+	where id_jogo = $1
+);
 delete
 from semana
 where id_temporada in (

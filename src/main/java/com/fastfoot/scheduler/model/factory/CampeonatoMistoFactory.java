@@ -29,6 +29,7 @@ public class CampeonatoMistoFactory {
 		campeonato.setRodadaAtual(0);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
+		campeonato.setNome(String.format("%s %d", nivelCampeonato.name(), temporada.getAno()));
 		
 		List<GrupoCampeonato> grupos = CampeonatoMistoFactory.gerarRodadasGrupo(clubes, campeonato);
 		List<RodadaEliminatoria> eliminatorias = CampeonatoMistoFactory.gerarRodadas(campeonato);

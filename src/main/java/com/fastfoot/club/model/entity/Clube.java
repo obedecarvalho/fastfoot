@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,6 +36,10 @@ public class Clube implements ElementoRoleta {
 	@ManyToOne
 	@JoinColumn(name = "id_liga_jogo")
 	private LigaJogo ligaJogo;
+	
+	@OneToOne
+	@JoinColumn(name = "id_treinador")
+	private Treinador treinador;
 
 	@Transient
 	@JsonIgnore
@@ -130,6 +135,14 @@ public class Clube implements ElementoRoleta {
 	@Override
 	public Integer getValor() {
 		return forcaGeralAtual;
+	}
+
+	public Treinador getTreinador() {
+		return treinador;
+	}
+
+	public void setTreinador(Treinador treinador) {
+		this.treinador = treinador;
 	}
 
 	@Override

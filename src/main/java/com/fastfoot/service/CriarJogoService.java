@@ -15,6 +15,8 @@ import com.fastfoot.club.model.entity.ClubeTituloRanking;
 import com.fastfoot.club.model.repository.ClubeRankingRepository;
 import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.ClubeTituloRankingRepository;
+import com.fastfoot.club.model.repository.TreinadorRepository;
+import com.fastfoot.club.model.repository.TreinadorTituloRankingRepository;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.model.Constantes;
@@ -52,6 +54,12 @@ public class CriarJogoService {
 	
 	@Autowired
 	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+	
+	@Autowired
+	private TreinadorRepository treinadorRepository;
+
+	@Autowired
+	private TreinadorTituloRankingRepository treinadorTituloRankingRepository;
 	
 	//###	SERVICE	###
 	
@@ -149,6 +157,10 @@ public class CriarJogoService {
 			List<MovimentacaoFinanceira> movimentacaoFinanceiras) {
 		jogoRepository.save(jogo);
 		ligaJogoRepository.saveAll(ligaJogos);
+		treinadorRepository.saveAll(ligaJogos.stream().flatMap(l -> l.getClubes().stream()).map(c -> c.getTreinador())
+				.collect(Collectors.toList()));
+		treinadorTituloRankingRepository.saveAll(ligaJogos.stream().flatMap(l -> l.getClubes().stream())
+				.map(c -> c.getTreinador().getTreinadorTituloRanking()).collect(Collectors.toList()));
 		clubeRepository.saveAll(ligaJogos.stream().flatMap(l -> l.getClubes().stream()).collect(Collectors.toList()));
 		parametroRepository.saveAll(parametros);
 		clubeRankingRepository.saveAll(clubeRankings);

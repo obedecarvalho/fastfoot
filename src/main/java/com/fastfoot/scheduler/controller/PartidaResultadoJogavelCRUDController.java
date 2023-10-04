@@ -1,5 +1,7 @@
 package com.fastfoot.scheduler.controller;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,28 @@ public class PartidaResultadoJogavelCRUDController {
 	
 	@Autowired
 	private ClubeCRUDService clubeCRUDService;
+
+	private Comparator<PartidaResultadoJogavel> COMPARATOR_SEMANA = new Comparator<PartidaResultadoJogavel>() {
+		
+		@Override
+		public int compare(PartidaResultadoJogavel o1, PartidaResultadoJogavel o2) {
+			return o1.getRodada().getSemana().getNumero().compareTo(o2.getRodada().getSemana().getNumero());
+		}
+	};
+	
+	private Comparator<PartidaResultadoJogavel> COMPARATOR_SEMANA_NIVEL_CAMP = new Comparator<PartidaResultadoJogavel>() {
+		
+		@Override
+		public int compare(PartidaResultadoJogavel o1, PartidaResultadoJogavel o2) {
+			int compare = o1.getRodada().getSemana().getNumero().compareTo(o2.getRodada().getSemana().getNumero());
+			
+			if (compare == 0) {
+				compare = o1.getNivelCampeonato().compareTo(o2.getNivelCampeonato());
+			}
+			
+			return compare;
+		}
+	};
 
 	@GetMapping("/partidasJogavel")
 	public ResponseEntity<List<PartidaResultadoJogavel>> getAll() {
@@ -72,6 +96,8 @@ public class PartidaResultadoJogavelCRUDController {
 			if (ValidatorUtil.isEmpty(partidas)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			Collections.sort(partidas, COMPARATOR_SEMANA);
 
 			return ResponseEntity.ok(partidas);
 			
@@ -89,6 +115,8 @@ public class PartidaResultadoJogavelCRUDController {
 			if (ValidatorUtil.isEmpty(partidas)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			Collections.sort(partidas, COMPARATOR_SEMANA);
 
 			return ResponseEntity.ok(partidas);
 			
@@ -111,6 +139,8 @@ public class PartidaResultadoJogavelCRUDController {
 			if (ValidatorUtil.isEmpty(partidas)) {
 				return ResponseEntity.noContent().build();
 			}
+			
+			Collections.sort(partidas, COMPARATOR_SEMANA_NIVEL_CAMP);
 
 			return ResponseEntity.ok(partidas);
 			

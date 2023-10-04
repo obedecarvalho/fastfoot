@@ -6,31 +6,27 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 
 import com.fastfoot.bets.model.TipoProbabilidadeResultadoPartida;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 
 @Entity
 public class PartidaProbabilidadeResultado {
-	//TODO: usar estrategia de FK semelhante a PartidaEstatisticas?
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "partidaProbabilidadeResultadoSequence")	
 	@SequenceGenerator(name = "partidaProbabilidadeResultadoSequence", sequenceName = "partida_probabilidade_resultado_seq")
 	private Long id;
 	
-	@ManyToOne
+	/*@ManyToOne
 	@JoinColumn(name = "id_partida_resultado")
 	private PartidaResultado partidaResultado;
 	
 	@ManyToOne
 	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
+	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
 	
 	private Double probabilidadeVitoriaMandante;
 	
@@ -39,6 +35,9 @@ public class PartidaProbabilidadeResultado {
 	private Double probabilidadeEmpate;
 	
 	private TipoProbabilidadeResultadoPartida tipoProbabilidadeResultadoPartida;
+	
+	@Transient
+	private PartidaResultadoJogavel partida;
 
 	public Long getId() {
 		return id;
@@ -48,7 +47,7 @@ public class PartidaProbabilidadeResultado {
 		this.id = id;
 	}
 
-	public PartidaResultado getPartidaResultado() {
+	/*public PartidaResultado getPartidaResultado() {
 		return partidaResultado;
 	}
 
@@ -62,7 +61,7 @@ public class PartidaProbabilidadeResultado {
 
 	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
 		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}
+	}*/
 
 	public Double getProbabilidadeVitoriaMandante() {
 		return probabilidadeVitoriaMandante;
@@ -88,6 +87,14 @@ public class PartidaProbabilidadeResultado {
 		this.probabilidadeEmpate = probabilidadeEmpate;
 	}
 
+	public PartidaResultadoJogavel getPartida() {
+		return partida;
+	}
+
+	public void setPartida(PartidaResultadoJogavel partida) {
+		this.partida = partida;
+	}
+
 	public TipoProbabilidadeResultadoPartida getTipoProbabilidadeResultadoPartida() {
 		return tipoProbabilidadeResultadoPartida;
 	}
@@ -96,7 +103,7 @@ public class PartidaProbabilidadeResultado {
 		this.tipoProbabilidadeResultadoPartida = tipoProbabilidadeResultadoPartida;
 	}
 
-	public PartidaResultadoJogavel getPartidaResultadoJogavel() {
+	/*public PartidaResultadoJogavel getPartidaResultadoJogavel() {
 		PartidaResultadoJogavel partidaResultadoJogavel = null;
 
 		if (partidaResultado != null) {
@@ -106,12 +113,12 @@ public class PartidaProbabilidadeResultado {
 		}
 
 		return partidaResultadoJogavel;
-	}
+	}*/
 
 	@Override
 	public String toString() {
-		return "PartidaProbabilidadeResultado [Partida=" + getPartidaResultadoJogavel()
-				+ ", probVitMand=" + probabilidadeVitoriaMandante + ", probVitVis="
+		return "PartidaProbabilidadeResultado ["
+				+ "probVitMand=" + probabilidadeVitoriaMandante + ", probVitVis="
 				+ probabilidadeVitoriaVisitante + ", probEmp=" + probabilidadeEmpate + "]";
 	}
 

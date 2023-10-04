@@ -29,16 +29,10 @@ if len(sys.argv) == 5:
     	rodadaFinal = 0
     	totalRodadas = int(sys.argv[3])
     	id_jogo = int(sys.argv[4])
-elif len(sys.argv) == 1:#equivalente a 'temporada-completa.py 1 1 25' ou 'temporada-completa.py 1 2 1'
-    novaTemporada = True
-    rodadaFinal = 25
-    numTemporada = 1
-    totalRodadas = 0
-    #transferencias = True
 else:
 	print('Comando: temporada-completa <nova_temporada> <modo> <n> <id_jogo>')
 	print('\t<nova_temporada> Indica se deve requisitar criação de nova temporada. Valores [0, 1] ')
-	print('\t<modo> Valores [1, 2, 3]:\n\t\t1: Executa ate <n> rodadas\n\t\t2: Executa ate <n> temporadas\n\t\t3: Executa <n> rodadas ')
+	print('\t<modo> Valores [1, 2, 3]:\n\t\t1: Executa ate a rodada <n>\n\t\t2: Executa <n> temporadas\n\t\t3: Executa <n> rodadas ')
 	#print('\t<transferencias> Indica se deve requisitar executar transferencias. Valores [0, 1] ')
 	exit()
 

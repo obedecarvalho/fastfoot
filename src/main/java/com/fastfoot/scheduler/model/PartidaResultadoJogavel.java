@@ -1,8 +1,10 @@
 package com.fastfoot.scheduler.model;
 
+import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaTorcida;
 
 public interface PartidaResultadoJogavel {
 
@@ -59,4 +61,12 @@ public interface PartidaResultadoJogavel {
 	public void setEscalacaoMandante(EscalacaoClube escalacaoMandante);
 
 	public void setEscalacaoVisitante(EscalacaoClube escalacaoVisitante);
+	
+	public PartidaTorcida getPartidaTorcida();
+
+	public void setPartidaTorcida(PartidaTorcida partidaTorcida);
+
+	public PartidaProbabilidadeResultado getPartidaProbabilidadeResultado();
+
+	public void setPartidaProbabilidadeResultado(PartidaProbabilidadeResultado partidaProbabilidadeResultado);
 }

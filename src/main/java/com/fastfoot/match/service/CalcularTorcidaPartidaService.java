@@ -22,9 +22,6 @@ import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.Classificacao;
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.util.ValidatorUtil;
@@ -119,11 +116,12 @@ public class CalcularTorcidaPartidaService {
 		PartidaTorcida partidaTorcida = new PartidaTorcida();
 		partidaTorcida.setPublico(publicoMandante + publicoVisitante);
 		
-		if (partida instanceof PartidaResultado) {
+		partida.setPartidaTorcida(partidaTorcida);
+		/*if (partida instanceof PartidaResultado) {
 			partidaTorcida.setPartidaResultado((PartidaResultado) partida);
 		} else {
 			throw new RuntimeException("Erro inesperado");
-		}
+		}*/
 		
 		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
@@ -167,11 +165,12 @@ public class CalcularTorcidaPartidaService {
 		PartidaTorcida partidaTorcida = new PartidaTorcida();
 		partidaTorcida.setPublico(publicoMandante + publicoVisitante);
 		
-		if (partida instanceof PartidaAmistosaResultado) {
+		partida.setPartidaTorcida(partidaTorcida);
+		/*if (partida instanceof PartidaAmistosaResultado) {
 			partidaTorcida.setPartidaAmistosaResultado((PartidaAmistosaResultado) partida);
 		} else {
 			throw new RuntimeException("Erro inesperado");
-		}
+		}*/
 		
 		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}
@@ -215,13 +214,14 @@ public class CalcularTorcidaPartidaService {
 		PartidaTorcida partidaTorcida = new PartidaTorcida();
 		partidaTorcida.setPublico(publicoMandante + publicoVisitante);
 		
-		if (partida instanceof PartidaEliminatoriaResultado) {
+		partida.setPartidaTorcida(partidaTorcida);
+		/*if (partida instanceof PartidaEliminatoriaResultado) {
 			partidaTorcida.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partida);
 		} else if (partida instanceof PartidaResultado) {
 			partidaTorcida.setPartidaResultado((PartidaResultado) partida);
 		} else {
 			throw new RuntimeException("Erro inesperado");
-		}
+		}*/
 		
 		partidaDadosSalvarDTO.addPartidaTorcida(partidaTorcida);
 	}

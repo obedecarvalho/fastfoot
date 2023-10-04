@@ -16,8 +16,6 @@ import com.fastfoot.player.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
-import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
-import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
@@ -81,12 +79,13 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService 
 		partidaProbabilidadeResultado.setTipoProbabilidadeResultadoPartida(
 				TipoProbabilidadeResultadoPartida.ESTATISTICAS_FINALIZACAO_POISSON);
 
-		if (partidaResultado instanceof PartidaResultado) {
+		partidaResultado.setPartidaProbabilidadeResultado(partidaProbabilidadeResultado);
+		/*if (partidaResultado instanceof PartidaResultado) {
 			partidaProbabilidadeResultado.setPartidaResultado((PartidaResultado) partidaResultado);
 		} else if (partidaResultado instanceof PartidaEliminatoriaResultado) {
 			partidaProbabilidadeResultado
 					.setPartidaEliminatoriaResultado((PartidaEliminatoriaResultado) partidaResultado);
-		}
+		}*/
 
 		double vitoriaMandante = 0, vitoriaVisitante = 0, empate = 0;
 

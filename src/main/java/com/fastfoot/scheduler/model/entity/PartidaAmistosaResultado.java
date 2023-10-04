@@ -8,13 +8,16 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
+import com.fastfoot.match.model.entity.PartidaTorcida;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 
@@ -45,9 +48,17 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	
 	private Boolean partidaJogada;
 	
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "id_partida_estatisticas")
 	private PartidaEstatisticas partidaEstatisticas;
+
+	@OneToOne
+	@JoinColumn(name = "id_partida_torcida")
+	private PartidaTorcida partidaTorcida;
+	
+	@OneToOne
+	@JoinColumn(name = "id_partida_probabilidade_resultado")
+	private PartidaProbabilidadeResultado partidaProbabilidadeResultado;
 
 	@Transient
 	private EscalacaoClube escalacaoMandante;
@@ -154,6 +165,22 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	@Override
 	public void setEscalacaoVisitante(EscalacaoClube escalacaoVisitante) {
 		this.escalacaoVisitante = escalacaoVisitante;
+	}
+
+	public PartidaTorcida getPartidaTorcida() {
+		return partidaTorcida;
+	}
+
+	public void setPartidaTorcida(PartidaTorcida partidaTorcida) {
+		this.partidaTorcida = partidaTorcida;
+	}
+
+	public PartidaProbabilidadeResultado getPartidaProbabilidadeResultado() {
+		return partidaProbabilidadeResultado;
+	}
+
+	public void setPartidaProbabilidadeResultado(PartidaProbabilidadeResultado partidaProbabilidadeResultado) {
+		this.partidaProbabilidadeResultado = partidaProbabilidadeResultado;
 	}
 
 	@JsonIgnore

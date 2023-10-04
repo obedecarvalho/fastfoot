@@ -19,9 +19,9 @@ public interface PartidaEstatisticasRepository extends JpaRepository<PartidaEsta
 			" 	sum(gols)/sum(num_jogos) as gols_partida, " +
 			" 	sum(gols + finalizacacoes_defendidas + finalizacacoes_fora)/sum(num_jogos) as finalizacoes_partidas, " +
 			" 	sum(gols + finalizacacoes_defendidas)/sum(num_jogos) as finalizacoes_no_gol, " +
-			" 	sum(gols + finalizacacoes_defendidas)/sum(gols + finalizacacoes_defendidas + finalizacacoes_fora) " +
+			" 	sum(gols + finalizacacoes_defendidas)/greatest(sum(gols + finalizacacoes_defendidas + finalizacacoes_fora), 1) " +
 			" 			as probilidade_finalizacoes_no_gol, " +
-			" 	sum(gols)/sum(gols + finalizacacoes_defendidas + finalizacacoes_fora) as probilidade_gols " +
+			" 	sum(gols)/greatest(sum(gols + finalizacacoes_defendidas + finalizacacoes_fora), 1) as probilidade_gols " +
 			" from ( " +
 			" 	select p.id_clube_mandante as id_clube, count(pe.id) as num_jogos, sum(p.gols_mandante) as gols,  " +
 			" 		sum(pe.finalizacacoes_defendidas_mandante) as finalizacacoes_defendidas, " +
@@ -73,7 +73,7 @@ public interface PartidaEstatisticasRepository extends JpaRepository<PartidaEsta
 
 	@Query(nativeQuery = true, value =
 			" select id_clube, " +
-			" 	sum(finalizacacoes_defendidas)/sum(gols_sofridos + finalizacacoes_defendidas) as probabilidade_defesa " +
+			" 	sum(finalizacacoes_defendidas)/greatest(sum(gols_sofridos + finalizacacoes_defendidas), 1) as probabilidade_defesa " +
 			" from ( " +
 			" 	select p.id_clube_mandante as id_clube, " +
 			" 		count(pe.id) as num_jogos, " +

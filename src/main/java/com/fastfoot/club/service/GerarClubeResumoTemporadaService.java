@@ -26,7 +26,6 @@ import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.CarregarCampeonatoService;
 
 @Service
 public class GerarClubeResumoTemporadaService {
@@ -34,12 +33,12 @@ public class GerarClubeResumoTemporadaService {
 	@Autowired
 	private ClubeResumoTemporadaRepository clubeResumoTemporadaRepository;
 
-	@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;
+	/*@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;*/
 
 	public void gerarClubeResumoTemporada(Temporada temporada) {
 				
-		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		
 		List<ClubeResumoTemporada> clubesResumo = new ArrayList<ClubeResumoTemporada>();
 		

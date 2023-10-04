@@ -18,6 +18,13 @@ public class Jogo {//TODO: melhorar nome
 	private Long id;
 	
 	private Date dataCriacao;
+	
+	public Jogo() {
+	}
+	
+	public Jogo(Long id) {
+		this.id = id;
+	}
 
 	public Long getId() {
 		return id;

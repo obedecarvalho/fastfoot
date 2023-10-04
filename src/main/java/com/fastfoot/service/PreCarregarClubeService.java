@@ -9,10 +9,14 @@ import com.fastfoot.club.model.ClubeNivel;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.entity.ClubeTituloRanking;
+import com.fastfoot.club.model.entity.Treinador;
+import com.fastfoot.club.model.entity.TreinadorTituloRanking;
 import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.model.entity.LigaJogo;
+import com.fastfoot.player.service.util.NomeUtil;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
@@ -263,6 +267,8 @@ public class PreCarregarClubeService {
 		clubes.add(new Clube(liga.getIdClubeInicial() + 30, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Racing Genk", "racing_genk.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 31, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Werder Bremen", "werder_bremen.png"));
 		
+		criarTreinador(liga.getJogo(), clubes);
+		
 		return clubes;
 	}
 
@@ -302,6 +308,8 @@ public class PreCarregarClubeService {
 		clubes.add(new Clube(liga.getIdClubeInicial() + 29, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Eibar", "eibar.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 30, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Zaragoza", "zaragoza.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 31, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Málaga", "malaga.png"));
+		
+		criarTreinador(liga.getJogo(), clubes);
 		
 		return clubes;
 	}
@@ -343,6 +351,8 @@ public class PreCarregarClubeService {
 		clubes.add(new Clube(liga.getIdClubeInicial() + 30, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Genoa", "genoa.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 31, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Venezia", "venezia.png"));
 		
+		criarTreinador(liga.getJogo(), clubes);
+		
 		return clubes;
 	}
 	
@@ -382,6 +392,8 @@ public class PreCarregarClubeService {
 		clubes.add(new Clube(liga.getIdClubeInicial() + 29, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Swansea City", "swansea_city.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 30, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "West Bromwich", "west_bromwich.png"));
 		clubes.add(new Clube(liga.getIdClubeInicial() + 31, liga, ClubeNivel.NIVEL_G, ClubeNivel.NIVEL_G, "Blackpool", "blackpool.png"));
+		
+		criarTreinador(liga.getJogo(), clubes);
 		
 		return clubes;
 	}
@@ -454,6 +466,26 @@ public class PreCarregarClubeService {
 		}
 
 		return movimentacoesFinanceiras;
+	}
+	
+	public void criarTreinador(Jogo jogo, List<Clube> clubes) {
+		
+		Treinador treinador = null;
+		TreinadorTituloRanking treinadorTituloRanking = null;
+		
+		for (Clube c : clubes) {
+			treinador = new Treinador();
+			//treinador.setClube(c);
+			treinador.setNome(NomeUtil.sortearNome());
+			treinador.setJogo(jogo);
+			treinador.setAtivo(true);
+			
+			treinadorTituloRanking = new TreinadorTituloRanking(treinador);
+			treinador.setTreinadorTituloRanking(treinadorTituloRanking);
+
+			c.setTreinador(treinador);
+		}
+
 	}
 
 	private ClassificacaoNacional posicaoToClassificacaoNacional(Integer pos) {

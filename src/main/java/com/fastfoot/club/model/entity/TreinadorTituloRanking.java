@@ -1,19 +1,24 @@
 package com.fastfoot.club.model.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
 
 @Entity
-public class ClubeTituloRanking {
-
+public class TreinadorTituloRanking {
+	
 	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "treinadorTituloRankingSequence")	
+	@SequenceGenerator(name = "treinadorTituloRankingSequence", sequenceName = "treinador_titulo_ranking_seq")
 	private Long id;
 	
 	@OneToOne
-	@JoinColumn(name = "id_clube")
-	private Clube clube;
+	@JoinColumn(name = "id_treinador")
+	private Treinador treinador;
 	
 	private Integer titulosNacional;
 	
@@ -31,13 +36,12 @@ public class ClubeTituloRanking {
 	
 	private Integer pontuacao;
 	
-	public ClubeTituloRanking() {
+	public TreinadorTituloRanking() {
 
 	}
 	
-	public ClubeTituloRanking(Long id, Clube clube) {
-		this.id = id;
-		this.clube = clube;
+	public TreinadorTituloRanking(Treinador treinador) {
+		this.treinador = treinador;
 		this.titulosNacional = 0;	
 		this.titulosNacionalII = 0;	
 		this.titulosCopaNacional = 0;	
@@ -56,12 +60,12 @@ public class ClubeTituloRanking {
 		this.id = id;
 	}
 
-	public Clube getClube() {
-		return clube;
+	public Treinador getTreinador() {
+		return treinador;
 	}
 
-	public void setClube(Clube clube) {
-		this.clube = clube;
+	public void setTreinador(Treinador treinador) {
+		this.treinador = treinador;
 	}
 
 	public Integer getTitulosNacional() {
