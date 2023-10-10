@@ -172,6 +172,26 @@ public class ClubeResumoTemporada {
 		this.classificacaoContinental = classificacaoContinental;
 	}
 	
+	public void incrementarJogos() {
+		this.jogos++;
+	}
+
+	public void incrementarVitorias() {
+		this.vitorias++;
+	}
+
+	public void incrementarEmpates() {
+		this.empates++;
+	}
+
+	public void incrementarGolsPro(int nroGols) {
+		this.golsPro += nroGols;
+	}
+
+	public void incrementarGolsContra(int nroGols) {
+		this.golsContra += nroGols;
+	}
+	
 	//@Transient
 	public String getClassificacaoDescricao() {
 		if (!ValidatorUtil.isEmpty(classificacaoNacional)) {

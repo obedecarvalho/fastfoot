@@ -5,18 +5,26 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.club.model.entity.Treinador;
 import com.fastfoot.club.model.entity.TreinadorResumoTemporada;
 import com.fastfoot.club.model.repository.TreinadorResumoTemporadaRepository;
+import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -24,22 +32,30 @@ import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
+import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.service.CarregarCampeonatoService;
+import com.fastfoot.service.CarregarParametroService;
 
 @Service
-public class GerarTreinadorResumoTemporadaService {
+public class GerarTreinadorResumoTemporadaService {//TODO: renomear para AtualizarTreinadorResumoTemporadaPorRodadaService
 
 	@Autowired
 	private TreinadorResumoTemporadaRepository treinadorResumoTemporadaRepository;
 
-	/*@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;*/
+	@Autowired
+	private CarregarParametroService carregarParametroService;
+	
+	@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;
 
+	@Deprecated
 	public void gerarTreinadorResumoTemporada(Temporada temporada) {
-				
-		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		
+		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+				
 		List<TreinadorResumoTemporada> treinadoresResumo = new ArrayList<TreinadorResumoTemporada>();
 		
 		treinadoresResumo.addAll(gerarTreinadorResumoTemporadaCampeonatoNacional(temporada));
@@ -49,6 +65,215 @@ public class GerarTreinadorResumoTemporadaService {
 		
 		
 		treinadorResumoTemporadaRepository.saveAll(treinadoresResumo);
+	}
+
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> atualizarTreinadorResumoTemporadaPorRodada(Jogo jogo, RodadaJogavel rodada) {
+		
+		List<TreinadorResumoTemporada> trts = treinadorResumoTemporadaRepository
+				.findByTemporada(rodada.getSemana().getTemporada());
+		
+		Map<Treinador, Map<Clube, Map<NivelCampeonato, List<TreinadorResumoTemporada>>>> treinadorClubeNivelResumos = trts.stream()
+				.collect(Collectors.groupingBy(trt -> trt.getTreinador(), Collectors.groupingBy(trt -> trt.getClube(),
+						Collectors.groupingBy(trt -> trt.getNivelCampeonato()))));
+		
+		
+		Map<Clube, Classificacao> clubeClassificacao = null;
+		Integer primeiraPosicaoEliminadoContinental = null;
+		if (rodada.getNivelCampeonato().isNIOuNII()
+				&& rodada.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+			clubeClassificacao = ((Rodada) rodada).getCampeonato().getClassificacao()
+					.stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
+		} else if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
+				&& rodada.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+			clubeClassificacao = ((Rodada) rodada).getGrupoCampeonato().getClassificacao()
+					.stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
+			primeiraPosicaoEliminadoContinental = carregarParametroService.getPrimeiraPosicaoEliminadoContinental(jogo,
+					rodada.getNivelCampeonato());
+		}
+		
+		
+		TreinadorResumoTemporada trtMandante, trtVisitante;
+		
+		List<TreinadorResumoTemporada> resumos = new ArrayList<TreinadorResumoTemporada>();
+
+		for (PartidaResultadoJogavel p : rodada.getPartidas()) {
+			
+			trtMandante = getTreinadorResumoTemporada(p.getClubeMandante().getTreinador(), p.getClubeMandante(),
+					rodada.getNivelCampeonato(), rodada.getSemana().getTemporada(), treinadorClubeNivelResumos);
+
+			trtVisitante = getTreinadorResumoTemporada(p.getClubeVisitante().getTreinador(), p.getClubeVisitante(),
+					rodada.getNivelCampeonato(), rodada.getSemana().getTemporada(), treinadorClubeNivelResumos);
+
+			trtMandante.incrementarJogos();
+			if (p.isMandanteVencedor()) trtMandante.incrementarVitorias();
+			if (p.isResultadoEmpatado()) trtMandante.incrementarEmpates();
+			trtMandante.incrementarGolsPro(p.getGolsMandante());
+			trtMandante.incrementarGolsContra(p.getGolsVisitante());
+
+			trtVisitante.incrementarJogos();
+			if (p.isVisitanteVencedor()) trtVisitante.incrementarVitorias();
+			if (p.isResultadoEmpatado()) trtVisitante.incrementarEmpates();
+			trtVisitante.incrementarGolsPro(p.getGolsVisitante());
+			trtVisitante.incrementarGolsContra(p.getGolsMandante());
+			
+			resumos.add(trtMandante);
+			resumos.add(trtVisitante);
+			
+			if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()) {
+
+				if (rodada.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+
+					if (clubeClassificacao.get(trtMandante.getClube()).getPosicao() >= primeiraPosicaoEliminadoContinental) {
+						trtMandante.setClassificacaoContinental(
+								ClassificacaoContinental.getClassificacaoFaseGrupo(rodada.getNivelCampeonato()));
+					}
+					
+					if (clubeClassificacao.get(trtVisitante.getClube()).getPosicao() >= primeiraPosicaoEliminadoContinental) {
+						trtVisitante.setClassificacaoContinental(
+								ClassificacaoContinental.getClassificacaoFaseGrupo(rodada.getNivelCampeonato()));
+					}
+
+				} else if (rodada.getNumero() > Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+				
+					if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+						trtMandante.setClassificacaoContinental(ClassificacaoContinental
+								.getClassificacao(rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada, false));
+					}
+	
+					if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+						trtVisitante.setClassificacaoContinental(ClassificacaoContinental
+								.getClassificacao(rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada, false));
+					}
+	
+					if (rodada.getNumero() == rodada.getCampeonatoJogavel().getTotalRodadas()) {// Final
+						if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+							trtVisitante.setClassificacaoContinental(
+									ClassificacaoContinental.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+						} else if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+							trtMandante.setClassificacaoContinental(
+									ClassificacaoContinental.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+						}
+					}
+				}
+				
+			} else if (rodada.getNivelCampeonato().isCNIOuCNII()) {
+
+				if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+					trtMandante.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(
+							rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada,
+							rodada.getCampeonatoJogavel().getTotalRodadas(), false));
+
+				}
+
+				if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+					trtVisitante.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(
+							rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada,
+							rodada.getCampeonatoJogavel().getTotalRodadas(), false));
+				}
+
+				if (rodada.getNumero() == rodada.getCampeonatoJogavel().getTotalRodadas()) {// Final
+					if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+						trtVisitante.setClassificacaoCopaNacional(
+								ClassificacaoCopaNacional.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+					} else if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+						trtMandante.setClassificacaoCopaNacional(
+								ClassificacaoCopaNacional.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+					}
+				}
+				
+			} else if (rodada.getNivelCampeonato().isNIOuNII()
+					&& rodada.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+
+				trtMandante.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(rodada.getNivelCampeonato(),
+						clubeClassificacao.get(trtMandante.getClube()).getPosicao()));
+
+				trtVisitante.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(
+						rodada.getNivelCampeonato(), clubeClassificacao.get(trtVisitante.getClube()).getPosicao()));
+
+			}
+
+		}
+		
+		treinadorResumoTemporadaRepository.saveAll(resumos);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	private TreinadorResumoTemporada getTreinadorResumoTemporada(Treinador treinador, Clube clube,
+			NivelCampeonato nivel, Temporada temporada,
+			Map<Treinador, Map<Clube, Map<NivelCampeonato, List<TreinadorResumoTemporada>>>> treinadorClubeNivelResumos) {
+
+		Map<Clube, Map<NivelCampeonato, List<TreinadorResumoTemporada>>> clubeNivelResumos;
+		Map<NivelCampeonato, List<TreinadorResumoTemporada>> nivelResumos;
+		List<TreinadorResumoTemporada> resumos;
+		
+		clubeNivelResumos = treinadorClubeNivelResumos.get(treinador);
+
+		if (clubeNivelResumos == null) {
+
+			resumos = new ArrayList<TreinadorResumoTemporada>();
+			nivelResumos = new HashMap<NivelCampeonato, List<TreinadorResumoTemporada>>();
+			clubeNivelResumos = new HashMap<Clube, Map<NivelCampeonato, List<TreinadorResumoTemporada>>>();
+
+			TreinadorResumoTemporada treinadorResumoTemporada = new TreinadorResumoTemporada();
+			treinadorResumoTemporada.setTreinador(treinador);
+			treinadorResumoTemporada.setTemporada(temporada);
+			treinadorResumoTemporada.setClube(clube);
+			treinadorResumoTemporada.setNivelCampeonato(nivel);
+
+			resumos.add(treinadorResumoTemporada);
+			nivelResumos.put(nivel, resumos);
+			clubeNivelResumos.put(clube, nivelResumos);
+			treinadorClubeNivelResumos.put(treinador, clubeNivelResumos);
+
+		} else {
+
+			nivelResumos = clubeNivelResumos.get(clube);
+
+			if (nivelResumos == null) {
+
+				resumos = new ArrayList<TreinadorResumoTemporada>();
+				nivelResumos = new HashMap<NivelCampeonato, List<TreinadorResumoTemporada>>();
+
+				TreinadorResumoTemporada treinadorResumoTemporada = new TreinadorResumoTemporada();
+				treinadorResumoTemporada.setTreinador(treinador);
+				treinadorResumoTemporada.setTemporada(temporada);
+				treinadorResumoTemporada.setClube(clube);
+				treinadorResumoTemporada.setNivelCampeonato(nivel);
+
+				resumos.add(treinadorResumoTemporada);
+				nivelResumos.put(nivel, resumos);
+				clubeNivelResumos.put(clube, nivelResumos);
+
+			} else {
+
+				resumos = nivelResumos.get(nivel);
+
+				if (resumos == null) {
+
+					resumos = new ArrayList<TreinadorResumoTemporada>();
+
+					TreinadorResumoTemporada treinadorResumoTemporada = new TreinadorResumoTemporada();
+					treinadorResumoTemporada.setTreinador(treinador);
+					treinadorResumoTemporada.setTemporada(temporada);
+					treinadorResumoTemporada.setClube(clube);
+					treinadorResumoTemporada.setNivelCampeonato(nivel);
+
+					resumos.add(treinadorResumoTemporada);
+					nivelResumos.put(nivel, resumos);
+
+				}
+
+			}
+
+		}
+
+		if (resumos.size() != 1) {
+			throw new RuntimeException("Inesperado....");// TODO
+		}
+
+		return resumos.get(0);
 	}
 	
 	private List<TreinadorResumoTemporada> gerarTreinadorResumoTemporadaCampeonatoNacional(Temporada temporada) {
@@ -70,6 +295,7 @@ public class GerarTreinadorResumoTemporadaService {
 				treinadorResumoTemporada.setGolsPro(classificacao.getGolsPro());
 				treinadorResumoTemporada.setGolsContra(classificacao.getGolsContra());
 				//treinadorResumoTemporada.setPosicaoFinal(classificacao.getPosicao());
+				treinadorResumoTemporada.setClube(classificacao.getClube());
 				
 				treinadorResumoTemporada.setClassificacaoNacional(ClassificacaoNacional
 						.getClassificacao(campeonato.getNivelCampeonato(), classificacao.getPosicao()));
@@ -104,6 +330,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaMandante.setTreinador(partida.getClubeMandante().getTreinador());
 					treinadorResumoTemporadaMandante.setTemporada(temporada);
 					treinadorResumoTemporadaMandante.setNivelCampeonato(campeonato.getNivelCampeonato());					
+					treinadorResumoTemporadaMandante.setClube(partida.getClubeMandante());
 					treinadorResumo.put(partida.getClubeMandante(), treinadorResumoTemporadaMandante);
 				}
 				
@@ -114,6 +341,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaVisitante.setTreinador(partida.getClubeVisitante().getTreinador());
 					treinadorResumoTemporadaVisitante.setTemporada(temporada);
 					treinadorResumoTemporadaVisitante.setNivelCampeonato(campeonato.getNivelCampeonato());
+					treinadorResumoTemporadaVisitante.setClube(partida.getClubeVisitante());
 					treinadorResumo.put(partida.getClubeVisitante(), treinadorResumoTemporadaVisitante);
 				}
 				
@@ -190,6 +418,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporada.setGolsPro(classificacao.getGolsPro());
 					treinadorResumoTemporada.setGolsContra(classificacao.getGolsContra());
 					//treinadorResumoTemporada.setPosicaoFinal(classificacao.getPosicao());
+					treinadorResumoTemporada.setClube(classificacao.getClube());
 					
 					treinadorResumoTemporada.setClassificacaoContinental(
 							ClassificacaoContinental.getClassificacaoFaseGrupo(campeonato.getNivelCampeonato()));
@@ -213,6 +442,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaMandante.setTreinador(partida.getClubeMandante().getTreinador());
 					treinadorResumoTemporadaMandante.setTemporada(temporada);
 					treinadorResumoTemporadaMandante.setNivelCampeonato(campeonato.getNivelCampeonato());					
+					treinadorResumoTemporadaMandante.setClube(partida.getClubeMandante());
 					treinadorResumo.put(partida.getClubeMandante(), treinadorResumoTemporadaMandante);
 				}
 				
@@ -223,6 +453,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaVisitante.setTreinador(partida.getClubeVisitante().getTreinador());
 					treinadorResumoTemporadaVisitante.setTemporada(temporada);
 					treinadorResumoTemporadaVisitante.setNivelCampeonato(campeonato.getNivelCampeonato());
+					treinadorResumoTemporadaVisitante.setClube(partida.getClubeVisitante());
 					treinadorResumo.put(partida.getClubeVisitante(), treinadorResumoTemporadaVisitante);
 				}
 				
@@ -307,6 +538,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaMandante.setTreinador(p.getClubeMandante().getTreinador());
 					treinadorResumoTemporadaMandante.setTemporada(temporada);
 					treinadorResumoTemporadaMandante.setNivelCampeonato(r.getNivelCampeonato());
+					treinadorResumoTemporadaMandante.setClube(p.getClubeMandante());
 					
 					treinadoresResumo.put(p.getClubeMandante(), treinadorResumoTemporadaMandante);
 				}
@@ -318,6 +550,7 @@ public class GerarTreinadorResumoTemporadaService {
 					treinadorResumoTemporadaVisitante.setTreinador(p.getClubeVisitante().getTreinador());
 					treinadorResumoTemporadaVisitante.setTemporada(temporada);
 					treinadorResumoTemporadaVisitante.setNivelCampeonato(r.getNivelCampeonato());
+					treinadorResumoTemporadaVisitante.setClube(p.getClubeVisitante());
 					
 					treinadoresResumo.put(p.getClubeVisitante(), treinadorResumoTemporadaVisitante);
 				}

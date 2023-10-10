@@ -30,6 +30,8 @@ public class Campeonato implements CampeonatoJogavel {
 
 	private Integer rodadaAtual;
 	
+	private Integer totalRodadas;
+	
 	@ManyToOne
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
@@ -79,12 +81,22 @@ public class Campeonato implements CampeonatoJogavel {
 		this.rodadas = rodadas;
 	}
 
+	@Override
 	public Integer getRodadaAtual() {
 		return rodadaAtual;
 	}
 
 	public void setRodadaAtual(Integer rodadaAtual) {
 		this.rodadaAtual = rodadaAtual;
+	}
+
+	@Override
+	public Integer getTotalRodadas() {
+		return totalRodadas;
+	}
+
+	public void setTotalRodadas(Integer totalRodadas) {
+		this.totalRodadas = totalRodadas;
 	}
 
 	public List<Classificacao> getClassificacao() {
@@ -95,6 +107,7 @@ public class Campeonato implements CampeonatoJogavel {
 		this.classificacao = classificacao;
 	}
 
+	@Override
 	public Temporada getTemporada() {
 		return temporada;
 	}

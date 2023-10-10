@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.club.model.entity.ClubeRanking;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
@@ -15,7 +16,7 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public abstract class CampeonatoEliminatorioFactory {
 
-	//public abstract CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato);
+	public abstract CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes);
 
 	//public abstract CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, Liga liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato);
 	
@@ -23,13 +24,14 @@ public abstract class CampeonatoEliminatorioFactory {
 	
 	protected abstract List<RodadaEliminatoria> gerarRodadasCopaNacional(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio);
 	
-	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
+		campeonato.setTotalRodadas(numeroRodadas(Constantes.NRO_CLUBES_CP_NAC_II));
 		campeonato.setTemporada(temporada);
-		campeonato.setNivelCampeonato(nivelCampeonato);
-		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
+		campeonato.setNivelCampeonato(NivelCampeonato.COPA_NACIONAL_II);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), NivelCampeonato.COPA_NACIONAL_II.name(), temporada.getAno()));
 		
 		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacionalII(clubes, campeonato);
 		
@@ -40,13 +42,14 @@ public abstract class CampeonatoEliminatorioFactory {
 		return campeonato;
 	}
 	
-	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, int totalRodadas) {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
+		campeonato.setTotalRodadas(totalRodadas);
 		campeonato.setTemporada(temporada);
-		campeonato.setNivelCampeonato(nivelCampeonato);
-		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
+		campeonato.setNivelCampeonato(NivelCampeonato.COPA_NACIONAL);
+		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), NivelCampeonato.COPA_NACIONAL.name(), temporada.getAno()));
 		
 		List<RodadaEliminatoria> rodadas = gerarRodadasCopaNacional(clubes, campeonato);
 		
@@ -59,6 +62,7 @@ public abstract class CampeonatoEliminatorioFactory {
 		CampeonatoEliminatorio campeonato = new CampeonatoEliminatorio();
 		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
+		campeonato.setTotalRodadas(numeroRodadas(clubes.size()));
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));

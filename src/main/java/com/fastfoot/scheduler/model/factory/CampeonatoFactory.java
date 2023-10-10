@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fastfoot.club.model.entity.Clube;
+import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.Campeonato;
@@ -21,6 +22,7 @@ public class CampeonatoFactory {
 		campeonato.setTemporada(temporada);
 		campeonato.setLigaJogo(liga);
 		campeonato.setRodadaAtual(0);
+		campeonato.setTotalRodadas(Constantes.NRO_RODADAS_CAMP_NACIONAL);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		campeonato.setNome(String.format("%s %s %d", liga.getLiga().name(), nivelCampeonato.name(), temporada.getAno()));
 		

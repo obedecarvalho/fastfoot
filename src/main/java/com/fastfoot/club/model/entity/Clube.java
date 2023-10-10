@@ -29,7 +29,7 @@ public class Clube implements ElementoRoleta {
 	
 	private ClubeNivel nivelNacional;
 	
-	private ClubeNivel nivelInternacional;
+	private ClubeNivel nivelInternacional;//TODO: necessario?
 	
 	private String logo;
 	

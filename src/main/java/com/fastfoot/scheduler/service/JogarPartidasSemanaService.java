@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeService;
+import com.fastfoot.club.service.AtualizarClubeTituloRankingService;
 import com.fastfoot.club.service.AtualizarTreinadorTituloRankingService;
 import com.fastfoot.club.service.ClassificarClubesTemporadaService;
 import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
@@ -163,8 +164,8 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
 	
-	@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;
+	/*@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;*/
 	
 	@Autowired
 	private ClassificarClubesTemporadaService classificarClubesTemporadaService;
@@ -189,6 +190,9 @@ public class JogarPartidasSemanaService {
 
 	@Autowired
 	private AtualizarTreinadorTituloRankingService atualizarTreinadorTituloRankingService;
+
+	@Autowired
+	private AtualizarClubeTituloRankingService atualizarClubeTituloRankingService;
 
 	public SemanaDTO jogarPartidasSemana(Jogo jogo) {
 		
@@ -272,11 +276,18 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#calcularProbabilidades:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
+		/*
 		if (semana.isUltimaSemana()) {
 			carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		}
 		stopWatch.split();
 		mensagens.add("\t#carregarCampeonatosTemporada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		*/
+		
+		atualizarClubeTituloRanking(jogo, semana);
+		stopWatch.split();
+		mensagens.add("\t#atualizarClubeTituloRanking:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		//gerar ClubeRanking
@@ -286,7 +297,13 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		mensagens.add("\t#classificarClubesTemporadaAtual:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+
+		atualizarTreinadorTituloRanking(jogo, semana);
+		stopWatch.split();
+		mensagens.add("\t#atualizarTreinadorTituloRanking:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
+		/*
 		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
 			atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(temporada);
@@ -294,20 +311,35 @@ public class JogarPartidasSemanaService {
 		stopWatch.split();
 		mensagens.add("\t#atualizarTreinadorTituloRanking:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		*/
+		
+		atualizarClubeResumoRodada(jogo, semana);
+		stopWatch.split();
+		mensagens.add("\t#atualizarClubeResumoRodada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
+		/*
 		if (semana.isUltimaSemana()) {
-			gerarClubeResumoTemporada(temporada);
+			gerarClubeResumoTemporadaService.gerarClubeResumoTemporada(temporada);
 		}
 		stopWatch.split();
 		mensagens.add("\t#gerarClubeResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		*/
 		
+		atualizarTreinadorResumoRodada(jogo, semana);
+		stopWatch.split();
+		mensagens.add("\t#atualizarTreinadorResumoRodada:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		/*
 		if (semana.isUltimaSemana()) {
 			gerarTreinadorResumoTemporadaService.gerarTreinadorResumoTemporada(temporada);
 		}
 		stopWatch.split();
 		mensagens.add("\t#gerarTreinadorResumoTemporada:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		*/
 
 		//Desenvolver jogadores
 		if (semana.getNumero() % 5 == 0) {//TODO: mudar pra não usar na semana 25
@@ -632,8 +664,89 @@ public class JogarPartidasSemanaService {
 		}
 	}
 	
-	private void gerarClubeResumoTemporada(Temporada temporada) {
-		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
-		gerarClubeResumoTemporadaService.gerarClubeResumoTemporada(temporada);
+	private void atualizarTreinadorResumoRodada(Jogo jogo, Semana semana) {
+		List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Rodada r : semana.getRodadas()) {
+			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+		}
+
+		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+		}
+		
+		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
+			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+		}
+
+		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+	
+	private void atualizarClubeResumoRodada(Jogo jogo, Semana semana) {
+		List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
+		
+		for (Rodada r : semana.getRodadas()) {
+			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+		}
+
+		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+		}
+		
+		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
+			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+		}
+
+		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+	}
+
+	private void atualizarTreinadorTituloRanking(Jogo jogo, Semana semana) {
+		
+		if (Constantes.SEMANA_FINAL_COPA_NACIONAL.equals(semana.getNumero())
+				|| Constantes.SEMANA_FINAL_CONTINENTAL.equals(semana.getNumero())
+				|| Constantes.SEMANA_FINAL_CAMP_NACIONAL.equals(semana.getNumero())) {
+		
+			List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
+			
+			for (Rodada r : semana.getRodadas()) {
+				rodadasFuture.add(atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(jogo, r));
+			}
+	
+			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+				rodadasFuture.add(atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(jogo, r));
+			}
+			
+			for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
+				rodadasFuture.add(atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(jogo, r));
+			}
+	
+			CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		}
+	}
+	
+	private void atualizarClubeTituloRanking(Jogo jogo, Semana semana) {
+		
+		if (Constantes.SEMANA_FINAL_COPA_NACIONAL.equals(semana.getNumero())
+				|| Constantes.SEMANA_FINAL_CONTINENTAL.equals(semana.getNumero())
+				|| Constantes.SEMANA_FINAL_CAMP_NACIONAL.equals(semana.getNumero())) {
+		
+			List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
+			
+			for (Rodada r : semana.getRodadas()) {
+				rodadasFuture.add(atualizarClubeTituloRankingService.atualizarClubeTituloRanking(jogo, r));
+			}
+	
+			for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
+				rodadasFuture.add(atualizarClubeTituloRankingService.atualizarClubeTituloRanking(jogo, r));
+			}
+			
+			for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
+				rodadasFuture.add(atualizarClubeTituloRankingService.atualizarClubeTituloRanking(jogo, r));
+			}
+	
+			CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
+		
+		}
 	}
 }

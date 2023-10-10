@@ -73,11 +73,11 @@ public class ConsultarClubeCampeaoService {
 
 		if (temporada.getAno().equals(ano) && temporada.getSemanaAtual() < Constantes.NUM_SEMANAS) {
 
-			if (temporada.getSemanaAtual() >= 16) {
+			if (temporada.getSemanaAtual() >= Constantes.SEMANA_FINAL_COPA_NACIONAL) {
 				clubeTituloAnosList.addAll(getCampeoesCopaNacional(temporada));
 			}
 
-			if (temporada.getSemanaAtual() >= 22) {
+			if (temporada.getSemanaAtual() >= Constantes.SEMANA_FINAL_CONTINENTAL) {
 				clubeTituloAnosList.addAll(getCampeoesContinentais(temporada));
 			}
 

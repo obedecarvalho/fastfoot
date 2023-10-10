@@ -5,18 +5,25 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeResumoTemporada;
 import com.fastfoot.club.model.repository.ClubeResumoTemporadaRepository;
+import com.fastfoot.model.Constantes;
+import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
 import com.fastfoot.scheduler.model.ClassificacaoCopaNacional;
 import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
+import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
+import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Campeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
@@ -24,21 +31,207 @@ import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
+import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.scheduler.service.CarregarCampeonatoService;
+import com.fastfoot.service.CarregarParametroService;
 
 @Service
-public class GerarClubeResumoTemporadaService {
+public class GerarClubeResumoTemporadaService {//TODO: renomear para AtualizarClubeResumoTemporadaPorRodadaService
 	
 	@Autowired
 	private ClubeResumoTemporadaRepository clubeResumoTemporadaRepository;
 
-	/*@Autowired
-	private CarregarCampeonatoService carregarCampeonatoService;*/
+	@Autowired
+	private CarregarCampeonatoService carregarCampeonatoService;
+	
+	@Autowired
+	private CarregarParametroService carregarParametroService;
+	
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> atualizarClubeResumoTemporadaPorRodada(Jogo jogo, RodadaJogavel rodada) {
+		
+		List<ClubeResumoTemporada> trts = clubeResumoTemporadaRepository
+				.findByTemporada(rodada.getSemana().getTemporada());
+		
+		Map<Clube, Map<NivelCampeonato, List<ClubeResumoTemporada>>> clubeNivelResumos = trts.stream().collect(
+				Collectors.groupingBy(trt -> trt.getClube(), Collectors.groupingBy(trt -> trt.getNivelCampeonato())));
+		
+		Map<Clube, Classificacao> clubeClassificacao = null;
+		Integer primeiraPosicaoEliminadoContinental = null;
+		if (rodada.getNivelCampeonato().isNIOuNII()
+				&& rodada.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+			clubeClassificacao = ((Rodada) rodada).getCampeonato().getClassificacao()
+					.stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
+		} else if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()
+				&& rodada.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+			clubeClassificacao = ((Rodada) rodada).getGrupoCampeonato().getClassificacao()
+					.stream().collect(Collectors.toMap(Classificacao::getClube, Function.identity()));
+			primeiraPosicaoEliminadoContinental = carregarParametroService.getPrimeiraPosicaoEliminadoContinental(jogo,
+					rodada.getNivelCampeonato());
+		}
+		
+		ClubeResumoTemporada crtMandante, crtVisitante;
+		
+		List<ClubeResumoTemporada> resumos = new ArrayList<ClubeResumoTemporada>();
 
+		for (PartidaResultadoJogavel p : rodada.getPartidas()) {
+			
+			crtMandante = getClubeResumoTemporada(p.getClubeMandante(), rodada.getNivelCampeonato(),
+					rodada.getSemana().getTemporada(), clubeNivelResumos);
+
+			crtVisitante = getClubeResumoTemporada(p.getClubeVisitante(), rodada.getNivelCampeonato(),
+					rodada.getSemana().getTemporada(), clubeNivelResumos);
+
+			crtMandante.incrementarJogos();
+			if (p.isMandanteVencedor()) crtMandante.incrementarVitorias();
+			if (p.isResultadoEmpatado()) crtMandante.incrementarEmpates();
+			crtMandante.incrementarGolsPro(p.getGolsMandante());
+			crtMandante.incrementarGolsContra(p.getGolsVisitante());
+
+			crtVisitante.incrementarJogos();
+			if (p.isVisitanteVencedor()) crtVisitante.incrementarVitorias();
+			if (p.isResultadoEmpatado()) crtVisitante.incrementarEmpates();
+			crtVisitante.incrementarGolsPro(p.getGolsVisitante());
+			crtVisitante.incrementarGolsContra(p.getGolsMandante());
+			
+			resumos.add(crtMandante);
+			resumos.add(crtVisitante);
+			
+			if (rodada.getNivelCampeonato().isCIOuCIIOuCIII()) {
+
+				if (rodada.getNumero() == Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+
+					if (clubeClassificacao.get(crtMandante.getClube()).getPosicao() >= primeiraPosicaoEliminadoContinental) {
+						crtMandante.setClassificacaoContinental(
+								ClassificacaoContinental.getClassificacaoFaseGrupo(rodada.getNivelCampeonato()));
+					}
+					
+					if (clubeClassificacao.get(crtVisitante.getClube()).getPosicao() >= primeiraPosicaoEliminadoContinental) {
+						crtVisitante.setClassificacaoContinental(
+								ClassificacaoContinental.getClassificacaoFaseGrupo(rodada.getNivelCampeonato()));
+					}
+
+				} else if (rodada.getNumero() > Constantes.NRO_PARTIDAS_FASE_GRUPOS) {
+				
+					if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+						crtMandante.setClassificacaoContinental(ClassificacaoContinental
+								.getClassificacao(rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada, false));
+					}
+	
+					if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+						crtVisitante.setClassificacaoContinental(ClassificacaoContinental
+								.getClassificacao(rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada, false));
+					}
+	
+					if (rodada.getNumero() == rodada.getCampeonatoJogavel().getTotalRodadas()) {// Final
+						if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+							crtVisitante.setClassificacaoContinental(
+									ClassificacaoContinental.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+						} else if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+							crtMandante.setClassificacaoContinental(
+									ClassificacaoContinental.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+						}
+					}
+				}
+				
+			} else if (rodada.getNivelCampeonato().isCNIOuCNII()) {
+
+				if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+					crtMandante.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(
+							rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada,
+							rodada.getCampeonatoJogavel().getTotalRodadas(), false));
+
+				}
+
+				if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+					crtVisitante.setClassificacaoCopaNacional(ClassificacaoCopaNacional.getClassificacao(
+							rodada.getNivelCampeonato(), (RodadaEliminatoria) rodada,
+							rodada.getCampeonatoJogavel().getTotalRodadas(), false));
+				}
+
+				if (rodada.getNumero() == rodada.getCampeonatoJogavel().getTotalRodadas()) {// Final
+					if (((PartidaEliminatoriaResultado) p).isMandanteEliminado()) {
+						crtVisitante.setClassificacaoCopaNacional(
+								ClassificacaoCopaNacional.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+					} else if (((PartidaEliminatoriaResultado) p).isVisitanteEliminado()) {
+						crtMandante.setClassificacaoCopaNacional(
+								ClassificacaoCopaNacional.getClassificacaoCampeao(rodada.getNivelCampeonato()));
+					}
+				}
+				
+			} else if (rodada.getNivelCampeonato().isNIOuNII()
+					&& rodada.getNumero() == Constantes.NRO_RODADAS_CAMP_NACIONAL) {
+
+				crtMandante.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(rodada.getNivelCampeonato(),
+						clubeClassificacao.get(crtMandante.getClube()).getPosicao()));
+
+				crtVisitante.setClassificacaoNacional(ClassificacaoNacional.getClassificacao(
+						rodada.getNivelCampeonato(), clubeClassificacao.get(crtVisitante.getClube()).getPosicao()));
+
+			}
+
+		}
+		
+		clubeResumoTemporadaRepository.saveAll(resumos);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	private ClubeResumoTemporada getClubeResumoTemporada(Clube clube, NivelCampeonato nivel, Temporada temporada,
+			Map<Clube, Map<NivelCampeonato, List<ClubeResumoTemporada>>> clubeNivelResumos) {
+
+		Map<NivelCampeonato, List<ClubeResumoTemporada>> nivelResumos;
+		List<ClubeResumoTemporada> resumos;
+
+		nivelResumos = clubeNivelResumos.get(clube);
+
+		if (nivelResumos == null) {
+
+			resumos = new ArrayList<ClubeResumoTemporada>();
+			nivelResumos = new HashMap<NivelCampeonato, List<ClubeResumoTemporada>>();
+
+			ClubeResumoTemporada treinadorResumoTemporada = new ClubeResumoTemporada();
+			treinadorResumoTemporada.setTemporada(temporada);
+			treinadorResumoTemporada.setClube(clube);
+			treinadorResumoTemporada.setNivelCampeonato(nivel);
+
+			resumos.add(treinadorResumoTemporada);
+			nivelResumos.put(nivel, resumos);
+			clubeNivelResumos.put(clube, nivelResumos);
+
+		} else {
+
+			resumos = nivelResumos.get(nivel);
+
+			if (resumos == null) {
+
+				resumos = new ArrayList<ClubeResumoTemporada>();
+
+				ClubeResumoTemporada treinadorResumoTemporada = new ClubeResumoTemporada();
+				treinadorResumoTemporada.setTemporada(temporada);
+				treinadorResumoTemporada.setClube(clube);
+				treinadorResumoTemporada.setNivelCampeonato(nivel);
+
+				resumos.add(treinadorResumoTemporada);
+				nivelResumos.put(nivel, resumos);
+
+			}
+		}
+
+		if (resumos.size() != 1) {
+			throw new RuntimeException("Inesperado....");// TODO
+		}
+
+		return resumos.get(0);
+	}
+
+	@Deprecated
 	public void gerarClubeResumoTemporada(Temporada temporada) {
 				
-		//carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
+		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		
 		List<ClubeResumoTemporada> clubesResumo = new ArrayList<ClubeResumoTemporada>();
 		

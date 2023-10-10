@@ -14,11 +14,11 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends CampeonatoEliminatorioFactory {
 
 	@Override
-	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacionalII(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes) {
 		//17 a 32
 		List<ClubeRanking> clubes1Fase =  clubes.stream().filter(c -> c.getPosicaoGeral() > 16 && c.getPosicaoGeral() <= 32).collect(Collectors.toList());
 
-		CampeonatoEliminatorio campeonato = criarCampeonato(temporada, liga, clubes1Fase, nivelCampeonato);
+		CampeonatoEliminatorio campeonato = criarCampeonato(temporada, liga, clubes1Fase, NivelCampeonato.COPA_NACIONAL_II);
 
 		SemanaUtil.associarRodadaCopaNacionalQuatroRodadasSemana(campeonato);
 
@@ -33,11 +33,11 @@ public class CampeonatoEliminatorioFactoryImplDezesseisClubes extends Campeonato
 	}
 
 	@Override
-	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes) {
 		//1 a 16
 		List<ClubeRanking> clubes1Fase =  clubes.stream().filter(c -> c.getPosicaoGeral() > 0 && c.getPosicaoGeral() <= 16).collect(Collectors.toList());
 
-		CampeonatoEliminatorio campeonato = criarCampeonato(temporada, liga, clubes1Fase, nivelCampeonato);
+		CampeonatoEliminatorio campeonato = criarCampeonato(temporada, liga, clubes1Fase, NivelCampeonato.COPA_NACIONAL);
 
 		SemanaUtil.associarRodadaCopaNacionalQuatroRodadasSemana(campeonato);
 

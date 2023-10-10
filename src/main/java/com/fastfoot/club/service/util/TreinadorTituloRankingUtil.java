@@ -12,13 +12,13 @@ import com.fastfoot.club.model.entity.TreinadorTituloRanking;
 
 public class TreinadorTituloRankingUtil {
 	
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 40;
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 20;
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_III = 10;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 24;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 6;
-	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 32;
-	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 8;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 100;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 84;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_III = 72;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 84;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 60;
+	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 96;
+	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 48;
 
 	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<TreinadorTituloRanking> rankingsTitulos) {
 		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(t -> t.getTreinador().getClube(), Function.identity())));
@@ -90,7 +90,7 @@ public class TreinadorTituloRankingUtil {
 		tituloRankingsRecalcular.stream().forEach(tr -> calcularPontuacao(tr));
 	}
 	
-	private static void calcularPontuacao(TreinadorTituloRanking ctr) {
+	public static void calcularPontuacao(TreinadorTituloRanking ctr) {
 
 		Integer pontuacao = 0;
 		

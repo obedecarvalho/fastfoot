@@ -9,6 +9,12 @@ public class Constantes {
 	/** Numero de semanas na temporada */
 	public static final Integer NUM_SEMANAS = 25;
 	
+	public static final Integer SEMANA_FINAL_COPA_NACIONAL = 18;
+	
+	public static final Integer SEMANA_FINAL_CONTINENTAL = 22;
+	
+	public static final Integer SEMANA_FINAL_CAMP_NACIONAL = 25;
+	
 	//###	PARTIDAS	###
 	public static final Integer PTOS_VITORIA = 3;
 	public static final Integer PTOS_EMPATE = 1;
@@ -58,6 +64,8 @@ public class Constantes {
 	
 	public static final Integer NRO_PARTIDAS_FASE_GRUPOS = 3;
 	
+	public static final Integer NRO_RODADAS_CONTINENTAL = 6;
+	
 	//###	AMISTOSOS	###
 	/** Numero de grupos */
 	public static final Integer NRO_GRUPOS_AMISTOSOS = 4;
@@ -102,7 +110,7 @@ public class Constantes {
 	public static final Integer NUMERO_MAX_SUBSTITUICOES = 5;
 	
 	//###	FINANCAS	###
-	public static final Double PORC_JUROS_BANCARIOS_SEMANAL = 0.0038;
+	public static final Double PORC_JUROS_BANCARIOS_SEMANAL = 0.0038;//10% ao ano
 	
 	//###	CONTRATOS	###
 	public static final Integer NUMERO_ANO_MAX_CONTRATO_PADRAO = 3;

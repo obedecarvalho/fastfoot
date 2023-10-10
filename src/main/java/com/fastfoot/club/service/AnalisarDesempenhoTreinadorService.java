@@ -16,7 +16,9 @@ import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.MudancaTreinadorRepository;
 import com.fastfoot.club.service.crud.TreinadorCRUDService;
 import com.fastfoot.model.Constantes;
+import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.entity.Temporada;
+import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.util.RoletaUtil;
 
 @Service
@@ -34,6 +36,9 @@ public class AnalisarDesempenhoTreinadorService {
 	@Autowired
 	private TreinadorCRUDService treinadorCRUDService;
 
+	@Autowired
+	private CarregarParametroService carregarParametroService;
+
 	public void analisarDesempenhoTreinador(Temporada temporada) {
 		
 		List<ClubeRanking> clubeRankings = clubeRankingRepository.findByTemporada(temporada);
@@ -41,6 +46,12 @@ public class AnalisarDesempenhoTreinadorService {
 		List<Clube> clubesMudarTreinador = new ArrayList<Clube>();
 		
 		List<Treinador> treinadoresDisponiveis = treinadorCRUDService.getTreinadoresSemClube(temporada.getJogo());
+
+		List<ClassificacaoNacional> posicoesRebaixadas = carregarParametroService
+				.getClassificacaoNacionalRebaixados(temporada.getJogo());
+
+		List<ClassificacaoNacional> posicoesPromovidas = carregarParametroService
+				.getClassificacaoNacionalPromovidos(temporada.getJogo());
 		
 		for (ClubeRanking clubeRanking : clubeRankings) {
 			int posicaoMax = Constantes.NRO_CLUBES_POR_LIGA;
@@ -52,7 +63,10 @@ public class AnalisarDesempenhoTreinadorService {
 				posicaoMax = Constantes.POSICAO_MAX_RANKING_NIVEL_7;
 			}
 
-			if (clubeRanking.getPosicaoGeral() > posicaoMax) {
+			if ((clubeRanking.getPosicaoGeral() > posicaoMax
+					&& !posicoesPromovidas.contains(clubeRanking.getClassificacaoNacional()))
+					|| (posicoesRebaixadas.contains(clubeRanking.getClassificacaoNacional())
+							&& !clubeRanking.isCampeao())) {
 
 				treinadoresDisponiveis.add(clubeRanking.getClube().getTreinador());				
 
@@ -67,15 +81,37 @@ public class AnalisarDesempenhoTreinadorService {
 		}
 		
 		Treinador treinador = null;
-		boolean novoTreinadorEscolhido = false;
+		//boolean novoTreinadorEscolhido = false;
 		List<MudancaTreinador> mudancaTreinadors = new ArrayList<MudancaTreinador>();
 		MudancaTreinador mudancaTreinador = null;
+		List<Treinador> treinadoresDisponiveisClube = null;
 
 		for (Clube c : clubesMudarTreinador) {
 			
-			novoTreinadorEscolhido = false;
+			//novoTreinadorEscolhido = false;
 			treinador = null;
 			
+			treinadoresDisponiveisClube = new ArrayList<Treinador>(treinadoresDisponiveis);
+			treinadoresDisponiveisClube.remove(c.getTreinador());
+			if (treinadoresDisponiveisClube.size() > 0) {
+				treinador = RoletaUtil.sortearPesoUm(treinadoresDisponiveisClube);
+				mudancaTreinador = new MudancaTreinador();
+				mudancaTreinador.setClube(c);
+				mudancaTreinador.setTreinadorAntigo(c.getTreinador());
+				mudancaTreinador.setTreinadorNovo(treinador);
+				mudancaTreinador.setTemporada(temporada);
+				mudancaTreinadors.add(mudancaTreinador);
+	
+				//System.err.println(String.format("%s\t->\t%s", c.getTreinador().toString(), treinador.toString()));
+	
+				c.setTreinador(treinador);
+	
+				treinadoresDisponiveis.remove(treinador);
+			} else {
+				System.err.println("Não há treinador disponível");
+			}
+
+			/*
 			int i = 0;
 			while (!novoTreinadorEscolhido && i < treinadoresDisponiveis.size()) {
 				treinador = RoletaUtil.sortearPesoUm(treinadoresDisponiveis);
@@ -102,6 +138,7 @@ public class AnalisarDesempenhoTreinadorService {
 			} else {
 				System.err.println("Não há treinador disponível");
 			}
+			*/
 
 		}
 

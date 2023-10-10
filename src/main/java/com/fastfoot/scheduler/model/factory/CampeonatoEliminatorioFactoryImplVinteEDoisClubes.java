@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.model.entity.LigaJogo;
-import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
@@ -15,9 +14,10 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public class CampeonatoEliminatorioFactoryImplVinteEDoisClubes extends CampeonatoEliminatorioFactory {
 	
-	/*
+	/**
 	 * CN: 12 -> (6' + 10) -> 8 -> 4 -> 2 [5 RODADAS]
 	 */
+	private static final Integer TOTAL_RODADAS = 5;
 
 	@Override
 	protected List<RodadaEliminatoria> gerarRodadasCopaNacionalII(List<ClubeRanking> clubes, CampeonatoEliminatorio campeonatoEliminatorio) {
@@ -71,9 +71,9 @@ public class CampeonatoEliminatorioFactoryImplVinteEDoisClubes extends Campeonat
 	 */
 	
 	@Override
-	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes, NivelCampeonato nivelCampeonato) {
+	public CampeonatoEliminatorio criarCampeonatoCopaNacional(Temporada temporada, LigaJogo liga, List<ClubeRanking> clubes) {
 
-		CampeonatoEliminatorio campeonato = super.criarCampeonatoCopaNacional(temporada, liga, clubes, nivelCampeonato);
+		CampeonatoEliminatorio campeonato = super.criarCampeonatoCopaNacional(temporada, liga, clubes, TOTAL_RODADAS);
 
 		SemanaUtil.associarRodadaCopaNacionalCincoRodadasSemana(campeonato);
 

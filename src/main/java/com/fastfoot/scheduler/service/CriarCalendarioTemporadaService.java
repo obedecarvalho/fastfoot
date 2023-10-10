@@ -275,6 +275,11 @@ public class CriarCalendarioTemporadaService {
 			stopWatch.split();
 			mensagens.add("\t#analisarDesempenhoTreinador:" + (stopWatch.getSplitTime() - inicio));
 			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			
+			clubeRepository.calcularForcaGeral(jogo.getId());
+			stopWatch.split();
+			mensagens.add("\t#calcularForcaGeralClube:" + (stopWatch.getSplitTime() - inicio));
+			inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		} else {
 
@@ -416,14 +421,12 @@ public class CriarCalendarioTemporadaService {
 			
 			clubesRk = clubeRankingRepository.findByLigaJogoAndAno(liga, ano - 1);
 			
-			copaNacional = campeonatoEliminatorioFactory.criarCampeonatoCopaNacional(temporada, liga, clubesRk,
-					NivelCampeonato.COPA_NACIONAL);
+			copaNacional = campeonatoEliminatorioFactory.criarCampeonatoCopaNacional(temporada, liga, clubesRk);
 			
 			copasNacionais.add(copaNacional);
 			
 			if (jogarCopaNacII) {
-				copaNacional = campeonatoEliminatorioFactory.criarCampeonatoCopaNacionalII(temporada, liga, clubesRk,
-						NivelCampeonato.COPA_NACIONAL_II);
+				copaNacional = campeonatoEliminatorioFactory.criarCampeonatoCopaNacionalII(temporada, liga, clubesRk);
 				
 				copasNacionais.add(copaNacional);
 			}
@@ -799,9 +802,11 @@ public class CriarCalendarioTemporadaService {
 		
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 		
+		/*
 		completableFutures.clear();
 		completableFutures.add(atualizarClubeNivelService.atualizarClubeNivelInternacional(temporada));
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
+		*/
 	}
 
 	private void renovarContratosAutomaticamente(Temporada temporada) {

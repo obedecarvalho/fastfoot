@@ -1,6 +1,8 @@
 package com.fastfoot.service;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -197,6 +199,29 @@ public class CarregarParametroService {
 		return classificacao;
 	}
 	
+	public List<ClassificacaoNacional> getClassificacaoNacionalRebaixados(Jogo jogo) {
+
+		Integer nroClubesRebaixados = getParametroInteger(jogo, ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
+
+		ClassificacaoNacional[] classificacao = new ClassificacaoNacional[nroClubesRebaixados];
+
+		System.arraycopy(ClassificacaoNacional.NACIONAL, Constantes.NRO_CLUBE_CAMP_NACIONAL - nroClubesRebaixados,
+				classificacao, 0, nroClubesRebaixados);
+
+		return Arrays.asList(classificacao);
+	}
+
+	public List<ClassificacaoNacional> getClassificacaoNacionalPromovidos(Jogo jogo) {
+
+		Integer nroClubesRebaixados = getParametroInteger(jogo, ParametroConstantes.NUMERO_CLUBES_REBAIXADOS);
+
+		ClassificacaoNacional[] classificacao = new ClassificacaoNacional[nroClubesRebaixados];
+
+		System.arraycopy(ClassificacaoNacional.NACIONAL_II, 0, classificacao, 0, nroClubesRebaixados);
+
+		return Arrays.asList(classificacao);
+	}
+
 	//	MARCAR_AMISTOSOS_AUTOMATICAMENTE
 
 	public boolean isMarcarAmistososAutomaticamenteSemanaASemana(Jogo jogo) {
@@ -216,4 +241,34 @@ public class CarregarParametroService {
 	
 	//	/MARCAR_AMISTOSOS_AUTOMATICAMENTE
 
+	public Integer getPrimeiraPosicaoEliminadoContinental(Jogo jogo, NivelCampeonato nivelCampeonato) {
+
+		if (isEstrategiaPromotorContinentalSegundoMelhorGrupo(jogo)) {
+			return 3;
+		}
+
+		if (isEstrategiaPromotorContinentalMelhorEliminado(jogo)) {
+
+			if (NivelCampeonato.CONTINENTAL.equals(nivelCampeonato)) {
+				return 3;
+			}
+
+			if (NivelCampeonato.CONTINENTAL_II.equals(nivelCampeonato)) {
+				return 2;
+			}
+
+			//Integer nroCompeticoesContinentais = getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);
+			Boolean cIIIReduzido = getParametroBoolean(jogo, ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO);
+
+			if (NivelCampeonato.CONTINENTAL_III.equals(nivelCampeonato)) {
+				if (cIIIReduzido) {
+					return 3;
+				} else {
+					return 2;
+				}
+			}
+		}
+
+		return null;
+	}
 }

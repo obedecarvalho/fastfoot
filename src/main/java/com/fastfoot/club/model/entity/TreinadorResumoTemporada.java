@@ -38,6 +38,10 @@ public class TreinadorResumoTemporada {
 	@JoinColumn(name = "id_temporada")
 	private Temporada temporada;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_clube")
+	private Clube clube;
+	
 	@Convert(converter = NivelCampeonatoAttributeConverter.class)
 	private NivelCampeonato nivelCampeonato;
 	
@@ -91,6 +95,14 @@ public class TreinadorResumoTemporada {
 
 	public void setTemporada(Temporada temporada) {
 		this.temporada = temporada;
+	}
+
+	public Clube getClube() {
+		return clube;
+	}
+
+	public void setClube(Clube clube) {
+		this.clube = clube;
 	}
 
 	public NivelCampeonato getNivelCampeonato() {
@@ -171,6 +183,26 @@ public class TreinadorResumoTemporada {
 
 	public void setClassificacaoContinental(ClassificacaoContinental classificacaoContinental) {
 		this.classificacaoContinental = classificacaoContinental;
+	}
+	
+	public void incrementarJogos() {
+		this.jogos++;
+	}
+
+	public void incrementarVitorias() {
+		this.vitorias++;
+	}
+
+	public void incrementarEmpates() {
+		this.empates++;
+	}
+
+	public void incrementarGolsPro(int nroGols) {
+		this.golsPro += nroGols;
+	}
+
+	public void incrementarGolsContra(int nroGols) {
+		this.golsContra += nroGols;
 	}
 	
 	//@Transient

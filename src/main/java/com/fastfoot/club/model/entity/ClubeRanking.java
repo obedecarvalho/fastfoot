@@ -175,6 +175,27 @@ public class ClubeRanking {
 		return ClassificacaoNacional.NII_1.equals(classificacaoNacional);
 	}
 
+	@JsonIgnore
+	public boolean isCampeao() {
+		return isCampeaoContinental() || isCampeaoContinentalII() || isCampeaoContinentalIII()
+				|| isCampeaoCopaNacional() || isCampeaoCopaNacionalII() || isCampeaoNacional() || isCampeaoNacionalII();
+	}
+
+	@JsonIgnore
+	public boolean isCampeaoAlgumNivelContinental() {
+		return isCampeaoContinental() || isCampeaoContinentalII() || isCampeaoContinentalIII();
+	}
+
+	@JsonIgnore
+	public boolean isCampeaoAlgumNivelCopaNacional() {
+		return isCampeaoCopaNacional() || isCampeaoCopaNacionalII();
+	}
+
+	@JsonIgnore
+	public boolean isCampeaoAlgumNivelCampeonatoNacional() {
+		return isCampeaoNacional() || isCampeaoNacionalII();
+	}
+
 	public Temporada getTemporada() {
 		return temporada;
 	}

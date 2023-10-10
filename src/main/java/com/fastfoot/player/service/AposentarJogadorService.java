@@ -100,7 +100,7 @@ public class AposentarJogadorService {
 				}
 				
 				//throw new RuntimeException(String.format("Quantitativo de jogadores por posição diferente do esperado [%d]", c.getId()));
-				System.err.println(String.format("Quantitativo de jogadores por posição diferente do esperado [%d]", c.getId()));
+				//System.err.println(String.format("Quantitativo de jogadores por posição diferente do esperado [%d]", c.getId()));
 			}
 
 			for (Jogador jogador : jogadoresClubeAposentar) {

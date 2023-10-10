@@ -11,13 +11,13 @@ import com.fastfoot.club.model.entity.ClubeTituloRanking;
 
 public class ClubeTituloRankingUtil {
 	
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 40;
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 20;
-	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_III = 10;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 24;
-	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 6;
-	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 32;
-	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 8;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 100;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 84;
+	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_III = 72;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_I = 84;
+	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 60;
+	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 96;
+	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 48;
 
 	/*
 		select cr.ano, cr.classificacao_nacional, count(*)
@@ -99,7 +99,7 @@ public class ClubeTituloRankingUtil {
 		}
 	}
 	
-	private static void calcularPontuacao(ClubeTituloRanking ctr) {
+	public static void calcularPontuacao(ClubeTituloRanking ctr) {
 
 		Integer pontuacao = 0;
 		

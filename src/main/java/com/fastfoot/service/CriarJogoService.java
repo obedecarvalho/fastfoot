@@ -148,6 +148,8 @@ public class CriarJogoService {
 		salvar(jogo, ligaJogos, parametros, clubeRankings, clubeTituloRankings, movimentacaoFinanceiras);
 		
 		criarJogadores(jogo, ligaJogos);
+
+		clubeRepository.calcularForcaGeral(jogo.getId());
 		
 		return jogo;
 	}

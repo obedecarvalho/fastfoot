@@ -20,13 +20,10 @@ import com.fastfoot.scheduler.service.util.SemanaUtil;
 
 public class CampeonatoMistoFactory {
 	
-	/*
-	 * * Criar variação para 3ro do grupo no CI se classifique para quarta de final do CII 
-	 */
-	
 	public static CampeonatoMisto criarCampeonato(Temporada temporada, Map<Liga, List<Clube>> clubes, NivelCampeonato nivelCampeonato) {
 		CampeonatoMisto campeonato = new CampeonatoMisto();
 		campeonato.setRodadaAtual(0);
+		campeonato.setTotalRodadas(Constantes.NRO_RODADAS_CONTINENTAL);
 		campeonato.setTemporada(temporada);
 		campeonato.setNivelCampeonato(nivelCampeonato);
 		campeonato.setNome(String.format("%s %d", nivelCampeonato.name(), temporada.getAno()));
