@@ -26,6 +26,8 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 	
 	private static final float MIN_FORA = 0.2f;
 	
+	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {1, 2};
+	
 	protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
 	
 	public abstract PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante);
@@ -157,16 +159,17 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 					/*habilidadeFora = new HabilidadeValor(Habilidade.FORA, (int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));*/
-					habilidadeFora = criarHabilidadeValorJogavelFora((int) Math.round(Math.max(
+					/*habilidadeFora = criarHabilidadeValorJogavelFora((int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));
-					habilidadeFora.calcularValorN();
+					habilidadeFora.calcularValorN();*/
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
-					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
-					habilidadeVencedora = (HabilidadeValorJogavel) RoletaUtil.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
-					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
-					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
+					jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorNPonderado(habilidadeValorAcao, habilidadeValorReacao, PESO_FINALIZACAO);
+					goleiroVenceu = !jogadorAcaoVenceu;
+					//habilidadeVencedora = (HabilidadeValorJogavel) RoletaUtil.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
+					//jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
+					//goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					//System.err.println("\t\tFORA!!!!");
 					
 					//
@@ -210,7 +213,7 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 								.incrementarGoleiroFinalizacoesDefendidas();
 						*/
-					} else if (habilidadeVencedora.equals(habilidadeFora)) {
+					//} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						//if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
 						//partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
 						/*

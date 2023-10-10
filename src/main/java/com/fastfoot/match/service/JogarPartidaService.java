@@ -41,7 +41,9 @@ public abstract class JogarPartidaService {
 	
 	protected static final Boolean LANCE_A_LANCE = true;
 	
-	protected static final float MIN_FORA = 0.2f;
+	private static final float MIN_FORA = 0.2f;
+	
+	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {1, 2};
 	
 	protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
 	
@@ -322,16 +324,17 @@ public abstract class JogarPartidaService {
 					/*habilidadeFora = new HabilidadeGrupoValor(HabilidadeGrupo.FORA, (int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));*///TODO: ajustar para compreender diminuição da energia??
-					habilidadeFora = criarHabilidadeValorJogavelFora((int) Math.round(Math.max(
+					/*habilidadeFora = criarHabilidadeValorJogavelFora((int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
 							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));//TODO: ajustar para compreender diminuição da energia??
-					habilidadeFora.calcularValorN();
+					habilidadeFora.calcularValorN();*/
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 
-					//jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedor(habilidadeValorAcao, habilidadeValorReacao);
-					habilidadeVencedora = (HabilidadeValorJogavel) RoletaUtil.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
-					jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
-					goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
+					jogadorAcaoVenceu = RoletaUtil.isPrimeiroVencedorNPonderado(habilidadeValorAcao, habilidadeValorReacao, PESO_FINALIZACAO);
+					goleiroVenceu = !jogadorAcaoVenceu;
+					//habilidadeVencedora = (HabilidadeValorJogavel) RoletaUtil.sortearN(Arrays.asList(habilidadeValorAcao, habilidadeValorReacao, habilidadeFora));
+					//jogadorAcaoVenceu = habilidadeVencedora.equals(habilidadeValorAcao);
+					//goleiroVenceu = habilidadeVencedora.equals(habilidadeValorReacao);
 					//System.err.println("\t\tFORA!!!!");
 					
 					if (LANCE_A_LANCE) criarPartidaLance(lances, partidaResultado, esquema.getJogadorPosse(),
@@ -368,10 +371,10 @@ public abstract class JogarPartidaService {
 								.incrementarFinalizacoesDefendidas();
 						esquema.getGoleiroSemPosse().getGoleiro().getJogadorEstatisticasSemana()
 								.incrementarGoleiroFinalizacoesDefendidas();
-					} else if (habilidadeVencedora.equals(habilidadeFora)) {
+					/*} else if (habilidadeVencedora.equals(habilidadeFora)) {
 						if (IMPRIMIR) System.err.println("\t\tFORA!!!!");
 						partidaResultado.incrementarFinalizacaoFora(esquema.getPosseBolaMandante());
-						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana().incrementarFinalizacoesFora();
+						habilidadeValorAcao.getJogador().getJogadorEstatisticasSemana().incrementarFinalizacoesFora();*/
 					}
 					esquema.inverterPosse();//TODO: iniciar posse em qual jogador???
 					jogadorAssistencia = null;
