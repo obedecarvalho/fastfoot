@@ -9,12 +9,6 @@ import org.springframework.stereotype.Repository;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Temporada;
 
-/**
- * 
- * @author obede
- *
- * Link util: https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
- */
 @Repository
 public interface TemporadaRepository extends JpaRepository<Temporada, Long>{
 

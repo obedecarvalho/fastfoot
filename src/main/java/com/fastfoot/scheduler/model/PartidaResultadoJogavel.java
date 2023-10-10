@@ -46,7 +46,7 @@ public interface PartidaResultadoJogavel {
 	
 	public boolean isVisitanteVencedor();
 	
-	public boolean isDisputarPenalts();
+	public boolean isDisputarPenalties();
 	
 	public void setPartidaEstatisticas(PartidaEstatisticas partidaEstatisticas);
 	

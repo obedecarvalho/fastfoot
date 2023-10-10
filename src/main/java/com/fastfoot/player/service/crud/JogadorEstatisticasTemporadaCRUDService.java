@@ -122,20 +122,20 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			jogadorEstatisticasTemporada.setTemporada(new Temporada(((BigInteger) e.get("id_temporada")).longValue()));
 			jogadorEstatisticasTemporada.setAmistoso((Boolean) e.get("amistoso"));
 			jogadorEstatisticasTemporada.setAssistencias(((BigInteger) e.get("assistencias")).intValue());
-			jogadorEstatisticasTemporada.setDefesasDisputaPenalt(((BigInteger) e.get("defesas_disputa_penalt")).intValue());
+			jogadorEstatisticasTemporada.setDefesasDisputaPenalties(((BigInteger) e.get("defesas_disputa_penalties")).intValue());
 			jogadorEstatisticasTemporada.setFaltas(((BigInteger) e.get("faltas")).intValue());
 			jogadorEstatisticasTemporada.setFinalizacoesDefendidas(((BigInteger) e.get("finalizacoes_defendidas")).intValue());
 			jogadorEstatisticasTemporada.setFinalizacoesFora(((BigInteger) e.get("finalizacoes_fora")).intValue());
 			jogadorEstatisticasTemporada.setGoleiroFinalizacoesDefendidas(((BigInteger) e.get("goleiro_finalizacoes_defendidas")).intValue());
-			jogadorEstatisticasTemporada.setGolsDisputaPenalt(((BigInteger) e.get("gols_disputa_penalt")).intValue());
+			jogadorEstatisticasTemporada.setGolsDisputaPenalties(((BigInteger) e.get("gols_disputa_penalties")).intValue());
 			jogadorEstatisticasTemporada.setGolsMarcados(((BigInteger) e.get("gols_marcados")).intValue());
-			jogadorEstatisticasTemporada.setGolsPerdidosDisputaPenalt(((BigInteger) e.get("gols_perdidos_disputa_penalt")).intValue());
+			jogadorEstatisticasTemporada.setGolsPerdidosDisputaPenalties(((BigInteger) e.get("gols_perdidos_disputa_penalties")).intValue());
 			jogadorEstatisticasTemporada.setGolsSofridos(((BigInteger) e.get("gols_sofridos")).intValue());
-			jogadorEstatisticasTemporada.setGolsSofridosDisputaPenalt(((BigInteger) e.get("gols_sofridos_disputa_penalt")).intValue());
+			jogadorEstatisticasTemporada.setGolsSofridosDisputaPenalties(((BigInteger) e.get("gols_sofridos_disputa_penalties")).intValue());
 			jogadorEstatisticasTemporada.setNumeroJogos(((BigInteger) e.get("numero_jogos")).intValue());
 			jogadorEstatisticasTemporada.setNumeroJogosTitular(((BigInteger) e.get("numero_jogos_titular")).intValue());
 			jogadorEstatisticasTemporada.setNumeroMinutosJogados(((BigInteger) e.get("numero_minutos_jogados")).intValue());
-			jogadorEstatisticasTemporada.setNumeroRodadaDisputaPenalt(((BigInteger) e.get("numero_rodada_disputa_penalt")).intValue());
+			jogadorEstatisticasTemporada.setNumeroRodadaDisputaPenalties(((BigInteger) e.get("numero_rodada_disputa_penalties")).intValue());
 			
 			estatisticasTemporadas.add(jogadorEstatisticasTemporada);
 		}

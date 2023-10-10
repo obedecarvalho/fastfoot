@@ -14,7 +14,7 @@ public class Jogo {//TODO: melhorar nome
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "jogoSequence")	
-	@SequenceGenerator(name = "jogoSequence", sequenceName = "jogo_seq", allocationSize = 8)
+	@SequenceGenerator(name = "jogoSequence", sequenceName = "jogo_seq", allocationSize = 1)//8
 	private Long id;
 	
 	private Date dataCriacao;

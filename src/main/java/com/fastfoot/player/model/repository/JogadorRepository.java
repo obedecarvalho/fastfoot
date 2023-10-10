@@ -85,16 +85,6 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	)
 	public List<Map<String, Object>> findValorTransferenciaPorClube(Long idJogo);
 	
-	@Deprecated
-	@Query(nativeQuery = true, value =
-			" select j.id_clube, j.posicao, count(*) as total" +
-			" from jogador j" +
-			" where j.status_jogador = 0" + //StatusJogador.ATIVO
-			" group by j.id_clube, j.posicao" +
-			" order by j.id_clube, total"
-	)
-	public List<Map<String, Object>> findQtdeJogadorPorPosicaoPorClube();
-
 	@Query(nativeQuery = true, value =
 			" select j.id_clube, j.posicao, count(*) as total" +
 			" from jogador j" +
@@ -164,16 +154,6 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 			" where j.status_jogador = 0 "	//StatusJogador.ATIVO
 	)
 	public void calcularForcaGeral2(Long idJogo);
-	
-	@Deprecated
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" update jogador " 
-					+ " set idade = idade + 1 " 
-					//+ " where status_jogador = 0 "
-	)
-	public void incrementarIdade();
 	
 	@Transactional
 	@Modifying

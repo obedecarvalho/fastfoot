@@ -18,18 +18,6 @@ public class PartidaTorcida {
 	@SequenceGenerator(name = "partidaTorcidaSequence", sequenceName = "partida_torcida_seq")
 	private Long id;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_partida_resultado")
-	private PartidaResultado partidaResultado;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_amistosa_resultado")
-	private PartidaAmistosaResultado partidaAmistosaResultado;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
-	
 	private Integer publico;
 	
 	@Transient
@@ -42,30 +30,6 @@ public class PartidaTorcida {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	/*public PartidaResultado getPartidaResultado() {
-		return partidaResultado;
-	}
-
-	public void setPartidaResultado(PartidaResultado partidaResultado) {
-		this.partidaResultado = partidaResultado;
-	}
-
-	public PartidaAmistosaResultado getPartidaAmistosaResultado() {
-		return partidaAmistosaResultado;
-	}
-
-	public void setPartidaAmistosaResultado(PartidaAmistosaResultado partidaAmistosaResultado) {
-		this.partidaAmistosaResultado = partidaAmistosaResultado;
-	}
-
-	public PartidaEliminatoriaResultado getPartidaEliminatoriaResultado() {
-		return partidaEliminatoriaResultado;
-	}
-
-	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
-		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}*/
 
 	public Integer getPublico() {
 		return publico;

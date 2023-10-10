@@ -34,14 +34,6 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	
 	//###	SELECT ESPECIFICOS	###
 	
-	@Deprecated
-	@Query(nativeQuery = true, value =
-			" select id_clube, sum(valor_movimentacao) as saldo" +
-			" from movimentacao_financeira mf" +
-			" group by id_clube"
-	)
-	public List<Map<String, Object>> findSaldoPorClube();
-	
 	@Query(nativeQuery = true, value =
 			" select id_clube, sum(valor_movimentacao) as saldo" +
 			" from movimentacao_financeira mf" +
@@ -70,24 +62,6 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	)
 	public List<Map<String, Object>> findAgrupadoPorTipoAndTemporada(Long idTemporada);
 
-	@Deprecated
-	@Query(nativeQuery = true, value =
-			" select c.id as id_clube, mov.saldo, sal.salarios as salarios_projetado" +
-			" from clube c" +
-			" inner join (" +
-			" 	select id_clube, sum(valor_movimentacao) as saldo" +
-			" 	from movimentacao_financeira" +
-			" 	group by id_clube" +
-			" ) as mov on mov.id_clube = c.id" +
-			" inner join (" +
-			" 	select id_clube, sum(valor_transferencia) * ?1 as salarios" +
-			" 	from jogador j" +
-			" 	where j.status_jogador = 0" +//StatusJogador.ATIVO
-			" 	group by id_clube" +
-			" ) as sal on sal.id_clube = c.id"
-	)
-	public List<Map<String, Object>> findSaldoProjetadoPorClube(Double porcSalarioAnual);//TODO: usar salario contrato
-	
 	@Query(nativeQuery = true, value =
 			" select c.id as id_clube, mov.saldo, sal.salarios as salarios_projetado" +
 			" from clube c" +

@@ -1,3 +1,4 @@
+drop sequence if exists partida_disputa_penalties_seq;
 drop sequence if exists campeonato_clube_probabilidade_seq;
 drop sequence if exists campeonato_seq;
 drop sequence if exists classificacao_seq;
@@ -38,3 +39,4 @@ drop sequence if exists trajetoria_forca_clube_seq;
 drop sequence if exists treinador_resumo_temporada_seq;
 drop sequence if exists treinador_seq;
 drop sequence if exists treinador_titulo_ranking_seq;
+drop sequence if exists mudanca_treinador_seq;

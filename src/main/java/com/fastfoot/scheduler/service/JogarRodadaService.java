@@ -10,8 +10,10 @@ import org.springframework.stereotype.Service;
 
 import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.match.model.PartidaDadosSalvarDTO;
+import com.fastfoot.match.model.entity.PartidaDisputaPenalties;
 import com.fastfoot.match.model.repository.EscalacaoClubeRepository;
 import com.fastfoot.match.model.repository.EscalacaoJogadorPosicaoRepository;
+import com.fastfoot.match.model.repository.PartidaDisputaPenaltiesRepository;
 import com.fastfoot.match.model.repository.PartidaEstatisticasRepository;
 import com.fastfoot.match.model.repository.PartidaLanceRepository;
 import com.fastfoot.match.model.repository.PartidaTorcidaRepository;
@@ -37,6 +39,7 @@ import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepos
 import com.fastfoot.scheduler.model.repository.PartidaResultadoRepository;
 import com.fastfoot.scheduler.service.util.ClassificacaoUtil;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
+import com.fastfoot.service.util.ValidatorUtil;
 
 @Service
 public class JogarRodadaService {
@@ -80,6 +83,9 @@ public class JogarRodadaService {
 	
 	@Autowired
 	private EscalacaoJogadorPosicaoRepository escalacaoJogadorPosicaoRepository;
+
+	@Autowired
+	private PartidaDisputaPenaltiesRepository partidaDisputaPenaltiesRepository;
 
 	//###	SERVICE	###
 	@Autowired
@@ -264,6 +270,13 @@ public class JogarRodadaService {
 	}
 
 	private void salvarPartidas(RodadaEliminatoria r) {
+		
+		List<PartidaDisputaPenalties> disputaPenalties = r.getPartidas().stream().filter(p -> p.getPartidaDisputaPenalties() != null)
+				.map(PartidaEliminatoriaResultado::getPartidaDisputaPenalties).collect(Collectors.toList());
+		
+		if (!ValidatorUtil.isEmpty(disputaPenalties)) {
+			partidaDisputaPenaltiesRepository.saveAll(disputaPenalties);
+		}
 		
 		partidaEstatisticasRepository.saveAll(r.getPartidas().stream()
 				.map(PartidaEliminatoriaResultado::getPartidaEstatisticas).collect(Collectors.toList()));

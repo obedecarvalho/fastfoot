@@ -229,7 +229,7 @@ public class PartidaResultado implements PartidaResultadoJogavel {
 	
 	@JsonIgnore
 	@Override
-	public boolean isDisputarPenalts() {
+	public boolean isDisputarPenalties() {
 		return false;
 	}
 

@@ -26,7 +26,6 @@ import com.fastfoot.service.util.ValidatorUtil;
 @Entity
 @Table(indexes = { @Index(columnList = "id_jogador") })
 public class HabilidadeValor implements HabilidadeValorJogavel {//TODO: renomear para JogadorHabilidade ??
-	//https://vladmihalcea.com/manytoone-jpa-hibernate/
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "habilidadeValorSequence")

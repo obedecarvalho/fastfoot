@@ -11,29 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.entity.ClubeRanking;
 import com.fastfoot.club.model.entity.Treinador;
 import com.fastfoot.club.model.entity.TreinadorTituloRanking;
-import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.club.model.repository.TreinadorTituloRankingRepository;
-import com.fastfoot.club.service.util.ClubeRankingUtil;
 import com.fastfoot.club.service.util.TreinadorTituloRankingUtil;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.Jogo;
-import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
 import com.fastfoot.scheduler.model.entity.Classificacao;
 import com.fastfoot.scheduler.model.entity.Rodada;
-import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.CarregarCampeonatoService;
-import com.fastfoot.service.LigaJogoCRUDService;
 
 @Service
 public class AtualizarTreinadorTituloRankingService {
 	
+	/*
 	@Autowired
 	private ClubeRepository clubeRepository;
 
@@ -42,11 +35,12 @@ public class AtualizarTreinadorTituloRankingService {
 	
 	@Autowired
 	private LigaJogoCRUDService ligaJogoCRUDService;
+	*/
 
 	@Autowired
 	private TreinadorTituloRankingRepository treinadorTituloRankingRepository;
 
-	@Deprecated
+	/*
 	public void atualizarTreinadorTituloRanking(Temporada temporada) {
 		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
 		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(temporada.getJogo());
@@ -57,6 +51,7 @@ public class AtualizarTreinadorTituloRankingService {
 		TreinadorTituloRankingUtil.atualizarRankingTitulos(rankings, rankingsTitulos);
 		treinadorTituloRankingRepository.saveAll(rankingsTitulos);
 	}
+	*/
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarTreinadorTituloRanking(Jogo jogo, RodadaJogavel rodada) {

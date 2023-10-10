@@ -12,6 +12,7 @@ import com.fastfoot.match.model.JogadorApoioCriacao;
 import com.fastfoot.match.model.PartidaDadosSalvarDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.model.entity.EscalacaoJogadorPosicao;
+import com.fastfoot.match.model.entity.PartidaDisputaPenalties;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaLance;
 import com.fastfoot.match.model.factory.EsquemaFactoryImpl;
@@ -44,7 +45,7 @@ public abstract class JogarPartidaService {
 	
 	protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
 	
-	protected abstract void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema);
+	protected abstract void disputarPenalties(PartidaResultadoJogavel partidaResultado, Esquema esquema);
 	
 	protected abstract void salvarEstatisticas(List<Jogador> jogadores, PartidaDadosSalvarDTO partidaDadosSalvarDTO);
 	
@@ -165,8 +166,9 @@ public abstract class JogarPartidaService {
 		partidaResultado.setPartidaEstatisticas(new PartidaEstatisticas());
 		List<PartidaLance> lances = jogar(esquema, partidaResultado, agrupado);
 		
-		if (partidaResultado.isDisputarPenalts() && partidaResultado.isResultadoEmpatado()) {
-			disputarPenalts(partidaResultado, esquema);
+		if (partidaResultado.isDisputarPenalties() && partidaResultado.isResultadoEmpatado()) {
+			((PartidaEliminatoriaResultado) partidaResultado).setPartidaDisputaPenalties(new PartidaDisputaPenalties());
+			disputarPenalties(partidaResultado, esquema);
 		}
 		
 		inserirConsumoEnergiaFixo(escalacaoMandante);

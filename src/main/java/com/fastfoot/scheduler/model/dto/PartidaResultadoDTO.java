@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
+import com.fastfoot.service.util.ValidatorUtil;
 
 public class PartidaResultadoDTO {
 
@@ -176,9 +177,12 @@ public class PartidaResultadoDTO {
 		dto.setGolsMandante(pr.getGolsMandante());
 		dto.setGolsVisitante(pr.getGolsVisitante());
 		
-		if (pr instanceof PartidaEliminatoriaResultado) {
-			dto.setGolsMandantePenalts(((PartidaEliminatoriaResultado) pr).getGolsMandantePenalts());
-			dto.setGolsVisitantePenalts(((PartidaEliminatoriaResultado) pr).getGolsVisitantePenalts());
+		if (pr instanceof PartidaEliminatoriaResultado
+				&& ValidatorUtil.isEmpty(((PartidaEliminatoriaResultado) pr).getPartidaDisputaPenalties())) {
+			dto.setGolsMandantePenalts(
+					((PartidaEliminatoriaResultado) pr).getPartidaDisputaPenalties().getGolsMandantePenalties());
+			dto.setGolsVisitantePenalts(
+					((PartidaEliminatoriaResultado) pr).getPartidaDisputaPenalties().getGolsVisitantePenalties());
 		}
 
 		dto.setNumeroRodada(pr.getRodada().getNumero());

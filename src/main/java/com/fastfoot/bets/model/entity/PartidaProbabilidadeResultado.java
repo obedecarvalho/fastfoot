@@ -20,14 +20,6 @@ public class PartidaProbabilidadeResultado {
 	@SequenceGenerator(name = "partidaProbabilidadeResultadoSequence", sequenceName = "partida_probabilidade_resultado_seq")
 	private Long id;
 	
-	/*@ManyToOne
-	@JoinColumn(name = "id_partida_resultado")
-	private PartidaResultado partidaResultado;
-	
-	@ManyToOne
-	@JoinColumn(name = "id_partida_eliminatoria_resultado")
-	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;*/
-	
 	private Double probabilidadeVitoriaMandante;
 	
 	private Double probabilidadeVitoriaVisitante;
@@ -46,22 +38,6 @@ public class PartidaProbabilidadeResultado {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
-	/*public PartidaResultado getPartidaResultado() {
-		return partidaResultado;
-	}
-
-	public void setPartidaResultado(PartidaResultado partidaResultado) {
-		this.partidaResultado = partidaResultado;
-	}
-
-	public PartidaEliminatoriaResultado getPartidaEliminatoriaResultado() {
-		return partidaEliminatoriaResultado;
-	}
-
-	public void setPartidaEliminatoriaResultado(PartidaEliminatoriaResultado partidaEliminatoriaResultado) {
-		this.partidaEliminatoriaResultado = partidaEliminatoriaResultado;
-	}*/
 
 	public Double getProbabilidadeVitoriaMandante() {
 		return probabilidadeVitoriaMandante;

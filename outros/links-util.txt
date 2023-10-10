@@ -1,0 +1,8 @@
+Link util: 
+	* https://www.baeldung.com/spring-data-jpa-query
+	* https://www.devmedia.com.br/tipos-de-heranca-no-hibernate/28641
+	* https://www.baeldung.com/apache-commons-collections-vs-guava
+	* https://thorben-janssen.com/tips-to-boost-your-hibernate-performance/
+	* https://thorben-janssen.com/criteria-updatedelete-easy-way-to/
+	* https://docs.spring.io/spring-data/jpa/docs/current/reference/html/
+	* https://vladmihalcea.com/manytoone-jpa-hibernate/

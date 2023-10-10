@@ -2,6 +2,7 @@ package com.fastfoot.probability.model.entity;
 
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -46,12 +47,16 @@ public class CampeonatoClubeProbabilidade {
 	
 	private Double probabilidadeAcesso;
 
+	@Column(name = "probabilidade_classificacao_ci")
 	private Double probabilidadeClassificacaoCI;
 	
+	@Column(name = "probabilidade_classificacao_cii")
 	private Double probabilidadeClassificacaoCII;
 	
+	@Column(name = "probabilidade_classificacao_ciii")
 	private Double probabilidadeClassificacaoCIII;
 	
+	@Column(name = "probabilidade_classificacao_cni")
 	private Double probabilidadeClassificacaoCNI;
 	
 	private TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade;

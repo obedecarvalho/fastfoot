@@ -229,7 +229,7 @@ public class PartidaAmistosaResultado implements PartidaResultadoJogavel {
 	
 	@JsonIgnore
 	@Override
-	public boolean isDisputarPenalts() {
+	public boolean isDisputarPenalties() {
 		return false;
 	}
 	

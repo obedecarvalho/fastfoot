@@ -18,8 +18,8 @@ import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeServ
 import com.fastfoot.club.service.AtualizarClubeTituloRankingService;
 import com.fastfoot.club.service.AtualizarTreinadorTituloRankingService;
 import com.fastfoot.club.service.ClassificarClubesTemporadaService;
-import com.fastfoot.club.service.GerarClubeResumoTemporadaService;
-import com.fastfoot.club.service.GerarTreinadorResumoTemporadaService;
+import com.fastfoot.club.service.AtualizarClubeResumoTemporadaPorRodadaService;
+import com.fastfoot.club.service.AtualizarTreinadorResumoTemporadaPorRodadaService;
 import com.fastfoot.financial.service.CalcularJurosBancariosService;
 import com.fastfoot.financial.service.DistribuirPremiacaoCompeticoesService;
 import com.fastfoot.financial.service.GerarDemonstrativoFinanceiroTemporadaService;
@@ -77,13 +77,6 @@ import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEOitoClu
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplVinteEQuatroClubes;
 import com.fastfoot.service.CarregarParametroService;
 import com.fastfoot.service.LigaJogoCRUDService;
-
-/*
- * https://www.baeldung.com/apache-commons-collections-vs-guava
- * https://thorben-janssen.com/tips-to-boost-your-hibernate-performance/
- * https://thorben-janssen.com/criteria-updatedelete-easy-way-to/
- * 
- */
 
 @Service
 public class JogarPartidasSemanaService {
@@ -162,7 +155,7 @@ public class JogarPartidasSemanaService {
 	private MarcarAmistososSemanalmenteService marcarAmistososSemanalmenteService;
 	
 	@Autowired
-	private GerarClubeResumoTemporadaService gerarClubeResumoTemporadaService;
+	private AtualizarClubeResumoTemporadaPorRodadaService atualizarClubeResumoTemporadaPorRodadaService;
 	
 	/*@Autowired
 	private CarregarCampeonatoService carregarCampeonatoService;*/
@@ -186,7 +179,7 @@ public class JogarPartidasSemanaService {
 	private LigaJogoCRUDService ligaJogoCRUDService;
 
 	@Autowired
-	private GerarTreinadorResumoTemporadaService gerarTreinadorResumoTemporadaService;
+	private AtualizarTreinadorResumoTemporadaPorRodadaService atualizarTreinadorResumoTemporadaPorRodadaService;
 
 	@Autowired
 	private AtualizarTreinadorTituloRankingService atualizarTreinadorTituloRankingService;
@@ -304,7 +297,6 @@ public class JogarPartidasSemanaService {
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
 		/*
-		//gerar ClubeRanking
 		if (semana.isUltimaSemana()) {
 			atualizarTreinadorTituloRankingService.atualizarTreinadorTituloRanking(temporada);
 		}
@@ -668,15 +660,15 @@ public class JogarPartidasSemanaService {
 		List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (Rodada r : semana.getRodadas()) {
-			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarTreinadorResumoTemporadaPorRodadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
 		}
 
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarTreinadorResumoTemporadaPorRodadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
 		}
 		
 		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
-			rodadasFuture.add(gerarTreinadorResumoTemporadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarTreinadorResumoTemporadaPorRodadaService.atualizarTreinadorResumoTemporadaPorRodada(jogo, r));
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();
@@ -686,15 +678,15 @@ public class JogarPartidasSemanaService {
 		List<CompletableFuture<Boolean>> rodadasFuture = new ArrayList<CompletableFuture<Boolean>>();
 		
 		for (Rodada r : semana.getRodadas()) {
-			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarClubeResumoTemporadaPorRodadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
 		}
 
 		for (RodadaEliminatoria r : semana.getRodadasEliminatorias()) {
-			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarClubeResumoTemporadaPorRodadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
 		}
 		
 		for (RodadaAmistosa r : semana.getRodadasAmistosas()) {
-			rodadasFuture.add(gerarClubeResumoTemporadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
+			rodadasFuture.add(atualizarClubeResumoTemporadaPorRodadaService.atualizarClubeResumoTemporadaPorRodada(jogo, r));
 		}
 
 		CompletableFuture.allOf(rodadasFuture.toArray(new CompletableFuture<?>[0])).join();

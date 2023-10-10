@@ -64,15 +64,15 @@ public class JogadorEstatisticasTemporada {
 	
 	//###	DISPUTA PENALTS	###
 	
-	private Integer numeroRodadaDisputaPenalt;
+	private Integer numeroRodadaDisputaPenalties;
 	
-	private Integer golsDisputaPenalt;
+	private Integer golsDisputaPenalties;
 	
-	private Integer golsPerdidosDisputaPenalt;
+	private Integer golsPerdidosDisputaPenalties;
 	
-	private Integer defesasDisputaPenalt;
+	private Integer defesasDisputaPenalties;
 
-	private Integer golsSofridosDisputaPenalt;
+	private Integer golsSofridosDisputaPenalties;
 
 	public JogadorEstatisticasTemporada() {
 		
@@ -97,11 +97,11 @@ public class JogadorEstatisticasTemporada {
 		this.golsSofridos = 0;
 		this.goleiroFinalizacoesDefendidas = 0;
 		
-		this.numeroRodadaDisputaPenalt = 0;
-		this.golsDisputaPenalt = 0;
-		this.golsPerdidosDisputaPenalt = 0;
-		this.defesasDisputaPenalt = 0;
-		this.golsSofridosDisputaPenalt = 0;
+		this.numeroRodadaDisputaPenalties = 0;
+		this.golsDisputaPenalties = 0;
+		this.golsPerdidosDisputaPenalties = 0;
+		this.defesasDisputaPenalties = 0;
+		this.golsSofridosDisputaPenalties = 0;
 	}
 	
 	public JogadorEstatisticasTemporada(Jogador jogador) {
@@ -120,11 +120,11 @@ public class JogadorEstatisticasTemporada {
 		this.golsSofridos = 0;
 		this.goleiroFinalizacoesDefendidas = 0;
 		
-		this.numeroRodadaDisputaPenalt = 0;
-		this.golsDisputaPenalt = 0;
-		this.golsPerdidosDisputaPenalt = 0;
-		this.defesasDisputaPenalt = 0;
-		this.golsSofridosDisputaPenalt = 0;
+		this.numeroRodadaDisputaPenalties = 0;
+		this.golsDisputaPenalties = 0;
+		this.golsPerdidosDisputaPenalties = 0;
+		this.defesasDisputaPenalties = 0;
+		this.golsSofridosDisputaPenalties = 0;
 	}
 	
 	public boolean isEmpty() {
@@ -255,64 +255,64 @@ public class JogadorEstatisticasTemporada {
 		this.goleiroFinalizacoesDefendidas++;
 	}
 
-	public Integer getNumeroRodadaDisputaPenalt() {
-		return numeroRodadaDisputaPenalt;
+	public Integer getNumeroRodadaDisputaPenalties() {
+		return numeroRodadaDisputaPenalties;
 	}
 
-	public void setNumeroRodadaDisputaPenalt(Integer numeroRodadaDisputaPenalt) {
-		this.numeroRodadaDisputaPenalt = numeroRodadaDisputaPenalt;
+	public void setNumeroRodadaDisputaPenalties(Integer numeroRodadaDisputaPenalties) {
+		this.numeroRodadaDisputaPenalties = numeroRodadaDisputaPenalties;
 	}
 	
-	public void incrementarNumeroRodadaDisputaPenalt() {
-		this.numeroRodadaDisputaPenalt++;
+	public void incrementarNumeroRodadaDisputaPenalties() {
+		this.numeroRodadaDisputaPenalties++;
 	}
 	
-	public void incrementarGolsDisputaPenalt() {
-		this.golsDisputaPenalt++;
+	public void incrementarGolsDisputaPenalties() {
+		this.golsDisputaPenalties++;
 	}
 
-	public Integer getGolsDisputaPenalt() {
-		return golsDisputaPenalt;
+	public Integer getGolsDisputaPenalties() {
+		return golsDisputaPenalties;
 	}
 
-	public void setGolsDisputaPenalt(Integer golsDisputasPenalt) {
-		this.golsDisputaPenalt = golsDisputasPenalt;
+	public void setGolsDisputaPenalties(Integer golsDisputaPenalties) {
+		this.golsDisputaPenalties = golsDisputaPenalties;
 	}
 	
-	public void incrementarGolsPerdidosDisputaPenalt() {
-		this.golsPerdidosDisputaPenalt++;
+	public void incrementarGolsPerdidosDisputaPenalties() {
+		this.golsPerdidosDisputaPenalties++;
 	}
 
-	public Integer getGolsPerdidosDisputaPenalt() {
-		return golsPerdidosDisputaPenalt;
+	public Integer getGolsPerdidosDisputaPenalties() {
+		return golsPerdidosDisputaPenalties;
 	}
 
-	public void setGolsPerdidosDisputaPenalt(Integer golsPerdidosDisputasPenalt) {
-		this.golsPerdidosDisputaPenalt = golsPerdidosDisputasPenalt;
+	public void setGolsPerdidosDisputaPenalties(Integer golsPerdidosDisputaPenalties) {
+		this.golsPerdidosDisputaPenalties = golsPerdidosDisputaPenalties;
 	}
 	
-	public void incrementarDefesasDisputaPenalt() {
-		this.defesasDisputaPenalt++;
+	public void incrementarDefesasDisputaPenalties() {
+		this.defesasDisputaPenalties++;
 	}
 
-	public Integer getDefesasDisputaPenalt() {
-		return defesasDisputaPenalt;
+	public Integer getDefesasDisputaPenalties() {
+		return defesasDisputaPenalties;
 	}
 
-	public void setDefesasDisputaPenalt(Integer defesasDisputasPenalt) {
-		this.defesasDisputaPenalt = defesasDisputasPenalt;
+	public void setDefesasDisputaPenalties(Integer defesasDisputaPenalties) {
+		this.defesasDisputaPenalties = defesasDisputaPenalties;
 	}
 	
-	public void incrementarGolsSofridosDisputaPenalt() {
-		this.golsSofridosDisputaPenalt++;
+	public void incrementarGolsSofridosDisputaPenalties() {
+		this.golsSofridosDisputaPenalties++;
 	}
 
-	public Integer getGolsSofridosDisputaPenalt() {
-		return golsSofridosDisputaPenalt;
+	public Integer getGolsSofridosDisputaPenalties() {
+		return golsSofridosDisputaPenalties;
 	}
 
-	public void setGolsSofridosDisputaPenalt(Integer golsSofridosDisputaPenalt) {
-		this.golsSofridosDisputaPenalt = golsSofridosDisputaPenalt;
+	public void setGolsSofridosDisputaPenalties(Integer golsSofridosDisputaPenalties) {
+		this.golsSofridosDisputaPenalties = golsSofridosDisputaPenalties;
 	}
 
 	public Integer getAssistencias() {

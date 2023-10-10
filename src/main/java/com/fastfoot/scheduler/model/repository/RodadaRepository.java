@@ -12,14 +12,6 @@ import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.Semana;
 
-/**
- * 
- * @author obede
- *
- * Link util: 
- * 	https://www.baeldung.com/spring-data-jpa-query
- * 	https://www.devmedia.com.br/tipos-de-heranca-no-hibernate/28641
- */
 @Repository
 public interface RodadaRepository extends JpaRepository<Rodada, Long>{
 

@@ -31,7 +31,7 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 	 */
 
 	@Autowired
-	private DisputarPenaltsService disputarPenaltsService;
+	private DisputarPenaltiesService disputarPenaltiesService;
 	
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
@@ -65,8 +65,8 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 	}
 
 	@Override
-	protected void disputarPenalts(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
-		disputarPenaltsService.disputarPenalts(partidaResultado, esquema);
+	protected void disputarPenalties(PartidaResultadoJogavel partidaResultado, Esquema esquema) {
+		disputarPenaltiesService.disputarPenalties(partidaResultado, esquema);
 	}
 	
 	@Override

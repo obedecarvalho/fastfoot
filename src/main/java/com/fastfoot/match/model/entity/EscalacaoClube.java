@@ -42,7 +42,7 @@ public class EscalacaoClube {
 	private PartidaEliminatoriaResultado partidaEliminatoriaResultado;
 	
 	@ManyToOne
-	@JoinColumn(name = "id_partida_amistosa")
+	@JoinColumn(name = "id_partida_amistosa_resultado")
 	private PartidaAmistosaResultado partidaAmistosaResultado;
 	
 	@JsonIgnore

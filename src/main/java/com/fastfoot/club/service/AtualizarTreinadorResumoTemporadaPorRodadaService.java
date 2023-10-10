@@ -1,7 +1,6 @@
 package com.fastfoot.club.service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,22 +24,15 @@ import com.fastfoot.scheduler.model.ClassificacaoNacional;
 import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
-import com.fastfoot.scheduler.model.entity.Campeonato;
-import com.fastfoot.scheduler.model.entity.CampeonatoEliminatorio;
-import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.Classificacao;
-import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
-import com.fastfoot.scheduler.model.entity.PartidaAmistosaResultado;
 import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
-import com.fastfoot.scheduler.model.entity.RodadaAmistosa;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.entity.Temporada;
-import com.fastfoot.scheduler.service.CarregarCampeonatoService;
 import com.fastfoot.service.CarregarParametroService;
 
 @Service
-public class GerarTreinadorResumoTemporadaService {//TODO: renomear para AtualizarTreinadorResumoTemporadaPorRodadaService
+public class AtualizarTreinadorResumoTemporadaPorRodadaService {
 
 	@Autowired
 	private TreinadorResumoTemporadaRepository treinadorResumoTemporadaRepository;
@@ -48,10 +40,12 @@ public class GerarTreinadorResumoTemporadaService {//TODO: renomear para Atualiz
 	@Autowired
 	private CarregarParametroService carregarParametroService;
 	
+	/*
 	@Autowired
 	private CarregarCampeonatoService carregarCampeonatoService;
+	*/
 
-	@Deprecated
+	/*
 	public void gerarTreinadorResumoTemporada(Temporada temporada) {
 		
 		carregarCampeonatoService.carregarCampeonatosTemporada(temporada);
@@ -66,6 +60,7 @@ public class GerarTreinadorResumoTemporadaService {//TODO: renomear para Atualiz
 		
 		treinadorResumoTemporadaRepository.saveAll(treinadoresResumo);
 	}
+	*/
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarTreinadorResumoTemporadaPorRodada(Jogo jogo, RodadaJogavel rodada) {
@@ -270,12 +265,13 @@ public class GerarTreinadorResumoTemporadaService {//TODO: renomear para Atualiz
 		}
 
 		if (resumos.size() != 1) {
-			throw new RuntimeException("Inesperado....");// TODO
+			throw new RuntimeException("Inesperado....");
 		}
 
 		return resumos.get(0);
 	}
 	
+	/*
 	private List<TreinadorResumoTemporada> gerarTreinadorResumoTemporadaCampeonatoNacional(Temporada temporada) {
 		
 		List<TreinadorResumoTemporada> treinadoresResumo = new ArrayList<TreinadorResumoTemporada>();
@@ -579,4 +575,5 @@ public class GerarTreinadorResumoTemporadaService {//TODO: renomear para Atualiz
 		
 		return treinadoresResumo.values();
 	}
+	*/
 }

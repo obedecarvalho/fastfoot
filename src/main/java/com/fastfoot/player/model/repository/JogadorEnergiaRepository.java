@@ -48,53 +48,6 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 	
 	//###	INSERT, UPDATE E DELETE	###
 	
-	@Deprecated
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" insert into jogador_energia (id, energia, id_jogador) " +
-			" select  " +
-			" 	nextval('jogador_energia_seq'), " +
-			" 	case  " +
-			" 		when (?1 - tmp.energia) <= ?2 then (?1 - tmp.energia) " +
-			" 		else ?2 " +
-			" 	end as energia_recuperar, " +
-			" 	tmp.id_jogador " +
-			" from ( " +
-			" 	select id_jogador, sum(energia) as energia " +
-			" 	from jogador_energia je " +
-			" 	inner join jogador j on j.id = je.id_jogador " +
-			" 	where j.status_jogador = 0 " + //StatusJogador.ATIVO
-			" 	group by id_jogador " +
-			" ) as tmp " +
-			" where tmp.energia < ?1 "
-	)
-	public void inserirRecuperacaoEnergiaTodosJogadores(Integer energiaMax, Integer energiaRecuperar);
-
-	@Deprecated
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" insert into jogador_energia (id, energia, id_jogador) " +
-			" select  " +
-			" 	nextval('jogador_energia_seq'), " +
-			" 	case  " +
-			" 		when (?1 - tmp.energia) <= ?2 then (?1 - tmp.energia) " +
-			" 		else ?2 " +
-			" 	end as energia_recuperar, " +
-			" 	tmp.id_jogador " +
-			" from ( " +
-			" 	select id_jogador, sum(energia) as energia " +
-			" 	from jogador_energia je " +
-			" 	inner join jogador j on j.id = je.id_jogador " +
-			" 	where j.status_jogador = 0 " + //StatusJogador.ATIVO
-			" 		and j.idade between ?3 and ?4 " +
-			" 	group by id_jogador " +
-			" ) as tmp " +
-			" where tmp.energia < ?1 "
-	)
-	public void inserirRecuperacaoEnergiaJogadores(Integer energiaMax, Integer energiaRecuperar, Integer idadeMin, Integer idadeMax);
-	
 	@Transactional
 	@Modifying
 	@Query(nativeQuery = true, value = 
@@ -120,17 +73,6 @@ public interface JogadorEnergiaRepository extends JpaRepository<JogadorEnergia, 
 			" where tmp.energia < ?1 "
 	)
 	public void inserirRecuperacaoEnergiaJogadores(Integer energiaMax, Integer energiaRecuperar, Integer idadeMin, Integer idadeMax, Long idJogo);
-	
-	@Deprecated
-	@Transactional
-	@Modifying
-	@Query(nativeQuery = true, value = 
-			" insert into jogador_energia (id, energia, id_jogador)  " +
-			" select nextval('jogador_energia_seq'), ?1 as energia, id as id_jogador " +
-			" from jogador " +
-			" where status_jogador = 0 " //StatusJogador.ATIVO
-	)
-	public void inserirEnergiaTodosJogadores(Integer energia);
 	
 	@Transactional
 	@Modifying

@@ -2,6 +2,7 @@ package com.fastfoot.scheduler.model.entity;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.match.model.entity.EscalacaoClube;
+import com.fastfoot.match.model.entity.PartidaDisputaPenalties;
 import com.fastfoot.match.model.entity.PartidaEstatisticas;
 import com.fastfoot.match.model.entity.PartidaTorcida;
 import com.fastfoot.scheduler.model.NivelCampeonato;
@@ -52,6 +54,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	private PartidaEliminatoriaResultado proximaPartida;
 
 	@JsonIgnore
+	@Column(name = "classifica_a_mandante")
 	private Boolean classificaAMandante;
 	
 	private Boolean partidaJogada;
@@ -68,9 +71,13 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@JoinColumn(name = "id_partida_probabilidade_resultado")
 	private PartidaProbabilidadeResultado partidaProbabilidadeResultado;
 	
-	private Integer golsMandantePenalts;//TODO: criar entidade PartidaDisputaPenalts com total de penalts disputados
+	//private Integer golsMandantePenalts;
 	
-	private Integer golsVisitantePenalts;
+	//private Integer golsVisitantePenalts;
+	
+	@OneToOne
+	@JoinColumn(name = "id_partida_disputa_penalties")
+	private PartidaDisputaPenalties partidaDisputaPenalties;
 
 	@Transient
 	private EscalacaoClube escalacaoMandante;
@@ -154,6 +161,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		this.partidaEstatisticas = partidaEstatisticas;
 	}
 
+	/*
 	public Integer getGolsMandantePenalts() {
 		return golsMandantePenalts;
 	}
@@ -169,6 +177,7 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	public void setGolsVisitantePenalts(Integer golsVisitantePenalts) {
 		this.golsVisitantePenalts = golsVisitantePenalts;
 	}
+	*/
 
 	@Override
 	public void setGolsVisitante(Integer golsVisitante) {
@@ -227,6 +236,14 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		this.partidaProbabilidadeResultado = partidaProbabilidadeResultado;
 	}
 
+	public PartidaDisputaPenalties getPartidaDisputaPenalties() {
+		return partidaDisputaPenalties;
+	}
+
+	public void setPartidaDisputaPenalties(PartidaDisputaPenalties partidaDisputaPenalties) {
+		this.partidaDisputaPenalties = partidaDisputaPenalties;
+	}
+
 	@JsonIgnore
 	@Override
 	public boolean isAmistoso() {
@@ -241,8 +258,8 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		if (partidaJogada) {
 			if (golsMandante > golsVisitante) return clubeMandante;
 			if (golsVisitante > golsMandante) return clubeVisitante;		
-			if (golsMandante == golsVisitante && golsMandantePenalts > golsVisitantePenalts) return clubeMandante;
-			if (golsVisitante == golsMandante && golsVisitantePenalts > golsMandantePenalts) return clubeVisitante;
+			if (golsMandante == golsVisitante && getGolsMandantePenalties() > getGolsVisitantePenalties()) return clubeMandante;
+			if (golsVisitante == golsMandante && getGolsVisitantePenalties() > getGolsMandantePenalties()) return clubeVisitante;
 		}
 		return null;
 	}
@@ -253,8 +270,8 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 		if (partidaJogada) {
 			if (golsMandante < golsVisitante) return clubeMandante;
 			if (golsVisitante < golsMandante) return clubeVisitante;
-			if (golsMandante == golsVisitante && golsMandantePenalts < golsVisitantePenalts) return clubeMandante;
-			if (golsVisitante == golsMandante && golsVisitantePenalts < golsMandantePenalts) return clubeVisitante;
+			if (golsMandante == golsVisitante && getGolsMandantePenalties() < getGolsVisitantePenalties()) return clubeMandante;
+			if (golsVisitante == golsMandante && getGolsVisitantePenalties() < getGolsMandantePenalties()) return clubeVisitante;
 		}
 		return null;
 	}
@@ -280,20 +297,28 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 	@JsonIgnore
 	public boolean isMandanteEliminado() {
 		if (partidaJogada && golsMandante < golsVisitante) return true;
-		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts < golsVisitantePenalts) return true;
+		if (partidaJogada && golsMandante == golsVisitante && getGolsMandantePenalties() < getGolsVisitantePenalties()) return true;
 		return false;
 	}
 	
 	@JsonIgnore
 	public boolean isVisitanteEliminado() {
 		if (partidaJogada && golsMandante > golsVisitante) return true;
-		if (partidaJogada && golsMandante == golsVisitante && golsMandantePenalts > golsVisitantePenalts) return true;
+		if (partidaJogada && golsMandante == golsVisitante && getGolsMandantePenalties() > getGolsVisitantePenalties()) return true;
 		return false;
+	}
+	
+	private Integer getGolsMandantePenalties() {
+		return partidaDisputaPenalties.getGolsMandantePenalties();
+	}
+	
+	private Integer getGolsVisitantePenalties() {
+		return partidaDisputaPenalties.getGolsVisitantePenalties();
 	}
 	
 	@JsonIgnore
 	@Override
-	public boolean isDisputarPenalts() {
+	public boolean isDisputarPenalties() {
 		return true;
 	}
 
@@ -328,9 +353,9 @@ public class PartidaEliminatoriaResultado implements PartidaResultadoJogavel {
 
 	@Override
 	public String toString() {
-		if (golsMandantePenalts != null) {
+		if (getGolsMandantePenalties() != null) {
 			return "PartidaEliminatoria [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " "
-					+ golsMandante + " (" + golsMandantePenalts + ") " + " x " + " (" + golsVisitantePenalts + ") "
+					+ golsMandante + " (" + getGolsMandantePenalties() + ") " + " x " + " (" + getGolsVisitantePenalties() + ") "
 					+ golsVisitante + " " + clubeVisitante.getNome() + "]";
 		} else {
 			return "PartidaEliminatoria [rod=" + rodada.getNumero() + ", " + clubeMandante.getNome() + " "
