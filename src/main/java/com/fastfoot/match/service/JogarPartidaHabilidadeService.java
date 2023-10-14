@@ -11,9 +11,6 @@ import com.fastfoot.match.model.Esquema;
 import com.fastfoot.match.model.EstrategiaSubstituicao;
 import com.fastfoot.match.model.PartidaDadosSalvarDTO;
 import com.fastfoot.match.model.entity.EscalacaoClube;
-import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValorJogavel;
-import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatistica;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
@@ -75,10 +72,10 @@ public class JogarPartidaHabilidadeService extends JogarPartidaService {
 		jogar(partidaResultado, escalacaoMandante, escalacaoVisitante, partidaDadosSalvarDTO, false);
 	}
 
-	@Override
+	/*@Override
 	protected HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor) {
 		return new HabilidadeValor(Habilidade.FORA, valor);
-	}
+	}*/
 
 	protected void realizarSubstituicoesJogadorPartida(Esquema esquema, EstrategiaSubstituicao estrategiaSubstituicao,
 			PartidaResultadoJogavel partidaResultado, boolean mandante, int minutoSubstituicao) {

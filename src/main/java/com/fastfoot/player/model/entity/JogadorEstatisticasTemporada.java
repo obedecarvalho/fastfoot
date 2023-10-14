@@ -38,11 +38,11 @@ public class JogadorEstatisticasTemporada {
 	
 	private Boolean amistoso;
 	
-	private Integer numeroJogos;//Numero total de jogos
+	private Integer jogos;//Numero total de jogos
 	
-	private Integer numeroJogosTitular;
+	private Integer jogosTitular;
 	
-	private Integer numeroMinutosJogados;
+	private Integer minutosJogados;
 	
 	//###	JOGADOR LINHA	###
 	
@@ -64,7 +64,7 @@ public class JogadorEstatisticasTemporada {
 	
 	//###	DISPUTA PENALTS	###
 	
-	private Integer numeroRodadaDisputaPenalties;
+	private Integer rodadasDisputaPenalties;
 	
 	private Integer golsDisputaPenalties;
 	
@@ -84,9 +84,9 @@ public class JogadorEstatisticasTemporada {
 		this.clube = clube;
 		this.amistoso = amistoso;
 		
-		this.numeroJogos = 0;
-		this.numeroJogosTitular = 0;
-		this.numeroMinutosJogados = 0;
+		this.jogos = 0;
+		this.jogosTitular = 0;
+		this.minutosJogados = 0;
 		
 		this.golsMarcados = 0;
 		this.assistencias = 0;
@@ -97,7 +97,7 @@ public class JogadorEstatisticasTemporada {
 		this.golsSofridos = 0;
 		this.goleiroFinalizacoesDefendidas = 0;
 		
-		this.numeroRodadaDisputaPenalties = 0;
+		this.rodadasDisputaPenalties = 0;
 		this.golsDisputaPenalties = 0;
 		this.golsPerdidosDisputaPenalties = 0;
 		this.defesasDisputaPenalties = 0;
@@ -107,9 +107,9 @@ public class JogadorEstatisticasTemporada {
 	public JogadorEstatisticasTemporada(Jogador jogador) {
 		this.jogador = jogador;
 		
-		this.numeroJogos = 0;
-		this.numeroJogosTitular = 0;
-		this.numeroMinutosJogados = 0;
+		this.jogos = 0;
+		this.jogosTitular = 0;
+		this.minutosJogados = 0;
 		
 		this.golsMarcados = 0;
 		this.assistencias = 0;
@@ -120,7 +120,7 @@ public class JogadorEstatisticasTemporada {
 		this.golsSofridos = 0;
 		this.goleiroFinalizacoesDefendidas = 0;
 		
-		this.numeroRodadaDisputaPenalties = 0;
+		this.rodadasDisputaPenalties = 0;
 		this.golsDisputaPenalties = 0;
 		this.golsPerdidosDisputaPenalties = 0;
 		this.defesasDisputaPenalties = 0;
@@ -128,7 +128,7 @@ public class JogadorEstatisticasTemporada {
 	}
 	
 	public boolean isEmpty() {
-		return this.numeroJogos == 0;
+		return this.jogos == 0;
 	}
 	
 	public Long getId() {
@@ -163,12 +163,12 @@ public class JogadorEstatisticasTemporada {
 		this.clube = clube;
 	}
 
-	public Integer getNumeroJogos() {
-		return numeroJogos;
+	public Integer getJogos() {
+		return jogos;
 	}
 
-	public void setNumeroJogos(Integer numeroJogos) {
-		this.numeroJogos = numeroJogos;
+	public void setJogos(Integer jogos) {
+		this.jogos = jogos;
 	}
 
 	public Integer getGolsMarcados() {
@@ -223,12 +223,12 @@ public class JogadorEstatisticasTemporada {
 		this.amistoso = amistoso;
 	}
 
-	public Integer getNumeroJogosTitular() {
-		return numeroJogosTitular;
+	public Integer getJogosTitular() {
+		return jogosTitular;
 	}
 
-	public void setNumeroJogosTitular(Integer numeroJogosTitular) {
-		this.numeroJogosTitular = numeroJogosTitular;
+	public void setJogosTitular(Integer jogosTitular) {
+		this.jogosTitular = jogosTitular;
 	}
 
 	public Integer getGolsSofridos() {
@@ -255,16 +255,16 @@ public class JogadorEstatisticasTemporada {
 		this.goleiroFinalizacoesDefendidas++;
 	}
 
-	public Integer getNumeroRodadaDisputaPenalties() {
-		return numeroRodadaDisputaPenalties;
+	public Integer getRodadasDisputaPenalties() {
+		return rodadasDisputaPenalties;
 	}
 
-	public void setNumeroRodadaDisputaPenalties(Integer numeroRodadaDisputaPenalties) {
-		this.numeroRodadaDisputaPenalties = numeroRodadaDisputaPenalties;
+	public void setRodadasDisputaPenalties(Integer rodadasDisputaPenalties) {
+		this.rodadasDisputaPenalties = rodadasDisputaPenalties;
 	}
 	
-	public void incrementarNumeroRodadaDisputaPenalties() {
-		this.numeroRodadaDisputaPenalties++;
+	public void incrementarRodadasDisputaPenalties() {
+		this.rodadasDisputaPenalties++;
 	}
 	
 	public void incrementarGolsDisputaPenalties() {
@@ -327,17 +327,17 @@ public class JogadorEstatisticasTemporada {
 		this.assistencias++;
 	}
 
-	public Integer getNumeroMinutosJogados() {
-		return numeroMinutosJogados;
+	public Integer getMinutosJogados() {
+		return minutosJogados;
 	}
 
-	public void setNumeroMinutosJogados(Integer numeroMinutosJogados) {
-		this.numeroMinutosJogados = numeroMinutosJogados;
+	public void setMinutosJogados(Integer minutosJogados) {
+		this.minutosJogados = minutosJogados;
 	}
 
 	@Override
 	public String toString() {
-		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos=" + numeroJogos +
+		return "JogadorEstatisticasTemporada [jogador=" + jogador + ", numeroJogos=" + jogos +
 
 				(!jogador.getPosicao().isGoleiro() ?
 

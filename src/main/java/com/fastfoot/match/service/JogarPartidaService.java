@@ -41,11 +41,11 @@ public abstract class JogarPartidaService {
 	
 	protected static final Boolean LANCE_A_LANCE = true;
 	
-	private static final float MIN_FORA = 0.2f;
+	//private static final float MIN_FORA = 0.2f;
 	
-	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {1, 2};
+	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {2, 3};
 	
-	protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
+	//protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
 	
 	protected abstract void disputarPenalties(PartidaResultadoJogavel partidaResultado, Esquema esquema);
 	
@@ -70,11 +70,11 @@ public abstract class JogarPartidaService {
 			esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().setMinutoFinal(90);
 		}
 
-		esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().setNumeroMinutosJogados(
+		esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().setMinutosJogados(
 				esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal()
 						- esquema.getGoleiroMandante().getGoleiro().getJogadorEstatisticasSemana().getMinutoInicial());
 
-		esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().setNumeroMinutosJogados(
+		esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().setMinutosJogados(
 				esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().getMinutoFinal()
 						- esquema.getGoleiroVisitante().getGoleiro().getJogadorEstatisticasSemana().getMinutoInicial());
 
@@ -89,12 +89,12 @@ public abstract class JogarPartidaService {
 
 		esquema.getPosicoes().stream().filter(p -> p.getMandante() != null)
 				.forEach(p -> p.getMandante().getJogadorEstatisticasSemana()
-						.setNumeroMinutosJogados(p.getMandante().getJogadorEstatisticasSemana().getMinutoFinal()
+						.setMinutosJogados(p.getMandante().getJogadorEstatisticasSemana().getMinutoFinal()
 								- p.getMandante().getJogadorEstatisticasSemana().getMinutoInicial()));
 
 		esquema.getPosicoes().stream().filter(p -> p.getVisitante() != null)
 				.forEach(p -> p.getVisitante().getJogadorEstatisticasSemana()
-						.setNumeroMinutosJogados(p.getVisitante().getJogadorEstatisticasSemana().getMinutoFinal()
+						.setMinutosJogados(p.getVisitante().getJogadorEstatisticasSemana().getMinutoFinal()
 								- p.getVisitante().getJogadorEstatisticasSemana().getMinutoInicial()));
 
 	}
@@ -205,8 +205,8 @@ public abstract class JogarPartidaService {
 		HabilidadeValorJogavel habilidadeVencedorAnterior = null;
 		HabilidadeValorJogavel habilidadeValorAcao = null;
 		HabilidadeValorJogavel habilidadeValorReacao = null;
-		HabilidadeValorJogavel habilidadeFora = null;
-		HabilidadeValorJogavel habilidadeVencedora = null;
+		//HabilidadeValorJogavel habilidadeFora = null;
+		//HabilidadeValorJogavel habilidadeVencedora = null;
 		
 		Jogador jogadorAssistencia = null;
 		
@@ -323,10 +323,10 @@ public abstract class JogarPartidaService {
 					//habilidadeFora = new HabilidadeValor(Habilidade.NULL, (habilidadeValorAcao.getValor() + habilidadeValorReacao.getValor())/2);
 					/*habilidadeFora = new HabilidadeGrupoValor(HabilidadeGrupo.FORA, (int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
-							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));*///TODO: ajustar para compreender diminuição da energia??
+							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));*/
 					/*habilidadeFora = criarHabilidadeValorJogavelFora((int) Math.round(Math.max(
 							((habilidadeValorAcao.getJogador().getForcaGeral() * esquema.getProbabilidadeArremateForaPosicaoPosse()) - habilidadeValorAcao.getValor()),
-							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));//TODO: ajustar para compreender diminuição da energia??
+							(MIN_FORA * habilidadeValorAcao.getJogador().getForcaGeral()))));
 					habilidadeFora.calcularValorN();*/
 					//System.err.println(String.format("\t\t\tJ:%d A:%d F:%d", habilidadeValorAcao.getJogador().getForcaGeral(), habilidadeValorAcao.getValor(), habilidadeFora.getValor()));
 

@@ -63,7 +63,6 @@ public class AposentarJogadorService {
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> aposentarJogador(Jogo jogo, Map<Clube, List<Jogador>> jogadoresAposentarPorClube,
 			Map<Clube, List<QuantitativoPosicaoClubeDTO>> quantitativoPosicaoPorClube) {
-		//TODO: deletar HabilidadeValorEstatisticaGrupo do jogador aposentado?
 		//TODO: deletar HabilidadeValor do jogador aposentado?
 		
 		List<Jogador> novosJogadores = new ArrayList<Jogador>();
@@ -141,9 +140,10 @@ public class AposentarJogadorService {
 		habilidadeValorRepository.saveAll(jogHab);
 		habilidadeGrupoValorRepository.saveAll(habilidadeGrupoValores);
 		
-		//TODO: transformar em UPDATE?
-		jogadorRepository.saveAll(jogadoresAposentar);
-		//
+		contratoRepository.desativarPorJogadores(jogadoresAposentar);
+		
+		//jogadorRepository.saveAll(jogadoresAposentar);
+		jogadorRepository.updateStatusJogadores(jogadoresAposentar, StatusJogador.APOSENTADO);
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}

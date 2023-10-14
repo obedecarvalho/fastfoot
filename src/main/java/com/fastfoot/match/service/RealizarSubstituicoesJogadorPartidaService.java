@@ -174,14 +174,14 @@ public class RealizarSubstituicoesJogadorPartidaService {
 					jogadorSubstituto.setJogadorEstatisticasSemana(new JogadorEstatisticasSemana(jogadorSubstituto,
 							partidaResultado.getRodada().getSemana(), jogadorSubstituto.getClube(), null, true));
 				}
-				jogadorSubstituto.getJogadorEstatisticasSemana().setNumeroJogos(1);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setJogos(1);
 				
 				
 				jogadorSubstituir.getJogadorEstatisticasSemana().setMinutoFinal(minutoSubstituicao);
 				jogadorSubstituto.getJogadorEstatisticasSemana().setMinutoInicial(minutoSubstituicao);
 				
 				jogadorSubstituir.getJogadorEstatisticasSemana()
-						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
+						.setMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
 								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
 				//
@@ -302,14 +302,14 @@ public class RealizarSubstituicoesJogadorPartidaService {
 					jogadorSubstituto.setJogadorEstatisticasSemana(new JogadorEstatisticasSemana(jogadorSubstituto,
 							partidaResultado.getRodada().getSemana(), jogadorSubstituto.getClube(), null, true));
 				}
-				jogadorSubstituto.getJogadorEstatisticasSemana().setNumeroJogos(1);
+				jogadorSubstituto.getJogadorEstatisticasSemana().setJogos(1);
 				
 				
 				jogadorSubstituir.getJogadorEstatisticasSemana().setMinutoFinal(minutoSubstituicao);
 				jogadorSubstituto.getJogadorEstatisticasSemana().setMinutoInicial(minutoSubstituicao);
 				
 				jogadorSubstituir.getJogadorEstatisticasSemana()
-						.setNumeroMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
+						.setMinutosJogados(jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoFinal()
 								- jogadorSubstituir.getJogadorEstatisticasSemana().getMinutoInicial());
 				
 				//

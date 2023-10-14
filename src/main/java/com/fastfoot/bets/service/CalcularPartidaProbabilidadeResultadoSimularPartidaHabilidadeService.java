@@ -13,10 +13,7 @@ import com.fastfoot.bets.model.repository.PartidaProbabilidadeResultadoRepositor
 import com.fastfoot.match.model.entity.EscalacaoClube;
 import com.fastfoot.match.service.CarregarEscalacaoJogadoresPartidaService;
 import com.fastfoot.match.service.EscalarClubeService;
-import com.fastfoot.player.model.Habilidade;
-import com.fastfoot.player.model.HabilidadeValorJogavel;
 import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.CarregarJogadorEnergiaService;
@@ -99,9 +96,9 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeServic
 		return calcularPartidaProbabilidadeResultado(partidaResultado, escalacaoMandante, escalacaoVisitante, TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA, false);
 	}
 
-	@Override
+	/*@Override
 	protected HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor) {
 		return new HabilidadeValor(Habilidade.FORA, valor);
-	}
+	}*/
 
 }

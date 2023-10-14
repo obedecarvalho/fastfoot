@@ -24,11 +24,11 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 	
 	private static final Integer MINUTOS = 90;
 	
-	private static final float MIN_FORA = 0.2f;
+	//private static final float MIN_FORA = 0.2f;
 	
-	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {1, 2};
+	protected static final Integer[] PESO_FINALIZACAO = new Integer[] {2, 3};
 	
-	protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
+	//protected abstract HabilidadeValorJogavel criarHabilidadeValorJogavelFora(Integer valor);
 	
 	public abstract PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado, EscalacaoClube escalacaoMandante, EscalacaoClube escalacaoVisitante);
 	
@@ -88,8 +88,8 @@ public abstract class CalcularPartidaProbabilidadeResultadoSimularPartidaAbstrac
 		HabilidadeValorJogavel habilidadeVencedorAnterior = null;
 		HabilidadeValorJogavel habilidadeValorAcao = null;
 		HabilidadeValorJogavel habilidadeValorReacao = null;
-		HabilidadeValorJogavel habilidadeFora = null;
-		HabilidadeValorJogavel habilidadeVencedora = null;
+		//HabilidadeValorJogavel habilidadeFora = null;
+		//HabilidadeValorJogavel habilidadeVencedora = null;
 		
 		//Jogador jogadorAssistencia = null;
 		

@@ -21,23 +21,23 @@ public abstract class EsquemaFactory {
 	
 	protected static final Integer PESO_RECUAR_DUPLO = 33;//TODO: Implementar logica aumentar dificuldade
 
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_ZAG = 1.50d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_ZAG = 1.50d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_LAT = 1.50d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_LAT = 1.50d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_VOL = 1.50d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_VOL = 1.50d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_MEI = 1.10d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_MEI = 1.10d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_ATA = 1.10d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_ATA = 1.10d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_2 = 1.50d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_2 = 1.50d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_3 = 1.50d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_3 = 1.50d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_4 = 1.10d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_4 = 1.10d;
 	
-	protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_5 = 1.10d;
+	//protected static final Double PROBABILIDADE_ARREMATE_FORA_LINHA_5 = 1.10d;
 	
 	public abstract Esquema gerarEsquemaEscalacao(EscalacaoClube mandantes,
 			EscalacaoClube visitantes, JogadorApoioCriacao jogadorApoioCriacaoMandante,

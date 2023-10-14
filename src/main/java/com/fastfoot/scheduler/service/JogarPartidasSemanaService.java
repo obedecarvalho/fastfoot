@@ -334,7 +334,7 @@ public class JogarPartidasSemanaService {
 		*/
 
 		//Desenvolver jogadores
-		if (semana.getNumero() % 5 == 0) {//TODO: mudar pra não usar na semana 25
+		if (semana.getNumero() % 5 == 0) {
 			habilidadeValorRepository.desenvolverTodasHabilidades(jogo.getId());//TODO: criar service
 			jogadorRepository.calcularForcaGeral(jogo.getId());
 		}
@@ -342,7 +342,7 @@ public class JogarPartidasSemanaService {
 		mensagens.add("\t#desenvolverTodasHabilidades:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
-		if (semana.getNumero() % 5 == 0) {//TODO: mudar pra não usar na semana 25
+		if (semana.getNumero() % 5 == 0) {
 			calcularHabilidadeGrupoValor3(jogo);
 		}
 		stopWatch.split();

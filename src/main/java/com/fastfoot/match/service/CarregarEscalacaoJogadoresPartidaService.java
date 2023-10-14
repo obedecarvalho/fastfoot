@@ -175,10 +175,10 @@ public class CarregarEscalacaoJogadoresPartidaService {
 		}
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogos(1));
+				.forEach(j -> j.getJogadorEstatisticasSemana().setJogos(1));
 
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
-				.forEach(j -> j.getJogadorEstatisticasSemana().setNumeroJogosTitular(1));
+				.forEach(j -> j.getJogadorEstatisticasSemana().setJogosTitular(1));
 		
 		escalacao.stream().filter(e -> e.getEscalacaoPosicao().isTitular()).map(EscalacaoJogadorPosicao::getJogador)
 				.forEach(j -> j.getJogadorEstatisticasSemana().setMinutoInicial(0));

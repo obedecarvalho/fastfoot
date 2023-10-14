@@ -275,10 +275,10 @@ public class EsquemaImpl implements Esquema {
 		}
 	}
 	
-	@Override
+	/*@Override
 	public Double getProbabilidadeArremateForaPosicaoPosse() {
 		return getPosicaoAtual().getProbabilidadeArremateFora(getPosseBolaMandante());
-	}
+	}*/
 
 	@Override
 	public EscalacaoClube getEscalacaoClubeMandante() {

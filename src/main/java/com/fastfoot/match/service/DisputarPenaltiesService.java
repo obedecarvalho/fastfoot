@@ -99,8 +99,8 @@ public class DisputarPenaltiesService {
 
 		partidaResultado.getPartidaDisputaPenalties().setGolsMandantePenalties(penaltiesCertosMandantes);
 		partidaResultado.getPartidaDisputaPenalties().setGolsVisitantePenalties(penaltiesCertosVisitante);
-		partidaResultado.getPartidaDisputaPenalties().setNumeroPenaltiesBatidosMandante(penaltiesDisputadosMandante);
-		partidaResultado.getPartidaDisputaPenalties().setNumeroPenaltiesBatidosVisitante(penaltiesDisputadosVisitante);
+		partidaResultado.getPartidaDisputaPenalties().setPenaltiesBatidosMandante(penaltiesDisputadosMandante);
+		partidaResultado.getPartidaDisputaPenalties().setPenaltiesBatidosVisitante(penaltiesDisputadosVisitante);
 		partidaResultado.getPartidaDisputaPenalties().setPenaltiesDefendidosMandante(penaltiesDefendidosMandante);
 		partidaResultado.getPartidaDisputaPenalties().setPenaltiesDefendidosVisitante(penaltiesDefendidosVisitante);
 		//partidaResultado.getPartidaDisputaPenalties().setPenaltiesForaMandante(null);
@@ -111,8 +111,8 @@ public class DisputarPenaltiesService {
 	protected Boolean disputarPenaltyHabilidadeValorJogavel(Jogador batedor, Jogador goleiro,
 			HabilidadeValorJogavel hvJogLinha, HabilidadeValorJogavel hvGoleiro) {//TODO: criar penalt para fora
 		
-		batedor.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalties();
-		goleiro.getJogadorEstatisticasSemana().incrementarNumeroRodadaDisputaPenalties();
+		batedor.getJogadorEstatisticasSemana().incrementarRodadasDisputaPenalties();
+		goleiro.getJogadorEstatisticasSemana().incrementarRodadasDisputaPenalties();
 
 		boolean acertou = false;
 		if (RoletaUtil.isPrimeiroVencedorNPonderado(hvJogLinha, hvGoleiro, PESO_FINALIZACAO_PENALTY)) {

@@ -39,6 +39,7 @@ import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.HabilidadeValorEstatisticaGrupo;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
+import com.fastfoot.player.model.repository.ContratoRepository;
 import com.fastfoot.player.model.repository.HabilidadeValorEstatisticaGrupoRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
 import com.fastfoot.player.model.repository.JogadorEstatisticasSemanaRepository;
@@ -125,6 +126,9 @@ public class CriarCalendarioTemporadaService {
 	
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
+
+	@Autowired
+	private ContratoRepository contratoRepository;
 	
 	//#######	SERVICE	#############
 	
@@ -330,6 +334,13 @@ public class CriarCalendarioTemporadaService {
 		stopWatch.split();
 		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
 		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		if (!temporadaAtualOpt.isPresent()) {
+			setarSemanaInicialContratos(temporada);
+		}
+		stopWatch.split();
+		mensagens.add("\t#setarSemanaInicialContratos:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
@@ -377,6 +388,11 @@ public class CriarCalendarioTemporadaService {
 		System.err.println(mensagens);
 
 		return TemporadaDTO.convertToDTO(temporada);
+	}
+	
+	private void setarSemanaInicialContratos(Temporada temporada) {
+		Semana semana = temporada.getSemanas().stream().filter(s -> s.getNumero() == 1).findFirst().get();
+		contratoRepository.updateSemanaInicial(semana);
 	}
 	
 	private void criarCampeonatos(Temporada temporada, List<Campeonato> campeonatosNacionais,

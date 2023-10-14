@@ -102,6 +102,11 @@ public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 	//###	/SELECT ESPECIFICOS	###
 	
 	//###	INSERT, UPDATE E DELETE	###
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Jogador j SET j.statusJogador = :status WHERE j IN :jogadores ")
+	public void updateStatusJogadores(@Param("jogadores") Collection<Jogador> jogadores , @Param("status") StatusJogador status);
 
 	@Transactional
 	@Modifying

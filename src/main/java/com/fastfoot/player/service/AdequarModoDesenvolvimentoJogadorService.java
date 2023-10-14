@@ -88,10 +88,10 @@ public class AdequarModoDesenvolvimentoJogadorService {
 					+ j.getEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados();*/
 			
 			int totalMinutosJogados = j.getJogadorEstatisticasTemporadaAtual() != null
-					? j.getJogadorEstatisticasTemporadaAtual().getNumeroMinutosJogados()
+					? j.getJogadorEstatisticasTemporadaAtual().getMinutosJogados()
 					: 0;
 			totalMinutosJogados += j.getJogadorEstatisticasAmistososTemporadaAtual() != null
-					? j.getJogadorEstatisticasAmistososTemporadaAtual().getNumeroMinutosJogados()
+					? j.getJogadorEstatisticasAmistososTemporadaAtual().getMinutosJogados()
 					: 0;
 			
 			if (totalMinutosJogados < j.getModoDesenvolvimentoJogador().getNumeroMinimoMinutos()

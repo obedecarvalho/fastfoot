@@ -132,10 +132,10 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			jogadorEstatisticasTemporada.setGolsPerdidosDisputaPenalties(((BigInteger) e.get("gols_perdidos_disputa_penalties")).intValue());
 			jogadorEstatisticasTemporada.setGolsSofridos(((BigInteger) e.get("gols_sofridos")).intValue());
 			jogadorEstatisticasTemporada.setGolsSofridosDisputaPenalties(((BigInteger) e.get("gols_sofridos_disputa_penalties")).intValue());
-			jogadorEstatisticasTemporada.setNumeroJogos(((BigInteger) e.get("numero_jogos")).intValue());
-			jogadorEstatisticasTemporada.setNumeroJogosTitular(((BigInteger) e.get("numero_jogos_titular")).intValue());
-			jogadorEstatisticasTemporada.setNumeroMinutosJogados(((BigInteger) e.get("numero_minutos_jogados")).intValue());
-			jogadorEstatisticasTemporada.setNumeroRodadaDisputaPenalties(((BigInteger) e.get("numero_rodada_disputa_penalties")).intValue());
+			jogadorEstatisticasTemporada.setJogos(((BigInteger) e.get("jogos")).intValue());
+			jogadorEstatisticasTemporada.setJogosTitular(((BigInteger) e.get("jogos_titular")).intValue());
+			jogadorEstatisticasTemporada.setMinutosJogados(((BigInteger) e.get("minutos_jogados")).intValue());
+			jogadorEstatisticasTemporada.setRodadasDisputaPenalties(((BigInteger) e.get("rodadas_disputa_penalties")).intValue());
 			
 			estatisticasTemporadas.add(jogadorEstatisticasTemporada);
 		}

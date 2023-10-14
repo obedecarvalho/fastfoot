@@ -5,6 +5,7 @@ truncate table jogo cascade;
 delete from partida_estatisticas;
 delete from partida_probabilidade_resultado;
 delete from partida_torcida;
+delete from partida_disputa_penalties;
 ";
 
 #psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "

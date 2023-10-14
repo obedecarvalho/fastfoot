@@ -47,8 +47,8 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" (id, id_jogador, id_clube, id_temporada, amistoso,  assistencias, defesas_disputa_penalties, " +
 			" 	faltas, finalizacoes_defendidas, finalizacoes_fora, goleiro_finalizacoes_defendidas, " +
 			" 	gols_disputa_penalties, gols_marcados, gols_perdidos_disputa_penalties, gols_sofridos, " +
-			" 	gols_sofridos_disputa_penalties, numero_jogos, numero_jogos_titular, " +
-			" 	numero_minutos_jogados, numero_rodada_disputa_penalties)" +
+			" 	gols_sofridos_disputa_penalties, jogos, jogos_titular, " +
+			" 	minutos_jogados, rodadas_disputa_penalties)" +
 			" SELECT NEXTVAL('jogador_estatisticas_temporada_seq') AS id," +
 			" 	id_jogador, id_clube, s.id_temporada, amistoso, " +
 			" 	sum(assistencias) AS assistencias," +
@@ -62,10 +62,10 @@ public interface JogadorEstatisticasTemporadaRepository extends JpaRepository<Jo
 			" 	sum(gols_perdidos_disputa_penalties) AS gols_perdidos_disputa_penalties," +
 			" 	sum(gols_sofridos) AS gols_sofridos," +
 			" 	sum(gols_sofridos_disputa_penalties) AS gols_sofridos_disputa_penalties," +
-			" 	sum(numero_jogos) AS numero_jogos," +
-			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
-			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
-			" 	sum(numero_rodada_disputa_penalties) AS numero_rodada_disputa_penalties" +
+			" 	sum(jogos) AS jogos," +
+			" 	sum(jogos_titular) AS jogos_titular," +
+			" 	sum(minutos_jogados) AS minutos_jogados," +
+			" 	sum(rodadas_disputa_penalties) AS rodadas_disputa_penalties" +
 			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" WHERE s.id_temporada = ?1 " +

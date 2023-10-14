@@ -15,6 +15,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.entity.Contrato;
 import com.fastfoot.player.model.entity.Jogador;
+import com.fastfoot.scheduler.model.entity.Semana;
 
 @Repository
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
@@ -31,7 +32,7 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 			+ " FROM Contrato c"
 			+ " WHERE c.clube.ligaJogo = :ligaJogo AND c.ativo = :ativo"
 			+ " 	AND c.clube.id BETWEEN :idClubeMin AND :idClubeMax"
-			+ " 	AND (c.semanaInicial.temporada.ano + c.numeroTemporadasDuracao - 1) < :anoAtual"
+			+ " 	AND (c.semanaInicial.temporada.ano + c.temporadasDuracao - 1) < :anoAtual"
 			//+ " 	AND c.jogador.statusJogador = :status"
 			)
 	public List<Contrato> findByLigaJogoAndAtivoAndVencidos(@Param("ligaJogo") LigaJogo ligaJogo, @Param("ativo") Boolean ativo,
@@ -62,6 +63,16 @@ public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 	@Modifying
 	@Query("UPDATE Contrato c SET c.ativo = false WHERE c IN :contratos")
 	public void desativar(@Param("contratos") Collection<Contrato> contratos);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Contrato c SET c.ativo = false WHERE c.jogador IN :jogadores")
+	public void desativarPorJogadores(@Param("jogadores") Collection<Jogador> jogadores);
+	
+	@Transactional
+	@Modifying
+	@Query("UPDATE Contrato c SET c.semanaInicial = :semana WHERE c.semanaInicial IS NULL")
+	public void updateSemanaInicial(@Param("semana") Semana semana);
 	
 	//###	/INSERT, UPDATE E DELETE	###
 }

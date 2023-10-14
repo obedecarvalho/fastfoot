@@ -2,6 +2,7 @@
 #--remover jogadores
 [ -z $1 ] && exit;
 psql -h 127.0.0.1 -W -d fastfoot -U fastfoot -c "
+BEGIN;
 delete
 from disponivel_negociacao dn
 where id_jogador in (
@@ -124,6 +125,12 @@ where id not in (
 	union all
 	select id_partida_torcida
 	from partida_resultado
+);
+delete
+from partida_disputa_penalties
+where id not in (
+	select id_partida_disputa_penalties
+	from partida_eliminatoria_resultado
 );
 delete
 from partida_probabilidade_resultado
@@ -314,4 +321,5 @@ where id_temporada in (
 delete
 from temporada
 where id_jogo = $1;
+COMMIT;
 ";

@@ -18,9 +18,9 @@ public class PartidaDisputaPenalties {
 	
 	private Integer golsVisitantePenalties;
 	
-	private Integer numeroPenaltiesBatidosMandante;
+	private Integer penaltiesBatidosMandante;
 	
-	private Integer numeroPenaltiesBatidosVisitante;
+	private Integer penaltiesBatidosVisitante;
 	
 	private Integer penaltiesDefendidosMandante;
 	
@@ -33,8 +33,8 @@ public class PartidaDisputaPenalties {
 	public PartidaDisputaPenalties() {
 		this.golsMandantePenalties = 0;
 		this.golsVisitantePenalties = 0;
-		this.numeroPenaltiesBatidosMandante = 0;
-		this.numeroPenaltiesBatidosVisitante = 0;
+		this.penaltiesBatidosMandante = 0;
+		this.penaltiesBatidosVisitante = 0;
 		this.penaltiesDefendidosMandante = 0;
 		this.penaltiesDefendidosVisitante = 0;
 		this.penaltiesForaMandante = 0;
@@ -65,12 +65,12 @@ public class PartidaDisputaPenalties {
 		this.golsVisitantePenalties = golsVisitantePenalties;
 	}
 
-	public Integer getNumeroPenaltiesBatidosMandante() {
-		return numeroPenaltiesBatidosMandante;
+	public Integer getPenaltiesBatidosMandante() {
+		return penaltiesBatidosMandante;
 	}
 
-	public void setNumeroPenaltiesBatidosMandante(Integer numeroPenaltiesBatidosMandante) {
-		this.numeroPenaltiesBatidosMandante = numeroPenaltiesBatidosMandante;
+	public void setPenaltiesBatidosMandante(Integer penaltiesBatidosMandante) {
+		this.penaltiesBatidosMandante = penaltiesBatidosMandante;
 	}
 
 	public Integer getPenaltiesDefendidosMandante() {
@@ -105,12 +105,12 @@ public class PartidaDisputaPenalties {
 		this.penaltiesForaVisitante = penaltiesForaVisitante;
 	}
 
-	public Integer getNumeroPenaltiesBatidosVisitante() {
-		return numeroPenaltiesBatidosVisitante;
+	public Integer getPenaltiesBatidosVisitante() {
+		return penaltiesBatidosVisitante;
 	}
 
-	public void setNumeroPenaltiesBatidosVisitante(Integer numeroPenaltiesBatidosVisitante) {
-		this.numeroPenaltiesBatidosVisitante = numeroPenaltiesBatidosVisitante;
+	public void setPenaltiesBatidosVisitante(Integer penaltiesBatidosVisitante) {
+		this.penaltiesBatidosVisitante = penaltiesBatidosVisitante;
 	}
 
 }

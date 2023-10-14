@@ -41,10 +41,10 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" 	sum(gols_perdidos_disputa_penalties) AS gols_perdidos_disputa_penalties," +
 			" 	sum(gols_sofridos) AS gols_sofridos," +
 			" 	sum(gols_sofridos_disputa_penalties) AS gols_sofridos_disputa_penalties," +
-			" 	sum(numero_jogos) AS numero_jogos," +
-			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
-			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
-			" 	sum(numero_rodada_disputa_penalties) AS numero_rodada_disputa_penalties" +
+			" 	sum(jogos) AS jogos," +
+			" 	sum(jogos_titular) AS jogos_titular," +
+			" 	sum(minutos_jogados) AS minutos_jogados," +
+			" 	sum(rodadas_disputa_penalties) AS rodadas_disputa_penalties" +
 			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
@@ -71,10 +71,10 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" 	sum(gols_perdidos_disputa_penalties) AS gols_perdidos_disputa_penalties," +
 			" 	sum(gols_sofridos) AS gols_sofridos," +
 			" 	sum(gols_sofridos_disputa_penalties) AS gols_sofridos_disputa_penalties," +
-			" 	sum(numero_jogos) AS numero_jogos," +
-			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
-			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
-			" 	sum(numero_rodada_disputa_penalties) AS numero_rodada_disputa_penalties" +
+			" 	sum(jogos) AS jogos," +
+			" 	sum(jogos_titular) AS jogos_titular," +
+			" 	sum(minutos_jogados) AS minutos_jogados," +
+			" 	sum(rodadas_disputa_penalties) AS rodadas_disputa_penalties" +
 			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +
@@ -102,10 +102,10 @@ public interface JogadorEstatisticasSemanaRepository extends JpaRepository<Jogad
 			" 	sum(gols_perdidos_disputa_penalties) AS gols_perdidos_disputa_penalties," +
 			" 	sum(gols_sofridos) AS gols_sofridos," +
 			" 	sum(gols_sofridos_disputa_penalties) AS gols_sofridos_disputa_penalties," +
-			" 	sum(numero_jogos) AS numero_jogos," +
-			" 	sum(numero_jogos_titular) AS numero_jogos_titular," +
-			" 	sum(numero_minutos_jogados) AS numero_minutos_jogados," +
-			" 	sum(numero_rodada_disputa_penalties) AS numero_rodada_disputa_penalties" +
+			" 	sum(jogos) AS jogos," +
+			" 	sum(jogos_titular) AS jogos_titular," +
+			" 	sum(minutos_jogados) AS minutos_jogados," +
+			" 	sum(rodadas_disputa_penalties) AS rodadas_disputa_penalties" +
 			" FROM jogador_estatisticas_semana jes" +
 			" INNER JOIN semana s ON jes.id_semana = s.id" +
 			" INNER JOIN jogador j ON j.id = jes.id_jogador" +

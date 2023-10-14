@@ -413,8 +413,9 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 	private Map<Clube, ClubeSaldo> getClubeSaldo(Temporada temporada) {
 
-		double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
-		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository.findSaldoProjetadoPorClube(porcSalarioAnual, temporada.getJogo().getId());
+		//double porcSalarioAnual = Constantes.PORC_VALOR_JOG_SALARIO_SEMANAL * Constantes.NUM_SEMANAS;
+		List<Map<String, Object>> saldoClubes = movimentacaoFinanceiraRepository
+				.findSaldoProjetadoPorClube(Constantes.NUM_SEMANAS, temporada.getJogo().getId());
 		
 		Map<Clube, ClubeSaldo> clubesSaldo = new HashMap<Clube, ClubeSaldo>();
 		

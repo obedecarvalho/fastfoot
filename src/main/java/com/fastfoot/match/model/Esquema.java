@@ -57,7 +57,7 @@ public interface Esquema {
 	
 	public Jogador getJogadorSemPosse();
 
-	public Double getProbabilidadeArremateForaPosicaoPosse();
+	//public Double getProbabilidadeArremateForaPosicaoPosse();
 	
 	public List<EsquemaPosicao> getPosicoes();
 	

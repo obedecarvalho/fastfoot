@@ -19,9 +19,9 @@ public class EsquemaPosicao {
 	
 	private List<EsquemaTransicao> transicoesVisitante;
 	
-	private Double probabilidadeArremateForaMandante;
+	//private Double probabilidadeArremateForaMandante;
 	
-	private Double probabilidadeArremateForaVisitante;
+	//private Double probabilidadeArremateForaVisitante;
 	
 	public EsquemaPosicao() {
 		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
@@ -36,16 +36,16 @@ public class EsquemaPosicao {
 		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
 	}
 	
-	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante, Double probabilidadeArremateForaMandante,
-			Double probabilidadeArremateForaVisitante) {
+	public EsquemaPosicao(Integer numero, Jogador mandante, Jogador visitante/*, Double probabilidadeArremateForaMandante,
+			Double probabilidadeArremateForaVisitante*/) {
 		super();
 		this.mandante = mandante;
 		this.visitante = visitante;
 		this.numero = numero;
 		this.transicoesMandante = new ArrayList<EsquemaTransicao>();
 		this.transicoesVisitante = new ArrayList<EsquemaTransicao>();
-		this.probabilidadeArremateForaMandante = probabilidadeArremateForaMandante;
-		this.probabilidadeArremateForaVisitante = probabilidadeArremateForaVisitante;
+		//this.probabilidadeArremateForaMandante = probabilidadeArremateForaMandante;
+		//this.probabilidadeArremateForaVisitante = probabilidadeArremateForaVisitante;
 	}
 
 	public Jogador getMandante() {
@@ -96,7 +96,7 @@ public class EsquemaPosicao {
 		this.goleiro = goleiro;
 	}
 
-	public Double getProbabilidadeArremateForaMandante() {
+	/*public Double getProbabilidadeArremateForaMandante() {
 		return probabilidadeArremateForaMandante;
 	}
 
@@ -110,15 +110,15 @@ public class EsquemaPosicao {
 
 	public void setProbabilidadeArremateForaVisitante(Double probabilidadeArremateForaVisitante) {
 		this.probabilidadeArremateForaVisitante = probabilidadeArremateForaVisitante;
-	}
+	}*/
 	
-	public Double getProbabilidadeArremateFora(boolean posseMandante) {
+	/*public Double getProbabilidadeArremateFora(boolean posseMandante) {
 		if (posseMandante) {
 			return probabilidadeArremateForaMandante;
 		} else {
 			return probabilidadeArremateForaVisitante;
 		}
-	}
+	}*/
 
 	public void addTransicaoMandante(EsquemaTransicao esquemaTransicao) {
 		transicoesMandante.add(esquemaTransicao);

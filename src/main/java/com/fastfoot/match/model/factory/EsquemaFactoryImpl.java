@@ -160,17 +160,17 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 		EsquemaPosicao ded = new EsquemaPosicao();
 		ded.setNumero(i++);
 		ded.setMandante(mandantesMap.get(EscalacaoPosicao.P_ZD).getJogador());
-		ded.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
+		//ded.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
 		ded.setVisitante(visitantesMap.get(EscalacaoPosicao.P_AE).getJogador());
-		ded.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
+		//ded.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
 		
 		
 		EsquemaPosicao dee = new EsquemaPosicao();
 		dee.setNumero(i++);
 		dee.setMandante(mandantesMap.get(EscalacaoPosicao.P_ZE).getJogador());
-		dee.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
+		//dee.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
 		dee.setVisitante(visitantesMap.get(EscalacaoPosicao.P_AD).getJogador());
-		dee.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
+		//dee.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
 		
 		//#3 Linha
 		
@@ -180,23 +180,23 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 		EsquemaPosicao mdd = new EsquemaPosicao();
 		mdd.setNumero(i++);
 		mdd.setMandante(mandantesMap.get(escalacaoPosicaoMandante[0]).getJogador());
-		mdd.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//mdd.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		mdd.setVisitante(visitantesMap.get(escalacaoPosicaoVisitante[0]).getJogador());
-		mdd.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//mdd.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		
 		EsquemaPosicao mdc = new EsquemaPosicao();
 		mdc.setNumero(i++);
 		mdc.setMandante(mandantesMap.get(escalacaoPosicaoMandante[1]).getJogador());
-		mdc.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//mdc.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		mdc.setVisitante(visitantesMap.get(escalacaoPosicaoVisitante[1]).getJogador());
-		mdc.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//mdc.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		
 		EsquemaPosicao mde = new EsquemaPosicao();
 		mde.setNumero(i++);
 		mde.setMandante(mandantesMap.get(escalacaoPosicaoMandante[2]).getJogador());
-		mde.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//mde.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		mde.setVisitante(visitantesMap.get(escalacaoPosicaoVisitante[2]).getJogador());
-		mde.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//mde.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		
 		//#4 Linha
 		
@@ -206,39 +206,39 @@ public class EsquemaFactoryImpl extends EsquemaFactory {
 		EsquemaPosicao mod = new EsquemaPosicao();
 		mod.setNumero(i++);
 		mod.setMandante(mandantesMap.get(escalacaoPosicaoMandanteL4[0]).getJogador());
-		mod.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//mod.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		mod.setVisitante(visitantesMap.get(escalacaoPosicaoVisitanteL4[0]).getJogador());
-		mod.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//mod.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		
 		EsquemaPosicao moc = new EsquemaPosicao();
 		moc.setNumero(i++);
 		moc.setMandante(mandantesMap.get(escalacaoPosicaoMandanteL4[1]).getJogador());
-		moc.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//moc.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		moc.setVisitante(visitantesMap.get(escalacaoPosicaoVisitanteL4[1]).getJogador());
-		moc.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//moc.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		
 		EsquemaPosicao moe = new EsquemaPosicao();
 		moe.setNumero(i++);
 		moe.setMandante(mandantesMap.get(escalacaoPosicaoMandanteL4[2]).getJogador());
-		moe.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
+		//moe.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_4);
 		moe.setVisitante(visitantesMap.get(escalacaoPosicaoVisitanteL4[2]).getJogador());
-		moe.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
+		//moe.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_3);
 		
 		//#5 Linha
 		EsquemaPosicao atd = new EsquemaPosicao();
 		atd.setNumero(i++);
 		atd.setMandante(mandantesMap.get(EscalacaoPosicao.P_AD).getJogador());
-		atd.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
+		//atd.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
 		atd.setVisitante(visitantesMap.get(EscalacaoPosicao.P_ZE).getJogador());
-		atd.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
+		//atd.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
 		
 		
 		EsquemaPosicao ate = new EsquemaPosicao();
 		ate.setNumero(i++);
 		ate.setMandante(mandantesMap.get(EscalacaoPosicao.P_AE).getJogador());
-		ate.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
+		//ate.setProbabilidadeArremateForaMandante(PROBABILIDADE_ARREMATE_FORA_LINHA_5);
 		ate.setVisitante(visitantesMap.get(EscalacaoPosicao.P_ZD).getJogador());
-		ate.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
+		//ate.setProbabilidadeArremateForaVisitante(PROBABILIDADE_ARREMATE_FORA_LINHA_2);
 
 		//Goleiro Visitante
 		EsquemaPosicao gov = new EsquemaPosicao();

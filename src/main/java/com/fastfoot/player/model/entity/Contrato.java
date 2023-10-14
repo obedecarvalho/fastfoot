@@ -37,9 +37,9 @@ public class Contrato {
 	 * Numero de temporadas de duracao do contrato.
 	 * 
 	 * O contrato dura até a ultima semana da temporada de ano igual a:
-	 * 	- (semanaInicial.temporada.ano + numeroTemporadasDuracao - 1)
+	 * 	- (semanaInicial.temporada.ano + temporadasDuracao - 1)
 	 */
-	private Integer numeroTemporadasDuracao;
+	private Integer temporadasDuracao;
 
 	private Double salario;
 	
@@ -47,13 +47,13 @@ public class Contrato {
 
 	}
 
-	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Integer numeroTemporadasDuracao, Boolean ativo, Double salario) {
+	public Contrato(Clube clube, Jogador jogador, Semana semanaInicial, Integer temporadasDuracao, Boolean ativo, Double salario) {
 		super();
 		this.clube = clube;
 		this.jogador = jogador;
 		this.semanaInicial = semanaInicial;
 		this.ativo = ativo;
-		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
+		this.temporadasDuracao = temporadasDuracao;
 		this.salario = salario;
 	}
 
@@ -97,16 +97,16 @@ public class Contrato {
 		this.ativo = ativo;
 	}
 
-	public Integer getNumeroTemporadasDuracao() {
-		return numeroTemporadasDuracao;
+	public Integer getTemporadasDuracao() {
+		return temporadasDuracao;
 	}
 
-	public void setNumeroTemporadasDuracao(Integer numeroTemporadasDuracao) {
-		this.numeroTemporadasDuracao = numeroTemporadasDuracao;
+	public void setTemporadasDuracao(Integer temporadasDuracao) {
+		this.temporadasDuracao = temporadasDuracao;
 	}
 	
 	public Integer getAnoFinalContrato() {
-		return this.semanaInicial.getTemporada().getAno() + numeroTemporadasDuracao - 1;
+		return this.semanaInicial.getTemporada().getAno() + temporadasDuracao - 1;
 	}
 
 	public Double getSalario() {
@@ -119,7 +119,7 @@ public class Contrato {
 
 	@Override
 	public String toString() {
-		return "Contrato [semanaInicial=" + semanaInicial + ", numeroTemporadasDuracao=" + numeroTemporadasDuracao
+		return "Contrato [semanaInicial=" + semanaInicial + ", temporadasDuracao=" + temporadasDuracao
 				+ ", getAnoFinalContrato()=" + getAnoFinalContrato() + "]";
 	}
 
