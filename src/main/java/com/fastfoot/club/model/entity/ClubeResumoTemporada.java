@@ -50,6 +50,8 @@ public class ClubeResumoTemporada {
 	
 	private Integer golsContra;
 	
+	private Integer pontuacao;
+	
 	//private Integer posicaoFinal;
 	
 	private ClassificacaoNacional classificacaoNacional;
@@ -66,6 +68,7 @@ public class ClubeResumoTemporada {
 		this.empates = 0;
 		this.golsPro = 0;
 		this.golsContra = 0;
+		this.pontuacao = 0;
 	}
 
 	public Long getId() {
@@ -147,6 +150,14 @@ public class ClubeResumoTemporada {
 	public void setPosicaoFinal(Integer posicaoFinal) {
 		this.posicaoFinal = posicaoFinal;
 	}*/
+
+	public Integer getPontuacao() {
+		return pontuacao;
+	}
+
+	public void setPontuacao(Integer pontuacao) {
+		this.pontuacao = pontuacao;
+	}
 
 	public ClassificacaoNacional getClassificacaoNacional() {
 		return classificacaoNacional;

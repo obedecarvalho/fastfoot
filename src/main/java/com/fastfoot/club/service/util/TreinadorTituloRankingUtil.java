@@ -1,16 +1,13 @@
 package com.fastfoot.club.service.util;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
-import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.club.model.entity.ClubeRanking;
+import com.fastfoot.club.model.entity.TreinadorResumoTemporada;
 import com.fastfoot.club.model.entity.TreinadorTituloRanking;
+import com.fastfoot.scheduler.model.NivelCampeonato;
 
-public class TreinadorTituloRankingUtil {
+public class TreinadorTituloRankingUtil {//TODO: renomear para TreinadorPontuacaoUtil?
 	
 	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_I = 100;
 	private static final Integer PONTUACAO_TITULOS_CONTINENTAL_II = 84;
@@ -19,12 +16,66 @@ public class TreinadorTituloRankingUtil {
 	private static final Integer PONTUACAO_TITULOS_COPA_NACIONAL_II = 60;
 	private static final Integer PONTUACAO_TITULOS_NACIONAL_I = 96;
 	private static final Integer PONTUACAO_TITULOS_NACIONAL_II = 48;
-
-	public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<TreinadorTituloRanking> rankingsTitulos) {
-		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(t -> t.getTreinador().getClube(), Function.identity())));
-	}
 	
-	protected static void atualizarRankingTitulos(List<ClubeRanking> rankings, Map<Clube, TreinadorTituloRanking> rankingsTitulos) {
+	private static final Integer PONTUACAO_VITORIA_NACIONAL = 9;
+	private static final Integer PONTUACAO_EMPATE_NACIONAL = 3;
+	private static final Integer PONTUACAO_VITORIA_NACIONAL_II = 3;
+	private static final Integer PONTUACAO_EMPATE_NACIONAL_II = 1;
+	private static final Integer PONTUACAO_VITORIA_COPA_NACIONAL = 18;
+	private static final Integer PONTUACAO_EMPATE_COPA_NACIONAL = 6;
+	private static final Integer PONTUACAO_VITORIA_COPA_NACIONAL_II = 9;
+	private static final Integer PONTUACAO_EMPATE_COPA_NACIONAL_II = 3;
+	private static final Integer PONTUACAO_VITORIA_CONTINENTAL = 24;
+	private static final Integer PONTUACAO_EMPATE_CONTINENTAL = 8;
+	private static final Integer PONTUACAO_VITORIA_CONTINENTAL_II = 18;
+	private static final Integer PONTUACAO_EMPATE_CONTINENTAL_II = 6;
+	private static final Integer PONTUACAO_VITORIA_CONTINENTAL_III = 12;
+	private static final Integer PONTUACAO_EMPATE_CONTINENTAL_III = 4;
+	private static final Integer PONTUACAO_VITORIA_CONTINENTAL_OUTROS = 0;
+	private static final Integer PONTUACAO_EMPATE_CONTINENTAL_OUTROS = 0;
+	private static final Integer PONTUACAO_VITORIA_AMISTOSO_INTERNACIONAL = 0;
+	private static final Integer PONTUACAO_EMPATE_AMISTOSO_INTERNACIONAL = 0;
+	private static final Integer PONTUACAO_VITORIA_AMISTOSO_NACIONAL = 0;
+	private static final Integer PONTUACAO_EMPATE_AMISTOSO_NACIONAL = 0;
+	
+	private static final Map<NivelCampeonato, Integer> PONTUACAO_VITORIA;
+	
+	private static final Map<NivelCampeonato, Integer> PONTUACAO_EMPATE;
+	
+	static {
+		
+		PONTUACAO_VITORIA = new HashMap<NivelCampeonato, Integer>();
+		
+		PONTUACAO_EMPATE = new HashMap<NivelCampeonato, Integer>();
+		
+		PONTUACAO_VITORIA.put(NivelCampeonato.NACIONAL, PONTUACAO_VITORIA_NACIONAL);
+		PONTUACAO_VITORIA.put(NivelCampeonato.NACIONAL_II, PONTUACAO_VITORIA_NACIONAL_II);
+		PONTUACAO_VITORIA.put(NivelCampeonato.COPA_NACIONAL, PONTUACAO_VITORIA_COPA_NACIONAL);
+		PONTUACAO_VITORIA.put(NivelCampeonato.COPA_NACIONAL_II, PONTUACAO_VITORIA_COPA_NACIONAL_II);
+		PONTUACAO_VITORIA.put(NivelCampeonato.CONTINENTAL, PONTUACAO_VITORIA_CONTINENTAL);
+		PONTUACAO_VITORIA.put(NivelCampeonato.CONTINENTAL_II, PONTUACAO_VITORIA_CONTINENTAL_II);
+		PONTUACAO_VITORIA.put(NivelCampeonato.CONTINENTAL_III, PONTUACAO_VITORIA_CONTINENTAL_III);
+		PONTUACAO_VITORIA.put(NivelCampeonato.CONTINENTAL_OUTROS, PONTUACAO_VITORIA_CONTINENTAL_OUTROS);
+		PONTUACAO_VITORIA.put(NivelCampeonato.AMISTOSO_INTERNACIONAL, PONTUACAO_VITORIA_AMISTOSO_INTERNACIONAL);
+		PONTUACAO_VITORIA.put(NivelCampeonato.AMISTOSO_NACIONAL, PONTUACAO_VITORIA_AMISTOSO_NACIONAL);
+		
+		PONTUACAO_EMPATE.put(NivelCampeonato.NACIONAL, PONTUACAO_EMPATE_NACIONAL);
+		PONTUACAO_EMPATE.put(NivelCampeonato.NACIONAL_II, PONTUACAO_EMPATE_NACIONAL_II);
+		PONTUACAO_EMPATE.put(NivelCampeonato.COPA_NACIONAL, PONTUACAO_EMPATE_COPA_NACIONAL);
+		PONTUACAO_EMPATE.put(NivelCampeonato.COPA_NACIONAL_II, PONTUACAO_EMPATE_COPA_NACIONAL_II);
+		PONTUACAO_EMPATE.put(NivelCampeonato.CONTINENTAL, PONTUACAO_EMPATE_CONTINENTAL);
+		PONTUACAO_EMPATE.put(NivelCampeonato.CONTINENTAL_II, PONTUACAO_EMPATE_CONTINENTAL_II);
+		PONTUACAO_EMPATE.put(NivelCampeonato.CONTINENTAL_III, PONTUACAO_EMPATE_CONTINENTAL_III);
+		PONTUACAO_EMPATE.put(NivelCampeonato.CONTINENTAL_OUTROS, PONTUACAO_EMPATE_CONTINENTAL_OUTROS);
+		PONTUACAO_EMPATE.put(NivelCampeonato.AMISTOSO_INTERNACIONAL, PONTUACAO_EMPATE_AMISTOSO_INTERNACIONAL);
+		PONTUACAO_EMPATE.put(NivelCampeonato.AMISTOSO_NACIONAL, PONTUACAO_EMPATE_AMISTOSO_NACIONAL);
+	}
+
+	/*public static void atualizarRankingTitulos(List<ClubeRanking> rankings, List<TreinadorTituloRanking> rankingsTitulos) {
+		atualizarRankingTitulos(rankings, rankingsTitulos.stream().collect(Collectors.toMap(t -> t.getTreinador().getClube(), Function.identity())));
+	}*/
+	
+	/*protected static void atualizarRankingTitulos(List<ClubeRanking> rankings, Map<Clube, TreinadorTituloRanking> rankingsTitulos) {
 	
 		List<ClubeRanking> campeoesContinentais = rankings.stream().filter(r -> r.isCampeaoContinental()).collect(Collectors.toList());
 		List<ClubeRanking> campeoesContinentaisII = rankings.stream().filter(r -> r.isCampeaoContinentalII()).collect(Collectors.toList());
@@ -88,7 +139,7 @@ public class TreinadorTituloRankingUtil {
 		}
 		
 		tituloRankingsRecalcular.stream().forEach(tr -> calcularPontuacao(tr));
-	}
+	}*/
 	
 	public static void calcularPontuacao(TreinadorTituloRanking ctr) {
 
@@ -106,6 +157,18 @@ public class TreinadorTituloRankingUtil {
 		
 		
 		ctr.setPontuacao(pontuacao);
+	}
+
+	public static void calcularPontuacao(TreinadorResumoTemporada treinadorResumoTemporada) {
+		
+		Integer pontuacao = 0;
+		
+		pontuacao += PONTUACAO_VITORIA.get(treinadorResumoTemporada.getNivelCampeonato()) * treinadorResumoTemporada.getVitorias();
+		
+		pontuacao += PONTUACAO_EMPATE.get(treinadorResumoTemporada.getNivelCampeonato()) * treinadorResumoTemporada.getEmpates();
+		
+		treinadorResumoTemporada.setPontuacao(pontuacao);
+		
 	}
 
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.ClubeResumoTemporada;
 import com.fastfoot.club.model.repository.ClubeResumoTemporadaRepository;
+import com.fastfoot.club.service.util.ClubeTituloRankingUtil;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
@@ -168,6 +169,8 @@ public class AtualizarClubeResumoTemporadaPorRodadaService {
 			}
 
 		}
+		
+		resumos.stream().forEach(r -> ClubeTituloRankingUtil.calcularPontuacao(r));
 		
 		clubeResumoTemporadaRepository.saveAll(resumos);
 

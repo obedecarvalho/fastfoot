@@ -16,6 +16,7 @@ import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.Treinador;
 import com.fastfoot.club.model.entity.TreinadorResumoTemporada;
 import com.fastfoot.club.model.repository.TreinadorResumoTemporadaRepository;
+import com.fastfoot.club.service.util.TreinadorTituloRankingUtil;
 import com.fastfoot.model.Constantes;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.ClassificacaoContinental;
@@ -189,6 +190,8 @@ public class AtualizarTreinadorResumoTemporadaPorRodadaService {
 			}
 
 		}
+		
+		resumos.stream().forEach(r -> TreinadorTituloRankingUtil.calcularPontuacao(r));
 		
 		treinadorResumoTemporadaRepository.saveAll(resumos);
 
