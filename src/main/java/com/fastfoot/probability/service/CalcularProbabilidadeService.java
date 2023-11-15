@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
+
 import com.fastfoot.bets.model.entity.PartidaProbabilidadeResultado;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.model.Constantes;
@@ -240,6 +242,15 @@ public abstract class CalcularProbabilidadeService {
 			TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade, Map<Integer, Clube> clubesCampeoes,
 			Integer numeroRebaixados) {
 		
+		//Instanciar StopWatch
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+		
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
+		
 		Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, CampeonatoClubeProbabilidade>();
 		
 		List<Clube> clubesLiga = nacional.getClassificacao().stream().map(c -> c.getClube()).collect(Collectors.toList());
@@ -251,6 +262,11 @@ public abstract class CalcularProbabilidadeService {
 		inicializarClubeProbabilidade(clubeProbabilidades, clubesLigaII, semana, nacionalII, tipoClubeProbabilidade);
 		
 		clubesLiga.addAll(clubesLigaII);
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
 		//Map<Integer, Clube> clubesCampeoes = consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLiga());
 
@@ -297,8 +313,24 @@ public abstract class CalcularProbabilidadeService {
 			agruparClubeRankingProbabilidade(clubeProbabilidades, ranking);
 			
 		}
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#simulacao:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		calcularProbabilidadesEspecificas(clubeProbabilidades, semana, numeroRebaixados);
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#calcularProbabilidadesEspecificas:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		//Finalizar
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		
+		//System.err.println(mensagens);
 		
 		//if (imprimir) printClubeProbabilidade(clubeProbabilidades.values());
 

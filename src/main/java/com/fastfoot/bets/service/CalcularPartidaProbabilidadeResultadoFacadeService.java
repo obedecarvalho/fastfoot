@@ -72,6 +72,9 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 
 	@Autowired
 	private CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService;
+	
+	@Autowired
+	private CalcularPartidaProbabilidadeResultadoForcaGeralService calcularPartidaProbabilidadeResultadoForcaGeralService;
 
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada,
@@ -90,6 +93,8 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 			calcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService.calcularPartidaProbabilidadeResultado(rodada);
 		} else if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_HABILIDADE_GRUPO.equals(tipoClubeProbabilidade)) {
 			calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService.calcularPartidaProbabilidadeResultado(rodada);
+		} else if (TipoCampeonatoClubeProbabilidade.FORCA_GERAL.equals(tipoClubeProbabilidade)) {
+			calcularPartidaProbabilidadeResultadoForcaGeralService.calcularPartidaProbabilidadeResultado(rodada);
 		}
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
@@ -126,6 +131,9 @@ public class CalcularPartidaProbabilidadeResultadoFacadeService {
 			} else {
 				return calcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoService.calcularPartidaProbabilidadeResultado(partidaResultado);
 			}
+		} else if (TipoCampeonatoClubeProbabilidade.FORCA_GERAL.equals(tipoClubeProbabilidade)) {
+			return calcularPartidaProbabilidadeResultadoForcaGeralService
+					.calcularPartidaProbabilidadeResultado(partidaResultado);
 		}
 
 		return null;

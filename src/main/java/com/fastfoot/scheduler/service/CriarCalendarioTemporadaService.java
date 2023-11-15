@@ -760,7 +760,8 @@ public class CriarCalendarioTemporadaService {
 		
 		if (carregarParametroService.getParametroBoolean(temporada.getJogo(), ParametroConstantes.USAR_APOSTAS_ESPORTIVAS) &&
 				(carregarParametroService.getTipoProbabilidadeResultadoPartida(temporada.getJogo()).equals(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA) ||
-				carregarParametroService.getTipoProbabilidadeResultadoPartida(temporada.getJogo()).equals(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO))) {
+				carregarParametroService.getTipoProbabilidadeResultadoPartida(temporada.getJogo()).equals(TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO) ||
+				carregarParametroService.getTipoProbabilidadeResultadoPartida(temporada.getJogo()).equals(TipoProbabilidadeResultadoPartida.FORCA_GERAL))) {
 		
 			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
 			

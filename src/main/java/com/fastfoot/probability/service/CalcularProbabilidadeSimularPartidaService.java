@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -46,11 +47,11 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 	
 	private static final Integer NUM_SIMULACOES_SEM_21 = 10000;
 	
-	private static final Integer NUM_SIMULACOES_SEM_22 = 10000;
+	private static final Integer NUM_SIMULACOES_SEM_22 = 5000;
 	
-	private static final Integer NUM_SIMULACOES_SEM_23 = 10000;
+	private static final Integer NUM_SIMULACOES_SEM_23 = 5000;
 	
-	private static final Integer NUM_SIMULACOES_SEM_24 = 10000;
+	private static final Integer NUM_SIMULACOES_SEM_24 = 5000;
 	
 	private static final Random R = new Random();
 	
@@ -90,25 +91,57 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularProbabilidadesCampeonato(Semana semana, Campeonato nacional, Campeonato nacionalII,
 			TipoCampeonatoClubeProbabilidade tipoClubeProbabilidade) {
+		
+		//Instanciar StopWatch
+		StopWatch stopWatch = new StopWatch();
+		List<String> mensagens = new ArrayList<String>();
+		
+		//Iniciar primeiro bloco
+		stopWatch.start();
+		stopWatch.split();
+		long inicio = stopWatch.getSplitTime();
 
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
 
 		nacionalII.setClassificacao(classificacaoRepository.findByCampeonato(nacionalII));
 		nacionalII.setRodadas(rodadaRepository.findByCampeonato(nacionalII));
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		List<Rodada> rodadas = new ArrayList<Rodada>();
 		rodadas.addAll(nacional.getRodadas());
 		rodadas.addAll(nacionalII.getRodadas());
 		carregarPartidas(semana.getTemporada().getJogo(), rodadas, tipoClubeProbabilidade);
 		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#carregarPartidas:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
 		//
 		Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade = new HashMap<PartidaResultado, PartidaProbabilidadeResultado>();
 		
-		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
-				.getEstatisticasFinalizacaoClube(semana.getTemporada());
-		Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa = calcularEstatisticasFinalizacaoDefesaService
-				.getEstatisticasDefesaClube(semana.getTemporada());
+		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = null;
+
+		Map<Clube, ClubeProbabilidadeDefesa> clubesProbabilidadeDefesa = null;
+
+		if (TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO.equals(tipoClubeProbabilidade) ||
+				TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO_DEFESA.equals(tipoClubeProbabilidade) ||
+				TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_ESTATISTICAS_FINALIZACAO_POISSON.equals(tipoClubeProbabilidade)) {
+			clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
+					.getEstatisticasFinalizacaoClube(semana.getTemporada());
+			clubesProbabilidadeDefesa = calcularEstatisticasFinalizacaoDefesaService
+					.getEstatisticasDefesaClube(semana.getTemporada());
+		}
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#getEstatisticas:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 
 		for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacional.getRodadas().get(r).getPartidas()) {
@@ -117,6 +150,11 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 						p.getEscalacaoVisitante(), tipoClubeProbabilidade));
 			}
 		}
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
 		
 		/*clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
 				.getEstatisticasFinalizacaoClube(nacionalII);
@@ -131,12 +169,33 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		}
 		//
 		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#calcularPartidaProbabilidadeResultadoII:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
 		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional,
 				nacionalII, partidaProbabilidade, tipoClubeProbabilidade,
 				consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLigaJogo()),
 				carregarParametroService.getParametroInteger(semana.getTemporada().getJogo(), ParametroConstantes.NUMERO_CLUBES_REBAIXADOS));
 		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#calcularClubeProbabilidade:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
 		salvarProbabilidades(probabilidades);
+		
+		//Finalizar bloco e já iniciar outro
+		stopWatch.split();
+		mensagens.add("\t#salvarProbabilidades:" + (stopWatch.getSplitTime() - inicio));
+		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		
+		//Finalizar
+		stopWatch.stop();
+		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		
+		//System.err.println(mensagens);
 		
 		return CompletableFuture.completedFuture(true);
 	}

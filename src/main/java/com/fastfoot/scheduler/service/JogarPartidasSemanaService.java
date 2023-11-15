@@ -406,8 +406,7 @@ public class JogarPartidasSemanaService {
 	
 	private void calcularPartidaProbabilidadeResultado(Temporada temporada) {
 		
-		if (carregarParametroService.getParametroBoolean(temporada.getJogo(), ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)
-				&& temporada.getSemanaAtual() > 1) {//TODO: não está calculado probabilidade semana 1 e 2
+		if (carregarParametroService.getParametroBoolean(temporada.getJogo(), ParametroConstantes.USAR_APOSTAS_ESPORTIVAS)) {
 		
 			Optional<Semana> semanaOpt = semanaRepository.findFirstByTemporadaAndNumero(temporada, temporada.getSemanaAtual() + 1);
 			

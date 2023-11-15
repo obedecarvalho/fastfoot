@@ -67,7 +67,7 @@ for i in range(1, numTemporada+1):
 	numero = 0
 
 	while numero < rodadaFinal:
-		time.sleep(0.5)
+		time.sleep(0.1)
 		start_time = time.time()
 		r = requests.get(url + '/' + str(id_jogo))
 		finish_time = time.time()
@@ -79,7 +79,7 @@ for i in range(1, numTemporada+1):
 			exit()
 
 	for j in range(totalRodadas):
-		time.sleep(0.5)
+		time.sleep(0.1)
 		start_time = time.time()
 		r = requests.get(url + '/' + str(id_jogo))
 		finish_time = time.time()

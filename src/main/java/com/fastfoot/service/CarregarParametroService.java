@@ -102,6 +102,8 @@ public class CarregarParametroService {
 			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
 			return TipoProbabilidadeResultadoPartida.SIMULAR_PARTIDA_HABILIDADE_GRUPO;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_FORCA_GERAL_PARAM.equals(metodoCalculo)) {
+			return TipoProbabilidadeResultadoPartida.FORCA_GERAL;
 		}
 
 		return TipoProbabilidadeResultadoPartida.ZERO;
@@ -120,6 +122,8 @@ public class CarregarParametroService {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA;
 		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM.equals(metodoCalculo)) {
 			return TipoCampeonatoClubeProbabilidade.SIMULAR_PARTIDA_HABILIDADE_GRUPO;
+		} else if (ParametroConstantes.METODO_CALCULO_PROBABILIDADE_FORCA_GERAL_PARAM.equals(metodoCalculo)) {
+			return TipoCampeonatoClubeProbabilidade.FORCA_GERAL;
 		}
 
 		return TipoCampeonatoClubeProbabilidade.ZERO;

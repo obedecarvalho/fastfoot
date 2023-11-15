@@ -19,6 +19,8 @@ import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.CarregarJogadorEnergiaService;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
@@ -48,31 +50,44 @@ public class CalcularPartidaProbabilidadeResultadoSimularPartidaHabilidadeGrupoS
 	@Autowired
 	private CarregarEscalacaoJogadoresPartidaService carregarEscalacaoJogadoresPartidaService;
 
+	@Override
 	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
 
 		List<PartidaProbabilidadeResultado> probabilidades = new ArrayList<PartidaProbabilidadeResultado>();
 		
-		List<? extends PartidaResultadoJogavel> partidas = null;
+		//List<? extends PartidaResultadoJogavel> partidas = null;
 		
 		if (rodada instanceof Rodada) {
-			partidas = partidaResultadoRepository.findByRodada((Rodada) rodada);
+			List<PartidaResultado> partidas = partidaResultadoRepository.findByRodada((Rodada) rodada);
+			
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), partidas);
+
+			for (PartidaResultadoJogavel p : partidas) {
+				probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
+				//probabilidades.add(simularPartida(p));
+			}
+
+			partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+			partidaResultadoRepository.saveAll(partidas);
 		} else if (rodada instanceof RodadaEliminatoria) {
-			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
+			List<PartidaEliminatoriaResultado> partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
+			
+			carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), partidas);
+
+			for (PartidaResultadoJogavel p : partidas) {
+				probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
+				//probabilidades.add(simularPartida(p));
+			}
+
+			partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+			partidaEliminatoriaResultadoRepository.saveAll(partidas);
 		}
-
-		carregarEscalacaoJogadoresPartidaService.carregarEscalacaoHabilidadeGrupo(rodada.getSemana().getTemporada().getJogo(), partidas);
-
-		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(calcularPartidaProbabilidadeResultado(p, p.getEscalacaoMandante(), p.getEscalacaoVisitante()));
-			//probabilidades.add(simularPartida(p));
-		}
-
-		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
-
+		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 
 	}
 
+	@Override
 	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado) {
 		
 		List<Jogador> jogadoresMandante = jogadorRepository

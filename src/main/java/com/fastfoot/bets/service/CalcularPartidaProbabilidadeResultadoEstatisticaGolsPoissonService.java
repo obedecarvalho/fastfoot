@@ -16,6 +16,8 @@ import com.fastfoot.player.service.CalcularEstatisticasFinalizacaoDefesaService;
 import com.fastfoot.probability.model.ClubeProbabilidadeFinalizacao;
 import com.fastfoot.scheduler.model.PartidaResultadoJogavel;
 import com.fastfoot.scheduler.model.RodadaJogavel;
+import com.fastfoot.scheduler.model.entity.PartidaEliminatoriaResultado;
+import com.fastfoot.scheduler.model.entity.PartidaResultado;
 import com.fastfoot.scheduler.model.entity.Rodada;
 import com.fastfoot.scheduler.model.entity.RodadaEliminatoria;
 import com.fastfoot.scheduler.model.repository.PartidaEliminatoriaResultadoRepository;
@@ -41,29 +43,39 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService 
 	@Autowired
 	private CalcularEstatisticasFinalizacaoDefesaService calcularEstatisticasFinalizacaoDefesaService;
 
+	@Override
 	//@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularPartidaProbabilidadeResultado(RodadaJogavel rodada) {
-		
+
 		List<PartidaProbabilidadeResultado> probabilidades = new ArrayList<PartidaProbabilidadeResultado>();
 		
-		List<? extends PartidaResultadoJogavel> partidas = null;
-		
-		if (rodada instanceof Rodada) {
-			partidas = partidaResultadoRepository.findByRodada((Rodada) rodada);
-		} else if (rodada instanceof RodadaEliminatoria) {
-			partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
-		}
+		//List<? extends PartidaResultadoJogavel> partidas = null;
 		
 		Map<Clube, ClubeProbabilidadeFinalizacao> clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
 				.getEstatisticasFinalizacaoClube(rodada.getSemana().getTemporada());
 		
-		for (PartidaResultadoJogavel p : partidas) {
-			probabilidades.add(calcularPartidaProbabilidadeResultado(p, clubeProbabilidadeFinalizacoes));
-		}
+		if (rodada instanceof Rodada) {
+			List<PartidaResultado> partidas = partidaResultadoRepository.findByRodada((Rodada) rodada);
+			
+			for (PartidaResultadoJogavel p : partidas) {
+				probabilidades.add(calcularPartidaProbabilidadeResultado(p, clubeProbabilidadeFinalizacoes));
+			}
 
-		partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+			partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+			partidaResultadoRepository.saveAll(partidas);
+		} else if (rodada instanceof RodadaEliminatoria) {
+			List<PartidaEliminatoriaResultado> partidas = partidaEliminatoriaResultadoRepository.findByRodada((RodadaEliminatoria) rodada);
+			
+			for (PartidaResultadoJogavel p : partidas) {
+				probabilidades.add(calcularPartidaProbabilidadeResultado(p, clubeProbabilidadeFinalizacoes));
+			}
+
+			partidaProbabilidadeResultadoRepository.saveAll(probabilidades);
+			partidaEliminatoriaResultadoRepository.saveAll(partidas);
+		}
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
+
 	}
 	
 	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(PartidaResultadoJogavel partidaResultado,
@@ -123,5 +135,12 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaGolsPoissonService 
 
 		return partidaProbabilidadeResultado;
 
+	}
+
+	@Override
+	public PartidaProbabilidadeResultado calcularPartidaProbabilidadeResultado(
+			PartidaResultadoJogavel partidaResultado) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

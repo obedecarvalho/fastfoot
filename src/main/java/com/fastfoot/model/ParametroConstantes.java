@@ -73,6 +73,8 @@ public class ParametroConstantes {
 	
 	public static final String METODO_CALCULO_PROBABILIDADE_SIMULAR_PARTIDA_HABILIDADE_GRUPO_PARAM = "SIMULAR_PARTIDA_HABILIDADE_GRUPO";
 	
+	public static final String METODO_CALCULO_PROBABILIDADE_FORCA_GERAL_PARAM = "FORCA_GERAL";
+	
 	/*public static final String ESCALACAO_PADRAO = "ESCALACAO_PADRAO";
 
 	public static final String ESCALACAO_PADRAO_PARAM_41212 = "4-1-2-1-2";
