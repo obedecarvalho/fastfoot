@@ -3,11 +3,11 @@ package com.fastfoot.service.util;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class RoletaUtil {
 
-	private static final Random R = new Random();
+	private static final SplittableRandom R = new SplittableRandom();
 
 	//###	sortear(ElementoRoleta e1, ElementoRoleta e2)	###
 	public static ElementoRoleta sortear(ElementoRoleta e1, ElementoRoleta e2) {

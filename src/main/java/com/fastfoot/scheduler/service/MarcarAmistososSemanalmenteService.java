@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.SplittableRandom;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -44,7 +44,7 @@ public class MarcarAmistososSemanalmenteService {
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
 	
-	private static final Random RANDOM = new Random();
+	private static final SplittableRandom RANDOM = new SplittableRandom();
 
 	public void marcarAmistososSemanalmente(Semana semanaAmistoso) {
 

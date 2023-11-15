@@ -3,7 +3,7 @@ package com.fastfoot.bets.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.SplittableRandom;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class CalcularPartidaProbabilidadeResultadoEstatisticaFinalizacaoDefesaSe
 
 	private static final Integer NUM_SIMULACOES = 10000;
 
-	private static final Random R = new Random();
+	private static final SplittableRandom R = new SplittableRandom();
 
 	@Autowired
 	private PartidaResultadoRepository partidaResultadoRepository;

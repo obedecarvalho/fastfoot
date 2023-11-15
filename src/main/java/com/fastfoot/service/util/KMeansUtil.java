@@ -3,7 +3,7 @@ package com.fastfoot.service.util;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class KMeansUtil {
 	
@@ -11,7 +11,7 @@ public class KMeansUtil {
 	
 	private static final Integer NUMERO_MAX_ITERACOES = 1000;
 	
-	protected static final Random R = new Random();
+	protected static final SplittableRandom R = new SplittableRandom();
 	
 	public static ClusterKMeans[] classificar(List<? extends ElementoKMeans> elementos, ClusterKMeans[] clusters) {
 

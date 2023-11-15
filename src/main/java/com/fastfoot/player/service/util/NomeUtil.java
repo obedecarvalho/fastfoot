@@ -1,10 +1,12 @@
 package com.fastfoot.player.service.util;
 
-import java.util.Random;
+import java.util.SplittableRandom;
 
 public class NomeUtil {
 	
-	private static final Random R = new Random();
+	private static final Double PORC_SEM_ABREVIACAO = 0.3;//30%
+	
+	private static final SplittableRandom R = new SplittableRandom();
 
 	private static final String[] NOMES = {
 			"Aarav",
@@ -1012,10 +1014,6 @@ public class NomeUtil {
 	private static final String[] INICIAIS = new String[] { "A.", "B.", "C.", "D.", "E.", "F.", "G.", "H.", "I.", "J.", "K.",
 			"L.", "M.", "N.", "O.", "P.", "Q.", "R.", "S.", "T.", "U.", "V.", "X.", "Y.", "W.", "Z."}; 
 	
-	public static String getNome() {
-		return NOMES[R.nextInt(NOMES.length)];
-	}
-	
 	protected static String getSobrenome() {
 		return NOMES[R.nextInt(NOMES.length)];
 	}
@@ -1025,6 +1023,9 @@ public class NomeUtil {
 	}
 	
 	public static String sortearNome() {
+		if (R.nextDouble() < PORC_SEM_ABREVIACAO)
+			return getSobrenome();
+		
 		return String.format("%s %s", getInicial(), getSobrenome());
 	}
 }

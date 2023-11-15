@@ -37,7 +37,7 @@ public class CalcularTorcidaPartidaService {
 	
 	private static final Double PORCENTAGEM_VISITANTE_AMISTOSO = 0.50;
 	
-	protected static final Random R = new Random();
+	protected static final Random R = new Random();//TODO: usar outra opção mais performatica
 	
 	private static final Double PORC_STDEV = 0.05;
 	

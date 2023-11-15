@@ -120,7 +120,7 @@ public abstract class JogadorFactory {
 	
 	//########	SUPER CLASSE ABSTRACT	########################
 	
-	protected static final Random R = new Random();
+	protected static final Random R = new Random();//TODO: usar outra opção mais performatica
 	
 	protected static final Double STDEV = 3.5; 
 	

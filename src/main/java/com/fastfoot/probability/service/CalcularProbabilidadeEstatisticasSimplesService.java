@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.SplittableRandom;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -46,7 +46,7 @@ public class CalcularProbabilidadeEstatisticasSimplesService extends CalcularPro
 	
 	private static final Integer NUM_SIMULACOES_SEM_24 = 10000;
 	
-	private static final Random R = new Random();
+	private static final SplittableRandom R = new SplittableRandom();
 	
 	//private static boolean imprimir = false;
 	

@@ -3,10 +3,13 @@ package com.fastfoot.service.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.SplittableRandom;
 
 public class RandomUtil {
 	
-	private static final Random R = new Random();
+	private static final SplittableRandom R = new SplittableRandom();
+
+	private static final Random R_GAUSSIAN = new Random();//TODO: usar outra opção mais performatica
 	
 	public static int sortearIntervalo(int min, int max) {
 		//return min + R.nextInt(max - min);
@@ -22,7 +25,7 @@ public class RandomUtil {
 	}
 
 	public static double getNextGaussianByAvgAndStdDev(Double average, Double stdDev) {
-		return average + R.nextGaussian() * stdDev;
+		return average + R_GAUSSIAN.nextGaussian() * stdDev;
 	}
 	
 	public static List<Integer> getRandomDistinctRangeValues(int maxValue, int qtdeTotal){
