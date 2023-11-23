@@ -237,20 +237,6 @@ public class RoletaUtil {
 	}
 	//###	/sortear(ElementoRoleta[] elementos)	###
 	
-	public static <T> T sortearPesoUm(List<T> elements) {
-		
-		if (elements == null || elements.isEmpty()) return null;
-		
-		return elements.get(R.nextInt(elements.size()));
-	}
-	
-	public static <T> T sortearPesoUm(T[] elements) {
-		
-		if (elements == null || elements.length == 0) return null;
-		
-		return elements[R.nextInt(elements.length)];
-	}
-	
 	//###	sortearAsDouble(List<? extends ElementoRoleta> elementos)	###
 	public static ElementoRoleta sortearAsDouble(List<? extends ElementoRoleta> elementos) {
 		double valor = 0.0;
@@ -434,6 +420,120 @@ public class RoletaUtil {
 		return elementos[i];
 	}
 	//###	/sortearAsDouble(ElementoRoleta[] elementos)	###
+	
+	public static <T> T sortearPesoUm(List<T> elements) {
+		
+		if (elements == null || elements.isEmpty()) return null;
+		
+		return elements.get(R.nextInt(elements.size()));
+	}
+	
+	public static <T> T sortearPesoUm(T[] elements) {
+		
+		if (elements == null || elements.length == 0) return null;
+		
+		return elements[R.nextInt(elements.length)];
+	}
+	
+	public static <T> T sortearPesoPonderado(T[] elementos, Integer[] pesos) {
+		
+		if (elementos == null || elementos.length == 0 || elementos.length != pesos.length) return null;
+		
+		int valor = 0;
+		
+		for (Integer peso : pesos) {
+			valor += peso;
+		}
+		
+		int v = R.nextInt(valor);
+		
+		int soma = 0;
+		
+		for (int i = 0; i < elementos.length; i++) {
+			soma += pesos[i];
+			
+			if (v < soma) {
+				return elementos[i];
+			}
+		}
+
+		return null;
+	}
+	
+	public static <T> T sortearPesoPonderado(T[] elementos, Double[] pesos) {
+		
+		if (elementos == null || elementos.length == 0 || elementos.length != pesos.length) return null;
+		
+		double valor = 0;
+		
+		for (Double peso : pesos) {
+			valor += peso;
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		double soma = 0;
+		
+		for (int i = 0; i < elementos.length; i++) {
+			soma += pesos[i];
+			
+			if (v < soma) {
+				return elementos[i];
+			}
+		}
+
+		return null;
+	}
+	
+	public static <T> T sortearPesoPonderado(List<T> elementos, Integer[] pesos) {
+		
+		if (elementos == null || elementos.size() == 0 || elementos.size() != pesos.length) return null;
+		
+		int valor = 0;
+		
+		for (Integer peso : pesos) {
+			valor += peso;
+		}
+		
+		int v = R.nextInt(valor);
+		
+		int soma = 0;
+		
+		for (int i = 0; i < elementos.size(); i++) {
+			soma += pesos[i];
+			
+			if (v < soma) {
+				return elementos.get(i);
+			}
+		}
+
+		return null;
+	}
+	
+	public static <T> T sortearPesoPonderado(List<T> elementos, Double[] pesos) {
+		
+		if (elementos == null || elementos.size() == 0 || elementos.size() != pesos.length) return null;
+		
+		double valor = 0;
+		
+		for (Double peso : pesos) {
+			valor += peso;
+		}
+		
+		double v = R.nextDouble() * valor;
+		
+		double soma = 0;
+		
+		for (int i = 0; i < elementos.size(); i++) {
+			soma += pesos[i];
+			
+			if (v < soma) {
+				return elementos.get(i);
+			}
+		}
+
+		return null;
+	}
 
 	/**
 	 * 
@@ -445,6 +545,8 @@ public class RoletaUtil {
 	 * @return
 	 */
 	public static <T> T sortear(Map<T, Integer> elementos) {
+		
+		if (elementos == null || elementos.size() == 0) return null;
 
 		int valor = 0;
 		
@@ -479,6 +581,8 @@ public class RoletaUtil {
 	 * @return
 	 */
 	public static <T> T sortearAsDouble(Map<T, Double> elementos) {
+		
+		if (elementos == null || elementos.size() == 0) return null;
 
 		double valor = 0;
 		

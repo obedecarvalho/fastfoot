@@ -13,7 +13,6 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fastfoot.FastfootApplication;
 import com.fastfoot.bets.service.CalcularPartidaProbabilidadeResultadoFacadeService;
 import com.fastfoot.club.service.AtualizarClubeTituloRankingService;
 import com.fastfoot.club.service.AtualizarTreinadorTituloRankingService;
@@ -28,13 +27,9 @@ import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.HabilidadeGrupo;
-import com.fastfoot.player.model.StatusJogador;
-import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
 import com.fastfoot.player.model.repository.HabilidadeGrupoValorRepository;
-import com.fastfoot.player.model.repository.HabilidadeValorRepository;
 import com.fastfoot.player.model.repository.JogadorEnergiaRepository;
-import com.fastfoot.player.model.repository.JogadorRepository;
 import com.fastfoot.player.service.CalcularHabilidadeGrupoValorService;
 import com.fastfoot.player.service.DesenvolverJogadorService;
 import com.fastfoot.player.service.PagarSalarioJogadoresService;
@@ -113,11 +108,11 @@ public class JogarPartidasSemanaService {
 	@Autowired
 	private RodadaAmistoraRepository rodadaAmistoraRepository;
 
-	@Autowired
-	private JogadorRepository jogadorRepository;
+	/*@Autowired
+	private JogadorRepository jogadorRepository;*/
 
-	@Autowired
-	private HabilidadeValorRepository habilidadeValorRepository;
+	/*@Autowired
+	private HabilidadeValorRepository habilidadeValorRepository;*/
 
 	@Autowired
 	private JogadorEnergiaRepository jogadorEnergiaRepository;
@@ -335,8 +330,11 @@ public class JogarPartidasSemanaService {
 
 		//Desenvolver jogadores
 		if (semana.getNumero() % 5 == 0) {
-			habilidadeValorRepository.desenvolverTodasHabilidades(jogo.getId());//TODO: criar service
+			/*
+			habilidadeValorRepository.desenvolverTodasHabilidades(jogo.getId());
 			jogadorRepository.calcularForcaGeral(jogo.getId());
+			*/
+			desenvolverJogadorService.desenvolverJogadorOtimizado(jogo);
 		}
 		stopWatch.split();
 		mensagens.add("\t#desenvolverTodasHabilidades:" + (stopWatch.getSplitTime() - inicio));
@@ -437,6 +435,7 @@ public class JogarPartidasSemanaService {
 		}
 	}
 
+	/*
 	private void desenvolverJogadores(Jogo jogo) {
 
 		List<Jogador> jogadores = jogadorRepository.findByJogoAndStatusJogadorFetchHabilidades(jogo, StatusJogador.ATIVO);
@@ -456,6 +455,22 @@ public class JogarPartidasSemanaService {
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 
 	}
+	*/
+	
+	private void desenvolverJogadores(Jogo jogo) {
+
+		List<LigaJogo> ligaJogos = ligaJogoCRUDService.getByJogo(jogo);
+
+		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
+
+		for (LigaJogo liga : ligaJogos) {
+			completableFutures.add(desenvolverJogadorService.desenvolverJogador(liga, true));
+			completableFutures.add(desenvolverJogadorService.desenvolverJogador(liga, false));
+		}
+
+		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
+
+	}
 	
 	private void calcularHabilidadeGrupoValor3(Jogo jogo) {
 
@@ -470,7 +485,7 @@ public class JogarPartidasSemanaService {
 	
 	private void calcularHabilidadeGrupoValor(Jogo jogo) {
 
-		habilidadeGrupoValorRepository.deleteAllInBatch();
+		habilidadeGrupoValorRepository.deleteByIdJogo(jogo.getId());
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		

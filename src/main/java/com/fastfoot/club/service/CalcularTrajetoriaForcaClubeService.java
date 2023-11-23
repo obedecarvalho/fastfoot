@@ -3,6 +3,7 @@ package com.fastfoot.club.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.fastfoot.club.model.entity.Clube;
 import com.fastfoot.club.model.entity.TrajetoriaForcaClube;
 import com.fastfoot.club.model.repository.TrajetoriaForcaClubeRepository;
+import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.factory.JogadorFactory;
@@ -39,20 +41,51 @@ public class CalcularTrajetoriaForcaClubeService {
 	private TrajetoriaForcaClubeRepository trajetoriaForcaClubeRepository;
 	
 	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularTrajetoriaForcaClube(LigaJogo liga, boolean primeirosIds, Semana semana){
+		
+		List<TrajetoriaForcaClube> trajetoriaForcaClubes = new ArrayList<TrajetoriaForcaClube>();
+		
+		List<Jogador> jogadores;
+		
+		if (primeirosIds) {
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15);
+		} else {
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogador(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal());
+		}
+
+		Map<Clube, List<Jogador>> jogadoresPorClube = jogadores.stream().collect(Collectors.groupingBy(j -> j.getClube()));
+
+		for (Clube clube : jogadoresPorClube.keySet()) {
+			calcularTrajetoriaForcaClube(clube, jogadores, trajetoriaForcaClubes, semana);
+		}
+
+		trajetoriaForcaClubeRepository.saveAll(trajetoriaForcaClubes);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
+	
+	/*
+	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularTrajetoriaForcaClube(List<Clube> clubes, Semana semana){
 		
 		List<TrajetoriaForcaClube> trajetoriaForcaClubes = new ArrayList<TrajetoriaForcaClube>();
 		
+		List<Jogador> jogadores;
+		
 		for (Clube clube : clubes) {
-			calcularTrajetoriaForcaClube(clube, trajetoriaForcaClubes, semana);
+			jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
+			calcularTrajetoriaForcaClube(clube, jogadores, trajetoriaForcaClubes, semana);
 		}
 		
 		trajetoriaForcaClubeRepository.saveAll(trajetoriaForcaClubes);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
+	*/
 
-	public void calcularTrajetoriaForcaClube(Clube clube, List<TrajetoriaForcaClube> trajetoriaForcaClubes, Semana semana) {
+	private void calcularTrajetoriaForcaClube(Clube clube, List<Jogador> jogadores, List<TrajetoriaForcaClube> trajetoriaForcaClubes, Semana semana) {
 		
 		TrajetoriaForcaClube trajetoriaForcaClube = new TrajetoriaForcaClube();
 		
@@ -60,8 +93,6 @@ public class CalcularTrajetoriaForcaClubeService {
 		
 		trajetoriaForcaClube.setSemana(semana);
 
-		List<Jogador> jogadores = jogadorRepository.findByClubeAndStatusJogador(clube, StatusJogador.ATIVO);
-		
 		int numTemporadas = JogadorFactory.IDADE_MAX - JogadorFactory.IDADE_MIN;
 		
 		int qtdeGol = (int) jogadores.stream().filter(j -> j.getPosicao().isGoleiro()).count();

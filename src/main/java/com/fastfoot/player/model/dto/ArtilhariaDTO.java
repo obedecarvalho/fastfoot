@@ -8,11 +8,11 @@ public class ArtilhariaDTO {
 	
 	private Integer qtdeGols;
 	
-	private Integer qtdeGolsAmistosos;//TODO
+	private Integer qtdeGolsAmistosos;//TODO: implementar logica
 	
-	private Integer numeroJogos;//TODO
+	private Integer numeroJogos;//TODO: implementar logica
 	
-	private Integer numeroTemporadas;//TODO
+	private Integer numeroTemporadas;//TODO: implementar logica
 
 	public Jogador getJogador() {
 		return jogador;

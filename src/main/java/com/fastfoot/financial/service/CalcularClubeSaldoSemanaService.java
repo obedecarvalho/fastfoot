@@ -15,6 +15,7 @@ import com.fastfoot.financial.model.TipoMovimentacaoFinanceira;
 import com.fastfoot.financial.model.entity.ClubeSaldoSemana;
 import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
 import com.fastfoot.financial.model.repository.ClubeSaldoSemanaRepository;
+import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
 import com.fastfoot.scheduler.model.entity.Semana;
 
 @Service
@@ -22,7 +23,11 @@ public class CalcularClubeSaldoSemanaService {
 
 	@Autowired
 	private ClubeSaldoSemanaRepository clubeSaldoSemanaRepository;
+	
+	@Autowired
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
 
+	/*
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> calcularClubeSaldoSemana(List<Semana> semanas,
 			Map<Clube, List<MovimentacaoFinanceira>> movimentacoesClube) {
@@ -37,6 +42,26 @@ public class CalcularClubeSaldoSemanaService {
 
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 
+	}
+	*/
+
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> calcularClubeSaldoSemana(List<Clube> clubes, List<Semana> semanas){
+
+		List<MovimentacaoFinanceira> movs = movimentacaoFinanceiraRepository.findByClubes(clubes);
+
+		Map<Clube, List<MovimentacaoFinanceira>> movimentacoesClube = movs.stream()
+				.collect(Collectors.groupingBy(MovimentacaoFinanceira::getClube));
+
+		List<ClubeSaldoSemana> clubeSaldoSemanas = new ArrayList<ClubeSaldoSemana>();
+
+		for (Clube c : clubes) {
+			calcularClubeSaldoSemana(c, semanas, movimentacoesClube.get(c), clubeSaldoSemanas);
+		}
+
+		clubeSaldoSemanaRepository.saveAll(clubeSaldoSemanas);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
 
 	private void calcularClubeSaldoSemana(Clube clube, List<Semana> semanas,

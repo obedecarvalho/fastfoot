@@ -7,7 +7,7 @@ public class JogadorCalcularForcaUtil {
 
 	public static void calcularForcaGeral(Jogador jogador) {
 		jogador.setForcaGeral((new Double(jogador.getHabilidadesValor().stream().filter(h -> h.isHabilidadeEspecifica())
-				.mapToInt(h -> h.getValor()).average().getAsDouble())).intValue());//TODO: usar valorTotal
+				.mapToDouble(h -> h.getValorTotal()).average().getAsDouble())).intValue());
 	}
 
 	public static void calcular(Jogador jogador) {

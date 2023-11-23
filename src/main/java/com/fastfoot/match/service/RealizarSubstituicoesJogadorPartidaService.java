@@ -47,7 +47,7 @@ public class RealizarSubstituicoesJogadorPartidaService {
 			entrarSubstituitoMaisForte(esquema, partidaResultado, mandante, minutoSubstituicao,
 					sortearNumeroSubstituicoes(), false);
 		} else if (EstrategiaSubstituicao.ENTRAR_JOGADORES_A_DESENVOLVER.equals(estrategiaSubstituicao)) {
-			//TODO
+			//TODO: implementar logica
 		}
 		
 	}

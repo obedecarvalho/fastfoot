@@ -446,7 +446,7 @@ public class ExecutarTransferenciasAutomaticamenteService {
 	}
 
 	@SuppressWarnings("unused")
-	private void possiveisTrocas(List<PropostaTransferenciaJogador> propostas, Map<Clube, ClubeSaldo> clubeSaldo) {//TODO
+	private void possiveisTrocas(List<PropostaTransferenciaJogador> propostas, Map<Clube, ClubeSaldo> clubeSaldo) {//TODO: implementar logica
 		
 		List<PropostaTransferenciaJogador> propostasPossiveisTrocas;
 		

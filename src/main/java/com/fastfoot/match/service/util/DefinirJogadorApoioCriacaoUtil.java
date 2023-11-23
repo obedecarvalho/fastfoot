@@ -21,7 +21,7 @@ public class DefinirJogadorApoioCriacaoUtil {
 		EscalacaoJogadorPosicao ve = escalacaoMap.get(EscalacaoPosicao.P_VE);
 		EscalacaoJogadorPosicao le = escalacaoMap.get(EscalacaoPosicao.P_LE);
 
-		//TODO
+		//TODO: implementar logica
 		
 		ld.getAtivo();
 		vd.getAtivo();

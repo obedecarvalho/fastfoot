@@ -21,6 +21,9 @@ import com.fastfoot.player.model.entity.Jogador;
 public interface JogadorRepository extends JpaRepository<Jogador, Long>{
 
 	public List<Jogador> findByClubeAndStatusJogador(Clube clube, StatusJogador status);
+	
+	@Query(" SELECT j FROM Jogador j WHERE j.clube IN :clubes AND j.statusJogador = :status ")
+	public List<Jogador> findByClubesAndStatusJogador(@Param("clubes") Collection<Clube> clubes, @Param("status") StatusJogador status);
 
 	@Query("SELECT j FROM Jogador j WHERE j.clube.ligaJogo.jogo = :jogo AND j.statusJogador = :status")
 	public List<Jogador> findByJogoAndStatusJogador(@Param("jogo") Jogo jogo, @Param("status") StatusJogador status);

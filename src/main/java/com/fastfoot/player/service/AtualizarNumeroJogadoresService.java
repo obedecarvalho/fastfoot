@@ -4,15 +4,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.model.entity.LigaJogo;
 import com.fastfoot.player.model.Posicao;
 import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.Jogador;
@@ -69,6 +66,7 @@ public class AtualizarNumeroJogadoresService {
 		}
 	}
 	
+	/*
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> atualizarNumeroJogadores(LigaJogo liga, boolean primeirosIds) {
 
@@ -92,7 +90,9 @@ public class AtualizarNumeroJogadoresService {
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
+	*/
 
+	/*
 	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar, Map<Clube, List<Jogador>> jogadoresNroDesconsiderar) {
 		
 		List<Jogador> jogadoresNaoAtualizar;
@@ -100,7 +100,7 @@ public class AtualizarNumeroJogadoresService {
 		List<Jogador> jogadoresNroDesconsiderarClube;
 		
 		for (Clube c : jogadoresAtualizar.keySet()) {
-			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);//TODO: otimizar
+			jogadoresNaoAtualizar = jogadorRepository.findByClubeAndStatusJogador(c, StatusJogador.ATIVO);
 			
 			
 			numeroJaUtilizadosClube = jogadoresNaoAtualizar.stream().map(Jogador::getNumero).collect(Collectors.toList());
@@ -112,6 +112,37 @@ public class AtualizarNumeroJogadoresService {
 			}
 			
 			
+			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar, numeroJaUtilizadosClube);
+		}
+	}
+	*/
+	
+	public void atualizarNumeroJogadores(Map<Clube, List<Jogador>> jogadoresAtualizar,
+			Map<Clube, List<Jogador>> jogadoresNroDesconsiderar) {
+
+		List<Jogador> jogs = jogadorRepository.findByClubesAndStatusJogador(jogadoresAtualizar.keySet(),
+				StatusJogador.ATIVO);
+
+		Map<Clube, List<Jogador>> jogadoresNaoAtualizarPorClube = jogs.stream()
+				.collect(Collectors.groupingBy(j -> j.getClube()));
+
+		List<Jogador> jogadoresNaoAtualizar;
+		List<Integer> numeroJaUtilizadosClube;
+		List<Jogador> jogadoresNroDesconsiderarClube;
+
+		for (Clube c : jogadoresAtualizar.keySet()) {
+			jogadoresNaoAtualizar = jogadoresNaoAtualizarPorClube.get(c);
+
+			numeroJaUtilizadosClube = jogadoresNaoAtualizar.stream().map(Jogador::getNumero)
+					.collect(Collectors.toList());
+
+			if (jogadoresNroDesconsiderar != null) {
+				jogadoresNroDesconsiderarClube = jogadoresNroDesconsiderar.get(c);
+
+				numeroJaUtilizadosClube.removeAll(
+						jogadoresNroDesconsiderarClube.stream().map(Jogador::getNumero).collect(Collectors.toList()));
+			}
+
 			atualizarNumeroJogadoresClube(jogadoresAtualizar.get(c), jogadoresNaoAtualizar, numeroJaUtilizadosClube);
 		}
 	}

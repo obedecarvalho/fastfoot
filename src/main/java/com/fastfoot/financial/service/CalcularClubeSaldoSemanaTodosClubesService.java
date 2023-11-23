@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.FastfootApplication;
 import com.fastfoot.club.model.entity.Clube;
-import com.fastfoot.financial.model.entity.MovimentacaoFinanceira;
-import com.fastfoot.financial.model.repository.MovimentacaoFinanceiraRepository;
+import com.fastfoot.club.model.repository.ClubeRepository;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.scheduler.model.entity.Semana;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
@@ -41,15 +38,19 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 		};
 	}
 	
-	@Autowired
-	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;
+	/*@Autowired
+	private MovimentacaoFinanceiraRepository movimentacaoFinanceiraRepository;*/
 
 	@Autowired
 	private SemanaRepository semanaRepository;
 	
 	@Autowired
+	private ClubeRepository clubeRepository;
+	
+	@Autowired
 	private CalcularClubeSaldoSemanaService calcularClubeSaldoSemanaService;
 
+	/*
 	public void calcularClubeSaldoSemana(Jogo jogo) {
 		
 		List<Semana> semanas = semanaRepository.findByJogo(jogo);
@@ -60,7 +61,7 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 
 		Map<Long, Map<Clube, List<MovimentacaoFinanceira>>> movimentacoesClube = movimentaceosFinanceiras.stream()
 				.collect(Collectors.groupingBy(mf -> mf.getClube().getId() % FastfootApplication.NUM_THREAD,
-						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));//TODO: mudar de getClube().getId() % FastfootApplication.NUM_THREAD para liga + primeirosId
+						Collectors.groupingBy(MovimentacaoFinanceira::getClube)));
 		
 		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
 		
@@ -69,6 +70,32 @@ public class CalcularClubeSaldoSemanaTodosClubesService {
 					.add(calcularClubeSaldoSemanaService.calcularClubeSaldoSemana(semanas, movimentacoesClube.get(i)));
 		}
 		
+		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
+	}
+	*/
+	
+	public void calcularClubeSaldoSemana(Jogo jogo) {
+
+		List<Semana> semanas = semanaRepository.findByJogo(jogo);
+
+		Collections.sort(semanas, COMPARATOR);
+
+		List<Clube> clubes = clubeRepository.findByJogo(jogo);
+
+		List<CompletableFuture<Boolean>> completableFutures = new ArrayList<CompletableFuture<Boolean>>();
+
+		int offset = clubes.size() / FastfootApplication.NUM_THREAD;
+
+		for (int i = 0; i < FastfootApplication.NUM_THREAD; i++) {
+			if ((i + 1) == FastfootApplication.NUM_THREAD) {
+				completableFutures.add(calcularClubeSaldoSemanaService
+						.calcularClubeSaldoSemana(clubes.subList(i * offset, clubes.size()), semanas));
+			} else {
+				completableFutures.add(calcularClubeSaldoSemanaService
+						.calcularClubeSaldoSemana(clubes.subList(i * offset, (i + 1) * offset), semanas));
+			}
+		}
+
 		CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture<?>[0])).join();
 	}
 }

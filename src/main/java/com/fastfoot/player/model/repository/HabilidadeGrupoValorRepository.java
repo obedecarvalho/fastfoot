@@ -89,6 +89,21 @@ public interface HabilidadeGrupoValorRepository extends JpaRepository<Habilidade
 	)
 	public void calcular2(int habilidadeGrupoOrdinal, int[] habilidadeOrdinal, Long idJogo);
 	
+	@Transactional
+	@Modifying
+	@Query(nativeQuery = true, value = 
+			" delete " +
+			" from habilidade_grupo_valor " +
+			" where id_jogador in ( " +
+			" 	select j.id " +
+			" 	from jogador j " +
+			" 	inner join clube c on j.id_clube = c.id " +
+			" 	inner join liga_jogo lj on c.id_liga_jogo = lj.id " +
+			" 	where lj.id_jogo = ?1 " +
+			" ) "
+	)
+	public void deleteByIdJogo(Long idJogo);
+	
 	//###	/INSERT, UPDATE E DELETE	###
 
 }

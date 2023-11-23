@@ -32,6 +32,9 @@ public interface MovimentacaoFinanceiraRepository extends JpaRepository<Moviment
 	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.clube.ligaJogo.jogo = :jogo ")
 	public List<MovimentacaoFinanceira> findByJogo(@Param("jogo") Jogo jogo);
 	
+	@Query(" SELECT mov FROM MovimentacaoFinanceira mov WHERE mov.clube IN :clubes ")
+	public List<MovimentacaoFinanceira> findByClubes(@Param("clubes") List<Clube> clubes);
+	
 	//###	SELECT ESPECIFICOS	###
 	
 	@Query(nativeQuery = true, value =

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.fastfoot.model.entity.Jogo;
+import com.fastfoot.model.entity.LigaJogo;
+import com.fastfoot.player.model.StatusJogador;
 import com.fastfoot.player.model.entity.HabilidadeValor;
 import com.fastfoot.player.model.entity.Jogador;
 import com.fastfoot.player.model.repository.HabilidadeValorRepository;
@@ -23,9 +26,36 @@ public class DesenvolverJogadorService {
 	@Autowired
 	private JogadorRepository jogadorRepository;
 	
-	@Autowired
-	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;
+	/*@Autowired
+	private CalcularHabilidadeGrupoValorService calcularHabilidadeGrupoValorService;*/
+
+	@Async("defaultExecutor")
+	public CompletableFuture<Boolean> desenvolverJogador(LigaJogo liga, boolean primeirosIds) {
+
+		List<Jogador> jogadores;
+
+		if (primeirosIds) {
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial(), liga.getIdClubeInicial() + 15);
+		} else {
+			jogadores = jogadorRepository.findByLigaJogoClubeAndStatusJogadorFetchHabilidades(liga, StatusJogador.ATIVO,
+					liga.getIdClubeInicial() + 16, liga.getIdClubeFinal());
+		}
+
+		for (Jogador jogador : jogadores) {
+			desenvolverJogador(jogador);
+		}
+
+		//calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogadores);
+
+		habilidadeValorRepository.saveAll(
+				jogadores.stream().flatMap(j -> j.getHabilidadesValor().stream()).collect(Collectors.toList()));
+		jogadorRepository.saveAll(jogadores);
+
+		return CompletableFuture.completedFuture(Boolean.TRUE);
+	}
 	
+	/*
 	@Async("defaultExecutor")
 	public CompletableFuture<Boolean> desenvolverJogador(List<Jogador> jogadores) {
 		
@@ -33,13 +63,14 @@ public class DesenvolverJogadorService {
 			desenvolverJogador(jogador);
 		}
 		
-		calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogadores);
+		//calcularHabilidadeGrupoValorService.calcularHabilidadeGrupoValor(jogadores);
 		
 		habilidadeValorRepository.saveAll(jogadores.stream().flatMap(j -> j.getHabilidadesValor().stream()).collect(Collectors.toList()));
 		jogadorRepository.saveAll(jogadores);
 		
 		return CompletableFuture.completedFuture(Boolean.TRUE);
 	}
+	*/
 	
 	private void desenvolverJogador(Jogador jogador) {
 
@@ -52,6 +83,11 @@ public class DesenvolverJogadorService {
 		}
 		
 		JogadorCalcularForcaUtil.calcularForcaGeral(jogador);
+	}
+	
+	public void desenvolverJogadorOtimizado(Jogo jogo) {
+		habilidadeValorRepository.desenvolverTodasHabilidades(jogo.getId());
+		jogadorRepository.calcularForcaGeral(jogo.getId());
 	}
 
 }

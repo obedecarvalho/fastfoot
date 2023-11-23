@@ -3,23 +3,21 @@ package com.fastfoot.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.fastfoot.model.ParametroConstantes;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.model.entity.Parametro;
-import com.fastfoot.model.repository.ParametroRepository;
 
 @Service
 public class PreCarregarParametrosService {
 	
-	@Autowired
-	private ParametroRepository parametroRepository;
+	/*@Autowired
+	private ParametroRepository parametroRepository;*/
 
-	public void preCarregarParametros() {
+	/*public void preCarregarParametros() {
 		
-		parametroRepository.deleteAll();//TODO
+		parametroRepository.deleteAll();
 
 		if (parametroRepository.count() == 0) {
 
@@ -27,7 +25,7 @@ public class PreCarregarParametrosService {
 
 			parametroRepository.saveAll(parametros);
 		}
-	}
+	}*/
 
 	public List<Parametro> inicializarParametrosPadrao(Jogo jogo) {
 			List<Parametro> parametros = new ArrayList<Parametro>();
