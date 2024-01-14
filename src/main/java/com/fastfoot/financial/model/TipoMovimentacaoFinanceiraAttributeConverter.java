@@ -1,6 +1,6 @@
 package com.fastfoot.financial.model;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class TipoMovimentacaoFinanceiraAttributeConverter implements AttributeConverter<TipoMovimentacaoFinanceira, Integer> {
 

@@ -1,6 +1,6 @@
 package com.fastfoot.scheduler.model;
 
-import javax.persistence.AttributeConverter;
+import jakarta.persistence.AttributeConverter;
 
 public class ClassificacaoContinentalAttributeConverter implements AttributeConverter<ClassificacaoContinental, Integer> {
 

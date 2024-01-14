@@ -1,6 +1,5 @@
 package com.fastfoot.club.service.crud;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +12,7 @@ import com.fastfoot.club.model.entity.Treinador;
 import com.fastfoot.club.model.repository.TreinadorRepository;
 import com.fastfoot.model.entity.Jogo;
 import com.fastfoot.service.CRUDServiceJogavel;
+import com.fastfoot.service.util.DatabaseUtil;
 
 @Service
 public class TreinadorCRUDService implements CRUDServiceJogavel<Treinador, Long> {
@@ -71,9 +71,9 @@ public class TreinadorCRUDService implements CRUDServiceJogavel<Treinador, Long>
 			
 			treinador = new Treinador();
 
-			treinador.setId(((BigInteger) map.get("id")).longValue());
+			treinador.setId(DatabaseUtil.getValueLong(map.get("id")));
 			treinador.setNome((String) map.get("nome"));
-			Long idJogo = ((BigInteger) map.get("id_jogo")).longValue();
+			Long idJogo = DatabaseUtil.getValueLong(map.get("id_jogo"));
 			treinador.setJogo(new Jogo(idJogo));
 			treinador.setAtivo((Boolean) map.get("ativo"));
 

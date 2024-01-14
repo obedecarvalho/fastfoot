@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +35,7 @@ public class ConsultarQuantitativoPosicaoClubeService {
 			dto = new QuantitativoPosicaoClubeDTO();
 			dto.setClube(new Clube(DatabaseUtil.getValueLong(map.get("id_clube"))));
 			dto.setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((String) map.get("posicao")));
-			dto.setQtde(((BigInteger) map.get("total")).intValue());
+			dto.setQtde(DatabaseUtil.getValueInteger(map.get("total")));
 			quantitativoPosicaoClubeList.add(dto);
 		}
 

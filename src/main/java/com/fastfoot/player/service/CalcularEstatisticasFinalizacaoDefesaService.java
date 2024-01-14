@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,12 +32,12 @@ public class CalcularEstatisticasFinalizacaoDefesaService {
 
 			clubeProbabilidadeFinalizacao.setClube(new Clube(DatabaseUtil.getValueLong(e.get("id_clube"))));
 			clubeProbabilidadeFinalizacao
-					.setFinalizacoesPartidas(((BigDecimal) e.get("finalizacoes_partidas")).doubleValue());
-			clubeProbabilidadeFinalizacao.setGolsPartida(((BigDecimal) e.get("gols_partida")).doubleValue());
+					.setFinalizacoesPartidas(DatabaseUtil.getValueDecimal(e.get("finalizacoes_partidas")));
+			clubeProbabilidadeFinalizacao.setGolsPartida(DatabaseUtil.getValueDecimal(e.get("gols_partida")));
 			clubeProbabilidadeFinalizacao
-					.setProbabilidadeGolFinalizacao(((BigDecimal) e.get("probilidade_gols")).doubleValue());
+					.setProbabilidadeGolFinalizacao(DatabaseUtil.getValueDecimal(e.get("probilidade_gols")));
 			clubeProbabilidadeFinalizacao
-					.setProbabilidadeFinalizacaoNoGol(((BigDecimal) e.get("probilidade_finalizacoes_no_gol")).doubleValue());
+					.setProbabilidadeFinalizacaoNoGol(DatabaseUtil.getValueDecimal(e.get("probilidade_finalizacoes_no_gol")));
 
 			clubeProbabilidadeFinalizacoes.put(clubeProbabilidadeFinalizacao.getClube(), clubeProbabilidadeFinalizacao);
 		}
@@ -57,7 +56,7 @@ public class CalcularEstatisticasFinalizacaoDefesaService {
 			clubeProbabilidadeDefesa = new ClubeProbabilidadeDefesa();
 
 			clubeProbabilidadeDefesa.setClube(new Clube(DatabaseUtil.getValueLong(e.get("id_clube"))));
-			clubeProbabilidadeDefesa.setProbabilidadeDefesa(((BigDecimal) e.get("probabilidade_defesa")).doubleValue());
+			clubeProbabilidadeDefesa.setProbabilidadeDefesa(DatabaseUtil.getValueDecimal(e.get("probabilidade_defesa")));
 
 			clubesProbabilidadeDefesa.put(clubeProbabilidadeDefesa.getClube(), clubeProbabilidadeDefesa);
 		}

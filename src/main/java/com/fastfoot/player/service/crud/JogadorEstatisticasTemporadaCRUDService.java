@@ -1,6 +1,5 @@
 package com.fastfoot.player.service.crud;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -111,7 +110,7 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 		for (Map<String, Object> e : estatisticasAgrupada) {
 			JogadorEstatisticasTemporada jogadorEstatisticasTemporada = new JogadorEstatisticasTemporada();
 			
-			jogadorEstatisticasTemporada.setJogador(new Jogador(((BigInteger) e.get("id_jogador")).longValue()));
+			jogadorEstatisticasTemporada.setJogador(new Jogador(DatabaseUtil.getValueLong(e.get("id_jogador"))));
 			jogadorEstatisticasTemporada.getJogador().setNome((String) e.get("nome_jogador"));
 			//jogadorEstatisticasTemporada.getJogador().setPosicao(Posicao.values()[(Integer) e.get("posicao")]);
 			jogadorEstatisticasTemporada.getJogador().setPosicao(PosicaoAttributeConverter.getInstance().convertToEntityAttribute((String) e.get("posicao")));
@@ -119,23 +118,23 @@ public class JogadorEstatisticasTemporadaCRUDService implements CRUDService<Joga
 			jogadorEstatisticasTemporada.getClube().setNome((String) e.get("nome_clube"));
 			jogadorEstatisticasTemporada.getClube().setLogo((String) e.get("logo_clube"));
 			jogadorEstatisticasTemporada.getJogador().setClube(jogadorEstatisticasTemporada.getClube());
-			jogadorEstatisticasTemporada.setTemporada(new Temporada(((BigInteger) e.get("id_temporada")).longValue()));
+			jogadorEstatisticasTemporada.setTemporada(new Temporada(DatabaseUtil.getValueLong(e.get("id_temporada"))));
 			jogadorEstatisticasTemporada.setAmistoso((Boolean) e.get("amistoso"));
-			jogadorEstatisticasTemporada.setAssistencias(((BigInteger) e.get("assistencias")).intValue());
-			jogadorEstatisticasTemporada.setDefesasDisputaPenalties(((BigInteger) e.get("defesas_disputa_penalties")).intValue());
-			jogadorEstatisticasTemporada.setFaltas(((BigInteger) e.get("faltas")).intValue());
-			jogadorEstatisticasTemporada.setFinalizacoesDefendidas(((BigInteger) e.get("finalizacoes_defendidas")).intValue());
-			jogadorEstatisticasTemporada.setFinalizacoesFora(((BigInteger) e.get("finalizacoes_fora")).intValue());
-			jogadorEstatisticasTemporada.setGoleiroFinalizacoesDefendidas(((BigInteger) e.get("goleiro_finalizacoes_defendidas")).intValue());
-			jogadorEstatisticasTemporada.setGolsDisputaPenalties(((BigInteger) e.get("gols_disputa_penalties")).intValue());
-			jogadorEstatisticasTemporada.setGolsMarcados(((BigInteger) e.get("gols_marcados")).intValue());
-			jogadorEstatisticasTemporada.setGolsPerdidosDisputaPenalties(((BigInteger) e.get("gols_perdidos_disputa_penalties")).intValue());
-			jogadorEstatisticasTemporada.setGolsSofridos(((BigInteger) e.get("gols_sofridos")).intValue());
-			jogadorEstatisticasTemporada.setGolsSofridosDisputaPenalties(((BigInteger) e.get("gols_sofridos_disputa_penalties")).intValue());
-			jogadorEstatisticasTemporada.setJogos(((BigInteger) e.get("jogos")).intValue());
-			jogadorEstatisticasTemporada.setJogosTitular(((BigInteger) e.get("jogos_titular")).intValue());
-			jogadorEstatisticasTemporada.setMinutosJogados(((BigInteger) e.get("minutos_jogados")).intValue());
-			jogadorEstatisticasTemporada.setRodadasDisputaPenalties(((BigInteger) e.get("rodadas_disputa_penalties")).intValue());
+			jogadorEstatisticasTemporada.setAssistencias(DatabaseUtil.getValueInteger(e.get("assistencias")));
+			jogadorEstatisticasTemporada.setDefesasDisputaPenalties(DatabaseUtil.getValueInteger(e.get("defesas_disputa_penalties")));
+			jogadorEstatisticasTemporada.setFaltas(DatabaseUtil.getValueInteger(e.get("faltas")));
+			jogadorEstatisticasTemporada.setFinalizacoesDefendidas(DatabaseUtil.getValueInteger(e.get("finalizacoes_defendidas")));
+			jogadorEstatisticasTemporada.setFinalizacoesFora(DatabaseUtil.getValueInteger(e.get("finalizacoes_fora")));
+			jogadorEstatisticasTemporada.setGoleiroFinalizacoesDefendidas(DatabaseUtil.getValueInteger(e.get("goleiro_finalizacoes_defendidas")));
+			jogadorEstatisticasTemporada.setGolsDisputaPenalties(DatabaseUtil.getValueInteger(e.get("gols_disputa_penalties")));
+			jogadorEstatisticasTemporada.setGolsMarcados(DatabaseUtil.getValueInteger(e.get("gols_marcados")));
+			jogadorEstatisticasTemporada.setGolsPerdidosDisputaPenalties(DatabaseUtil.getValueInteger(e.get("gols_perdidos_disputa_penalties")));
+			jogadorEstatisticasTemporada.setGolsSofridos(DatabaseUtil.getValueInteger(e.get("gols_sofridos")));
+			jogadorEstatisticasTemporada.setGolsSofridosDisputaPenalties(DatabaseUtil.getValueInteger(e.get("gols_sofridos_disputa_penalties")));
+			jogadorEstatisticasTemporada.setJogos(DatabaseUtil.getValueInteger(e.get("jogos")));
+			jogadorEstatisticasTemporada.setJogosTitular(DatabaseUtil.getValueInteger(e.get("jogos_titular")));
+			jogadorEstatisticasTemporada.setMinutosJogados(DatabaseUtil.getValueInteger(e.get("minutos_jogados")));
+			jogadorEstatisticasTemporada.setRodadasDisputaPenalties(DatabaseUtil.getValueInteger(e.get("rodadas_disputa_penalties")));
 			
 			estatisticasTemporadas.add(jogadorEstatisticasTemporada);
 		}

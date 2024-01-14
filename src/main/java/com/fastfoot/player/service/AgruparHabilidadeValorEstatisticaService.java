@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -49,11 +48,11 @@ public class AgruparHabilidadeValorEstatisticaService {
 		for (Map<String, Object> e : estatisticas) {
 			habilidadeValorEstatisticaGrupo = new HabilidadeValorEstatisticaGrupo();
 			habilidadeValor = new HabilidadeValor();
-			habilidadeValor.setId(((BigInteger) e.get("id_habilidade_valor")).longValue());
+			habilidadeValor.setId(DatabaseUtil.getValueLong(e.get("id_habilidade_valor")));
 			habilidadeValorEstatisticaGrupo.setHabilidadeValor(habilidadeValor);
 			habilidadeValorEstatisticaGrupo.setTemporada(temporada);
-			habilidadeValorEstatisticaGrupo.setQuantidadeUso(((BigInteger) e.get("quantidade_uso")).intValue());
-			habilidadeValorEstatisticaGrupo.setQuantidadeUsoVencedor(((BigInteger) e.get("quantidade_uso_vencedor")).intValue());
+			habilidadeValorEstatisticaGrupo.setQuantidadeUso(DatabaseUtil.getValueInteger(e.get("quantidade_uso")));
+			habilidadeValorEstatisticaGrupo.setQuantidadeUsoVencedor(DatabaseUtil.getValueInteger(e.get("quantidade_uso_vencedor")));
 			habilidadeValorEstatisticaGrupo.setAmistoso((Boolean) e.get("amistoso"));
 			
 			/*habilidadeValorEstatisticaGrupo

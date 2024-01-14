@@ -1,6 +1,5 @@
 package com.fastfoot.player.service;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -39,7 +38,7 @@ public class CarregarJogadorEnergiaService {
 	private void carregarJogadorEnergia(List<Jogador> jogadores, List<Map<String, Object>> jogEnergia) {
 
 		Map<Jogador, Map<String, Object>> x = jogEnergia.stream()
-				.collect(Collectors.toMap(ej -> new Jogador(((BigInteger) ej.get("id_jogador")).longValue()), Function.identity()));
+				.collect(Collectors.toMap(ej -> new Jogador(DatabaseUtil.getValueLong(ej.get("id_jogador"))), Function.identity()));
 
 		JogadorEnergia je = null;
 		Map<String, Object> jes = null;

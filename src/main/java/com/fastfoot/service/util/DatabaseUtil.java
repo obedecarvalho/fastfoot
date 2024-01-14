@@ -65,6 +65,8 @@ public class DatabaseUtil {
 			return ((BigInteger) object).intValue();
 		} else if (object instanceof BigDecimal) {
 			return ((BigDecimal) object).intValue();
+		} else if (object instanceof Long) {
+			return ((Long) object).intValue();
 		}
 		
 		throw new RuntimeException("Tipo de dado não mapeado: " + object.getClass());
