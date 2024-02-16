@@ -59,12 +59,12 @@ public class EsquemaTransicao implements ElementoRoleta {
 	
 	@Override
 	public Double getValorAsDouble() {
-		return new Double(getValor());
+		return Double.valueOf(getValor());
 	}
 
 	@Override
 	public Double getValorNAsDouble() {
-		return new Double(getValorN());
+		return Double.valueOf(getValorN());
 	}
 
 	@Override

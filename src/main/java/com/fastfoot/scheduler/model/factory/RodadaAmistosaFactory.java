@@ -20,7 +20,7 @@ public class RodadaAmistosaFactory {
 
 	public static List<RodadaAmistosa> criarRodadasAmistosasAgrupaGrupo(Temporada temporada, Map<Liga, List<Clube>> clubes) {
 		
-		int nroCompeticoes = new Double(Math.ceil(clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT.doubleValue())).intValue();
+		int nroCompeticoes = Double.valueOf(Math.ceil(clubes.get(Liga.GENEBE).size()/Constantes.NRO_CLUBES_POR_LIGA_CONT.doubleValue())).intValue();
 		
 		Map<Liga, List<Clube>> clubesGrupo = new HashMap<Liga, List<Clube>>();
 		List<RodadaAmistosa> rodadasGeral = new ArrayList<RodadaAmistosa>();

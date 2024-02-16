@@ -72,7 +72,7 @@ public class JogadorFactoryImplDesenRegular extends JogadorFactory {
 			valorHabilidadesEspecificasPotEfetiva.add(potencialSorteado);
 		}
 		jogador.setForcaGeral(
-				(new Double(valorHabilidadesEspecificas.stream().mapToDouble(v -> v).average().getAsDouble())).intValue());
+				(Double.valueOf(valorHabilidadesEspecificas.stream().mapToDouble(v -> v).average().getAsDouble())).intValue());
 		/*jogador.setForcaGeralPotencial(
 				(new Double(valorHabilidadesEspecificasPot.stream().mapToDouble(v -> v).average().getAsDouble()))
 						.intValue());*/

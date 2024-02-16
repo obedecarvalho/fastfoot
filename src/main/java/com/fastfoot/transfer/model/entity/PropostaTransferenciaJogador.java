@@ -171,7 +171,7 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	@Override
 	public Integer getValorN() {
 		if (pesoN == null) {
-			pesoN = new Double(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
+			pesoN = Double.valueOf(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
 					/ (Math.pow((getClubeDestino().getForcaGeral() - getJogador().getForcaGeral()), 2) + 1)).intValue();
 		}
 		return pesoN;
@@ -180,13 +180,13 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 	@JsonIgnore
 	@Override
 	public Double getValorAsDouble() {
-		return new Double(getValor());
+		return Double.valueOf(getValor());
 	}
 
 	@JsonIgnore
 	@Override
 	public Double getValorNAsDouble() {
-		return new Double(getValorN());
+		return Double.valueOf(getValorN());
 	}
 
 	@Override

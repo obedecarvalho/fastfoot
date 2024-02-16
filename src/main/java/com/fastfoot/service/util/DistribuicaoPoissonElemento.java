@@ -34,7 +34,7 @@ public class DistribuicaoPoissonElemento implements ElementoRoleta {
 	@Override
 	public Integer getValorN() {
 		if (valorProbabilidadeN == null) {
-			valorProbabilidadeN = new Double(Math.pow(valorProbabilidade, Constantes.ROLETA_N_POWER));
+			valorProbabilidadeN = Double.valueOf(Math.pow(valorProbabilidade, Constantes.ROLETA_N_POWER));
 		}
 		return valorProbabilidadeN.intValue();
 	}
@@ -52,7 +52,7 @@ public class DistribuicaoPoissonElemento implements ElementoRoleta {
 	@Override
 	public Double getValorNAsDouble() {
 		if (valorProbabilidadeN == null) {
-			valorProbabilidadeN = new Double(Math.pow(valorProbabilidade, Constantes.ROLETA_N_POWER));
+			valorProbabilidadeN = Double.valueOf(Math.pow(valorProbabilidade, Constantes.ROLETA_N_POWER));
 		}
 		return valorProbabilidadeN;
 	}

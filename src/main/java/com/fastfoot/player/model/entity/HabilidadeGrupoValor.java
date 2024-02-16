@@ -128,7 +128,7 @@ public class HabilidadeGrupoValor implements HabilidadeValorJogavel {
 		if (valorN == null) {
 			calcularValorN();
 		}
-		return new Double(valorN);
+		return Double.valueOf(valorN);
 	}
 
 	public HabilidadeGrupoAcao getHabilidadeGrupoAcao() {

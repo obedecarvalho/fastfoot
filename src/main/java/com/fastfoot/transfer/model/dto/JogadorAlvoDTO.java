@@ -142,17 +142,17 @@ public class JogadorAlvoDTO implements ElementoRoleta {
 	@Override
 	public Integer getValorN() {
 		//return rankTransferencia;
-		return new Double(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
+		return Double.valueOf(Constantes.PESO_DIFERENCA_JOGADOR_CLUBE_TRANSFERENCIA
 				/ (Math.pow((forcaGeralClube - forcaGeralJogador), 2) + 1)).intValue();
 	}
 
 	@Override
 	public Double getValorAsDouble() {
-		return new Double(getValor());
+		return Double.valueOf(getValor());
 	}
 
 	@Override
 	public Double getValorNAsDouble() {
-		return new Double(getValorN());
+		return Double.valueOf(getValorN());
 	}
 }

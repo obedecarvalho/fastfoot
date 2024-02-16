@@ -178,13 +178,13 @@ public class Clube implements ElementoRoleta {
 	@Override
 	@JsonIgnore
 	public Double getValorAsDouble() {
-		return new Double(getValor());
+		return Double.valueOf(getValor());
 	}
 
 	@Override
 	@JsonIgnore
 	public Double getValorNAsDouble() {
-		return new Double(getValorN());
+		return Double.valueOf(getValorN());
 	}
 
 	public String getLogo() {

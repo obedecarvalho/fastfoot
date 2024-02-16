@@ -76,7 +76,7 @@ public class HabilidadeValorEstatisticaGrupo {
 	}
 	
 	public Double getPorcAcerto() {
-		return new Double(quantidadeUsoVencedor)/quantidadeUso;
+		return Double.valueOf(quantidadeUsoVencedor)/quantidadeUso;
 	}
 
 	public Boolean getAmistoso() {

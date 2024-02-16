@@ -39,7 +39,7 @@ public class FastfootApplication {
 	}
 
 	@Bean(name = "defaultExecutor")
-	public Executor asyncDefaultExecutor() {
+	protected Executor asyncDefaultExecutor() {
 		final ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
 		executor.setCorePoolSize(NUM_THREAD);
 		//executor.setMaxPoolSize(8);
