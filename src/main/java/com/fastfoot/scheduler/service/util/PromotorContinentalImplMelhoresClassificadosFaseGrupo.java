@@ -4,7 +4,7 @@ import java.util.Set;
 
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 
-public class PromotorContinentalImplDoisPorGrupo extends PromotorContinental {
+public class PromotorContinentalImplMelhoresClassificadosFaseGrupo extends PromotorContinental {
 
 	@Override
 	public void promover(Set<CampeonatoMisto> campeonatos) {

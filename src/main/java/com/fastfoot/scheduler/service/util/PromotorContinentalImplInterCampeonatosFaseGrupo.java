@@ -11,7 +11,7 @@ import com.fastfoot.scheduler.model.NivelCampeonato;
 import com.fastfoot.scheduler.model.entity.CampeonatoMisto;
 import com.fastfoot.scheduler.model.entity.GrupoCampeonato;
 
-public class PromotorContinentalImplInterCampeonatos extends PromotorContinental {
+public class PromotorContinentalImplInterCampeonatosFaseGrupo extends PromotorContinental {
 
 	/*@Override
 	public void promover(CampeonatoMisto campeonato) {

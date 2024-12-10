@@ -68,6 +68,13 @@ public class PreCarregarParametrosService {
 			
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_CONTINENTAL_III_REDUZIDO, "true", "false, true", jogo));
 			
+			parametros.add(new Parametro(ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL, 
+					ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_LIGA, 
+					String.format("%s, %s", 
+							ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_GRUPOS, 
+							ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_LIGA),
+					jogo));
+			
 			parametros.add(new Parametro(ParametroConstantes.CALCULAR_PROBABILIDADES, "true", "false, true", jogo));
 			
 			parametros.add(new Parametro(ParametroConstantes.JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES, "true", "false, true", jogo));

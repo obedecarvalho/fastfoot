@@ -243,6 +243,16 @@ public class CarregarParametroService {
 		return ParametroConstantes.MARCAR_AMISTOSOS_AUTOMATICAMENTE_INICIO_TEMPORADA_PARAM.equals(opcao);
 	}
 	
+	public boolean isModoDisputaFaseInicialContinentalFaseGrupos(Jogo jogo) {
+		String opcao = getParametroString(jogo, ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL);
+		return ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_GRUPOS.equals(opcao);
+	}
+	
+	public boolean isModoDisputaFaseInicialContinentalFaseLiga(Jogo jogo) {
+		String opcao = getParametroString(jogo, ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL);
+		return ParametroConstantes.MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_LIGA.equals(opcao);
+	}
+	
 	//	/MARCAR_AMISTOSOS_AUTOMATICAMENTE
 
 	public Integer getPrimeiraPosicaoEliminadoContinental(Jogo jogo, NivelCampeonato nivelCampeonato) {

@@ -71,6 +71,8 @@ import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVin
 import com.fastfoot.scheduler.model.factory.CampeonatoEliminatorioFactoryImplVinteEQuatroClubes;
 import com.fastfoot.scheduler.model.factory.CampeonatoFactory;
 import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactory;
+import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactoryImplFaseGrupos;
+import com.fastfoot.scheduler.model.factory.CampeonatoMistoFactoryImplFaseLiga;
 import com.fastfoot.scheduler.model.factory.RodadaAmistosaFactory;
 import com.fastfoot.scheduler.model.factory.TemporadaFactory;
 import com.fastfoot.scheduler.model.repository.RodadaEliminatoriaRepository;
@@ -414,6 +416,7 @@ public class CriarCalendarioTemporadaService {
 		
 
 		CampeonatoEliminatorioFactory campeonatoEliminatorioFactory = getCampeonatoEliminatorioFactory(temporada.getJogo());
+		CampeonatoMistoFactory campeonatoMistoFactory = getCampeonatoMistoFactory(temporada.getJogo());
 
 		Integer ano = temporada.getAno();
 
@@ -473,7 +476,7 @@ public class CriarCalendarioTemporadaService {
 				clubesContinental.put(liga.getLiga(), clubeRepository.findByLigaJogoAndAnoAndPosicaoGeralBetween(liga, ano - 1, posInicial + 1, posFinal));
 			}
 
-			campeonatoContinental = CampeonatoMistoFactory.criarCampeonato(temporada, clubesContinental,
+			campeonatoContinental = campeonatoMistoFactory.criarCampeonato(temporada, clubesContinental,
 					NivelCampeonato.getContinentalPorOrdem(i));
 			campeonatosContinentais.add(campeonatoContinental);
 		}
@@ -500,6 +503,19 @@ public class CriarCalendarioTemporadaService {
 		}
 	}
 	
+	private CampeonatoMistoFactory getCampeonatoMistoFactory(Jogo jogo) {
+		if (carregarParametroService.isModoDisputaFaseInicialContinentalFaseGrupos(jogo)) {
+			return new CampeonatoMistoFactoryImplFaseGrupos();
+		}
+		
+		if (carregarParametroService.isModoDisputaFaseInicialContinentalFaseLiga(jogo)) {
+			return new CampeonatoMistoFactoryImplFaseLiga();
+		}
+		
+		return new CampeonatoMistoFactoryImplFaseGrupos();//TODO: throw parametro não esperado
+
+	}
+
 	private CampeonatoEliminatorioFactory getCampeonatoEliminatorioFactory(Jogo jogo) {
 		
 		Integer nroCompeticoesContinentais = carregarParametroService.getParametroInteger(jogo, ParametroConstantes.NUMERO_CAMPEONATOS_CONTINENTAIS);

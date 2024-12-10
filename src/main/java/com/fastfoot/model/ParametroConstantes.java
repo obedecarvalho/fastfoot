@@ -51,6 +51,12 @@ public class ParametroConstantes {
 	//true, false
 	public static final String JOGAR_CONTINENTAL_III_REDUZIDO = "JOGAR_CONTINENTAL_III_REDUZIDO";
 	
+	public static final String MODO_DISPUTA_FASE_INICIAL_CONTINENTAL = "MODO_DISPUTA_FASE_INICIAL_CONTINENTAL";
+	
+	public static final String MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_GRUPOS = "FASE_GRUPOS";
+	
+	public static final String MODO_DISPUTA_FASE_INICIAL_CONTINENTAL_FASE_LIGA = "FASE_LIGA";
+	
 	//true, false
 	//Para o caso de haver CIII Reduzido, 32 clubes jogar a copa nacional (ao invés de 30)
 	public static final String JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES = "JOGAR_COPA_NACIONAL_COMPLETA_32_TIMES";

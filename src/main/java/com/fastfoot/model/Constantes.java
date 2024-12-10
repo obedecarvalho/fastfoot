@@ -64,6 +64,8 @@ public class Constantes {
 	
 	public static final Integer NRO_PARTIDAS_FASE_GRUPOS = 3;
 	
+	public static final Integer NRO_RODADAS_FASE_LIGA = 3;
+	
 	public static final Integer NRO_RODADAS_CONTINENTAL = 6;
 	
 	//###	AMISTOSOS	###

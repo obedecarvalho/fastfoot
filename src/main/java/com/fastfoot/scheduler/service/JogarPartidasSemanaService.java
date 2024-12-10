@@ -60,8 +60,10 @@ import com.fastfoot.scheduler.model.repository.RodadaRepository;
 import com.fastfoot.scheduler.model.repository.SemanaRepository;
 import com.fastfoot.scheduler.service.crud.TemporadaCRUDService;
 import com.fastfoot.scheduler.service.util.PromotorContinental;
-import com.fastfoot.scheduler.service.util.PromotorContinentalImplDoisPorGrupo;
-import com.fastfoot.scheduler.service.util.PromotorContinentalImplInterCampeonatos;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplMelhoresClassificadosFaseGrupo;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplInterCampeonatosFaseGrupo;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplInterCampeonatosFaseLiga;
+import com.fastfoot.scheduler.service.util.PromotorContinentalImplMelhoresClassificadosFaseLiga;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoria;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplTrintaClubes;
 import com.fastfoot.scheduler.service.util.PromotorEliminatoriaImplTrintaEDoisClubes;
@@ -605,10 +607,18 @@ public class JogarPartidasSemanaService {
 		//SEGUNDO_MELHOR_GRUPO, MELHOR_ELIMINADO_CAMPEONATO_SUPERIOR
 		PromotorContinental promotorContinental = null;
 
-		if (carregarParametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo(jogo)) {
-			promotorContinental = new PromotorContinentalImplDoisPorGrupo();
-		} else if (carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo)) {	
-			promotorContinental = new PromotorContinentalImplInterCampeonatos();
+		if (carregarParametroService.isModoDisputaFaseInicialContinentalFaseGrupos(jogo)) {
+			if (carregarParametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo(jogo)) {
+				promotorContinental = new PromotorContinentalImplMelhoresClassificadosFaseGrupo();
+			} else if (carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo)) {
+				promotorContinental = new PromotorContinentalImplInterCampeonatosFaseGrupo();
+			}
+		} else if (carregarParametroService.isModoDisputaFaseInicialContinentalFaseLiga(jogo)) {
+			if (carregarParametroService.isEstrategiaPromotorContinentalSegundoMelhorGrupo(jogo)) {
+				promotorContinental = new PromotorContinentalImplMelhoresClassificadosFaseLiga();
+			} else if (carregarParametroService.isEstrategiaPromotorContinentalMelhorEliminado(jogo)) {
+				promotorContinental = new PromotorContinentalImplInterCampeonatosFaseLiga();
+			}
 		}
 
 		return promotorContinental;
