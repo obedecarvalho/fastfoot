@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,7 +36,7 @@ public class Clube implements ElementoRoleta {
 	@JoinColumn(name = "id_liga_jogo")
 	private LigaJogo ligaJogo;
 	
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "id_treinador")
 	private Treinador treinador;
 

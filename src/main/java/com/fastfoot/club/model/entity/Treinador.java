@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Transient;
 
@@ -31,9 +30,11 @@ public class Treinador {
 
 	private Boolean ativo;
 	
+	/*
 	@JsonIgnore
 	@OneToOne(mappedBy = "treinador")
 	private Clube clube;
+	*/
 	
 	@JsonIgnore
 	@Transient
@@ -55,6 +56,7 @@ public class Treinador {
 		this.nome = nome;
 	}
 
+	/*
 	public Clube getClube() {
 		return clube;
 	}
@@ -62,6 +64,7 @@ public class Treinador {
 	public void setClube(Clube clube) {
 		this.clube = clube;
 	}
+	*/
 
 	public TreinadorTituloRanking getTreinadorTituloRanking() {
 		return treinadorTituloRanking;

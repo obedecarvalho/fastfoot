@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.fastfoot.club.model.entity.Clube;
@@ -14,7 +15,8 @@ import com.fastfoot.model.entity.Jogo;
 @Repository
 public interface TreinadorRepository extends JpaRepository<Treinador, Long> {
 
-	public List<Treinador> findByClubeAndAtivo(Clube clube, Boolean ativo);
+	@Query("SELECT c.treinador FROM Clube c WHERE c = :clube AND c.treinador.ativo = :ativo")
+	public List<Treinador> findByClubeAndAtivo(@Param("clube") Clube clube, @Param("ativo") Boolean ativo);
 	
 	public List<Treinador> findByJogoAndAtivo(Jogo jogo, Boolean ativo);
 

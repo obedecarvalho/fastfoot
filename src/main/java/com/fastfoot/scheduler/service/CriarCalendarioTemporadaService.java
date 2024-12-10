@@ -203,7 +203,7 @@ public class CriarCalendarioTemporadaService {
 		//Iniciar primeiro bloco
 		stopWatch.start();
 		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
+		long inicio = stopWatch.getSplitDuration().toMillis();
 
 		Temporada temporada = null, temporadaAtual = null;
 		Optional<Temporada> temporadaAtualOpt = temporadaRepository.findFirstByJogoAndAtual(jogo, true);//TODO: substituir por TemporadaCRUDService
@@ -224,8 +224,8 @@ public class CriarCalendarioTemporadaService {
 			if (SALVAR_HABILIDADE_VALOR_ESTATISTICAS) {
 			agruparHabilidadeValorEstatisticaService.agrupar2(temporadaAtual);
 			stopWatch.split();
-			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#agruparHabilidadeValorEstatistica:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 			}
 
 			/*
@@ -235,21 +235,21 @@ public class CriarCalendarioTemporadaService {
 			*/
 			agruparJogadorEstatisticasTemporadaService.agruparJogadorEstatisticasTemporadaService(temporadaAtual);
 			stopWatch.split();
-			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#agruparJogadorEstatisticasTemporada:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			temporadaAtual.setAtual(false);
 			temporadaRepository.save(temporadaAtual);
 
 			jogadorRepository.incrementarIdade(jogo.getId());
 			stopWatch.split();
-			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#incrementarIdade:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			adequarModoDesenvolvimentoJogador(temporadaAtual);
 			stopWatch.split();
-			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#adequarModoDesenvolvimentoJogador:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			/*if (parametroService.getParametroBoolean(ParametroConstantes.USAR_BANCO_DADOS_EM_MEMORIA)) {
 				atualizarPassoDesenvolvimentoJogador();
@@ -257,13 +257,13 @@ public class CriarCalendarioTemporadaService {
 			atualizarPassoDesenvolvimentoJogadorOtimizado(jogo);
 			//}
 			stopWatch.split();
-			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#atualizarPassoDesenvolvimentoJogador:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			aposentarJogadores(jogo);
 			stopWatch.split();
-			mensagens.add("\t#aposentarJogadores:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#aposentarJogadores:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			/*if (carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.USAR_VERSAO_SIMPLIFICADA)) {
 				calcularValorTransferenciaJogadoresSimplificado(jogo);
@@ -272,31 +272,31 @@ public class CriarCalendarioTemporadaService {
 			}*/
 			calcularValorTransferencia(jogo);
 			stopWatch.split();
-			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#calcularValorTransferenciaJogadores:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 			renovarContratosAutomaticamente(temporada);
 			stopWatch.split();
-			mensagens.add("\t#renovarContratosAutomaticamente:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#renovarContratosAutomaticamente:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 			
 			analisarDesempenhoTreinadorService.analisarDesempenhoTreinador(temporadaAtual);
 			stopWatch.split();
-			mensagens.add("\t#analisarDesempenhoTreinador:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#analisarDesempenhoTreinador:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 			
 			clubeRepository.calcularForcaGeral(jogo.getId());
 			stopWatch.split();
-			mensagens.add("\t#calcularForcaGeralClube:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#calcularForcaGeralClube:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		} else {
 
 			/*preCarregarParametrosService.preCarregarParametros();
 			preCarregarClubeService.preCarregarClubes();
 			stopWatch.split();
-			mensagens.add("\t#preCarregar:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco*/
+			mensagens.add("\t#preCarregar:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco*/
 
 			/*if (jogadorRepository.count() == 0) {
 				List<Clube> clubes = clubeRepository.findByJogo(jogo);
@@ -320,8 +320,8 @@ public class CriarCalendarioTemporadaService {
 			}
 
 			stopWatch.split();
-			mensagens.add("\t#criarJogadoresClube:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco*/
+			mensagens.add("\t#criarJogadoresClube:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco*/
 
 		}
 
@@ -332,42 +332,42 @@ public class CriarCalendarioTemporadaService {
 
 		criarCampeonatos(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		mensagens.add("\t#criarCampeonatos:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#criarCampeonatos:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		salvar(temporada, campeonatosNacionais, campeonatosContinentais, copasNacionais, rodadaAmistosaAutomaticas);
 		stopWatch.split();
-		mensagens.add("\t#salvar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#salvar:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		if (!temporadaAtualOpt.isPresent()) {
 			setarSemanaInicialContratos(temporada);
 		}
 		stopWatch.split();
-		mensagens.add("\t#setarSemanaInicialContratos:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#setarSemanaInicialContratos:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		calcularPartidaProbabilidadeResultado(temporada);
 		stopWatch.split();
-		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		distribuirPremiacaoCompeticoesService.distribuirPremiacaoCompeticoes(temporada);
 		stopWatch.split();
-		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#distribuirPremiacaoCompeticoes:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		distribuirPatrocinioService.distribuirPatrocinio(temporada);
 		stopWatch.split();
-		mensagens.add("\t#distribuirPatrocinio:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#distribuirPatrocinio:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		if (carregarParametroService.getParametroBoolean(jogo, ParametroConstantes.GERAR_TRANSFERENCIA_INICIO_TEMPORADA)) {
 
 			executarTransferenciasAutomaticamenteService.executarTransferenciasAutomaticamente(temporada);
 			stopWatch.split();
-			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#gerarTransferencias:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		}
 		
@@ -375,8 +375,8 @@ public class CriarCalendarioTemporadaService {
 
 			gerarMudancaClubeNivel(temporada);
 			stopWatch.split();
-			mensagens.add("\t#gerarMudancaClubeNivel:" + (stopWatch.getSplitTime() - inicio));
-			inicio = stopWatch.getSplitTime();//inicar outro bloco
+			mensagens.add("\t#gerarMudancaClubeNivel:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+			inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		}
 
@@ -384,11 +384,11 @@ public class CriarCalendarioTemporadaService {
 		jogadorEnergiaRepository.deleteByIdJogo(jogo.getId());
 		jogadorEnergiaRepository.inserirEnergiaTodosJogadores(Constantes.ENERGIA_INICIAL, jogo.getId());
 		stopWatch.split();
-		mensagens.add("\t#inserirEnergiaTodosJogadores:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#inserirEnergiaTodosJogadores:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		mensagens.add("\t#tempoTotal:" + stopWatch.getDuration().toMillis());//Tempo total
 
 		System.err.println(mensagens);
 

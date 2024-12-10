@@ -222,7 +222,9 @@ public class ExecutarTransferenciasAutomaticamenteService {
 
 		}
 		
-		elementosParaSalvarDTO.getPropostaTransferenciaJogadores().stream().forEach(p -> p.setId(0l));
+		//elementosParaSalvarDTO.getPropostaTransferenciaJogadores().stream().forEach(p -> p.setId(0l));
+		elementosParaSalvarDTO.setPropostaTransferenciaJogadores(elementosParaSalvarDTO
+				.getPropostaTransferenciaJogadores().stream().map(p -> p.clone()).collect(Collectors.toList()));
 		
 	}
 	

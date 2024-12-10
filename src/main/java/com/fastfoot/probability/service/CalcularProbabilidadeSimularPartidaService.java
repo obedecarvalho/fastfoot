@@ -99,7 +99,7 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		//Iniciar primeiro bloco
 		stopWatch.start();
 		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
+		long inicio = stopWatch.getSplitDuration().toMillis();
 
 		nacional.setClassificacao(classificacaoRepository.findByCampeonato(nacional));
 		nacional.setRodadas(rodadaRepository.findByCampeonato(nacional));
@@ -109,8 +109,8 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		List<Rodada> rodadas = new ArrayList<Rodada>();
 		rodadas.addAll(nacional.getRodadas());
@@ -119,8 +119,8 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#carregarPartidas:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#carregarPartidas:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		//
 		Map<PartidaResultado, PartidaProbabilidadeResultado> partidaProbabilidade = new HashMap<PartidaResultado, PartidaProbabilidadeResultado>();
@@ -140,8 +140,8 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#getEstatisticas:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#getEstatisticas:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		for (int r = nacional.getRodadaAtual(); r < nacional.getRodadas().size(); r++) {			
 			for (PartidaResultado p : nacional.getRodadas().get(r).getPartidas()) {
@@ -153,8 +153,8 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#calcularPartidaProbabilidadeResultado:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		/*clubeProbabilidadeFinalizacoes = calcularEstatisticasFinalizacaoDefesaService
 				.getEstatisticasFinalizacaoClube(nacionalII);
@@ -171,8 +171,8 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#calcularPartidaProbabilidadeResultadoII:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#calcularPartidaProbabilidadeResultadoII:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		Collection<CampeonatoClubeProbabilidade> probabilidades = calcularClubeProbabilidade(semana, nacional,
 				nacionalII, partidaProbabilidade, tipoClubeProbabilidade,
@@ -181,19 +181,19 @@ public class CalcularProbabilidadeSimularPartidaService extends CalcularProbabil
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#calcularClubeProbabilidade:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#calcularClubeProbabilidade:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		salvarProbabilidades(probabilidades);
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#salvarProbabilidades:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#salvarProbabilidades:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		//Finalizar
 		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		mensagens.add("\t#tempoTotal:" + stopWatch.getDuration().toMillis());//Tempo total
 		
 		//System.err.println(mensagens);
 		

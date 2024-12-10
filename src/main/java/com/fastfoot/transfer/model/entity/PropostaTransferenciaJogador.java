@@ -213,4 +213,22 @@ public class PropostaTransferenciaJogador implements ElementoRoleta {
 				+ propostaAceita + "]";
 	}
 
+	public PropostaTransferenciaJogador clone() {
+		PropostaTransferenciaJogador clone = new PropostaTransferenciaJogador();
+		
+		//clone.setId(this.getId());
+		clone.setClubeOrigem(this.getClubeOrigem());
+		clone.setClubeDestino(this.getClubeDestino());
+		clone.setJogador(this.getJogador());
+		clone.setTemporada(this.getTemporada());
+		clone.setSemanaTransferencia(this.getSemanaTransferencia());
+		clone.setNecessidadeContratacaoClube(this.getNecessidadeContratacaoClube());
+		clone.setValorTransferencia(this.getValorTransferencia());
+		clone.setPropostaAceita(this.getPropostaAceita());
+		clone.setTipoNegociacao(this.getTipoNegociacao());
+		
+		return clone;
+		
+	}
+
 }

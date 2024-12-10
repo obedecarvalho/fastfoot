@@ -249,7 +249,7 @@ public abstract class CalcularProbabilidadeService {
 		//Iniciar primeiro bloco
 		stopWatch.start();
 		stopWatch.split();
-		long inicio = stopWatch.getSplitTime();
+		long inicio = stopWatch.getSplitDuration().toMillis();
 		
 		Map<Clube, CampeonatoClubeProbabilidade> clubeProbabilidades = new HashMap<Clube, CampeonatoClubeProbabilidade>();
 		
@@ -265,8 +265,8 @@ public abstract class CalcularProbabilidadeService {
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#carregar:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#carregar:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		//Map<Integer, Clube> clubesCampeoes = consultarClubeCampeaoService.getCampeoes(semana.getTemporada(), nacional.getLiga());
 
@@ -316,19 +316,19 @@ public abstract class CalcularProbabilidadeService {
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#simulacao:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#simulacao:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 
 		calcularProbabilidadesEspecificas(clubeProbabilidades, semana, numeroRebaixados);
 		
 		//Finalizar bloco e já iniciar outro
 		stopWatch.split();
-		mensagens.add("\t#calcularProbabilidadesEspecificas:" + (stopWatch.getSplitTime() - inicio));
-		inicio = stopWatch.getSplitTime();//inicar outro bloco
+		mensagens.add("\t#calcularProbabilidadesEspecificas:" + (stopWatch.getSplitDuration().toMillis() - inicio));
+		inicio = stopWatch.getSplitDuration().toMillis();//inicar outro bloco
 		
 		//Finalizar
 		stopWatch.stop();
-		mensagens.add("\t#tempoTotal:" + stopWatch.getTime());//Tempo total
+		mensagens.add("\t#tempoTotal:" + stopWatch.getDuration().toMillis());//Tempo total
 		
 		//System.err.println(mensagens);
 		
